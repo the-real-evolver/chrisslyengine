@@ -27,7 +27,7 @@ int
 ExitCallback(int arg1, int arg2, void *common)
 {
     exitRequest = true;
-	return 0;
+    return 0;
 }
 
 //------------------------------------------------------------------------------
@@ -36,8 +36,8 @@ ExitCallback(int arg1, int arg2, void *common)
 int
 main (int argc, char* argv[])
 {
-	int cbid = sceKernelCreateCallback("ExitCallback", ExitCallback, NULL);
-	sceKernelRegisterExitCallback(cbid);
+    int cbid = sceKernelCreateCallback("ExitCallback", ExitCallback, NULL);
+    sceKernelRegisterExitCallback(cbid);
     
     // create and initialise graphicssystem
     GraphicsSystem* gs = new GraphicsSystem();
