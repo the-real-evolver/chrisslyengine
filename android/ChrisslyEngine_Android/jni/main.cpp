@@ -71,12 +71,12 @@ Enter(struct android_app* state)
 void
 Exit()
 {
-	initialized = false;
+    initialized = false;
 
     material->RemoveAllPasses();
-	delete material;
+    delete material;
 
-	delete graphicsSystem;
+    delete graphicsSystem;
 }
 
 //------------------------------------------------------------------------------
@@ -85,11 +85,11 @@ Exit()
 void
 Trigger()
 {
-	if (initialized)
-	{
-	    sceneNode->Yaw((float)distance * 0.02f);
+    if (initialized)
+    {
+        sceneNode->Yaw((float)distance * 0.02f);
         graphicsSystem->RenderOneFrame();
-	}
+    }
 }
 
 //------------------------------------------------------------------------------
@@ -101,10 +101,10 @@ HandleInputEvents(struct android_app* app, AInputEvent* event)
 {
     if (AINPUT_EVENT_TYPE_MOTION == AInputEvent_getType(event))
     {
-    	int32_t x = AMotionEvent_getX(event, 0);
-    	distance = x - lastX;
-    	lastX = x;
-    	lastY = AMotionEvent_getY(event, 0);
+        int32_t x = AMotionEvent_getX(event, 0);
+        distance = x - lastX;
+        lastX = x;
+        lastY = AMotionEvent_getY(event, 0);
         return 1;
     }
     return 0;
@@ -154,11 +154,11 @@ android_main(struct android_app* state)
     app_dummy();
 
     // set callbacks
-	state->onAppCmd = HandleCommands;
-	state->onInputEvent = HandleInputEvents;
+    state->onAppCmd = HandleCommands;
+    state->onInputEvent = HandleInputEvents;
 
     // initialize filesystem
-	FSWrapper::_Initialise(state->activity->assetManager);
+    FSWrapper::_Initialise(state->activity->assetManager);
 
     while (true)
     {
@@ -184,6 +184,6 @@ android_main(struct android_app* state)
         }
 
         // draw the next frame
-		Trigger();
+        Trigger();
     }
 }
