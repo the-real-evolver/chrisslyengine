@@ -1,0 +1,10 @@
+Building Chrissly for Android
+========================================================================
+- edit 'android\ChrisslyEngine_Android\rebuild.cmd'
+- change 'NDK' variable to point to your NDK installation directory
+- run 'rebuild.cmd'
+
+Running the demo
+========================================================================
+- open 'android\ChrisslyEngine_Android\.project' with eclipse
+- run or debug the application to install it on your device
