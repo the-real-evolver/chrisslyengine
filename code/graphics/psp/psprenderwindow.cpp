@@ -33,9 +33,6 @@ PSPRenderWindow::~PSPRenderWindow()
 void
 PSPRenderWindow::Create()
 {
-    this->format = graphics::PF_R8G8B8A8;
-    this->width = 512;
-
     const unsigned int bufferWidth = 512;
     const unsigned int width = 480;
     const unsigned int height = 272;
@@ -49,8 +46,7 @@ PSPRenderWindow::Create()
     sceGuDispBuffer(width, height, dispBuffer, bufferWidth);
     sceGuDepthBuffer(depthBuffer, bufferWidth);
 
-    sceGuScissor(0, 0, width, height);
-    sceGuDisable(GU_SCISSOR_TEST);
+    sceGuEnable(GU_SCISSOR_TEST);
     sceGuEnable(GU_CLIP_PLANES);
     sceGuDepthRange(65535, 0);
     sceGuDepthFunc(GU_GEQUAL);
@@ -59,6 +55,10 @@ PSPRenderWindow::Create()
     sceGuFinish();
     sceGuSync(0, 0);
     sceGuDisplay(GU_TRUE);
+    
+    this->format = graphics::PF_R8G8B8A8;
+    this->width = bufferWidth;
+    this->height = height;
 }
     
 //------------------------------------------------------------------------------

@@ -106,6 +106,7 @@ StateAnimationTest::Trigger()
     sceGuClearColor(0xff554433);
     sceGuClearDepth(0);
     sceGuClear(GU_COLOR_BUFFER_BIT | GU_DEPTH_BUFFER_BIT);
+    sceGuScissor(0, 0, 480, 272);
     sceGumMatrixMode(GU_PROJECTION);
     sceGumLoadIdentity();
     sceGumPerspective(75.0f, 16.0f / 9.0f, 0.5f, 1000.0f);

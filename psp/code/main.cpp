@@ -45,7 +45,7 @@ main (int argc, char* argv[])
     // add a camera
     Camera* camera = SceneManager::Instance()->CreateCamera("MainCamera");
     // add viewport
-    window->AddViewport(camera, 480 >> 1, 272 >> 1, 480, 272);
+    window->AddViewport(camera, 0, 0, 480, 272);
     // enable shadows
     SceneManager::Instance()->SetShadowTechnique(SHADOWTYPE_TEXTURE_ADDITIVE);
 

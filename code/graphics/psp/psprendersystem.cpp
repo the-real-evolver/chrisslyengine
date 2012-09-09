@@ -61,7 +61,7 @@ PSPRenderSystem::Shutdown()
 void
 PSPRenderSystem::_SetRenderTarget(graphics::RenderTarget *target)
 {
-    sceGuDrawBufferList(PSPMappings::Get(target->GetFormat()),target->GetBuffer(), target->GetWidth());
+    sceGuDrawBufferList(PSPMappings::Get(target->GetFormat()), target->GetBuffer(), target->GetWidth());
 }
 
 //------------------------------------------------------------------------------
@@ -70,11 +70,15 @@ PSPRenderSystem::_SetRenderTarget(graphics::RenderTarget *target)
 void
 PSPRenderSystem::_SetViewport(graphics::Viewport *vp)
 {
-    sceGuClearDepth(0);
-    sceGuClearColor(vp->GetBackgroundColour());
-    sceGuOffset(2048 - vp->GetActualLeft(), 2048 - vp->GetActualTop());
+    sceGuOffset(2048 - (vp->GetActualWidth() >> 1) - vp->GetActualLeft(), 2048 - (vp->GetActualHeight() >> 1) - vp->GetActualTop());
     sceGuViewport(2048, 2048, vp->GetActualWidth(), vp->GetActualHeight());
-    sceGuClear(PSPMappings::Get((graphics::FrameBufferType)vp->GetClearBuffers()));
+    sceGuScissor(vp->GetActualLeft(), vp->GetActualTop(), vp->GetActualLeft() + vp->GetActualWidth(), vp->GetActualTop() + vp->GetActualHeight());
+    if (vp->GetClearEveryFrame())
+    {        
+        sceGuClearDepth(0);
+        sceGuClearColor(vp->GetBackgroundColour());
+        sceGuClear(PSPMappings::Get((graphics::FrameBufferType)vp->GetClearBuffers()));
+    }
 }
 
 //------------------------------------------------------------------------------

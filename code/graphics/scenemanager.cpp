@@ -223,7 +223,7 @@ SceneManager::SetShadowTechnique(ShadowTechnique technique)
 
             this->shadowRenderTexture = CE_NEW RenderTexture();
             this->shadowRenderTexture->Create(256, 256, PF_A4R4G4B4);
-            Viewport* vp = this->shadowRenderTexture->AddViewport(this->shadowCamera, 128, 128, 256, 256);
+            Viewport* vp = this->shadowRenderTexture->AddViewport(this->shadowCamera, 0, 0, 256, 256);
             vp->SetBackgroundColour(0xffffffff);
             vp->SetClearEveryFrame(true, FBT_COLOUR);
 

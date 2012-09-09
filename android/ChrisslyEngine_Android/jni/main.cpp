@@ -37,7 +37,7 @@ Enter(struct android_app* state)
     camera = SceneManager::Instance()->CreateCamera("MainCamera");
     camera->SetAspectRatio((float)window->GetWidth() / (float)window->GetHeight());
     camera->SetPosition(0.0f, 0.0f, 0.9f);
-    window->AddViewport(camera, window->GetWidth() >> 1, window->GetHeight() >> 1, window->GetWidth(), window->GetHeight());
+    window->AddViewport(camera, 0, 0, window->GetWidth(), window->GetHeight());
 
     tex = TextureManager::Instance()->Load("mage_etc1.tex");
     tex->SetFormat(PF_ETC1_RGB8);

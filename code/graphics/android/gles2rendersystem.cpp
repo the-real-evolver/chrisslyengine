@@ -21,7 +21,7 @@ const char* GLES2RenderSystem::FixedFunctionVertexShader =
     "uniform mat4 worldMatrix;\n"
     "uniform mat4 viewMatrix;\n"
     "uniform mat4 projectionMatrix;\n"
-	"uniform mat4 worldViewProjMatrix;\n"
+    "uniform mat4 worldViewProjMatrix;\n"
     "void main()\n"
     "{\n"
     "    gl_Position = worldViewProjMatrix * vertexPosition;\n"
@@ -98,7 +98,7 @@ GLES2RenderSystem::_Initialise(void* customParams)
 void
 GLES2RenderSystem::Shutdown()
 {
-	CE_DELETE this->gpuProgram;
+    CE_DELETE this->gpuProgram;
 
     CE_LOG("GLES2RenderSystem::Shutdown\n");
 }
@@ -118,16 +118,19 @@ GLES2RenderSystem::_SetRenderTarget(graphics::RenderTarget *target)
 void
 GLES2RenderSystem::_SetViewport(graphics::Viewport *vp)
 {
+    glViewport(vp->GetActualLeft(), vp->GetActualTop(), vp->GetActualWidth(), vp->GetActualHeight());
+    CheckGlError("glViewport");
     glDepthRangef(0.0f, 1.0f);
     CheckGlError("glDepthRangef");
-    float red, green, blue, alpha;
-    GLES2Mappings::Get(vp->GetBackgroundColour(), red, green, blue, alpha);
-    glClearColor(red, green, blue, alpha);
-    CheckGlError("glClearColor");
-    glClear(GLES2Mappings::Get((graphics::FrameBufferType)vp->GetClearBuffers()));
-    CheckGlError("glClear");
-    glViewport(0, 0, vp->GetActualWidth(), vp->GetActualHeight());
-    CheckGlError("glViewport");
+    if (vp->GetClearEveryFrame())
+    {
+        float red, green, blue, alpha;
+        GLES2Mappings::Get(vp->GetBackgroundColour(), red, green, blue, alpha);
+        glClearColor(red, green, blue, alpha);
+        CheckGlError("glClearColor");
+        glClear(GLES2Mappings::Get((graphics::FrameBufferType)vp->GetClearBuffers()));
+        CheckGlError("glClear");
+    }
 }
 
 //------------------------------------------------------------------------------
@@ -154,7 +157,7 @@ GLES2RenderSystem::_SetWorldMatrix(const core::Matrix4& m)
 void
 GLES2RenderSystem::_SetViewMatrix(const core::Matrix4& m)
 {
-	this->viewMatrix = m;
+    this->viewMatrix = m;
     GLES2Mappings::MakeGLMatrix(this->glViewMatrix, m);
 }
 
@@ -164,7 +167,7 @@ GLES2RenderSystem::_SetViewMatrix(const core::Matrix4& m)
 void
 GLES2RenderSystem::_SetProjectionMatrix(const core::Matrix4& m)
 {
-	this->projectionMatrix = m;
+    this->projectionMatrix = m;
     GLES2Mappings::MakeGLMatrix(this->glProjectionMatrix, m);
 }
 
@@ -183,7 +186,7 @@ GLES2RenderSystem::_SetTextureMatrix(const core::Matrix4& xform)
 void
 GLES2RenderSystem::_Render(graphics::SubEntity* renderable)
 {
-	GLint vertexPositionHandle = this->gpuProgram->GetAttributeLocation(graphics::VES_POSITION);
+    GLint vertexPositionHandle = this->gpuProgram->GetAttributeLocation(graphics::VES_POSITION);
     glVertexAttribPointer(vertexPositionHandle, 3, GL_FLOAT, GL_FALSE, 36, (unsigned char*)renderable->GetSubMesh()->_vertexBuffer + 24);
     CheckGlError("glVertexAttribPointer");
     glEnableVertexAttribArray(vertexPositionHandle);
@@ -217,7 +220,7 @@ GLES2RenderSystem::_SetPass(graphics::Pass* pass)
     }
     else
     {
-    	glDisable(GL_BLEND);
+        glDisable(GL_BLEND);
     }
 
     // depth check
