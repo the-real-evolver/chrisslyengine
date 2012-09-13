@@ -87,6 +87,9 @@ GLES2RenderSystem::_Initialise(void* customParams)
     CheckGlError("glGetIntegerv");
     CE_LOG("GL_MAX_TEXTURE_SIZE: %i\n", maxTextureSize);
 
+    glEnable(GL_SCISSOR_TEST);
+    CheckGlError("glEnable");
+    
     this->gpuProgram = CE_NEW GLES2GpuProgram(FixedFunctionVertexShader, FixedFunctionFragmentShader);
     
     return renderWindow;
@@ -118,10 +121,18 @@ GLES2RenderSystem::_SetRenderTarget(graphics::RenderTarget *target)
 void
 GLES2RenderSystem::_SetViewport(graphics::Viewport *vp)
 {
-    glViewport(vp->GetActualLeft(), vp->GetActualTop(), vp->GetActualWidth(), vp->GetActualHeight());
+    int width = vp->GetActualWidth();
+    int height = vp->GetActualHeight();
+    int left = vp->GetActualLeft();
+    int top = vp->GetActualTop();
+
+    glViewport(left, top, width, height);
     CheckGlError("glViewport");
     glDepthRangef(0.0f, 1.0f);
     CheckGlError("glDepthRangef");
+    glScissor(left, top, width, height);
+    CheckGlError("glScissor");
+    
     if (vp->GetClearEveryFrame())
     {
         float red, green, blue, alpha;
@@ -200,6 +211,24 @@ GLES2RenderSystem::_Render(graphics::SubEntity* renderable)
 
     glDrawArrays(GL_TRIANGLES, 0, renderable->GetSubMesh()->_vertexCount);
     CheckGlError("glDrawArrays");
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+GLES2RenderSystem::_BeginFrame()
+{
+
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+GLES2RenderSystem::_EndFrame()
+{
+
 }
 
 //------------------------------------------------------------------------------

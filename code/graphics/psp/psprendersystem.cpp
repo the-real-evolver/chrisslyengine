@@ -70,9 +70,15 @@ PSPRenderSystem::_SetRenderTarget(graphics::RenderTarget *target)
 void
 PSPRenderSystem::_SetViewport(graphics::Viewport *vp)
 {
-    sceGuOffset(2048 - (vp->GetActualWidth() >> 1) - vp->GetActualLeft(), 2048 - (vp->GetActualHeight() >> 1) - vp->GetActualTop());
-    sceGuViewport(2048, 2048, vp->GetActualWidth(), vp->GetActualHeight());
-    sceGuScissor(vp->GetActualLeft(), vp->GetActualTop(), vp->GetActualLeft() + vp->GetActualWidth(), vp->GetActualTop() + vp->GetActualHeight());
+    int width = vp->GetActualWidth();
+    int height = vp->GetActualHeight();
+    int left = vp->GetActualLeft();
+    int top = vp->GetActualTop();
+
+    sceGuOffset(2048 - (width >> 1) - left, 2048 - (height >> 1) - top);
+    sceGuViewport(2048, 2048, width, height);
+    sceGuScissor(left, top, left + width, top + height);
+
     if (vp->GetClearEveryFrame())
     {        
         sceGuClearDepth(0);
@@ -133,6 +139,25 @@ PSPRenderSystem::_Render(graphics::SubEntity* renderable)
                     renderable->GetSubMesh()->_vertexBuffer); 
 }
 
+//------------------------------------------------------------------------------
+/**
+*/
+void
+PSPRenderSystem::_BeginFrame()
+{
+    sceGuStart(GU_DIRECT, PSPRenderSystem::Instance()->GetDisplayList());
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+PSPRenderSystem::_EndFrame()
+{
+    sceGuFinish();
+    sceGuSync(0, 0);
+}
+    
 //------------------------------------------------------------------------------
 /**
 */

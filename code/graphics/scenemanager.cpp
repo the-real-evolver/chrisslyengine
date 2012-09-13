@@ -316,12 +316,6 @@ SceneManager::_RenderScene(Camera *camera, Viewport *vp)
         }
     }
 
-    this->destRenderSystem->_SetRenderTarget(vp->GetTarget());
-    this->destRenderSystem->_SetViewport(vp);
-    
-    this->destRenderSystem->_SetProjectionMatrix(camera->GetProjectionMatrixRS());
-    this->destRenderSystem->_SetViewMatrix(camera->GetViewMatrix());
-
     // update transformation
     this->GetRootSceneNode()->_Update();
     
@@ -400,6 +394,14 @@ SceneManager::_RenderScene(Camera *camera, Viewport *vp)
         sceneNodeIt = sceneNodeIt->next;
     }
     
+    this->destRenderSystem->_BeginFrame();
+
+    this->destRenderSystem->_SetRenderTarget(vp->GetTarget());
+    this->destRenderSystem->_SetViewport(vp);
+    
+    this->destRenderSystem->_SetProjectionMatrix(camera->GetProjectionMatrixRS());
+    this->destRenderSystem->_SetViewMatrix(camera->GetViewMatrix());
+
     // render queues
     if (this->IsShadowTechniqueInUse() && this->illuminationStage == IRS_RENDER_TO_TEXTURE)
     {
@@ -425,6 +427,8 @@ SceneManager::_RenderScene(Camera *camera, Viewport *vp)
         this->_ClearRenderQueue(this->renderQueueOpaque);
         this->renderQueueOpaque = NULL;
     }
+    
+    this->destRenderSystem->_EndFrame();
 }
 
 //------------------------------------------------------------------------------

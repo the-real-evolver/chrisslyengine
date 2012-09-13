@@ -67,8 +67,6 @@ PSPRenderWindow::Create()
 void
 PSPRenderWindow::Update()
 {
-    sceGuStart(GU_DIRECT, PSPRenderSystem::Instance()->GetDisplayList());
-
     // update all viewports
     unsigned int index;
     for (index = 0; index < this->numViewports; index++)
@@ -76,10 +74,7 @@ PSPRenderWindow::Update()
         graphics::Viewport* vp = (graphics::Viewport*)DynamicArrayGet(&this->viewportList, index);
         vp->Update();
     }
- 
-    sceGuFinish();
-    sceGuSync(0, 0);
-    
+
     // build scheduled morphkeyframes here
 }
 

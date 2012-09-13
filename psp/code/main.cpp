@@ -18,7 +18,7 @@ PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER);
 using namespace chrissly::graphics;
 using namespace application;
 
-bool exitRequest = false;
+bool volatile exitRequest = false;
 
 //------------------------------------------------------------------------------
 /**

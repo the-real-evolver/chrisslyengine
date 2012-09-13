@@ -56,6 +56,10 @@ public:
         classes will be responsible for calling this method.
     */
     void _Render(graphics::SubEntity* renderable);
+    /// start of rendering on a single viewport
+    void _BeginFrame();
+    /// ends rendering of a frame to the current viewport
+    void _EndFrame();
     /// method for setting up the renderstate for a rendering pass
     void _SetPass(graphics::Pass* pass);
     /// sets the colour & strength of the ambient (global directionless) light in the world

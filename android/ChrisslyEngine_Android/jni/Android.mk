@@ -19,8 +19,8 @@ LOCAL_SRC_FILES := core/android/androiddebug.cpp core/android/androidfswrapper.c
                    graphics/texturebase.cpp graphics/textureunitstate.cpp graphics/texturemanager.cpp \
                    graphics/pass.cpp graphics/material.cpp \
                    graphics/graphicssystem.cpp \
-	               graphics/meshmanager.cpp graphics/mesh.cpp graphics/submesh.cpp \
-	               graphics/subentity.cpp  graphics/entity.cpp \
+                   graphics/meshmanager.cpp graphics/mesh.cpp graphics/submesh.cpp \
+                   graphics/subentity.cpp  graphics/entity.cpp \
                    graphics/scenemanager.cpp graphics/scenenode.cpp \
                    graphics/camera.cpp graphics/viewport.cpp \
                    graphics/rendertarget.cpp graphics/android/gles2rendertexture.cpp graphics/android/gles2renderwindow.cpp \
