@@ -5,7 +5,6 @@
 #include "graphicssystem.h"
 #include "scenemanager.h"
 #include "meshmanager.h"
-#include "renderqueuesortinggrouping.h"
 #include <stdio.h>
 
 namespace chrissly
@@ -25,10 +24,6 @@ SceneManager::SceneManager() :
     sceneNodes(NULL),
     sceneRoot(NULL),
     ambientLight(0x00000000),
-    renderQueueOpaque(NULL),
-    renderQueueTransparent(NULL),
-    renderQueueShadowCaster(NULL),
-    renderQueueShadowReceiver(NULL),
     illuminationStage(IRS_NONE),
     shadowTechnique(SHADOWTYPE_NONE),
     shadowTextureConfigDirty(true),
@@ -40,7 +35,12 @@ SceneManager::SceneManager() :
 {
     Singleton = this;
     HashTableInit(&this->cameras, 2);
-    
+
+    this->renderQueueOpaque.Initialise(64);
+    this->renderQueueTransparent.Initialise(64);
+    this->renderQueueShadowCaster.Initialise(64);
+    this->renderQueueShadowReceiver.Initialise(64);
+
     this->destRenderSystem = GraphicsSystem::Instance()->GetRenderSystem();
 }
 
@@ -50,13 +50,13 @@ SceneManager::SceneManager() :
 SceneManager::~SceneManager()
 {
     Singleton = NULL;
-    
+
     this->ClearScene();
-    
+
     CE_DELETE this->sceneRoot;
-    
+
     this->DestroyAllCameras();
-    
+
     if (!this->shadowTextureConfigDirty)
     {
         CE_DELETE this->shadowTexture;
@@ -106,7 +106,7 @@ SceneManager::DestroyAllCameras()
             it = it->next;   
         }
     }
-    
+
     HashTableClear(&this->cameras);
 }
     
@@ -170,9 +170,9 @@ SceneManager::ClearScene()
         linkedlistRemove(node);
     }
     this->movableObjectCollectionMap = NULL;
-    
+
     this->sceneRoot->RemoveAllChildren();
-    
+
     it = this->sceneNodes;
     while (it != NULL)
     {
@@ -212,7 +212,7 @@ void
 SceneManager::SetShadowTechnique(ShadowTechnique technique)
 {
     this->shadowTechnique = technique;
-    
+
     if (SHADOWTYPE_TEXTURE_ADDITIVE == technique)
     {
         // setup texture shadowing
@@ -233,7 +233,7 @@ SceneManager::SetShadowTechnique(ShadowTechnique technique)
             this->shadowTexture->SetHeight(this->shadowRenderTexture->GetHeight());
             this->shadowTexture->SetBuffer(this->shadowRenderTexture->GetBuffer());
             this->shadowTexture->SetSwizzleEnabled(false);
- 
+
             // FragmentColor * 0xff888888 + FrameBufferPixelColor * 0xff000000 (FragmentColor = ModelVertexColor = White)
             this->shadowRttPass = CE_NEW Pass(0);
             this->shadowRttPass->SetSceneBlendingEnabled(true);
@@ -244,7 +244,7 @@ SceneManager::SetShadowTechnique(ShadowTechnique technique)
             this->shadowPass = CE_NEW Pass(0);
             this->shadowPass->SetSceneBlendingEnabled(true);
             this->shadowPass->SetSceneBlending(SBF_SOURCE_COLOUR, SBF_ONE_MINUS_SOURCE_ALPHA);
-            
+
             TextureUnitState* tus = this->shadowPass->CreateTextureUnitState();
             tus->SetTextureBlendOperation(LBT_COLOUR, LBO_REPLACE);
             tus->SetTextureAddressingMode(TextureUnitState::TAM_CLAMP, TextureUnitState::TAM_CLAMP);
@@ -318,14 +318,14 @@ SceneManager::_RenderScene(Camera *camera, Viewport *vp)
 
     // update transformation
     this->GetRootSceneNode()->_Update();
-    
+
     // fill renderqueues
     LinkedList* sceneNodeIt = this->sceneNodes;
     while (sceneNodeIt != NULL)
     {
         // for all scenenodes
         SceneNode* sceneNode = (SceneNode*)sceneNodeIt->data;
-        
+
         unsigned int entityIndex;
         for (entityIndex = 0; entityIndex < sceneNode->NumAttachedObjects(); entityIndex++)
         {
@@ -333,9 +333,9 @@ SceneManager::_RenderScene(Camera *camera, Viewport *vp)
             Entity* entity = sceneNode->GetAttachedObject(entityIndex);
             
             if (this->IsShadowTechniqueInUse() && this->illuminationStage == IRS_RENDER_TO_TEXTURE && !entity->GetCastShadows()) continue;
-            
+
             // ----- update animation here -----
-            
+
             unsigned int subEntityIndex;
             for (subEntityIndex = 0; subEntityIndex < entity->GetNumSubEntities(); subEntityIndex++)
             {
@@ -346,88 +346,67 @@ SceneManager::_RenderScene(Camera *camera, Viewport *vp)
                 
                 Material* material = subEntity->GetMaterial();
                 if (NULL == material) continue;
- 
+
                 // add to shadow caster queue
                 if (this->IsShadowTechniqueInUse() && this->illuminationStage == IRS_RENDER_TO_TEXTURE)
                 {
-                    RenderablePass* renderablePass = CE_NEW RenderablePass(subEntity, this->shadowRttPass);
-                
-                    this->renderQueueShadowCaster = linkedlistAdd(&this->renderQueueShadowCaster, renderablePass);
-                    this->renderQueueShadowCaster->data = renderablePass;
-                    
+                    this->renderQueueShadowCaster.AddRenderable(subEntity, this->shadowRttPass);
                     continue;
                 }
-                
+
                 unsigned int passIndex;
                 for (passIndex = 0; passIndex < material->GetNumPasses(); passIndex++)
                 {
                     // for all passes
                     Pass* pass = material->GetPass(passIndex);
-                    
-                    RenderablePass* renderablePass = CE_NEW RenderablePass(subEntity, pass);
-                    
+
                     if (pass->GetSceneBlendingEnabled())
                     {
                         // add to transparency queue
-                        this->renderQueueTransparent = linkedlistAdd(&this->renderQueueTransparent, renderablePass);
-                        this->renderQueueTransparent->data = renderablePass;
+                        this->renderQueueTransparent.AddRenderable(subEntity, pass);
                     }
                     else
                     {
                         // add to opaque queue
-                        this->renderQueueOpaque = linkedlistAdd(&this->renderQueueOpaque, renderablePass);
-                        this->renderQueueOpaque->data = renderablePass;
+                        this->renderQueueOpaque.AddRenderable(subEntity, pass);
                     }
                 }
-                
+
                 // add to shadow receiver queue
                 if (this->IsShadowTechniqueInUse() && subEntity->parentEntity->GetReceivesShadows() && this->illuminationStage != IRS_RENDER_TO_TEXTURE)
                 {
-                    RenderablePass* renderablePass = CE_NEW RenderablePass(subEntity, NULL);
-                
-                    this->renderQueueShadowReceiver = linkedlistAdd(&this->renderQueueShadowReceiver, renderablePass);
-                    this->renderQueueShadowReceiver->data = renderablePass;
+                    this->renderQueueShadowReceiver.AddRenderable(subEntity, NULL);
                 }
             }
         }
-        
+
         sceneNodeIt = sceneNodeIt->next;
     }
-    
+
     this->destRenderSystem->_BeginFrame();
 
     this->destRenderSystem->_SetRenderTarget(vp->GetTarget());
     this->destRenderSystem->_SetViewport(vp);
-    
+
     this->destRenderSystem->_SetProjectionMatrix(camera->GetProjectionMatrixRS());
     this->destRenderSystem->_SetViewMatrix(camera->GetViewMatrix());
 
     // render queues
     if (this->IsShadowTechniqueInUse() && this->illuminationStage == IRS_RENDER_TO_TEXTURE)
     {
-        this->_RenderQueueGroupObjects(this->renderQueueShadowCaster);
-        this->_ClearRenderQueue(this->renderQueueShadowCaster);
-        this->renderQueueShadowCaster = NULL;
+        this->_RenderQueueGroupObjects(&this->renderQueueShadowCaster);
     }
     else
     {    
-        this->_RenderQueueGroupObjects(this->renderQueueOpaque);
-        this->_RenderQueueGroupObjects(this->renderQueueTransparent); 
+        this->_RenderQueueGroupObjects(&this->renderQueueOpaque);
+        this->_RenderQueueGroupObjects(&this->renderQueueTransparent);
         
         if (this->IsShadowTechniqueInUse())
         {
-            this->_RenderTextureShadowReceiverQueueGroupObjects(this->renderQueueShadowReceiver);
-            this->_ClearRenderQueue(this->renderQueueShadowReceiver);
-            this->renderQueueShadowReceiver = NULL;
+            this->_RenderTextureShadowReceiverQueueGroupObjects(&this->renderQueueShadowReceiver);
         }
-        
-        this->_ClearRenderQueue(this->renderQueueTransparent);
-        this->renderQueueTransparent = NULL;
-        
-        this->_ClearRenderQueue(this->renderQueueOpaque);
-        this->renderQueueOpaque = NULL;
     }
-    
+
     this->destRenderSystem->_EndFrame();
 }
 
@@ -444,15 +423,16 @@ SceneManager::_SetPass(Pass* pass)
 /**
 */
 void
-SceneManager::_RenderQueueGroupObjects(LinkedList* queue)
+SceneManager::_RenderQueueGroupObjects(QueuedRenderableCollection* queue)
 {
     Pass* lastPass = NULL;
 
-    LinkedList* queueIt = queue;
-    while (queueIt != NULL)
+    unsigned short numRenderablePasses = queue->GetNumRenderablePasses();
+    unsigned short i;
+    for (i = 0; i < numRenderablePasses; i++)
     {
-        RenderablePass* renderablePass = (RenderablePass*)queueIt->data;
- 
+        RenderablePass* renderablePass = queue->GetRenderablePass(i);
+
         // apply pass
         Pass* pass = renderablePass->pass;
         if (pass != lastPass)
@@ -460,51 +440,36 @@ SceneManager::_RenderQueueGroupObjects(LinkedList* queue)
             this->_SetPass(pass);
         }
         lastPass = pass;
- 
+
         // render entity
         SubEntity* renderable = renderablePass->renderable;
         this->destRenderSystem->_SetWorldMatrix(renderable->parentEntity->parentNode->_GetFullTransform());
         this->destRenderSystem->_Render(renderable);
- 
-        queueIt = queueIt->next;
-    } 
+    }
+
+    queue->Clear();
 }
 
 //------------------------------------------------------------------------------
 /**
 */
 void
-SceneManager::_RenderTextureShadowReceiverQueueGroupObjects(LinkedList* queue)
+SceneManager::_RenderTextureShadowReceiverQueueGroupObjects(QueuedRenderableCollection* queue)
 {
     this->_SetPass(this->shadowPass);
 
-    LinkedList* queueIt = queue;
-    while (queueIt != NULL)
+    unsigned short numRenderablePasses = queue->GetNumRenderablePasses();
+    unsigned short i;
+    for (i = 0; i < numRenderablePasses; i++)
     {
-        SubEntity* renderable = ((RenderablePass*)queueIt->data)->renderable;
+        SubEntity* renderable = queue->GetRenderablePass(i)->renderable;
+
         this->destRenderSystem->_SetWorldMatrix(renderable->parentEntity->parentNode->_GetFullTransform());
         this->destRenderSystem->_SetTextureMatrix(this->shadowProjection * renderable->parentEntity->parentNode->_GetFullTransform());
         this->destRenderSystem->_Render(renderable);
-
-        queueIt = queueIt->next;
-    } 
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-void
-SceneManager::_ClearRenderQueue(LinkedList* queueIt)
-{
-    while (queueIt != NULL)
-    {
-        LinkedList* node = queueIt;
-
-        CE_DELETE (RenderablePass*)node->data;
-
-        queueIt = queueIt->next;
-        linkedlistRemove(node);
     }
+
+    queue->Clear();
 }
 
 } // namespace graphics

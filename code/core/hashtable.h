@@ -4,7 +4,7 @@
 /**
     A simple hash table using separate chaining and strings as keys.
 
-    (C) 2012 Christian Bleicher
+    (C) 2012 Christian Bleicher (evolver)
 
     This software is provided 'as-is', without any express or implied
     warranty.  In no event will the authors be held liable for any

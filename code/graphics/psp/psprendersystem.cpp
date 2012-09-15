@@ -42,7 +42,17 @@ PSPRenderSystem::_Initialise(void* customParams)
 
     graphics::RenderWindow* renderWindow = CE_NEW graphics::RenderWindow();
     renderWindow->Create();
-    
+
+    sceGuStart(GU_DIRECT, DisplayList);
+    sceGuEnable(GU_SCISSOR_TEST);
+    sceGuEnable(GU_CLIP_PLANES);
+    sceGuDepthRange(65535, 0);
+    sceGuDepthFunc(GU_GEQUAL);
+    sceGuShadeModel(GU_SMOOTH);
+    sceGuFinish();
+    sceGuSync(0, 0);
+    sceGuDisplay(GU_TRUE);
+
     return renderWindow;
 }
 
@@ -145,7 +155,7 @@ PSPRenderSystem::_Render(graphics::SubEntity* renderable)
 void
 PSPRenderSystem::_BeginFrame()
 {
-    sceGuStart(GU_DIRECT, PSPRenderSystem::Instance()->GetDisplayList());
+    sceGuStart(GU_DIRECT, DisplayList);
 }
 
 //------------------------------------------------------------------------------

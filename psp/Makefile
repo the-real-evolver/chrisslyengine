@@ -26,6 +26,7 @@ OBJS = $(CE)/code/core/quaternion.o $(CE)/code/core/vector3.o $(CE)/code/core/ma
        $(CE)/code/graphics/textureunitstate.o $(CE)/code/graphics/pass.o $(CE)/code/graphics/material.o \
        $(CE)/code/graphics/meshmanager.o $(CE)/code/graphics/mesh.o $(CE)/code/graphics/submesh.o \
        $(CE)/code/graphics/subentity.o $(CE)/code/graphics/entity.o \
+       $(CE)/code/graphics/renderqueuesortinggrouping.o \
        $(CE)/code/graphics/scenemanager.o $(CE)/code/graphics/scenenode.o \
        $(CE)/code/graphics/camera.o $(CE)/code/graphics/viewport.o \
        $(CE)/code/graphics/rendertarget.o $(CE)/code/graphics/psp/psprendertexture.o $(CE)/code/graphics/psp/psprenderwindow.o \

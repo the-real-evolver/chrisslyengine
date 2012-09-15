@@ -45,16 +45,8 @@ PSPRenderWindow::Create()
     sceGuDrawBuffer(GU_PSM_8888, drawBuffer, bufferWidth);
     sceGuDispBuffer(width, height, dispBuffer, bufferWidth);
     sceGuDepthBuffer(depthBuffer, bufferWidth);
-
-    sceGuEnable(GU_SCISSOR_TEST);
-    sceGuEnable(GU_CLIP_PLANES);
-    sceGuDepthRange(65535, 0);
-    sceGuDepthFunc(GU_GEQUAL);
-    sceGuShadeModel(GU_SMOOTH);
-
     sceGuFinish();
     sceGuSync(0, 0);
-    sceGuDisplay(GU_TRUE);
     
     this->format = graphics::PF_R8G8B8A8;
     this->width = bufferWidth;

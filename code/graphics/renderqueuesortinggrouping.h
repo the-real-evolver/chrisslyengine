@@ -14,20 +14,47 @@ namespace graphics
 {
 
 /** 
-    Struct associating a single Pass with a single Renderable. 
+    struct associating a single Pass with a single Renderable
     This is used to for objects sorted by depth and thus not
-    grouped by pass.
+    grouped by pass
 */
 struct RenderablePass
 {
-    /// Pointer to the Renderable details
+    /// pointer to the Renderable details
     SubEntity* renderable;
-    /// Pointer to the Pass
+    /// pointer to the Pass
     Pass* pass;
 
     RenderablePass(SubEntity* rend, Pass* p) : renderable(rend), pass(p) {}
 };
 
+/**
+    collection of renderables
+*/
+class QueuedRenderableCollection
+{
+public:
+    /// default constructor
+    QueuedRenderableCollection();
+    /// destructor
+    ~QueuedRenderableCollection();
+    /// allocate collection
+    void Initialise(unsigned short capacity);
+    /// destroy collection
+    void Destroy();
+    /// empty the collection
+    void Clear();
+    /// add a renderable to the collection using a given pass
+    void AddRenderable(SubEntity* rend, Pass* pass);
+    /// gets the number of renderable pass currently populating the collection
+    unsigned short GetNumRenderablePasses() const;
+    /// get RenderablePass at given index
+    RenderablePass* GetRenderablePass(unsigned short index);
+
+private:
+    DynamicArray renderablePasses;
+    unsigned short numRenderablePasses;
+};
 
 } // namespace graphics
 } // namespace chrissly

@@ -9,6 +9,7 @@
 #include "camera.h"
 #include "entity.h"
 #include "scenenode.h"
+#include "renderqueuesortinggrouping.h"
 #include "rendertexture.h"
 #include "rendersystem.h"
 #include "linkedlist.h"
@@ -132,11 +133,9 @@ public:
 
 private:
     /// render the objects in a given queue group 
-    void _RenderQueueGroupObjects(LinkedList* queue);
+    void _RenderQueueGroupObjects(QueuedRenderableCollection* queue);
     /// render a group rendering only shadow receivers
-    void _RenderTextureShadowReceiverQueueGroupObjects(LinkedList* queue);
-    /// clears the given renderqueue
-    void _ClearRenderQueue(LinkedList* queueIt);
+    void _RenderTextureShadowReceiverQueueGroupObjects(QueuedRenderableCollection* queue);
     /// copy constructor
     SceneManager(const SceneManager&cc) {}; 
 
@@ -157,10 +156,10 @@ private:
     RenderSystem* destRenderSystem;
 
     /// renderqueues
-    LinkedList* renderQueueOpaque;
-    LinkedList* renderQueueTransparent;
-    LinkedList* renderQueueShadowCaster;
-    LinkedList* renderQueueShadowReceiver;
+    QueuedRenderableCollection renderQueueOpaque;
+    QueuedRenderableCollection renderQueueTransparent;
+    QueuedRenderableCollection renderQueueShadowCaster;
+    QueuedRenderableCollection renderQueueShadowReceiver;
 
     /// shadow related members
     IlluminationRenderStage illuminationStage;
