@@ -16,9 +16,11 @@ SubEntity::SubEntity(Entity *parent, SubMesh* subMeshBasis) :
     parentEntity(parent),
     pMaterial(NULL),
     subMesh(subMeshBasis),
-    visible(true)
+    visible(true),
+    hardwareVertexAnimVertexData(NULL),
+    morphWeight(0.0f)
 {
-    
+
 }
 
 //------------------------------------------------------------------------------
@@ -26,7 +28,11 @@ SubEntity::SubEntity(Entity *parent, SubMesh* subMeshBasis) :
 */
 SubEntity::~SubEntity()
 {
-    
+    if (this->hardwareVertexAnimVertexData != NULL)
+    {
+        CE_FREE(this->hardwareVertexAnimVertexData->vertexBuffer);
+        CE_DELETE this->hardwareVertexAnimVertexData;
+    }
 }
 
 //------------------------------------------------------------------------------
@@ -72,6 +78,33 @@ SubMesh*
 SubEntity::GetSubMesh()
 {
     return this->subMesh;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+VertexData*
+SubEntity::_GetHardwareVertexAnimVertexData() const
+{
+    return this->hardwareVertexAnimVertexData;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+SubEntity::SetMorphWeight(float weight)
+{
+    this->morphWeight = weight;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+float
+SubEntity::GetMorphWeight() const
+{
+    return this->morphWeight;
 }
 
 } // namespace graphics

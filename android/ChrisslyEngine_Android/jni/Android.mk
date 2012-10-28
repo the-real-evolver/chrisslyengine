@@ -15,7 +15,7 @@ LOCAL_CFLAGS := -Werror -D__ANDROID__
 LOCAL_C_INCLUDES += $(CE)/core $(CE)/graphics
 
 LOCAL_SRC_FILES := core/android/androiddebug.cpp core/android/androidfswrapper.cpp core/android/androidmath.cpp \
-                   core/vector3.cpp core/matrix3.cpp core/matrix4.cpp core/quaternion.cpp \
+                   core/vector3.cpp core/matrix3.cpp core/matrix4.cpp core/quaternion.cpp core/chrisslymemory.cpp \
                    graphics/texturebase.cpp graphics/textureunitstate.cpp graphics/texturemanager.cpp \
                    graphics/pass.cpp graphics/material.cpp \
                    graphics/graphicssystem.cpp \
@@ -24,6 +24,7 @@ LOCAL_SRC_FILES := core/android/androiddebug.cpp core/android/androidfswrapper.c
                    graphics/renderqueuesortinggrouping.cpp \
                    graphics/scenemanager.cpp graphics/scenenode.cpp \
                    graphics/camera.cpp graphics/viewport.cpp \
+                   graphics/animation.cpp graphics/animationtrack.cpp graphics/keyframe.cpp graphics/animationstate.cpp \
                    graphics/rendertarget.cpp graphics/android/gles2rendertexture.cpp graphics/android/gles2renderwindow.cpp \
                    graphics/android/gles2mappings.cpp graphics/android/gles2texture.cpp graphics/android/gles2rendersystem.cpp \
                    graphics/android/gles2gpuprogram.cpp \

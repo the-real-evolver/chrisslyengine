@@ -62,7 +62,7 @@ RenderTarget::GetNumViewports() const
 /**
 */
 Viewport*
-RenderTarget::GetViewport(unsigned short index)
+RenderTarget::GetViewport(unsigned short index) const
 {
     return (Viewport*)DynamicArrayGet(&this->viewportList, index); 
 }

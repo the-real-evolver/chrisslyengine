@@ -32,6 +32,6 @@ typedef chrissly::GLES2Texture Texture;
 } // namespace chrissly
 //------------------------------------------------------------------------------
 #else
-#error "RenderSystem class not implemented on this platform!"
+#error "Texture class not implemented on this platform!"
 #endif
 #endif

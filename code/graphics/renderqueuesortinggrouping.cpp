@@ -100,7 +100,7 @@ QueuedRenderableCollection::GetNumRenderablePasses() const
 /**
 */
 RenderablePass*
-QueuedRenderableCollection::GetRenderablePass(unsigned short index)
+QueuedRenderableCollection::GetRenderablePass(unsigned short index) const
 {
     return (RenderablePass*)DynamicArrayGet(&this->renderablePasses, index);
 }

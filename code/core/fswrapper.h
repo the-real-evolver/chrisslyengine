@@ -2,7 +2,7 @@
 #define FSWRAPPER_H_
 //------------------------------------------------------------------------------
 /**
-    wrapper for the filesystem
+    Wrapper for the filesystem.
     
     10.08.2011 -> Creation
     

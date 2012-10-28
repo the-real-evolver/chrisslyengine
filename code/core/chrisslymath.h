@@ -1,9 +1,9 @@
-#ifndef MATH_H_
-#define MATH_H_
+#ifndef CHRISSLYMATH_H_
+#define CHRISSLYMATH_H_
 //------------------------------------------------------------------------------
 /**
     @class chrissly::core::Math
-        
+
     (C) 2012 Christian Bleicher
 */
 

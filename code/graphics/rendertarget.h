@@ -34,7 +34,7 @@ public:
     /// returns the number of viewports attached to this target
     unsigned short GetNumViewports() const;
     /// retrieves a pointer to the viewport with the given index
-    Viewport* GetViewport(unsigned short index);
+    Viewport* GetViewport(unsigned short index) const;
     /// removes all viewports on this target
     void RemoveAllViewports();
     /// get the width of the rendertarget
@@ -47,7 +47,7 @@ public:
     void* GetBuffer() const;
 
 protected:
-    DynamicArray viewportList;
+    mutable DynamicArray viewportList;
     unsigned short numViewports;
 
     void* buffer;

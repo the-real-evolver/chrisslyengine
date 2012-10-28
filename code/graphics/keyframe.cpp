@@ -1,10 +1,9 @@
 //------------------------------------------------------------------------------
-//  submesh.cpp
-//  (C) 2011 Christian Bleicher
+//  keyframe.cpp
+//  (C) 2012 Christian Bleicher
 //------------------------------------------------------------------------------
-#include "submesh.h"
+#include "keyframe.h"
 #include "memoryallocatorconfig.h"
-#include <stdio.h>
 
 namespace chrissly
 {
@@ -14,9 +13,7 @@ namespace graphics
 //------------------------------------------------------------------------------
 /**
 */
-SubMesh::SubMesh() :
-    vertexData(NULL),
-    vertexAnimationType(VAT_NONE)
+VertexMorphKeyFrame::VertexMorphKeyFrame(float time) : time(time)
 {
 
 }
@@ -24,22 +21,19 @@ SubMesh::SubMesh() :
 //------------------------------------------------------------------------------
 /**
 */
-SubMesh::~SubMesh()
+VertexMorphKeyFrame::~VertexMorphKeyFrame()
 {
-    if (this->vertexData->vertexBuffer != NULL)
-    {
-        CE_FREE(this->vertexData->vertexBuffer);
-    }
+    CE_FREE(this->vertexData->vertexBuffer);
     CE_DELETE this->vertexData;
 }
 
 //------------------------------------------------------------------------------
 /**
 */
-VertexAnimationType
-SubMesh::GetVertexAnimationType() const
+float
+VertexMorphKeyFrame::GetTime() const
 {
-    return this->vertexAnimationType;
+    return this->time;
 }
 
 } // namespace graphics

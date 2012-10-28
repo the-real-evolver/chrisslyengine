@@ -181,7 +181,7 @@ public:
     /// inserts a new TextureUnitState object into the Pass
     TextureUnitState* CreateTextureUnitState();
     /// retrieves a pointer to a texture unit state so it may be modified
-    TextureUnitState* GetTextureUnitState(unsigned short index);
+    TextureUnitState* GetTextureUnitState(unsigned short index) const;
     /// returns the number of texture unit settings
     unsigned short GetNumTextureUnitStates() const;
     /// Removes all texture unit settings
@@ -209,7 +209,7 @@ private:
     float fogStart;
     float fogEnd;
 
-    DynamicArray textureUnitStates;
+    mutable DynamicArray textureUnitStates;
     unsigned short numTextureUnitStates;
 };
 

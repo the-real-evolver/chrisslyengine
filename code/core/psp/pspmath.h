@@ -25,6 +25,8 @@ public:
     static inline float Cos(float fValue) {return pspFpuCos(fValue);}
     /// returns the arc tangent of the given value
     static inline float ATan(float fValue) {return pspFpuAtan(fValue);}
+    /// returns the floating-point remainder of numerator / denominator
+    static inline float Fmod(float fNumerator, float fDenominator) {return pspFpuFmod(fNumerator, fDenominator);}
 };
 } // namespace chrissly
 //------------------------------------------------------------------------------

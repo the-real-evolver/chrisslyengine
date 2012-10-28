@@ -40,7 +40,7 @@ public:
     /// return hardware pixel buffer for a surface
     const void* GetBuffer() const;
     
-    /// enable to swizzle TextureBase-read
+    /// enable to swizzle texture read
     void SetSwizzleEnabled(bool enabled);
     /// returns if the pixelbuffer is swizzled
     bool GetSwizzleEnabled() const;

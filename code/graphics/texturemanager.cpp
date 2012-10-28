@@ -49,18 +49,32 @@ TextureManager::Load(const char* name)
         }
         it = it->next;
     }
-    
-    void* textureBuffer = NULL;
 
     core::FileHandle fd = FSWrapper::Open(name, ReadAccess, 0777);
     unsigned int fileSize = FSWrapper::GetFileSize(fd);
-    textureBuffer = CE_MALLOC_ALIGN(16, fileSize);
-    FSWrapper::Read(fd, textureBuffer, fileSize);
+    unsigned int headerSizeBytes = 6;
+
+    unsigned char format = PF_UNKNOWN;
+    unsigned short width = 0;
+    unsigned short height = 0;
+    unsigned char swizzled = 0;
+
+    FSWrapper::Read(fd, &format, 1);
+    FSWrapper::Read(fd, &width, 2);
+    FSWrapper::Read(fd, &height, 2);
+    FSWrapper::Read(fd, &swizzled, 1);
+
+    void* textureBuffer = CE_MALLOC_ALIGN(16, fileSize - headerSizeBytes);
+    FSWrapper::Read(fd, textureBuffer, fileSize - headerSizeBytes);
     FSWrapper::Close(fd);
     
     Texture* texture = CE_NEW Texture();
+    texture->SetFormat((PixelFormat)format);
+    texture->SetWidth(width);
+    texture->SetHeight(height);
+    texture->SetSwizzleEnabled(1 == swizzled ? true : false);
     texture->SetBuffer(textureBuffer);
-    // texture->CreateInternalResourcesImpl();
+    texture->CreateInternalResourcesImpl();
     
     TextureResource* textureResource = CE_NEW TextureResource;
     textureResource->texture = texture;

@@ -3,12 +3,12 @@
 :: Description: export animations
 :: History:     30.10.2010 -> creation
 
-cd tools
+cd ..\tools
 
 :: convert obj to vertexbuffer
 
-OBJ_TO_PSPVB_Converter.exe ..\assets\meshes\gothic_woman.obj ..\export\gothic_woman.mesh
-OBJ_TO_PSPVB_Converter.exe ..\assets\meshes\cube.obj ..\export\cube.mesh
-OBJ_TO_PSPVB_Converter.exe ..\assets\meshes\cone.obj ..\export\cone.mesh
+meshtool.exe -src ..\assets\meshes\gothic_woman.obj -dst ..\psp\export\gothic_woman.mesh
+meshtool.exe -src ..\assets\meshes\cube.obj -dst ..\psp\export\cube.mesh
+meshtool.exe -src ..\assets\meshes\cone.obj -dst ..\psp\export\cone.mesh
 
-cd..
+cd ..\psp

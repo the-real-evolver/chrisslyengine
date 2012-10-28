@@ -2,7 +2,7 @@
 #define FILEHANDLE_H_
 //------------------------------------------------------------------------------
 /**
-    wrapper for a filehandle
+    Wrapper for a filehandle.
     
     02.06.2012 -> Creation
     

@@ -129,7 +129,7 @@ public:
         Retrieves by index, see alternate version to retrieve by name. The index
         of an object may change as other objects are added / removed.
     */
-    Entity* GetAttachedObject(unsigned short index);
+    Entity* GetAttachedObject(unsigned short index) const;
     /// detaches all objects attached to this node
     void DetachAllObjects();
     
@@ -182,7 +182,7 @@ private:
     mutable chrissly::core::Matrix4 cachedTransform;
     mutable bool cachedTransformOutOfDate;
     
-    DynamicArray objectMap;
+    mutable DynamicArray objectMap;
     unsigned short numAttachedObjects;
 };
 

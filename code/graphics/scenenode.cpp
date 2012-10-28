@@ -291,8 +291,6 @@ SceneNode::Rotate(const chrissly::core::Quaternion& q)
 const chrissly::core::Matrix4&
 SceneNode::_GetFullTransform() const
 {
-    // Fixme: use derived values
-
     if (this->cachedTransformOutOfDate)
     {
         // Ordering:
@@ -301,21 +299,21 @@ SceneNode::_GetFullTransform() const
         //    3. Translate
 
         chrissly::core::Matrix3 rot3x3;
-        this->orientation.ToRotationMatrix(rot3x3);
+        this->derivedOrientation.ToRotationMatrix(rot3x3);
 
         // Set up final matrix with scale, rotation and translation
-        this->cachedTransform[0][0] = this->scale.x * rot3x3[0][0];
-        this->cachedTransform[0][1] = this->scale.y * rot3x3[0][1];
-        this->cachedTransform[0][2] = this->scale.z * rot3x3[0][2];
-        this->cachedTransform[0][3] = this->position.x;
-        this->cachedTransform[1][0] = this->scale.x * rot3x3[1][0];
-        this->cachedTransform[1][1] = this->scale.y * rot3x3[1][1];
-        this->cachedTransform[1][2] = this->scale.z * rot3x3[1][2];
-        this->cachedTransform[1][3] = this->position.y;
-        this->cachedTransform[2][0] = this->scale.x * rot3x3[2][0];
-        this->cachedTransform[2][1] = this->scale.y * rot3x3[2][1];
-        this->cachedTransform[2][2] = this->scale.z * rot3x3[2][2];
-        this->cachedTransform[2][3] = this->position.z;
+        this->cachedTransform[0][0] = this->derivedScale.x * rot3x3[0][0];
+        this->cachedTransform[0][1] = this->derivedScale.y * rot3x3[0][1];
+        this->cachedTransform[0][2] = this->derivedScale.z * rot3x3[0][2];
+        this->cachedTransform[0][3] = this->derivedPosition.x;
+        this->cachedTransform[1][0] = this->derivedScale.x * rot3x3[1][0];
+        this->cachedTransform[1][1] = this->derivedScale.y * rot3x3[1][1];
+        this->cachedTransform[1][2] = this->derivedScale.z * rot3x3[1][2];
+        this->cachedTransform[1][3] = this->derivedPosition.y;
+        this->cachedTransform[2][0] = this->derivedScale.x * rot3x3[2][0];
+        this->cachedTransform[2][1] = this->derivedScale.y * rot3x3[2][1];
+        this->cachedTransform[2][2] = this->derivedScale.z * rot3x3[2][2];
+        this->cachedTransform[2][3] = this->derivedPosition.z;
 
         // No projection term
         this->cachedTransform[3][0] = 0.0f;
@@ -358,7 +356,7 @@ SceneNode::NumAttachedObjects() const
 /**
 */
 Entity*
-SceneNode::GetAttachedObject(unsigned short index)
+SceneNode::GetAttachedObject(unsigned short index) const
 {
     return (Entity*)DynamicArrayGet(&this->objectMap, index);
 }

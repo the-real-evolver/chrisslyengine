@@ -2,7 +2,7 @@
 #define PSPFSWRAPPER_H_
 //------------------------------------------------------------------------------
 /**
-    wrapper for the sce filesystem
+    Wrapper for the sce filesystem.
     
     10.08.2011 -> Creation
     

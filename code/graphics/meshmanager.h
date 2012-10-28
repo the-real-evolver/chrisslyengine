@@ -44,9 +44,9 @@ private:
         Mesh* mesh;
         const char* fileName;
     };
-    
+
     LinkedList* resources;
-    
+
     enum MeshChunkID
     {
         M_SUBMESH = 0x01,

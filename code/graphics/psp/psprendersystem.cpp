@@ -5,8 +5,11 @@
 #include "psprendersystem.h"
 #include "psp/pspmappings.h"
 #include "common.h"
+#include "animationtrack.h"
+#include "vertexdata.h"
 #include <stdio.h>
 #include <pspgum.h>
+#include <psputils.h>
 
 namespace chrissly
 {
@@ -143,10 +146,25 @@ PSPRenderSystem::_SetTextureMatrix(const core::Matrix4& xform)
 void
 PSPRenderSystem::_Render(graphics::SubEntity* renderable)
 {
-    sceGumDrawArray(GU_TRIANGLES,
-                    GU_TEXTURE_32BITF | GU_COLOR_8888 | GU_NORMAL_32BITF | GU_VERTEX_32BITF | GU_TRANSFORM_3D,
-                    renderable->GetSubMesh()->_vertexCount, 0, 
-                    renderable->GetSubMesh()->_vertexBuffer); 
+    if (graphics::VAT_MORPH == renderable->GetSubMesh()->GetVertexAnimationType())
+    {
+        float morphWeight = renderable->GetMorphWeight();
+        sceGuMorphWeight(0, 1.0f - morphWeight);
+        sceGuMorphWeight(1, morphWeight);
+
+        graphics::VertexData* vertexData = renderable->_GetHardwareVertexAnimVertexData();
+        sceGumDrawArray(GU_TRIANGLES,
+                        GU_TEXTURE_32BITF | GU_COLOR_8888 | GU_NORMAL_32BITF | GU_VERTEX_32BITF | GU_TRANSFORM_3D | GU_VERTICES(2) | GU_WEIGHTS(2),
+                        vertexData->vertexCount, 0,
+                        vertexData->vertexBuffer);
+    }
+    else
+    {
+        sceGumDrawArray(GU_TRIANGLES,
+                        GU_TEXTURE_32BITF | GU_COLOR_8888 | GU_NORMAL_32BITF | GU_VERTEX_32BITF | GU_TRANSFORM_3D,
+                        renderable->GetSubMesh()->vertexData->vertexCount, 0,
+                        renderable->GetSubMesh()->vertexData->vertexBuffer);
+    }
 }
 
 //------------------------------------------------------------------------------
@@ -167,7 +185,7 @@ PSPRenderSystem::_EndFrame()
     sceGuFinish();
     sceGuSync(0, 0);
 }
-    
+
 //------------------------------------------------------------------------------
 /**
 */
@@ -186,10 +204,10 @@ PSPRenderSystem::_SetPass(graphics::Pass* pass)
     {
         sceGuDisable(GU_BLEND);
     }
-    
+
     // depth check
     pass->GetDepthCheckEnabled() ? sceGuEnable(GU_DEPTH_TEST) : sceGuDisable(GU_DEPTH_TEST);
-    
+
     // culling mode
     switch (pass->GetCullingMode())
     {
@@ -205,7 +223,7 @@ PSPRenderSystem::_SetPass(graphics::Pass* pass)
             sceGuFrontFace(GU_CCW);
             break;
     }
-    
+
     // lighting
     if (pass->GetLightingEnabled())
     {
@@ -236,7 +254,7 @@ PSPRenderSystem::_SetPass(graphics::Pass* pass)
     {
         sceGuDisable(GU_LIGHTING);
     }
-   
+
     // texture unit parameters    
     if (pass->GetNumTextureUnitStates() > 0)
     {
@@ -266,7 +284,7 @@ PSPRenderSystem::_SetPass(graphics::Pass* pass)
     {
         sceGuDisable(GU_TEXTURE_2D);
     }
-    
+
     // fog parameters
     if (graphics::FOG_LINEAR == pass->GetFogMode())
     {
@@ -301,25 +319,9 @@ PSPRenderSystem::GetDisplayList() const
 /**
 */
 void
-PSPRenderSystem::FillInterleaved(void const* src0, void const* src1, void* dst, unsigned short stride, unsigned int dstLen)
+PSPRenderSystem::_NotifyMorphKeyFrameBuild()
 {
-    char* pDst = (char*)dst;
-    char const* pSrc0 = (char const*)src0;
-    char const* pSrc1 = (char const*)src1;
-    unsigned int doubleStride = stride << 1;
-
-    unsigned int i;
-    while (dstLen)
-    {
-        for (i = 0; i < stride; i++)
-        {
-            *pDst = *pSrc0++;
-            *(pDst + stride) = *pSrc1++;
-            pDst++;
-        }
-        pDst += stride;
-        dstLen -= doubleStride;
-    }
+    sceKernelDcacheWritebackAll();
 }
 
 } // namespace chrissly

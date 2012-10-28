@@ -64,6 +64,8 @@ public:
     void _SetPass(graphics::Pass* pass);
     /// sets the colour & strength of the ambient (global directionless) light in the world
     void SetAmbientLight(unsigned int colour);
+    /// notify the rendersystem that a morphkeyframe was build
+    void _NotifyMorphKeyFrameBuild();
     
     /// print some aspect of the current GL connection
     static void PrintGLString(const char *name, GLenum s);

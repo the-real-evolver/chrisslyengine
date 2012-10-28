@@ -26,7 +26,7 @@ public:
     /// creates a new Pass for this Material
     Pass* CreatePass();
     /// retrieves the Pass with the given index
-    Pass* GetPass(unsigned short index);
+    Pass* GetPass(unsigned short index) const;
     /// retrieves the number of passes
     unsigned short GetNumPasses() const;  
     /// removes all Passes from this Material 
@@ -34,7 +34,7 @@ public:
 
 private:
     /// list of primary passes
-    DynamicArray passes;
+    mutable DynamicArray passes;
     unsigned short numPasses;
 };
 

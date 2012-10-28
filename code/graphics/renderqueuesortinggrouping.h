@@ -14,7 +14,7 @@ namespace graphics
 {
 
 /** 
-    struct associating a single Pass with a single Renderable
+    struct associating a single Pass with a single Renderable.
     This is used to for objects sorted by depth and thus not
     grouped by pass
 */
@@ -49,10 +49,10 @@ public:
     /// gets the number of renderable pass currently populating the collection
     unsigned short GetNumRenderablePasses() const;
     /// get RenderablePass at given index
-    RenderablePass* GetRenderablePass(unsigned short index);
+    RenderablePass* GetRenderablePass(unsigned short index) const;
 
 private:
-    DynamicArray renderablePasses;
+    mutable DynamicArray renderablePasses;
     unsigned short numRenderablePasses;
 };
 

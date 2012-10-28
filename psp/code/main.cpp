@@ -38,7 +38,7 @@ main (int argc, char* argv[])
 {
     int cbid = sceKernelCreateCallback("ExitCallback", ExitCallback, NULL);
     sceKernelRegisterExitCallback(cbid);
-    
+
     // create and initialise graphicssystem
     GraphicsSystem* gs = new GraphicsSystem();
     RenderWindow* window = GraphicsSystem::Instance()->Initialise();
@@ -56,7 +56,7 @@ main (int argc, char* argv[])
     // initialise statemanager
     StateManager* sm = new StateManager();
     StateManager::Instance()->Initialise();
-    
+
     while (StateManager::Instance()->IsRunning() && !exitRequest)
     {
         StateManager::Instance()->Trigger();
@@ -68,8 +68,8 @@ main (int argc, char* argv[])
     delete sat;
     delete sm;
     delete gs;
-    
+
     sceKernelExitGame();
-    
+
     return 0;
 }

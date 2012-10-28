@@ -24,6 +24,8 @@ public:
     static inline float Cos(float fValue) {return cos(fValue);}
     /// returns the arc tangent of the given value
     static inline float ATan(float fValue) {return atan(fValue);}
+    /// returns the floating-point remainder of numerator / denominator
+    static inline float Fmod(float fNumerator, float fDenominator) {return fmod(fNumerator, fDenominator);}
 };
 } // namespace chrissly
 //------------------------------------------------------------------------------

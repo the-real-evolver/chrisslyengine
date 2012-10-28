@@ -66,8 +66,6 @@ PSPRenderWindow::Update()
         graphics::Viewport* vp = (graphics::Viewport*)DynamicArrayGet(&this->viewportList, index);
         vp->Update();
     }
-
-    // build scheduled morphkeyframes here
 }
 
 //------------------------------------------------------------------------------

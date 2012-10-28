@@ -3,10 +3,10 @@
 :: Description: export animations
 :: History:     30.10.2010 -> creation
 
-cd tools
+cd ..\tools
 
-:: convert keyframes as obj to vertexbuffer
+:: convert keyframes as obj to mesh
 
-OBJ_TO_PSPVB_Converter.exe -anim ..\assets\animations\cerberus\cerberus_walk ..\export\cerberus_walk.mesh
+meshtool.exe -morphanim -src ..\assets\animations\cerberus\cerberus_walk -dst ..\psp\export\cerberus_walk.mesh -length 3.0 -numKeys 31
 
-cd..
+cd ..\psp

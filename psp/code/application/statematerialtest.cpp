@@ -45,9 +45,6 @@ StateMaterialTest::Enter()
     // solid material
     this->solidMaterial = new Material();
     Texture* tex = TextureManager::Instance()->Load("gothic_solid.tex");
-    tex->SetFormat(PF_R5G6B5);
-    tex->SetWidth(512);
-    tex->SetHeight(512);
     Pass* pass = this->solidMaterial->CreatePass();
     pass->SetFog(FOG_LINEAR, 0xff0080ff, 0.0f, 50.0f);
     TextureUnitState* tus = pass->CreateTextureUnitState();
@@ -57,9 +54,6 @@ StateMaterialTest::Enter()
     // transparent material
     this->alphaMaterial = new Material();
     tex = TextureManager::Instance()->Load("gothic_alpha.tex");
-    tex->SetFormat(PF_A4R4G4B4);
-    tex->SetWidth(512);
-    tex->SetHeight(512);
     pass = this->alphaMaterial->CreatePass();
     pass->SetSceneBlendingEnabled(true);
     pass->SetSceneBlending(SBF_SOURCE_ALPHA, SBF_ONE_MINUS_SOURCE_ALPHA);
@@ -85,18 +79,12 @@ StateMaterialTest::Enter()
     this->cubeMaterial = new Material();
 
     tex = TextureManager::Instance()->Load("floor.tex");
-    tex->SetFormat(PF_R5G6B5);
-    tex->SetWidth(256);
-    tex->SetHeight(256);
     pass = this->cubeMaterial->CreatePass();
     tus = pass->CreateTextureUnitState();
     tus->SetTextureBlendOperation(LBT_COLOUR, LBO_REPLACE);
     tus->SetTexture(tex);
 
     tex = TextureManager::Instance()->Load("water.tex");
-    tex->SetFormat(PF_R5G6B5);
-    tex->SetWidth(256);
-    tex->SetHeight(256);
     pass = this->cubeMaterial->CreatePass();
     pass->SetSceneBlendingEnabled(true);
     pass->SetSceneBlending(SBF_SOURCE_COLOUR, SBF_DEST_COLOUR);
@@ -142,15 +130,15 @@ StateMaterialTest::Exit()
     delete this->solidMaterial;
     this->alphaMaterial->RemoveAllPasses();
     delete this->alphaMaterial;
-    
+
     this->cubeMaterial->RemoveAllPasses();
     delete this->cubeMaterial;
-    
+
     this->lightConeMaterial->RemoveAllPasses();
     delete this->lightConeMaterial;
 
     SceneManager::Instance()->ClearScene();
-    MeshManager::Instance()->RemoveAll();   
+    MeshManager::Instance()->RemoveAll();
     TextureManager::Instance()->RemoveAll();
 }
 

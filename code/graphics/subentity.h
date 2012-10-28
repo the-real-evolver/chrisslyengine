@@ -33,6 +33,12 @@ public:
     bool IsVisible() const;
     /// accessor method to read mesh data 
     SubMesh* GetSubMesh();
+    /// advanced method to get the hardware morph vertex information
+    VertexData* _GetHardwareVertexAnimVertexData() const;
+    /// set vertex morph weight value
+    void SetMorphWeight(float weight);
+    /// get vertex morph weight value
+    float GetMorphWeight() const;
 
 private:
     /// private constructor - don't allow creation by anybody else
@@ -45,6 +51,10 @@ private:
     SubMesh* subMesh;
     /// is this SubEntity visible?
     bool visible;
+    /// the vertex data for hardware morphing (pos2 binding)
+    VertexData* hardwareVertexAnimVertexData;
+    /// vertex morph weight
+    float morphWeight;
 };
 
 } // namespace graphics

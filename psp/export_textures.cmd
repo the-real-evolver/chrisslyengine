@@ -1,14 +1,16 @@
 :: Name:        export_textures.bat
 :: Autor:       evolver
-:: Description: copie's raw texture data from intermediate folder to export folder
+:: Description: add header to raw texture data from intermediate folder
 :: History:     30.10.2010 -> creation
 
-copy assets\textures\psp\floor.raw export\floor.tex
-copy assets\textures\psp\water.raw export\water.tex
+cd ..\tools
 
-copy assets\textures\psp\gothic_solid.raw export\gothic_solid.tex
-copy assets\textures\psp\gothic_alpha.raw export\gothic_alpha.tex
+texturetool.exe -format PF_R5G6B5 -width 256 -height 256 -data ..\assets\textures\floor.raw -out ..\psp\export\floor.tex -swizzled
+texturetool.exe -format PF_R5G6B5 -width 256 -height 256 -data ..\assets\textures\water.raw -out ..\psp\export\water.tex -swizzled
 
-copy assets\textures\psp\cerberus.raw export\cerberus.tex
+texturetool.exe -format PF_R5G6B5 -width 512 -height 512 -data ..\assets\textures\gothic_solid.raw -out ..\psp\export\gothic_solid.tex -swizzled
+texturetool.exe -format PF_A4R4G4B4 -width 512 -height 512 -data ..\assets\textures\gothic_alpha.raw -out ..\psp\export\gothic_alpha.tex -swizzled
 
+texturetool.exe -format PF_R5G6B5 -width 512 -height 512 -data ..\assets\textures\cerberus.raw -out ..\psp\export\cerberus.tex -swizzled
 
+cd ..\psp

@@ -53,6 +53,19 @@
 ------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------
+  "mage.mesh"
+  "mage_etc1.raw"
+
+  are generated from the following original file:
+  
+    http://opengameart.org/sites/default/files/mage_final.blend
+  
+    Author:   thecubber
+    Lincense: CREATIVE COMMONS Attribution-ShareAlike 3.0 Unported (see below)
+    See:      http://opengameart.org/content/rigged-textured-mage
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
   CREATIVE COMMONS Attribution-ShareAlike 3.0 Unported
 ------------------------------------------------------------------------------
 

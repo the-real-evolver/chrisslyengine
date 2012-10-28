@@ -5,6 +5,7 @@
 #include "graphicssystem.h"
 #include "scenemanager.h"
 #include "meshmanager.h"
+#include "debug.h"
 #include <stdio.h>
 
 namespace chrissly
@@ -84,7 +85,7 @@ SceneManager::CreateCamera(const char* name)
 /**
 */
 Camera*
-SceneManager::GetCamera(const char* name)
+SceneManager::GetCamera(const char* name) const
 {
     return (Camera*)HashTableFind(&this->cameras, name);
 }
@@ -171,7 +172,7 @@ SceneManager::ClearScene()
     }
     this->movableObjectCollectionMap = NULL;
 
-    this->sceneRoot->RemoveAllChildren();
+    this->GetRootSceneNode()->RemoveAllChildren();
 
     it = this->sceneNodes;
     while (it != NULL)
@@ -309,15 +310,15 @@ SceneManager::_RenderScene(Camera *camera, Viewport *vp)
 { 
     if (this->illuminationStage != IRS_RENDER_TO_TEXTURE)
     {
+        // update transformation
+        this->GetRootSceneNode()->_Update();
+
         // are we using any shadows at all?
         if (this->IsShadowTechniqueInUse())
         {
             this->PrepareShadowTextures();
         }
     }
-
-    // update transformation
-    this->GetRootSceneNode()->_Update();
 
     // fill renderqueues
     LinkedList* sceneNodeIt = this->sceneNodes;
@@ -334,7 +335,8 @@ SceneManager::_RenderScene(Camera *camera, Viewport *vp)
             
             if (this->IsShadowTechniqueInUse() && this->illuminationStage == IRS_RENDER_TO_TEXTURE && !entity->GetCastShadows()) continue;
 
-            // ----- update animation here -----
+            // update animation
+            if (entity->HasVertexAnimation() && this->illuminationStage != IRS_RENDER_TO_TEXTURE) entity->UpdateAnimation();
 
             unsigned int subEntityIndex;
             for (subEntityIndex = 0; subEntityIndex < entity->GetNumSubEntities(); subEntityIndex++)
@@ -383,6 +385,7 @@ SceneManager::_RenderScene(Camera *camera, Viewport *vp)
         sceneNodeIt = sceneNodeIt->next;
     }
 
+    // render queues
     this->destRenderSystem->_BeginFrame();
 
     this->destRenderSystem->_SetRenderTarget(vp->GetTarget());
@@ -391,7 +394,6 @@ SceneManager::_RenderScene(Camera *camera, Viewport *vp)
     this->destRenderSystem->_SetProjectionMatrix(camera->GetProjectionMatrixRS());
     this->destRenderSystem->_SetViewMatrix(camera->GetViewMatrix());
 
-    // render queues
     if (this->IsShadowTechniqueInUse() && this->illuminationStage == IRS_RENDER_TO_TEXTURE)
     {
         this->_RenderQueueGroupObjects(&this->renderQueueShadowCaster);

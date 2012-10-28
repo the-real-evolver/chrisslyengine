@@ -2,7 +2,6 @@
 //  main.cpp
 //  (C) 2012 Christian Bleicher
 //------------------------------------------------------------------------------
-#include <jni.h>
 #include <android/sensor.h>
 #include <android_native_app_glue.h>
 #include "graphics/graphicssystem.h"
@@ -10,7 +9,6 @@
 #include "graphics/renderwindow.h"
 #include "graphics/camera.h"
 #include "core/fswrapper.h"
-#include "core/debug.h"
 
 using namespace chrissly::graphics;
 using namespace chrissly::core;
@@ -39,19 +37,12 @@ Enter(struct android_app* state)
     camera->SetPosition(0.0f, 0.0f, 0.9f);
     window->AddViewport(camera, 0, 0, window->GetWidth(), window->GetHeight());
 
-    tex = TextureManager::Instance()->Load("mage_etc1.tex");
-    tex->SetFormat(PF_ETC1_RGB8);
-    tex->SetWidth(256);
-    tex->SetHeight(256);
-    tex->CreateInternalResourcesImpl();
-
     material = new Material();
-
     Pass* pass = material->CreatePass();
     pass->SetCullingMode(CULL_NONE);
     pass->SetSceneBlendingEnabled(false);
     pass->SetSceneBlending(SBF_SOURCE_COLOUR, SBF_DEST_COLOUR);
-
+    tex = TextureManager::Instance()->Load("mage_etc1.tex");
     TextureUnitState* tus = pass->CreateTextureUnitState();
     tus->SetTexture(tex);
 
@@ -132,6 +123,13 @@ HandleCommands(struct android_app* app, int32_t cmd)
         case APP_CMD_TERM_WINDOW:
             // the window is being hidden or closed, clean it up
             Exit();
+            break;
+        case APP_CMD_CONFIG_CHANGED:
+            if (initialized)
+            {
+                Exit();
+            }
+            Enter(app);
             break;
         case APP_CMD_GAINED_FOCUS:
             // app gained focus

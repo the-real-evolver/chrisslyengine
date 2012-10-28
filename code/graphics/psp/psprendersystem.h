@@ -67,8 +67,8 @@ public:
 
     /// returns displaylist
     void* GetDisplayList() const;
-    /// helperfunction for meshmorphing
-    void FillInterleaved(void const* src0, void const* src1, void* dst, unsigned short stride, unsigned int dstLen);
+    /// notify the rendersystem that a morphkeyframe was build
+    void _NotifyMorphKeyFrameBuild();
 
 private:
     /// copy constructor

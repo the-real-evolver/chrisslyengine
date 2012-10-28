@@ -198,18 +198,18 @@ void
 GLES2RenderSystem::_Render(graphics::SubEntity* renderable)
 {
     GLint vertexPositionHandle = this->gpuProgram->GetAttributeLocation(graphics::VES_POSITION);
-    glVertexAttribPointer(vertexPositionHandle, 3, GL_FLOAT, GL_FALSE, 36, (unsigned char*)renderable->GetSubMesh()->_vertexBuffer + 24);
+    glVertexAttribPointer(vertexPositionHandle, 3, GL_FLOAT, GL_FALSE, 36, (unsigned char*)renderable->GetSubMesh()->vertexData->vertexBuffer + 24);
     CheckGlError("glVertexAttribPointer");
     glEnableVertexAttribArray(vertexPositionHandle);
     CheckGlError("glEnableVertexAttribArray");
 
     GLint vertexTexCoordHandle = this->gpuProgram->GetAttributeLocation(graphics::VES_TEXTURE_COORDINATES);
-    glVertexAttribPointer(vertexTexCoordHandle, 2, GL_FLOAT, GL_FALSE, 36, renderable->GetSubMesh()->_vertexBuffer);
+    glVertexAttribPointer(vertexTexCoordHandle, 2, GL_FLOAT, GL_FALSE, 36, renderable->GetSubMesh()->vertexData->vertexBuffer);
     CheckGlError("glVertexAttribPointer");
     glEnableVertexAttribArray(vertexTexCoordHandle);
     CheckGlError("glEnableVertexAttribArray");
 
-    glDrawArrays(GL_TRIANGLES, 0, renderable->GetSubMesh()->_vertexCount);
+    glDrawArrays(GL_TRIANGLES, 0, renderable->GetSubMesh()->vertexData->vertexCount);
     CheckGlError("glDrawArrays");
 }
 
@@ -290,6 +290,15 @@ void
 GLES2RenderSystem::SetAmbientLight(unsigned int colour)
 {
     this->ambientLight = colour;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+GLES2RenderSystem::_NotifyMorphKeyFrameBuild()
+{
+
 }
 
 //------------------------------------------------------------------------------

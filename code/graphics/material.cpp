@@ -33,12 +33,12 @@ Pass*
 Material::CreatePass()
 {
     Pass* pass = CE_NEW Pass(this->numPasses);
-    
+
     if (!DynamicArraySet(&this->passes, this->numPasses, pass))
     {
         return NULL;
     }
-    
+
     this->numPasses++;
 
     return pass;
@@ -48,11 +48,11 @@ Material::CreatePass()
 /**
 */
 Pass*
-Material::GetPass(unsigned short index)
+Material::GetPass(unsigned short index) const
 {
     return (Pass*)DynamicArrayGet(&this->passes, index);
 }
-    
+
 //------------------------------------------------------------------------------
 /**
 */
@@ -71,11 +71,11 @@ Material::RemoveAllPasses()
     unsigned int i;
     for (i = 0; i < this->numPasses; i++)
     {
-        CE_DELETE (Pass*)DynamicArrayGet(&this->passes, i);	
+        CE_DELETE (Pass*)DynamicArrayGet(&this->passes, i);
     }
 
     DynamicArrayDelete(&this->passes);
-    
+
     this->numPasses = 0;
 }
 

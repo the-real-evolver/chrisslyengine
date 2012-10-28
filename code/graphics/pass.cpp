@@ -30,9 +30,9 @@ Pass::Pass(unsigned short index) :
     tracking(TVC_NONE),
     index(index),
     fogMode(FOG_NONE),
-	fogColour(0xffffffff),
-	fogStart(0.0f),
-	fogEnd(1.0f),
+    fogColour(0xffffffff),
+    fogStart(0.0f),
+    fogEnd(1.0f),
     numTextureUnitStates(0)
 {
     DynamicArrayInit(&this->textureUnitStates, 0);
@@ -378,7 +378,7 @@ Pass::CreateTextureUnitState()
 /**
 */
 TextureUnitState*
-Pass::GetTextureUnitState(unsigned short index)
+Pass::GetTextureUnitState(unsigned short index) const
 {
     return (TextureUnitState*)DynamicArrayGet(&this->textureUnitStates, index);
 }

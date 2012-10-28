@@ -4,6 +4,7 @@
 //------------------------------------------------------------------------------
 #include "entity.h"
 #include "memoryallocatorconfig.h"
+#include "debug.h"
 
 namespace chrissly
 {
@@ -18,10 +19,23 @@ Entity::Entity(const char* name, Mesh* mesh) :
     receivesShadows(false)
 {
     this->mesh = mesh;
+
     this->numSubEntities = 0;
     DynamicArrayInit(&this->subEntityList, 0);
-    
     this->BuildSubEntityList(this->mesh, &this->subEntityList);
+
+    HashTableInit(&this->animationState, 1);
+    if (this->HasVertexAnimation())
+    {
+        this->mesh->_InitAnimationState(&this->animationState);
+
+        // Fixme: setup for multiple animationtracks
+        SubEntity* subEntity = this->GetSubEntity(0);
+        CE_ASSERT(subEntity != NULL, "Entity::Entity(): subEntity not valid");
+        VertexData* subMeshVertexData = subEntity->GetSubMesh()->vertexData;
+        void* vertexBuffer = CE_MALLOC(2 * subMeshVertexData->bytesPerVertex * subMeshVertexData->vertexCount);
+        subEntity->hardwareVertexAnimVertexData = CE_NEW VertexData(subMeshVertexData->vertexCount, vertexBuffer, subMeshVertexData->bytesPerVertex);
+    }
 }
 
 //------------------------------------------------------------------------------
@@ -36,13 +50,26 @@ Entity::~Entity()
     }
 
     DynamicArrayDelete(&this->subEntityList);
+
+    for (i = 0; i < this->animationState.capacity; i++)
+    {
+        Chain* chain = (Chain*)DynamicArrayGet(&this->animationState.entries, i);
+        LinkedList* it = chain->list;
+        while (it != NULL)
+        {
+            CE_DELETE (AnimationState*)((KeyValuePair*)it->data)->value;
+            it = it->next;
+        }
+    }
+
+    HashTableClear(&this->animationState);
 }
 
 //------------------------------------------------------------------------------
 /**
 */
 SubEntity*
-Entity::GetSubEntity(unsigned int index)
+Entity::GetSubEntity(unsigned int index) const
 {
     return (SubEntity*)DynamicArrayGet(&this->subEntityList, index);
 }
@@ -99,6 +126,49 @@ bool
 Entity::GetReceivesShadows() const
 {
     return this->receivesShadows;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+bool
+Entity::HasVertexAnimation() const
+{
+    return this->mesh->HasVertexAnimation();
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+AnimationState*
+Entity::GetAnimationState(const char* name) const
+{
+    return (AnimationState*)HashTableFind(&this->animationState, name);
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+Entity::UpdateAnimation()
+{
+    // loop trough all animstates, update enabled ones   
+    unsigned int i;
+    for (i = 0; i < this->animationState.capacity; i++)
+    {
+        Chain* chain = (Chain*)DynamicArrayGet(&this->animationState.entries, i);
+        LinkedList* it = chain->list;
+        while (it != NULL)
+        {
+            AnimationState* state = (AnimationState*)((KeyValuePair*)it->data)->value;
+            if (state->GetEnabled())
+            {
+                Animation* anim = this->mesh->GetAnimation(state->GetAnimationName());
+                anim->Apply(this, state->GetTimePosition());
+            }
+            it = it->next;
+        }
+    }
 }
     
 //------------------------------------------------------------------------------

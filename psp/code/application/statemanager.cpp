@@ -35,7 +35,7 @@ StateManager::Initialise()
 {
     this->currentState = NULL;
     this->isRunning = true;
-    this->ChangeState(StateMaterialTest::Instance());
+    this->ChangeState(StateAnimationTest::Instance());
 }
 
 //------------------------------------------------------------------------------

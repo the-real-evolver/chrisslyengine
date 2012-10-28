@@ -52,7 +52,23 @@ GLES2GpuProgram::GLES2GpuProgram(const char* vertexShaderSource, const char* fra
 */
 GLES2GpuProgram::~GLES2GpuProgram()
 {
+    GLint numAttachedShaders;
+    glGetProgramiv(this->gpuProgram, GL_ATTACHED_SHADERS, &numAttachedShaders);
 
+    GLsizei shaderCount = 0;
+    GLuint* shaders = (GLuint*) CE_MALLOC(numAttachedShaders * sizeof(GLuint));
+    glGetAttachedShaders(this->gpuProgram, numAttachedShaders, &shaderCount, shaders);
+
+    GLint i;
+    for (i = 0; i < shaderCount; i++)
+    {
+        glDetachShader(this->gpuProgram, shaders[i]);
+        glDeleteShader(shaders[i]);
+    }
+
+    CE_FREE(shaders);
+
+    glDeleteProgram(this->gpuProgram);
 }
 
 //------------------------------------------------------------------------------
