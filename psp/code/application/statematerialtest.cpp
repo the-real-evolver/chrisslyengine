@@ -125,7 +125,7 @@ StateMaterialTest::Enter()
 */
 void
 StateMaterialTest::Exit()
-{	
+{
     this->solidMaterial->RemoveAllPasses();
     delete this->solidMaterial;
     this->alphaMaterial->RemoveAllPasses();
@@ -147,7 +147,7 @@ StateMaterialTest::Exit()
 */
 void
 StateMaterialTest::Trigger()
-{ 
+{
     // camera fps controls
     sceCtrlReadBufferPositive(&this->pad, 1);
     float tx = (this->pad.Lx - 128) / 127.0f;

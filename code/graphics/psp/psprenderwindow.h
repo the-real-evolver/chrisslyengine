@@ -2,7 +2,7 @@
 #define PSPRENDERWINDOW_H_
 //------------------------------------------------------------------------------
 /**
-    @class chrissly::graphics::PSPRenderWindow
+    @class chrissly::PSPRenderWindow
 
     (C) 2011 Christian Bleicher
 */

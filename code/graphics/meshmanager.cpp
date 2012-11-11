@@ -69,7 +69,7 @@ MeshManager::Load(const char* filename)
     Animation* animation = NULL;
     VertexAnimationTrack* animationTrack = NULL;
 
-    core::FileHandle fd = FSWrapper::Open(filename, ReadAccess, 0777);
+    FileHandle fd = FSWrapper::Open(filename, ReadAccess, 0777);
 
     while (FSWrapper::Read(fd, &currentChunk, 1) > 0)
     {

@@ -158,7 +158,6 @@ private:
     /// renderqueues
     QueuedRenderableCollection renderQueueOpaque;
     QueuedRenderableCollection renderQueueTransparent;
-    QueuedRenderableCollection renderQueueShadowCaster;
     QueuedRenderableCollection renderQueueShadowReceiver;
 
     /// shadow related members

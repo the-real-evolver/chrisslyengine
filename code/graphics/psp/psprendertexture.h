@@ -2,7 +2,7 @@
 #define PSPRENDERTEXTURE_H_
 //------------------------------------------------------------------------------
 /**
-    @class chrissly::graphics::PSPRenderTexture
+    @class chrissly::PSPRenderTexture
 
     (C) 2011 Christian Bleicher
 */

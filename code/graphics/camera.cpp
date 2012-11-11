@@ -11,18 +11,20 @@ namespace chrissly
 namespace graphics
 {
 
+using namespace chrissly::core;
+
 //------------------------------------------------------------------------------
 /**
 */
 Camera::Camera() :
-    viewMatrix(chrissly::core::Matrix4::IDENTITY),
+    viewMatrix(Matrix4::IDENTITY),
     recalcView(true),
     recalcFrustum(true),
     FOVy(90.0f),
     farDist(1000.0f),
     nearDist(0.1f),
     aspect(1.7777f),
-    projMatrixRS(chrissly::core::Matrix4::ZERO)
+    projMatrixRS(Matrix4::ZERO)
 {
 
 }
@@ -51,7 +53,7 @@ Camera::SetPosition(float x, float y, float z)
 /**
 */
 void
-Camera::SetPosition(const chrissly::core::Vector3& vec)
+Camera::SetPosition(const Vector3& vec)
 {
     this->position = vec;
     this->recalcView = true;
@@ -60,7 +62,7 @@ Camera::SetPosition(const chrissly::core::Vector3& vec)
 //------------------------------------------------------------------------------
 /**
 */
-const chrissly::core::Vector3&
+const Vector3&
 Camera::GetPosition() const
 {
     return this->position;
@@ -70,7 +72,7 @@ Camera::GetPosition() const
 //------------------------------------------------------------------------------
 /**
 */
-const chrissly::core::Quaternion&
+const Quaternion&
 Camera::GetOrientation() const
 {
     return this->orientation;
@@ -82,7 +84,7 @@ Camera::GetOrientation() const
 /**
 */
 void
-Camera::SetOrientation(const chrissly::core::Quaternion& q)
+Camera::SetOrientation(const Quaternion& q)
 {
     this->orientation = q;
     this->orientation.Normalise();
@@ -93,10 +95,10 @@ Camera::SetOrientation(const chrissly::core::Quaternion& q)
 /**
 */
 void
-Camera::MoveRelative(const chrissly::core::Vector3& vec)
+Camera::MoveRelative(const Vector3& vec)
 {
     // transform the axes of the relative vector by camera's local axes
-    chrissly::core::Vector3 trans = this->orientation * vec;
+    Vector3 trans = this->orientation * vec;
     this->position = this->position + trans;
     this->recalcView = true; 
 }
@@ -108,7 +110,7 @@ void
 Camera::Roll(float angle)
 {
     // rotate around local Z axis
-    chrissly::core::Vector3 zAxis = this->orientation * chrissly::core::Vector3(0.0f, 0.0f, 1.0f);
+    Vector3 zAxis = this->orientation * Vector3(0.0f, 0.0f, 1.0f);
     this->Rotate(zAxis, angle);
 }
 
@@ -119,7 +121,7 @@ void
 Camera::Pitch(float angle)
 {
     // rotate around local X axis
-    chrissly::core::Vector3 xAxis = this->orientation * chrissly::core::Vector3(1.0f, 0.0f, 0.0f);
+    Vector3 xAxis = this->orientation * Vector3(1.0f, 0.0f, 0.0f);
     this->Rotate(xAxis, angle);
 }
 
@@ -130,7 +132,7 @@ void
 Camera::Yaw(float angle)
 {
     // rotate around local y axis
-    chrissly::core::Vector3 yAxis = this->orientation * chrissly::core::Vector3(0.0f, 1.0f, 0.0f);
+    Vector3 yAxis = this->orientation * Vector3(0.0f, 1.0f, 0.0f);
     this->Rotate(yAxis, angle);
 }
 
@@ -138,9 +140,9 @@ Camera::Yaw(float angle)
 /**
 */
 void
-Camera::Rotate(const chrissly::core::Vector3& axis, float angle)
+Camera::Rotate(const Vector3& axis, float angle)
 {
-    chrissly::core::Quaternion q;
+    Quaternion q;
     q.FromAngleAxis(angle,axis);
     this->Rotate(q);
 }
@@ -149,11 +151,11 @@ Camera::Rotate(const chrissly::core::Vector3& axis, float angle)
 /**
 */
 void
-Camera::Rotate(const chrissly::core::Quaternion& q)
+Camera::Rotate(const Quaternion& q)
 {
     // note the order of the mult, i.e. q comes after
     // normalise the quat to avoid cumulative problems with precision
-    chrissly::core::Quaternion qnorm = q;
+    Quaternion qnorm = q;
     qnorm.Normalise();
     this->orientation = qnorm * this->orientation;
     this->recalcView = true;
@@ -171,7 +173,7 @@ Camera::_RenderScene(Viewport* vp)
 //------------------------------------------------------------------------------
 /**
 */
-const chrissly::core::Matrix4&
+const Matrix4&
 Camera::GetViewMatrix() const
 {
     if (this->recalcView) this->UpdateViewImpl();
@@ -195,12 +197,12 @@ Camera::UpdateViewImpl() const
     // Where T = -(Transposed(Rot) * Pos)
 
     // this is most efficiently done using 3x3 matrices
-    chrissly::core::Matrix3 rot;
+    Matrix3 rot;
     this->orientation.ToRotationMatrix(rot);
 
     // Make the translation relative to new axes
-    chrissly::core::Matrix3 rotT = rot.Transpose();
-    chrissly::core::Vector3 trans = -rotT * position;
+    Matrix3 rotT = rot.Transpose();
+    Vector3 trans = -rotT * position;
 
     // make final matrix
     // fills upper 3x3
@@ -300,7 +302,7 @@ Camera::GetAspectRatio() const
 //------------------------------------------------------------------------------
 /**
 */
-const chrissly::core::Matrix4&
+const Matrix4&
 Camera::GetProjectionMatrixRS() const
 {
     if (this->recalcFrustum) this->UpdateFrustumImpl();
@@ -315,7 +317,7 @@ void
 Camera::UpdateFrustumImpl() const
 {
     // 0.5f * 3.141593f / 180.0f = 0.0087266f
-    float f = 1.0f / chrissly::core::Math::ATan(this->FOVy * 0.0087266f);
+    float f = 1.0f / Math::ATan(this->FOVy * 0.0087266f);
  
     this->projMatrixRS[0][0] = f / this->aspect;
     this->projMatrixRS[1][0] = 0.0f;

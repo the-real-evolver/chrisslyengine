@@ -39,11 +39,15 @@ GLES2GpuProgram::GLES2GpuProgram(const char* vertexShaderSource, const char* fra
     GLES2RenderSystem::CheckGlError("glGetUniformLocation");
     this->uniformLocations[graphics::ACT_WORLDVIEWPROJ_MATRIX] = glGetUniformLocation(this->gpuProgram, "worldViewProjMatrix");
     GLES2RenderSystem::CheckGlError("glGetUniformLocation");
+    this->uniformLocations[graphics::ACT_MORPH_WEIGHT] = glGetUniformLocation(this->gpuProgram, "morphWeight");
+    GLES2RenderSystem::CheckGlError("glGetUniformLocation");
     this->uniformLocations[graphics::ACT_TEXTURE_MATRIX] = 0;
 
-    this->attributeLocations[graphics::VES_POSITION] = glGetAttribLocation(this->gpuProgram, "vertexPosition");
+    this->attributeLocations[graphics::VES_POSITION] = glGetAttribLocation(this->gpuProgram, "position");
     GLES2RenderSystem::CheckGlError("glGetAttribLocation");
     this->attributeLocations[graphics::VES_TEXTURE_COORDINATES] = glGetAttribLocation(this->gpuProgram, "texCoordIn");
+    GLES2RenderSystem::CheckGlError("glGetAttribLocation");
+    this->attributeLocations[graphics::VES_POSITION_MORPH_TARGET] = glGetAttribLocation(this->gpuProgram, "positionMorphTarget");
     GLES2RenderSystem::CheckGlError("glGetAttribLocation");
 }
 
@@ -130,7 +134,7 @@ GLES2GpuProgram::CreateShaderFromString(GLenum shaderType, const char* source)
                 if (buf != NULL)
                 {
                     glGetShaderInfoLog(shader, infoLen, NULL, buf);
-                    CE_ASSERT(false, "Could not compile shader %d: %s\n", shaderType, buf);
+                    CE_LOG("Could not compile shader %d: %s\n", shaderType, buf);
                     CE_FREE(buf);
                 }
                 glDeleteShader(shader);
@@ -173,7 +177,7 @@ GLES2GpuProgram::CreateProgram(GLuint vertexShader, GLuint fragmentShader)
                 if (buf != NULL)
                 {
                     glGetProgramInfoLog(program, bufLength, NULL, buf);
-                    CE_ASSERT(false, "Could not link program: %s\n", buf);
+                    CE_LOG("Could not link program: %s\n", buf);
                     CE_FREE(buf);
                 }
             }

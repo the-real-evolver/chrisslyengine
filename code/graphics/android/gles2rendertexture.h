@@ -2,7 +2,7 @@
 #define GLES2RENDERTEXTURE_H_
 //------------------------------------------------------------------------------
 /**
-    @class chrissly::graphics::GLES2RenderTexture
+    @class chrissly::GLES2RenderTexture
 
     (C) 2012 Christian Bleicher
 */

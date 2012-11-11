@@ -152,7 +152,7 @@ Entity::GetAnimationState(const char* name) const
 void
 Entity::UpdateAnimation()
 {
-    // loop trough all animstates, update enabled ones   
+    // loop trough all animstates, update enabled ones
     unsigned int i;
     for (i = 0; i < this->animationState.capacity; i++)
     {

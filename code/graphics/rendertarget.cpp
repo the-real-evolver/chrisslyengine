@@ -80,7 +80,7 @@ RenderTarget::RemoveAllViewports()
     }
 
     DynamicArrayDelete(&this->viewportList);
-    
+
     this->numViewports = 0;
 }
 

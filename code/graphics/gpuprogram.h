@@ -1,37 +1,36 @@
-#ifndef RENDERSYSTEM_H_
-#define RENDERSYSTEM_H_
+#ifndef GPUPROGRAM_H_
+#define GPUPROGRAM_H_
 //------------------------------------------------------------------------------
-/**	
-    10.03.2012 -> Creation
-    
+/**
+    @class chrissly::graphics::GpuProgram
+
     (C) 2012 Christian Bleicher
 */
 #if __PSP__
-#include "psp/psprendersystem.h"
 //------------------------------------------------------------------------------
 namespace chrissly
 {
 namespace graphics
 {
 
-typedef chrissly::PSPRenderSystem RenderSystem;
+class GpuProgram {};
 
 } // namespace graphics
 } // namespace chrissly
 //------------------------------------------------------------------------------
 #elif __ANDROID__
-#include "android/gles2rendersystem.h"
+#include "android/gles2gpuprogram.h"
 namespace chrissly
 {
 namespace graphics
 {
 
-typedef chrissly::GLES2RenderSystem RenderSystem;
+typedef chrissly::GLES2GpuProgram GpuProgram;
 
 } // namespace graphics
 } // namespace chrissly
 //------------------------------------------------------------------------------
 #else
-#error "RenderSystem class not implemented on this platform!"
+#error "GpuProgram class not implemented on this platform!"
 #endif
 #endif

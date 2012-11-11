@@ -15,7 +15,8 @@
 
 ------------------------------------------------------------------------------
   "cerberus_walk1.obj" - "cerberus_walk31.obj"
-  "cerberus.raw" 
+  "cerberus.raw"
+  "cerberus_etc1.raw"
 
   are generated from the following original files:
   
@@ -50,19 +51,6 @@
     Author:   Mysteryem
     Lincense: CREATIVE COMMONS Attribution-ShareAlike 3.0 Unported (see below)
     See:      http://opengameart.org/node/8081
-------------------------------------------------------------------------------
-
-------------------------------------------------------------------------------
-  "mage.mesh"
-  "mage_etc1.raw"
-
-  are generated from the following original file:
-  
-    http://opengameart.org/sites/default/files/mage_final.blend
-  
-    Author:   thecubber
-    Lincense: CREATIVE COMMONS Attribution-ShareAlike 3.0 Unported (see below)
-    See:      http://opengameart.org/content/rigged-textured-mage
 ------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------

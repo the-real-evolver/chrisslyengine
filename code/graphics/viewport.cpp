@@ -21,7 +21,7 @@ Viewport::Viewport(Camera *camera, RenderTarget *target, int left, int top, int 
     this->actTop = top;
     this->actWidth = width;
     this->actHeight = height;
-    
+
     this->clearEveryFrame = true;
     this->clearBuffers = FBT_COLOUR | FBT_DEPTH;
     this->backColour = 0xff554433;

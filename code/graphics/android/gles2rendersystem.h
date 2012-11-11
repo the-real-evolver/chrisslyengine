@@ -2,7 +2,7 @@
 #define GLES2RENDERSYSTEM_H_
 //------------------------------------------------------------------------------
 /**
-    @class chrissly::graphics::GLES2RenderSystem
+    @class chrissly::GLES2RenderSystem
 
     (C) 2012 Christian Bleicher
 */
@@ -27,7 +27,7 @@ public:
     GLES2RenderSystem();
     /// destructor
     ~GLES2RenderSystem();
-    
+
     /// start up the renderer
     graphics::RenderWindow* _Initialise(void* customParams);
     /// shutdown the renderer and cleanup resources
@@ -66,7 +66,7 @@ public:
     void SetAmbientLight(unsigned int colour);
     /// notify the rendersystem that a morphkeyframe was build
     void _NotifyMorphKeyFrameBuild();
-    
+
     /// print some aspect of the current GL connection
     static void PrintGLString(const char *name, GLenum s);
     /// print value of the error flag the recent function call returned
@@ -83,10 +83,11 @@ private:
     core::Matrix4 viewMatrix;
     core::Matrix4 projectionMatrix;
 
-    static const char* FixedFunctionVertexShader;
-    static const char* FixedFunctionFragmentShader;
+    static const char* DefaultVertexShader;
+    static const char* DefaultFragmentShader;
 
-    GLES2GpuProgram* gpuProgram;
+    GLES2GpuProgram* defaultGpuProgram;
+    GLES2GpuProgram* currentGpuProgram;
 
     GLfloat glWorldMatrix[16];
     GLfloat glViewMatrix[16];

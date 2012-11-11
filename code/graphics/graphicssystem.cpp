@@ -46,7 +46,6 @@ GraphicsSystem::~GraphicsSystem()
         CE_DELETE (RenderTarget*)DynamicArrayGet(&this->renderTargets, i);	
     }
     DynamicArrayDelete(&this->renderTargets);
-    this->autoWindow = NULL;
 }
 
 //------------------------------------------------------------------------------

@@ -2,7 +2,7 @@
 #define PSPMATH_H_
 //------------------------------------------------------------------------------
 /**
-    @class chrissly::core::PSPMath
+    @class chrissly::PSPMath
     
     Wrapper class for common mathematical functions using the FPU of the
     Playstation Portable. 

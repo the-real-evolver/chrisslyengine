@@ -1,6 +1,6 @@
 Building Chrissly for PSP
 ========================================================================
-- install devkitpro toolchain
+- install devkitPSP (see: http://devkitpro.org/wiki/Getting_Started/devkitPSP)
 - open a commandline, goto 'chrisslyengine\psp' and run 'make'
   or open 'ChrisslyEngine_PSP.pnproj' and press 'ALT + 1'
 - run 'psp\exportassets.cmd'
@@ -9,7 +9,8 @@ Running the demo on a real PSP
 ========================================================================
 - create a new folder 'ms0:/PSP/GAME/ChrisslyEngine_PSP'
 - copy the 'export' folder and the 'EBOOT.PBP' to the new folder
-- use 'HalfByte Loader' to execute, since the code is not signed
+- use 'Half-Byte Loader' (see: http://wololo.net/hbl) to execute, since
+  the PBP is not signed
 
 Running the demo on the JPCSP emulator
 ========================================================================

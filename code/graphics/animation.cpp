@@ -12,6 +12,8 @@ namespace chrissly
 namespace graphics
 {
 
+using namespace chrissly::core;
+
 //------------------------------------------------------------------------------
 /**
 */
@@ -98,6 +100,8 @@ Animation::DestroyAllVertexTracks()
     }
 
     DynamicArrayDelete(&this->vertexTrackList);
+
+    this->numVertexTracks = 0;
 }
 
 //------------------------------------------------------------------------------
@@ -106,12 +110,9 @@ Animation::DestroyAllVertexTracks()
 void
 Animation::Apply(Entity* entity, float timePos)
 {
-    SubEntity* subEntity = entity->GetSubEntity(0);
-    VertexData* hwVertexData = subEntity->_GetHardwareVertexAnimVertexData();
-
     if (timePos > this->length && this->length > 0.0f)
     {
-        timePos = core::Math::Fmod(timePos, this->length);
+        timePos = Math::Fmod(timePos, this->length);
     }
 
     int timeIndex = 0;
@@ -135,7 +136,9 @@ Animation::Apply(Entity* entity, float timePos)
         }
     }
 
+    SubEntity* subEntity = entity->GetSubEntity(0);
     subEntity->SetMorphWeight(morphWeight);
+    VertexData* hwVertexData = subEntity->_GetHardwareVertexAnimVertexData();
 
     for (i = 0; i < this->numVertexTracks; i++)
     {

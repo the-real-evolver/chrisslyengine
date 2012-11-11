@@ -12,6 +12,8 @@ namespace chrissly
 namespace graphics
 {
 
+using namespace chrissly::core;
+
 //------------------------------------------------------------------------------
 /**
 */
@@ -79,6 +81,8 @@ VertexAnimationTrack::RemoveAllKeyFrames()
     }
 
     DynamicArrayDelete(&this->keyFrames);
+
+    this->numKeyFrames = 0;
 }
 
 //------------------------------------------------------------------------------
@@ -93,9 +97,9 @@ VertexAnimationTrack::ApplyToVertexData(VertexData* data, int timeIndex)
         {
             VertexMorphKeyFrame* kf1 = (VertexMorphKeyFrame*)DynamicArrayGet(&this->keyFrames, timeIndex);
             VertexMorphKeyFrame* kf2 = (VertexMorphKeyFrame*)DynamicArrayGet(&this->keyFrames, timeIndex + 1);
-            core::Memory::FillInterleaved(kf1->vertexData->vertexBuffer, kf2->vertexData->vertexBuffer,
-                                            data->vertexBuffer, data->bytesPerVertex,
-                                            2 * data->bytesPerVertex * data->vertexCount);
+            Memory::FillInterleaved(kf1->vertexData->vertexBuffer, kf2->vertexData->vertexBuffer,
+                                    data->vertexBuffer, data->bytesPerVertex,
+                                    2 * data->bytesPerVertex * data->vertexCount);
 
             GraphicsSystem::Instance()->GetRenderSystem()->_NotifyMorphKeyFrameBuild();
 

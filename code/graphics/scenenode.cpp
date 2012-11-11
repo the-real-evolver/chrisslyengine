@@ -11,15 +11,17 @@ namespace chrissly
 namespace graphics
 {
 
+using namespace chrissly::core;
+
 //------------------------------------------------------------------------------
 /**
 */
 SceneNode::SceneNode() :
     parent(NULL),
     children(NULL),
-    scale(chrissly::core::Vector3(1.0f, 1.0f, 1.0f)),
-    derivedScale(chrissly::core::Vector3(1.0f, 1.0f, 1.0f)),
-    cachedTransform(chrissly::core::Matrix4::IDENTITY),
+    scale(Vector3(1.0f, 1.0f, 1.0f)),
+    derivedScale(Vector3(1.0f, 1.0f, 1.0f)),
+    cachedTransform(Matrix4::IDENTITY),
     cachedTransformOutOfDate(true),
     numAttachedObjects(0)
 {
@@ -43,8 +45,8 @@ SceneNode::_Update()
 {
     if (this->parent)
     {
-        chrissly::core::Quaternion parentOrientation = this->parent->_GetDerivedOrientation();     
-        chrissly::core::Vector3 parentScale = this->parent->_GetDerivedScale();
+        Quaternion parentOrientation = this->parent->_GetDerivedOrientation();
+        Vector3 parentScale = this->parent->_GetDerivedScale();
     
         // combine orientation with that of parent
         this->derivedOrientation = parentOrientation * this->orientation;
@@ -117,7 +119,7 @@ SceneNode::RemoveAllChildren()
 //------------------------------------------------------------------------------
 /**
 */
-const chrissly::core::Quaternion&
+const Quaternion&
 SceneNode::GetOrientation() const
 {
     return this->orientation;
@@ -127,7 +129,7 @@ SceneNode::GetOrientation() const
 /**
 */
 void
-SceneNode::SetOrientation(const chrissly::core::Quaternion& q)
+SceneNode::SetOrientation(const Quaternion& q)
 {
     this->orientation = q;
     this->cachedTransformOutOfDate = true;
@@ -150,7 +152,7 @@ SceneNode::SetOrientation(float w, float x, float y, float z)
 /**
 */
 void
-SceneNode::SetPosition(const chrissly::core::Vector3& pos)
+SceneNode::SetPosition(const Vector3& pos)
 {
     this->position = pos;
     this->cachedTransformOutOfDate = true;
@@ -171,7 +173,7 @@ SceneNode::SetPosition(float x, float y, float z)
 //------------------------------------------------------------------------------
 /**
 */
-const chrissly::core::Vector3&
+const Vector3&
 SceneNode::GetPosition() const
 {
     return this->position;
@@ -181,7 +183,7 @@ SceneNode::GetPosition() const
 /**
 */
 void
-SceneNode::SetScale(const chrissly::core::Vector3& scale)
+SceneNode::SetScale(const Vector3& scale)
 {
     this->scale = scale;
     this->cachedTransformOutOfDate = true;
@@ -202,7 +204,7 @@ SceneNode::SetScale(float x, float y, float z)
 //------------------------------------------------------------------------------
 /**
 */
-const chrissly::core::Vector3&
+const Vector3&
 SceneNode::GetScale() const
 {
     return this->scale;
@@ -211,7 +213,7 @@ SceneNode::GetScale() const
 //------------------------------------------------------------------------------
 /**
 */
-const chrissly::core::Quaternion&
+const Quaternion&
 SceneNode::_GetDerivedOrientation() const
 {
     return this->derivedOrientation;
@@ -220,7 +222,7 @@ SceneNode::_GetDerivedOrientation() const
 //------------------------------------------------------------------------------
 /**
 */
-const chrissly::core::Vector3&
+const Vector3&
 SceneNode::_GetDerivedPosition() const
 {
     return this->derivedPosition;
@@ -229,7 +231,7 @@ SceneNode::_GetDerivedPosition() const
 //------------------------------------------------------------------------------
 /**
 */
-const chrissly::core::Vector3&
+const Vector3&
 SceneNode::_GetDerivedScale() const
 {
     return this->derivedScale;
@@ -241,7 +243,7 @@ SceneNode::_GetDerivedScale() const
 void
 SceneNode::Roll(float angle)
 {
-    this->Rotate(chrissly::core::Vector3(0.0f, 0.0f, 1.0f), angle);
+    this->Rotate(Vector3(0.0f, 0.0f, 1.0f), angle);
 }
 
 //------------------------------------------------------------------------------
@@ -250,7 +252,7 @@ SceneNode::Roll(float angle)
 void
 SceneNode::Pitch(float angle)
 {
-    this->Rotate(chrissly::core::Vector3(1.0f, 0.0f, 0.0f), angle);
+    this->Rotate(Vector3(1.0f, 0.0f, 0.0f), angle);
 }
 //------------------------------------------------------------------------------
 /**
@@ -258,16 +260,16 @@ SceneNode::Pitch(float angle)
 void
 SceneNode::Yaw(float angle)
 {
-    this->Rotate(chrissly::core::Vector3(0.0f, 1.0f, 0.0f), angle);
+    this->Rotate(Vector3(0.0f, 1.0f, 0.0f), angle);
 
 }
 //------------------------------------------------------------------------------
 /**
 */
 void
-SceneNode::Rotate(const chrissly::core::Vector3& axis, float angle)
+SceneNode::Rotate(const Vector3& axis, float angle)
 {
-    chrissly::core::Quaternion q;
+    Quaternion q;
     q.FromAngleAxis(angle, axis);
     this->Rotate(q);
 }
@@ -276,10 +278,10 @@ SceneNode::Rotate(const chrissly::core::Vector3& axis, float angle)
 /**
 */
 void
-SceneNode::Rotate(const chrissly::core::Quaternion& q)
+SceneNode::Rotate(const Quaternion& q)
 {
     // Normalise quaternion to avoid drift
-    chrissly::core::Quaternion qnorm = q;
+    Quaternion qnorm = q;
     qnorm.Normalise();
     this->orientation = this->orientation * qnorm;
     this->cachedTransformOutOfDate = true;
@@ -288,7 +290,7 @@ SceneNode::Rotate(const chrissly::core::Quaternion& q)
 //------------------------------------------------------------------------------
 /**
 */
-const chrissly::core::Matrix4&
+const Matrix4&
 SceneNode::_GetFullTransform() const
 {
     if (this->cachedTransformOutOfDate)
@@ -298,7 +300,7 @@ SceneNode::_GetFullTransform() const
         //    2. Rotate
         //    3. Translate
 
-        chrissly::core::Matrix3 rot3x3;
+        Matrix3 rot3x3;
         this->derivedOrientation.ToRotationMatrix(rot3x3);
 
         // Set up final matrix with scale, rotation and translation

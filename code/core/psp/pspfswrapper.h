@@ -2,6 +2,8 @@
 #define PSPFSWRAPPER_H_
 //------------------------------------------------------------------------------
 /**
+    @class chrissly::PSPFSWrapper
+
     Wrapper for the sce filesystem.
     
     10.08.2011 -> Creation

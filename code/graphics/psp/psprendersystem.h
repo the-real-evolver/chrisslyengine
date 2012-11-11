@@ -2,7 +2,7 @@
 #define PSPRenderSystem_H_
 //------------------------------------------------------------------------------
 /**
-    @class chrissly::graphics::PSPRenderSystem
+    @class chrissly::PSPRenderSystem
 
     (C) 2012 Christian Bleicher
 */

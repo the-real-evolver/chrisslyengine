@@ -33,7 +33,8 @@ Pass::Pass(unsigned short index) :
     fogColour(0xffffffff),
     fogStart(0.0f),
     fogEnd(1.0f),
-    numTextureUnitStates(0)
+    numTextureUnitStates(0),
+    gpuProgram(NULL)
 {
     DynamicArrayInit(&this->textureUnitStates, 0);
 }
@@ -407,6 +408,33 @@ Pass::RemoveAllTextureUnitStates()
     DynamicArrayDelete(&this->textureUnitStates);
     
     this->numTextureUnitStates = 0;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+bool
+Pass::IsProgrammable() const
+{
+    return (this->gpuProgram != NULL);
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+Pass::SetGpuProgram(GpuProgram* program)
+{
+    this->gpuProgram = program;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+GpuProgram*
+Pass::GetGpuProgram() const
+{
+    return this->gpuProgram;
 }
 
 } // namespace graphics

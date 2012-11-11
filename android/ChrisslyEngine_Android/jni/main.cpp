@@ -8,6 +8,7 @@
 #include "graphics/scenemanager.h"
 #include "graphics/renderwindow.h"
 #include "graphics/camera.h"
+#include "graphics/animationstate.h"
 #include "core/fswrapper.h"
 
 using namespace chrissly::graphics;
@@ -23,6 +24,33 @@ Texture* tex;
 Mesh* mesh;
 Camera* camera;
 int32_t lastX, lastY, distance;
+AnimationState* animState;
+GpuProgram* gpuProgram;
+
+const char* MorphAnimVertexShader =
+    "attribute vec2 texCoordIn;\n"
+    "varying vec2 texCoordOut;\n"
+    "attribute vec4 position;\n"
+	"attribute vec4 positionMorphTarget;\n"
+    "uniform mat4 worldMatrix;\n"
+    "uniform mat4 viewMatrix;\n"
+    "uniform mat4 projectionMatrix;\n"
+    "uniform mat4 worldViewProjMatrix;\n"
+	"uniform float morphWeight;\n"
+    "void main()\n"
+    "{\n"
+	"    gl_Position = worldViewProjMatrix * (position + (positionMorphTarget - position) * morphWeight);\n"
+    "    texCoordOut = texCoordIn;\n"
+    "}\n";
+
+const char* FragmentShader =
+    "varying lowp vec2 texCoordOut;\n"
+    "uniform sampler2D texture;\n"
+    "precision mediump float;\n"
+    "void main()\n"
+    "{\n"
+    "    gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0) * texture2D(texture, texCoordOut);\n"
+    "}\n";
 
 //------------------------------------------------------------------------------
 /**
@@ -42,16 +70,21 @@ Enter(struct android_app* state)
     pass->SetCullingMode(CULL_NONE);
     pass->SetSceneBlendingEnabled(false);
     pass->SetSceneBlending(SBF_SOURCE_COLOUR, SBF_DEST_COLOUR);
-    tex = TextureManager::Instance()->Load("mage_etc1.tex");
+    gpuProgram = CE_NEW GpuProgram(MorphAnimVertexShader, FragmentShader);
+    pass->SetGpuProgram(gpuProgram);
+    tex = TextureManager::Instance()->Load("cerberus_etc1.tex");
     TextureUnitState* tus = pass->CreateTextureUnitState();
     tus->SetTexture(tex);
 
-    entity = SceneManager::Instance()->CreateEntity("mage.mesh");
+    entity = SceneManager::Instance()->CreateEntity("cerberus_walk.mesh");
     entity->GetSubEntity(0)->SetMaterial(material);
+    animState = entity->GetAnimationState("default");
+    animState->SetEnabled(true);
+    animState->SetLoop(true);
 
     sceneNode = SceneManager::Instance()->GetRootSceneNode()->CreateChildSceneNode();
     sceneNode->AttachObject(entity);
-    sceneNode->SetPosition(0.0f, -0.5f, 0.0f);
+    sceneNode->SetPosition(0.0f, 0.0f, 0.0f);
 
     initialized = true;
 }
@@ -64,6 +97,7 @@ Exit()
 {
     initialized = false;
 
+    CE_DELETE gpuProgram;
     material->RemoveAllPasses();
     delete material;
 
@@ -78,6 +112,7 @@ Trigger()
 {
     if (initialized)
     {
+    	animState->AddTime(0.016f);
         sceneNode->Yaw((float)distance * 0.02f);
         graphicsSystem->RenderOneFrame();
     }

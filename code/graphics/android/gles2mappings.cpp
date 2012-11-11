@@ -138,7 +138,7 @@ GLES2Mappings::IsCompressed(graphics::PixelFormat pf)
 /**
 */
 GLenum
-GLES2Mappings::Get(chrissly::graphics::SceneBlendOperation op)
+GLES2Mappings::Get(graphics::SceneBlendOperation op)
 {
     switch (op)
     {
@@ -158,7 +158,7 @@ GLES2Mappings::Get(chrissly::graphics::SceneBlendOperation op)
 /**
 */
 GLenum
-GLES2Mappings::Get(chrissly::graphics::SceneBlendFactor sbf)
+GLES2Mappings::Get(graphics::SceneBlendFactor sbf)
 {
     switch (sbf)
     {

@@ -50,7 +50,7 @@ TextureManager::Load(const char* name)
         it = it->next;
     }
 
-    core::FileHandle fd = FSWrapper::Open(name, ReadAccess, 0777);
+    FileHandle fd = FSWrapper::Open(name, ReadAccess, 0777);
     unsigned int fileSize = FSWrapper::GetFileSize(fd);
     unsigned int headerSizeBytes = 6;
 
@@ -100,7 +100,7 @@ TextureManager::RemoveAll()
         CE_FREE((void*)resource->texture->GetBuffer());
         CE_DELETE resource->texture;
         CE_DELETE resource;
-        
+
         it = it->next;
         linkedlistRemove(node);
     }

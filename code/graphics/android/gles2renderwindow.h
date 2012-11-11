@@ -2,7 +2,7 @@
 #define GLES2RENDERWINDOW_H_
 //------------------------------------------------------------------------------
 /**
-    @class chrissly::graphics::GLES2RenderWindow
+    @class chrissly::GLES2RenderWindow
 
     (C) 2012 Christian Bleicher
 */

@@ -40,12 +40,14 @@ public:
     void AddTime(float offset);
     /// returns true if this animation is currently enabled
     bool GetEnabled() const;
-    /// gets whether or not this animation loops         
+    /// gets whether or not this animation loops
     bool GetLoop() const;
     /// gets the name of the animation to which this state applies
     const char* GetAnimationName() const;
     /// gets the time position for this animation
     float GetTimePosition() const;
+    /// sets the total length of this animation (may be shorter than whole animation)
+    void SetLength(float len);
 
 private:
     const char* animationName;

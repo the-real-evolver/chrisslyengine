@@ -25,6 +25,8 @@ namespace graphics
         ACT_WORLDVIEWPROJ_MATRIX,
         /// provides the current transform matrix of the texture unit
         ACT_TEXTURE_MATRIX,
+        /// specifies the morph weight when blending between two vertices
+        ACT_MORPH_WEIGHT,
         /// the  number of AutoConstantType elements
         ACT_COUNT
     };

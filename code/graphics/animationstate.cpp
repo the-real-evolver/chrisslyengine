@@ -10,6 +10,8 @@ namespace chrissly
 namespace graphics
 {
 
+using namespace chrissly::core;
+
 //------------------------------------------------------------------------------
 /**
 */
@@ -39,7 +41,7 @@ AnimationState::SetEnabled(bool enabled)
 {
     this->enabled = enabled;
 }
-   
+
 //------------------------------------------------------------------------------
 /**
 */
@@ -59,7 +61,7 @@ AnimationState::SetTimePosition(float timePos)
 
     if (this->loop)
     {
-        this->timePos = core::Math::Fmod(this->timePos, this->length);
+        this->timePos = Math::Fmod(this->timePos, this->length);
         if (this->timePos < 0.0f)
         {
             this->timePos += this->length;
@@ -121,6 +123,15 @@ float
 AnimationState::GetTimePosition() const
 {
     return this->timePos;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+AnimationState::SetLength(float len)
+{
+    this->length = len;
 }
 
 } // namespace graphics

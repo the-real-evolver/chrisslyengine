@@ -14,21 +14,23 @@ namespace chrissly
 GLES2RenderSystem* GLES2RenderSystem::Singleton = NULL;
 
 //------------------------------------------------------------------------------
-const char* GLES2RenderSystem::FixedFunctionVertexShader =
+const char* GLES2RenderSystem::DefaultVertexShader =
     "attribute vec2 texCoordIn;\n"
     "varying vec2 texCoordOut;\n"
-    "attribute vec4 vertexPosition;\n"
+    "attribute vec4 position;\n"
+    "attribute vec4 positionMorphTarget;\n"
     "uniform mat4 worldMatrix;\n"
     "uniform mat4 viewMatrix;\n"
     "uniform mat4 projectionMatrix;\n"
     "uniform mat4 worldViewProjMatrix;\n"
+    "uniform float morphWeight;\n"
     "void main()\n"
     "{\n"
-    "    gl_Position = worldViewProjMatrix * vertexPosition;\n"
+    "    gl_Position = worldViewProjMatrix * position;\n"
     "    texCoordOut = texCoordIn;\n"
     "}\n";
 
-const char* GLES2RenderSystem::FixedFunctionFragmentShader =
+const char* GLES2RenderSystem::DefaultFragmentShader =
     "varying lowp vec2 texCoordOut;\n"
     "uniform sampler2D texture;\n"
     "precision mediump float;\n"
@@ -42,9 +44,10 @@ const char* GLES2RenderSystem::FixedFunctionFragmentShader =
 */
 GLES2RenderSystem::GLES2RenderSystem() :
     ambientLight(0x00000000),
-    viewMatrix(chrissly::core::Matrix4::ZERO),
-    projectionMatrix(chrissly::core::Matrix4::ZERO),
-    gpuProgram(NULL),
+    viewMatrix(core::Matrix4::ZERO),
+    projectionMatrix(core::Matrix4::ZERO),
+    defaultGpuProgram(NULL),
+    currentGpuProgram(NULL),
     numTextureUnits(0)
 {
     Singleton = this;
@@ -81,7 +84,7 @@ GLES2RenderSystem::_Initialise(void* customParams)
     glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &this->numTextureUnits);
     CheckGlError("glGetIntegerv");
     CE_LOG("GL_MAX_TEXTURE_IMAGE_UNITS: %i\n", this->numTextureUnits);
-    
+
     GLint maxTextureSize;
     glGetIntegerv(GL_MAX_TEXTURE_SIZE, &maxTextureSize);
     CheckGlError("glGetIntegerv");
@@ -89,9 +92,10 @@ GLES2RenderSystem::_Initialise(void* customParams)
 
     glEnable(GL_SCISSOR_TEST);
     CheckGlError("glEnable");
-    
-    this->gpuProgram = CE_NEW GLES2GpuProgram(FixedFunctionVertexShader, FixedFunctionFragmentShader);
-    
+
+    this->defaultGpuProgram = CE_NEW GLES2GpuProgram(DefaultVertexShader, DefaultFragmentShader);
+    this->currentGpuProgram = this->defaultGpuProgram;
+
     return renderWindow;
 }
 
@@ -101,7 +105,7 @@ GLES2RenderSystem::_Initialise(void* customParams)
 void
 GLES2RenderSystem::Shutdown()
 {
-    CE_DELETE this->gpuProgram;
+    CE_DELETE this->defaultGpuProgram;
 
     CE_LOG("GLES2RenderSystem::Shutdown\n");
 }
@@ -132,7 +136,7 @@ GLES2RenderSystem::_SetViewport(graphics::Viewport *vp)
     CheckGlError("glDepthRangef");
     glScissor(left, top, width, height);
     CheckGlError("glScissor");
-    
+
     if (vp->GetClearEveryFrame())
     {
         float red, green, blue, alpha;
@@ -151,14 +155,14 @@ void
 GLES2RenderSystem::_SetWorldMatrix(const core::Matrix4& m)
 {
     GLES2Mappings::MakeGLMatrix(this->glWorldMatrix, m);
-    glUniformMatrix4fv(this->gpuProgram->GetUniformLocation(graphics::ACT_WORLD_MATRIX), 1, GL_FALSE, this->glWorldMatrix);
+    glUniformMatrix4fv(this->currentGpuProgram->GetUniformLocation(graphics::ACT_WORLD_MATRIX), 1, GL_FALSE, this->glWorldMatrix);
     CheckGlError("glUniformMatrix4fv");
-    glUniformMatrix4fv(this->gpuProgram->GetUniformLocation(graphics::ACT_VIEW_MATRIX), 1, GL_FALSE, this->glViewMatrix);
+    glUniformMatrix4fv(this->currentGpuProgram->GetUniformLocation(graphics::ACT_VIEW_MATRIX), 1, GL_FALSE, this->glViewMatrix);
     CheckGlError("glUniformMatrix4fv");
-    glUniformMatrix4fv(this->gpuProgram->GetUniformLocation(graphics::ACT_PROJECTION_MATRIX), 1, GL_FALSE, this->glProjectionMatrix);
+    glUniformMatrix4fv(this->currentGpuProgram->GetUniformLocation(graphics::ACT_PROJECTION_MATRIX), 1, GL_FALSE, this->glProjectionMatrix);
     CheckGlError("glUniformMatrix4fv");
     GLES2Mappings::MakeGLMatrix(this->glWorldViewProjectionMatrix, this->projectionMatrix * this->viewMatrix * m);
-    glUniformMatrix4fv(this->gpuProgram->GetUniformLocation(graphics::ACT_WORLDVIEWPROJ_MATRIX), 1, GL_FALSE, this->glWorldViewProjectionMatrix);
+    glUniformMatrix4fv(this->currentGpuProgram->GetUniformLocation(graphics::ACT_WORLDVIEWPROJ_MATRIX), 1, GL_FALSE, this->glWorldViewProjectionMatrix);
     CheckGlError("glUniformMatrix4fv");
 }
 
@@ -197,20 +201,53 @@ GLES2RenderSystem::_SetTextureMatrix(const core::Matrix4& xform)
 void
 GLES2RenderSystem::_Render(graphics::SubEntity* renderable)
 {
-    GLint vertexPositionHandle = this->gpuProgram->GetAttributeLocation(graphics::VES_POSITION);
-    glVertexAttribPointer(vertexPositionHandle, 3, GL_FLOAT, GL_FALSE, 36, (unsigned char*)renderable->GetSubMesh()->vertexData->vertexBuffer + 24);
-    CheckGlError("glVertexAttribPointer");
-    glEnableVertexAttribArray(vertexPositionHandle);
-    CheckGlError("glEnableVertexAttribArray");
+    if (graphics::VAT_MORPH == renderable->GetSubMesh()->GetVertexAnimationType())
+    {
+        glUniform1f(this->currentGpuProgram->GetUniformLocation(graphics::ACT_MORPH_WEIGHT), renderable->GetMorphWeight());
+        CheckGlError("glUniform1f");
 
-    GLint vertexTexCoordHandle = this->gpuProgram->GetAttributeLocation(graphics::VES_TEXTURE_COORDINATES);
-    glVertexAttribPointer(vertexTexCoordHandle, 2, GL_FLOAT, GL_FALSE, 36, renderable->GetSubMesh()->vertexData->vertexBuffer);
-    CheckGlError("glVertexAttribPointer");
-    glEnableVertexAttribArray(vertexTexCoordHandle);
-    CheckGlError("glEnableVertexAttribArray");
+        graphics::VertexData* vertexData = renderable->_GetHardwareVertexAnimVertexData();
 
-    glDrawArrays(GL_TRIANGLES, 0, renderable->GetSubMesh()->vertexData->vertexCount);
-    CheckGlError("glDrawArrays");
+        GLint vertexPositionHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_POSITION);
+        glVertexAttribPointer(vertexPositionHandle, 3, GL_FLOAT, GL_FALSE, 72, (unsigned char*)vertexData->vertexBuffer + 24);
+        CheckGlError("glVertexAttribPointer");
+        glEnableVertexAttribArray(vertexPositionHandle);
+        CheckGlError("glEnableVertexAttribArray");
+
+        GLint vertexTexCoordHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_TEXTURE_COORDINATES);
+        glVertexAttribPointer(vertexTexCoordHandle, 2, GL_FLOAT, GL_FALSE, 72, vertexData->vertexBuffer);
+        CheckGlError("glVertexAttribPointer");
+        glEnableVertexAttribArray(vertexTexCoordHandle);
+        CheckGlError("glEnableVertexAttribArray");
+
+        GLint vertexPositionMorphTargetHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_POSITION_MORPH_TARGET);
+        glVertexAttribPointer(vertexPositionMorphTargetHandle, 3, GL_FLOAT, GL_FALSE, 72, (unsigned char*)vertexData->vertexBuffer + 60);
+        CheckGlError("glVertexAttribPointer");
+        glEnableVertexAttribArray(vertexPositionMorphTargetHandle);
+        CheckGlError("glEnableVertexAttribArray");
+
+        glDrawArrays(GL_TRIANGLES, 0, vertexData->vertexCount);
+        CheckGlError("glDrawArrays");
+    }
+    else
+    {
+        graphics::VertexData* vertexData = renderable->GetSubMesh()->vertexData;
+
+        GLint vertexPositionHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_POSITION);
+        glVertexAttribPointer(vertexPositionHandle, 3, GL_FLOAT, GL_FALSE, 36, (unsigned char*)vertexData->vertexBuffer + 24);
+        CheckGlError("glVertexAttribPointer");
+        glEnableVertexAttribArray(vertexPositionHandle);
+        CheckGlError("glEnableVertexAttribArray");
+
+        GLint vertexTexCoordHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_TEXTURE_COORDINATES);
+        glVertexAttribPointer(vertexTexCoordHandle, 2, GL_FLOAT, GL_FALSE, 36, vertexData->vertexBuffer);
+        CheckGlError("glVertexAttribPointer");
+        glEnableVertexAttribArray(vertexTexCoordHandle);
+        CheckGlError("glEnableVertexAttribArray");
+
+        glDrawArrays(GL_TRIANGLES, 0, vertexData->vertexCount);
+        CheckGlError("glDrawArrays");
+    }
 }
 
 //------------------------------------------------------------------------------
@@ -237,7 +274,15 @@ GLES2RenderSystem::_EndFrame()
 void
 GLES2RenderSystem::_SetPass(graphics::Pass* pass)
 {
-    glUseProgram(this->gpuProgram->GetProgramHandle());
+    if (pass->IsProgrammable())
+    {
+        this->currentGpuProgram = pass->GetGpuProgram();
+    }
+    else
+    {
+        this->currentGpuProgram = this->defaultGpuProgram;
+    }
+    glUseProgram(this->currentGpuProgram->GetProgramHandle());
     CheckGlError("glUseProgram");
 
     // scene blending parameters
@@ -279,7 +324,7 @@ GLES2RenderSystem::_SetPass(graphics::Pass* pass)
         graphics::TextureUnitState* tus = pass->GetTextureUnitState(0);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, tus->GetTexture()->GetName());
-        glUniform1i(this->gpuProgram->GetTextureUniformLocation(), 0 /* index of the textureunit */);
+        glUniform1i(this->currentGpuProgram->GetTextureUniformLocation(), 0 /* index of the textureunit */);
     }
 }
 

@@ -2,10 +2,10 @@
 #define ANDROIDMATH_H_
 //------------------------------------------------------------------------------
 /**
-    @class chrissly::core::AndroidMath
-    
+    @class chrissly::AndroidMath
+
     Wrapper class for common mathematical functions
-    
+
     (C) 2012 Christian Bleicher
 */
 #include <math.h>

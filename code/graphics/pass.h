@@ -10,6 +10,7 @@
 #include "dynamicarray.h"
 #include "textureunitstate.h"
 #include "blendmode.h"
+#include "gpuprogram.h"
 
 //------------------------------------------------------------------------------
 namespace chrissly
@@ -187,6 +188,13 @@ public:
     /// Removes all texture unit settings
     void RemoveAllTextureUnitStates();
 
+    /// returns true if this pass is programmable i.e. includes a gpu program
+    bool IsProgrammable() const;
+    /// sets the gpu program to use
+    void SetGpuProgram(GpuProgram* program);
+    /// gets the gpu program used by this pass
+    GpuProgram* GetGpuProgram() const;
+
 private:
     SceneBlendOperation blendOperation;
     SceneBlendFactor sourceBlendFactor; // fragment
@@ -211,6 +219,8 @@ private:
 
     mutable DynamicArray textureUnitStates;
     unsigned short numTextureUnitStates;
+
+    GpuProgram* gpuProgram;
 };
 
 } // namespace graphics

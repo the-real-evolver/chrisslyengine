@@ -19,6 +19,8 @@ namespace graphics
         VES_POSITION = 0,
         /// texture coordinates
         VES_TEXTURE_COORDINATES,
+        /// position of the morph target vertex
+        VES_POSITION_MORPH_TARGET,
         /// the  number of VertexElementSemantic elements
         VES_COUNT
     };

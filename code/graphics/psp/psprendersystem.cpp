@@ -160,10 +160,11 @@ PSPRenderSystem::_Render(graphics::SubEntity* renderable)
     }
     else
     {
+        graphics::VertexData* vertexData = renderable->GetSubMesh()->vertexData;
         sceGumDrawArray(GU_TRIANGLES,
                         GU_TEXTURE_32BITF | GU_COLOR_8888 | GU_NORMAL_32BITF | GU_VERTEX_32BITF | GU_TRANSFORM_3D,
-                        renderable->GetSubMesh()->vertexData->vertexCount, 0,
-                        renderable->GetSubMesh()->vertexData->vertexBuffer);
+                        vertexData->vertexCount, 0,
+                        vertexData->vertexBuffer);
     }
 }
 

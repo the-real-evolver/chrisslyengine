@@ -39,7 +39,6 @@ SceneManager::SceneManager() :
 
     this->renderQueueOpaque.Initialise(64);
     this->renderQueueTransparent.Initialise(64);
-    this->renderQueueShadowCaster.Initialise(64);
     this->renderQueueShadowReceiver.Initialise(64);
 
     this->destRenderSystem = GraphicsSystem::Instance()->GetRenderSystem();
@@ -224,7 +223,9 @@ SceneManager::SetShadowTechnique(ShadowTechnique technique)
 
             this->shadowRenderTexture = CE_NEW RenderTexture();
             this->shadowRenderTexture->Create(256, 256, PF_A4R4G4B4);
-            Viewport* vp = this->shadowRenderTexture->AddViewport(this->shadowCamera, 0, 0, 256, 256);
+            // GL_CLAMP_TO_EDGE
+            memset(this->shadowRenderTexture->GetBuffer(), 0xff, 131072);
+            Viewport* vp = this->shadowRenderTexture->AddViewport(this->shadowCamera, 1, 1, 254, 254);
             vp->SetBackgroundColour(0xffffffff);
             vp->SetClearEveryFrame(true, FBT_COLOUR);
 
@@ -352,7 +353,7 @@ SceneManager::_RenderScene(Camera *camera, Viewport *vp)
                 // add to shadow caster queue
                 if (this->IsShadowTechniqueInUse() && this->illuminationStage == IRS_RENDER_TO_TEXTURE)
                 {
-                    this->renderQueueShadowCaster.AddRenderable(subEntity, this->shadowRttPass);
+                    this->renderQueueOpaque.AddRenderable(subEntity, this->shadowRttPass);
                     continue;
                 }
 
@@ -396,7 +397,7 @@ SceneManager::_RenderScene(Camera *camera, Viewport *vp)
 
     if (this->IsShadowTechniqueInUse() && this->illuminationStage == IRS_RENDER_TO_TEXTURE)
     {
-        this->_RenderQueueGroupObjects(&this->renderQueueShadowCaster);
+        this->_RenderQueueGroupObjects(&this->renderQueueOpaque);
     }
     else
     {    
