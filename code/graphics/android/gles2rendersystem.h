@@ -8,6 +8,7 @@
 */
 #include "renderwindow.h"
 #include "subentity.h"
+#include "hashtable.h"
 #include "gles2gpuprogram.h"
 #include <GLES2/gl2.h>
 
