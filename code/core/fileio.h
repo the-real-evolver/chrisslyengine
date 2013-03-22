@@ -17,8 +17,17 @@ namespace core
         ReadAccess,
         WriteAccess,
         AppendAccess,
-        ReadWriteAccess,
+        ReadWriteAccess
     };
+
+    /// seek origins
+    enum SeekOrigin
+    {
+        Begin,
+        Current,
+        End
+    };
+
 } // namespace core
 } // namespace chrissly
 //------------------------------------------------------------------------------

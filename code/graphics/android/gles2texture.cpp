@@ -35,7 +35,6 @@ GLES2Texture::CreateInternalResourcesImpl()
 {
     glGenTextures(1, &this->textureName);
     glBindTexture(GL_TEXTURE_2D, this->textureName);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
     if (GLES2Mappings::IsCompressed(this->format))
     {

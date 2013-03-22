@@ -4,7 +4,7 @@
 #------------------------------------------------------------------------------
 TARGET = ChrisslyEngine_PSP
 CFLAGS = -O2 -G0 -Wall -D__PSP__
-CXXFLAGS = $(CFLAGS) -fno-exceptions -fpermissive
+CXXFLAGS = $(CFLAGS) -fno-exceptions
 ASFLAGS = $(CFLAGS)
 PSPSDK = $(shell psp-config --pspsdk-path)
 CE = ../
@@ -13,7 +13,7 @@ CE = ../
 # includes
 # PSPSDK = C:/dev/devkitpro/devkitPSP/psp/sdk
 #------------------------------------------------------------------------------ 
-INCDIR = $(PSPSDK) $(CE)/code/core $(CE)/code/graphics code/application
+INCDIR = $(PSPSDK) $(CE)/code/core $(CE)/code/graphics $(CE)/code/application code/tests
 
 #------------------------------------------------------------------------------
 # object files
@@ -27,12 +27,14 @@ OBJS = $(CE)/code/core/quaternion.o $(CE)/code/core/vector3.o $(CE)/code/core/ma
        $(CE)/code/graphics/meshmanager.o $(CE)/code/graphics/mesh.o $(CE)/code/graphics/submesh.o \
        $(CE)/code/graphics/subentity.o $(CE)/code/graphics/entity.o \
        $(CE)/code/graphics/renderqueuesortinggrouping.o \
+       $(CE)/code/graphics/light.o \
        $(CE)/code/graphics/scenemanager.o $(CE)/code/graphics/scenenode.o \
        $(CE)/code/graphics/camera.o $(CE)/code/graphics/viewport.o \
        $(CE)/code/graphics/animation.o $(CE)/code/graphics/animationtrack.o $(CE)/code/graphics/keyframe.o $(CE)/code/graphics/animationstate.o \
        $(CE)/code/graphics/rendertarget.o $(CE)/code/graphics/psp/psprendertexture.o $(CE)/code/graphics/psp/psprenderwindow.o \
+       $(CE)/code/application/statemanager.o \
        code/main.o \
-       code/application/stateanimationtest.o code/application/statematerialtest.o code/application/statemanager.o
+       code/tests/stateanimationtest.o code/tests/statematerialtest.o
 
 #------------------------------------------------------------------------------
 # libaries

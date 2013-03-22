@@ -2,7 +2,7 @@
 #define STATE_H_
 //------------------------------------------------------------------------------
 /**
-    @class application::State
+    @class chrissly::application::State
 
     11.06.2007 -> Creation
 
@@ -10,6 +10,8 @@
 */
 
 //------------------------------------------------------------------------------
+namespace chrissly
+{
 namespace application
 {
 
@@ -29,5 +31,6 @@ public:
 };
 
 } // namespace application
+} // namespace chrissly
 //------------------------------------------------------------------------------
 #endif

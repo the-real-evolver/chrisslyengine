@@ -9,11 +9,9 @@
 #include "scenemanager.h"
 #include <psputils.h>
 
-namespace application
-{
-
 using namespace chrissly::graphics;
 using namespace chrissly::core;
+using namespace chrissly::application;
 
 StateMaterialTest* StateMaterialTest::Singleton = NULL;
 
@@ -47,10 +45,13 @@ StateMaterialTest::Enter()
     Texture* tex = TextureManager::Instance()->Load("gothic_solid.tex");
     Pass* pass = this->solidMaterial->CreatePass();
     pass->SetFog(FOG_LINEAR, 0xff0080ff, 0.0f, 50.0f);
+    pass->SetLightingEnabled(true);
+    pass->SetVertexColourTracking(TVC_DIFFUSE | TVC_AMBIENT | TVC_SPECULAR);
+    pass->SetSpecular(12.0f);
     TextureUnitState* tus = pass->CreateTextureUnitState();
     tus->SetTexture(tex);
-    tus->SetTextureBlendOperation(LBT_COLOUR, LBO_REPLACE);
-    
+    tus->SetTextureBlendOperation(LBT_COLOUR, LBO_MODULATE);
+
     // transparent material
     this->alphaMaterial = new Material();
     tex = TextureManager::Instance()->Load("gothic_alpha.tex");
@@ -59,23 +60,26 @@ StateMaterialTest::Enter()
     pass->SetSceneBlending(SBF_SOURCE_ALPHA, SBF_ONE_MINUS_SOURCE_ALPHA);
     pass->SetCullingMode(CULL_NONE);
     pass->SetFog(FOG_LINEAR, 0xff0080ff, 0.0f, 50.0f);
+    pass->SetLightingEnabled(true);
+    pass->SetVertexColourTracking(TVC_DIFFUSE | TVC_AMBIENT | TVC_SPECULAR);
+    pass->SetSpecular(12.0f);
     tus = pass->CreateTextureUnitState();
     tus->SetTexture(tex);
     tus->SetTextureBlendOperation(LBT_ALPHA, LBO_REPLACE);
-    
+
     // create entity and set materials
     this->gothEntity = SceneManager::Instance()->CreateEntity("gothic_woman.mesh");
     this->gothEntity->SetCastShadows(true);
     this->gothEntity->GetSubEntity(1)->SetMaterial(this->solidMaterial);
     this->gothEntity->GetSubEntity(0)->SetMaterial(this->alphaMaterial);
     this->gothEntity->GetSubEntity(2)->SetMaterial(this->alphaMaterial);
-    
+
     // create scenenode
     this->gothSceneNode = SceneManager::Instance()->GetRootSceneNode()->CreateChildSceneNode();
     this->gothSceneNode->SetScale(3.5f, 3.5f, 3.5f);
-    this->gothSceneNode->SetPosition(0.0f, 0.1f, -1.4f);
+    this->gothSceneNode->SetPosition(-2.0f, 0.1f, -1.4f);
     this->gothSceneNode->AttachObject(this->gothEntity);
-    
+
     this->cubeMaterial = new Material();
 
     tex = TextureManager::Instance()->Load("floor.tex");
@@ -103,8 +107,6 @@ StateMaterialTest::Enter()
 
     this->lightConeMaterial = new Material();
     pass = this->lightConeMaterial->CreatePass();
-    pass->SetLightingEnabled(true);
-    pass->SetSelfIllumination(0xff00ffff);
     this->lightConeEntity = SceneManager::Instance()->CreateEntity("cone.mesh");
     this->lightConeEntity->GetSubEntity(0)->SetMaterial(this->lightConeMaterial);
     this->lightConeSceneNode = SceneManager::Instance()->GetRootSceneNode()->CreateChildSceneNode();
@@ -113,10 +115,28 @@ StateMaterialTest::Enter()
     this->lightConeSceneNode->Yaw(2.14f);
     this->lightConeSceneNode->Pitch(-1.0f);
     this->lightConeSceneNode->AttachObject(this->lightConeEntity);
-    
+
     this->camera = SceneManager::Instance()->GetCamera("MainCamera");
     this->camera->SetPosition(0.0f, 0.0f, 5.0f);
-    
+    this->camera->SetOrientation(Quaternion());
+
+    SceneManager::Instance()->SetAmbientLight(0x00222222);
+    Light* light = SceneManager::Instance()->CreateLight("SpotLight");
+    light->SetType(Light::LT_SPOTLIGHT);
+    light->SetDiffuseColour(0xffff0000);
+    light->SetSpecularColour(0xffff0000);
+    light->SetAttenuation(1.0f, 0.0f, 0.0f);
+    light->SetPosition(6.0f, 6.0f, -1.4f);
+    light->SetDirection(-1.0f, -1.0f, 0.0f);
+    light->SetSpotlightFalloff(5.0f);
+    light->SetSpotlightOuterAngle(0.6f);
+    light = SceneManager::Instance()->CreateLight("PointLight");
+    light->SetType(Light::LT_POINT);
+    light->SetDiffuseColour(0xffff00ff);
+    light->SetSpecularColour(0xffff00ff);
+    light->SetAttenuation(0.0f, 0.5f, 0.0f);
+    light->SetPosition(0.0f, -7.0f, -1.4f);
+
     sceKernelDcacheWritebackAll();
 }
 
@@ -164,7 +184,7 @@ StateMaterialTest::Trigger()
         tx = 0.0f;
     }
     this->camera->Yaw(2.0f * -tx * (GU_PI / 180.0f));
-    
+
     float ty = (this->pad.Ly - 128) / 127.0f;
     if (ty > 0.2f)
     {
@@ -179,7 +199,7 @@ StateMaterialTest::Trigger()
         ty = 0.0f;
     }
     this->camera->Pitch(2.0f * ty * (GU_PI / 180.0f));
-    
+
     if (this->pad.Buttons & PSP_CTRL_TRIANGLE) this->camera->MoveRelative(Vector3(0.0f, 0.0f, -0.1f));
     if (this->pad.Buttons & PSP_CTRL_SQUARE)   this->camera->MoveRelative(Vector3(0.0f, 0.0f, 0.1f));
 
@@ -188,11 +208,11 @@ StateMaterialTest::Trigger()
     if (this->pad.Buttons & PSP_CTRL_RIGHT) this->gothSceneNode->SetPosition(pos.x + 0.05f, pos.y, pos.z);
     if (this->pad.Buttons & PSP_CTRL_UP)    this->gothSceneNode->SetPosition(pos.x, pos.y, pos.z - 0.05f);
     if (this->pad.Buttons & PSP_CTRL_DOWN)  this->gothSceneNode->SetPosition(pos.x, pos.y, pos.z + 0.05f);
-    
+
     // test uv animation
     this->vMod += 0.003f;
     this->cubeMaterial->GetPass(1)->GetTextureUnitState(0)->SetTextureScroll(0.0f, this->vMod);
-    
+
     // rotate scenenode
     this->gothSceneNode->Yaw(0.01f);
 
@@ -201,6 +221,5 @@ StateMaterialTest::Trigger()
     if (this->pad.Buttons & PSP_CTRL_CROSS) StateManager::Instance()->ChangeState(StateAnimationTest::Instance());
 }
 
-} // namespace application
 
 

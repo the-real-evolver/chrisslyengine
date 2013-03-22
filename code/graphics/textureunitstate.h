@@ -24,16 +24,20 @@ public:
     {
         /// Texture wraps at values over 1.0
         TAM_WRAP,
+        /// Texture mirrors (flips) at joins over 1.0
+        TAM_MIRROR,
         /// Texture clamps at 1.0
-        TAM_CLAMP
+        TAM_CLAMP,
+        /// Texture coordinates outside the range [0.0, 1.0] are set to the border colour
+        TAM_BORDER
     };
-   
+
     /// texture addressing mode for each texture coordinate
     struct UVWAddressingMode
     {
         TextureAddressingMode u, v;
     };
-    
+
     /// texture mapping mode - default is TMM_TEXTURE_COORDS
     enum TextureMappingMode
     {
@@ -41,7 +45,7 @@ public:
         TMM_TEXTURE_MATRIX,
         TMM_ENVIRONMENT_MAP
     };
-    
+
     /// texture projection mapping mode - default is TPM_UV
     enum TextureProjectionMappingMode
     {
@@ -50,12 +54,12 @@ public:
         TPM_NORMALIZED_NORMAL,
         TPM_NORMAL
     };
-    
+
     /// constructor
     TextureUnitState();
     /// destructor
     ~TextureUnitState();
-    
+
     /// sets the scaling factor applied to texture coordinates
     void SetTextureScale(float uScale, float vScale);
     /// get texture uscale value
@@ -94,7 +98,7 @@ public:
     void SetTextureBlendOperation(LayerBlendType lbt, LayerBlendOperation lbo);
     /// get the texture operation
     void GetTextureBlendOperation(LayerBlendType& lbt, LayerBlendOperation& lbo) const;
-  
+
     /// sets the texture addressing mode, i.e. what happens at uv values above 1.0.
     /**
         @note
@@ -118,7 +122,7 @@ public:
     void SetTextureMappingMode(TextureMappingMode mode);
     /// get the texturemapping mode
     TextureMappingMode GetTextureMappingMode() const;
-    
+
     /// set the texture projection mapping mode
     /**
         @remarks
@@ -130,7 +134,7 @@ public:
     void SetTextureProjectionMappingMode(TextureProjectionMappingMode mode);
     /// get the texture projection mapping mode
     TextureProjectionMappingMode GetTextureProjectionMappingMode() const;
-   
+
     /// set texture to use
     void SetTexture(Texture* texture);
     /// get the used texture

@@ -33,7 +33,7 @@ public:
     static void _Initialise(AAssetManager* assetManager);
 
 private:
-    static AAssetManager* assetManager;
+    static AAssetManager* AssetManager;
 };
 
 } // namespace chrissly

@@ -16,7 +16,7 @@ PSP_MODULE_INFO("Chrissly Engine PSP", 0, 1, 1);
 PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER);
 
 using namespace chrissly::graphics;
-using namespace application;
+using namespace chrissly::application;
 
 bool volatile exitRequest = false;
 
@@ -55,7 +55,7 @@ main (int argc, char* argv[])
     StateMaterialTest* smt = new StateMaterialTest();
     // initialise statemanager
     StateManager* sm = new StateManager();
-    StateManager::Instance()->Initialise();
+    StateManager::Instance()->ChangeState(smt);
 
     while (StateManager::Instance()->IsRunning() && !exitRequest)
     {

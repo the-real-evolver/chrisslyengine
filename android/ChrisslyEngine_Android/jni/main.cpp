@@ -31,15 +31,15 @@ const char* MorphAnimVertexShader =
     "attribute vec2 texCoordIn;\n"
     "varying vec2 texCoordOut;\n"
     "attribute vec4 position;\n"
-	"attribute vec4 positionMorphTarget;\n"
+    "attribute vec4 positionMorphTarget;\n"
     "uniform mat4 worldMatrix;\n"
     "uniform mat4 viewMatrix;\n"
     "uniform mat4 projectionMatrix;\n"
     "uniform mat4 worldViewProjMatrix;\n"
-	"uniform float morphWeight;\n"
+    "uniform float morphWeight;\n"
     "void main()\n"
     "{\n"
-	"    gl_Position = worldViewProjMatrix * (position + (positionMorphTarget - position) * morphWeight);\n"
+    "    gl_Position = worldViewProjMatrix * (position + (positionMorphTarget - position) * morphWeight);\n"
     "    texCoordOut = texCoordIn;\n"
     "}\n";
 
@@ -70,7 +70,7 @@ Enter(struct android_app* state)
     pass->SetCullingMode(CULL_NONE);
     pass->SetSceneBlendingEnabled(false);
     pass->SetSceneBlending(SBF_SOURCE_COLOUR, SBF_DEST_COLOUR);
-    gpuProgram = CE_NEW GpuProgram(MorphAnimVertexShader, FragmentShader);
+    gpuProgram = new GpuProgram(MorphAnimVertexShader, FragmentShader);
     pass->SetGpuProgram(gpuProgram);
     tex = TextureManager::Instance()->Load("cerberus_etc1.tex");
     TextureUnitState* tus = pass->CreateTextureUnitState();
@@ -97,7 +97,7 @@ Exit()
 {
     initialized = false;
 
-    CE_DELETE gpuProgram;
+    delete gpuProgram;
     material->RemoveAllPasses();
     delete material;
 
@@ -112,7 +112,7 @@ Trigger()
 {
     if (initialized)
     {
-    	animState->AddTime(0.016f);
+        animState->AddTime(0.016f);
         sceneNode->Yaw((float)distance * 0.02f);
         graphicsSystem->RenderOneFrame();
     }

@@ -115,8 +115,6 @@ Animation::Apply(Entity* entity, float timePos)
         timePos = Math::Fmod(timePos, this->length);
     }
 
-    int timeIndex = 0;
-    float morphWeight = 0.0f;
     unsigned int i;
     for (i = 0; i < this->numVertexTracks; i++)
     {
@@ -129,21 +127,12 @@ Animation::Apply(Entity* entity, float timePos)
             VertexMorphKeyFrame* nextKey = vertexAnimTrack->GetVertexMorphKeyFrame(keyIndex + 1);
             if (timePos >= key->GetTime() && timePos < nextKey->GetTime())
             {
-                timeIndex = keyIndex;
-                morphWeight = (timePos - key->GetTime()) / (nextKey->GetTime() - key->GetTime());
+                SubEntity* subEntity = entity->GetSubEntity(0);
+                subEntity->SetMorphWeight((timePos - key->GetTime()) / (nextKey->GetTime() - key->GetTime()));
+                vertexAnimTrack->ApplyToVertexData(subEntity->_GetHardwareVertexAnimVertexData(), keyIndex);
                 break;
             }
         }
-    }
-
-    SubEntity* subEntity = entity->GetSubEntity(0);
-    subEntity->SetMorphWeight(morphWeight);
-    VertexData* hwVertexData = subEntity->_GetHardwareVertexAnimVertexData();
-
-    for (i = 0; i < this->numVertexTracks; i++)
-    {
-        VertexAnimationTrack* vertexAnimTrack = (VertexAnimationTrack*)DynamicArrayGet(&this->vertexTrackList, i);
-        vertexAnimTrack->ApplyToVertexData(hwVertexData, timeIndex);
     }
 }
 

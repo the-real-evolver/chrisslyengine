@@ -8,7 +8,7 @@
 namespace chrissly
 {
 
-AAssetManager* AndroidFSWrapper::assetManager = 0;
+AAssetManager* AndroidFSWrapper::AssetManager = 0;
 
 //------------------------------------------------------------------------------
 /**
@@ -17,7 +17,7 @@ core::FileHandle
 AndroidFSWrapper::Open(const char* fileName, core::AccessMode flags, int mode)
 {
     core::FileHandle fileHandle;
-    fileHandle.handle = AAssetManager_open(AndroidFSWrapper::assetManager, fileName, AASSET_MODE_UNKNOWN);
+    fileHandle.handle = AAssetManager_open(AndroidFSWrapper::AssetManager, fileName, AASSET_MODE_UNKNOWN);
     CE_ASSERT(fileHandle.handle >= 0, "FSWrapper::Open(): can't open file '%s'\n", fileName);
     return fileHandle;
 }
@@ -58,7 +58,7 @@ AndroidFSWrapper::Read(core::FileHandle fileHandle, void* buf, unsigned int numB
 void
 AndroidFSWrapper::_Initialise(AAssetManager* assetManager)
 {
-    AndroidFSWrapper::assetManager = assetManager;
+    AndroidFSWrapper::AssetManager = assetManager;
     CE_LOG("AndroidFSWrapper::_Initialise\n");
 }
 

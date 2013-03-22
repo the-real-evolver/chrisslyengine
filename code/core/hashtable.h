@@ -120,6 +120,11 @@ HashTableClear(HashTable* table)
 static inline void
 HashTableInsert(HashTable* table, const char* key, void* value)
 {
+    if (0 == table->capacity)
+    {
+        HashTableInit(table, 1);
+    }
+
     if (table->currentSize == table->capacity)
     {
         HashTableResize(table, table->capacity * 2);

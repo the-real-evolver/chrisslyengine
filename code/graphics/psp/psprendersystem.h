@@ -8,6 +8,7 @@
 */
 #include "renderwindow.h"
 #include "subentity.h"
+#include "hashtable.h"
 #include <pspgu.h>
 
 //------------------------------------------------------------------------------
@@ -26,7 +27,7 @@ public:
     PSPRenderSystem();
     /// destructor
     ~PSPRenderSystem();
-    
+
     /// start up the renderer
     graphics::RenderWindow* _Initialise(void* customParams);
     /// shutdown the renderer and cleanup resources
@@ -59,27 +60,32 @@ public:
     void _BeginFrame();
     /// ends rendering of a frame to the current viewport
     void _EndFrame();
-    
+
     /// method for setting up the renderstate for a rendering pass
     void _SetPass(graphics::Pass* pass);
+    /// tells the rendersystem to use the attached set of lights (and no others)
+    void _UseLights(HashTable* lights);
     /// sets the colour & strength of the ambient (global directionless) light in the world
     void SetAmbientLight(unsigned int colour);
+    /// notify the rendersystem that a morphkeyframe was build
+    void _NotifyMorphKeyFrameBuild();
 
     /// returns displaylist
     void* GetDisplayList() const;
-    /// notify the rendersystem that a morphkeyframe was build
-    void _NotifyMorphKeyFrameBuild();
 
 private:
     /// copy constructor
     PSPRenderSystem(const PSPRenderSystem&cc) {}; 
 
     static PSPRenderSystem* Singleton;
-    
+
     /// the GE store the commands for processing in this array
     static unsigned int __attribute__((aligned(16))) DisplayList[262144];
-    
+    static int MaxLights;
+
     unsigned int ambientLight;
+    ScePspFVector3 lightPos;
+    ScePspFVector3 lightDir;
     ScePspFMatrix4 viewMat;
     ScePspFMatrix4 projMat;
     ScePspFMatrix4 worldMat;

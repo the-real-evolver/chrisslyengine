@@ -59,13 +59,11 @@ MeshManager::Load(const char* filename)
     this->resources = linkedlistAdd(&this->resources, meshResource);
     this->resources->data = meshResource;
 
-    unsigned char byteArray[4];
     unsigned int bytesToRead = 0;
     unsigned int bytesPerVertex = 36;
     unsigned char currentChunk;
     unsigned int vertexCount = 0;
     void* vertexBuffer = NULL;
-
     Animation* animation = NULL;
     VertexAnimationTrack* animationTrack = NULL;
 
@@ -78,8 +76,7 @@ MeshManager::Load(const char* filename)
             case M_SUBMESH:
                 {
                     // read vertex count
-                    FSWrapper::Read(fd, byteArray, 4);
-                    vertexCount = *(unsigned int*)byteArray;
+                    FSWrapper::Read(fd, &vertexCount, 4);
 
                     // read vertex buffer
                     if (vertexCount > 0)
@@ -102,8 +99,8 @@ MeshManager::Load(const char* filename)
             case M_ANIMATION:
                 {
                     // read animation length
-                    FSWrapper::Read(fd, byteArray, 4);
-                    float animLength = *(float*)byteArray;
+                    float animLength;
+                    FSWrapper::Read(fd, &animLength, 4);
                     animation = mesh->CreateAnimation("default", animLength);
                 }
                 break;
@@ -117,12 +114,11 @@ MeshManager::Load(const char* filename)
             case M_ANIMATION_MORPH_KEYFRAME:
                 {
                     // read key time
-                    FSWrapper::Read(fd, byteArray, 4);
-                    float keyTime = *(float*)byteArray;
+                    float keyTime;
+                    FSWrapper::Read(fd, &keyTime, 4);
 
                     // read vertex count
-                    FSWrapper::Read(fd, byteArray, 4);
-                    vertexCount = *(unsigned int*)byteArray;
+                    FSWrapper::Read(fd, &vertexCount, 4);
 
                     // read vertex buffer
                     bytesToRead = vertexCount * bytesPerVertex;

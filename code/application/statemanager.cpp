@@ -3,9 +3,11 @@
 //  (C) 2010 Christian Bleicher
 //------------------------------------------------------------------------------
 #include "statemanager.h"
-#include "stateanimationtest.h"
-#include "statematerialtest.h"
+#include <stdio.h>
+#include "debug.h"
 
+namespace chrissly
+{
 namespace application
 {
 
@@ -14,7 +16,9 @@ StateManager* StateManager::Singleton = NULL;
 //------------------------------------------------------------------------------
 /**
 */
-StateManager::StateManager()
+StateManager::StateManager() :
+    currentState(NULL),
+    isRunning(false)
 {
     Singleton = this;
 }
@@ -31,20 +35,12 @@ StateManager::~StateManager()
 /**
 */
 void
-StateManager::Initialise()
-{
-    this->currentState = NULL;
-    this->isRunning = true;
-    this->ChangeState(StateAnimationTest::Instance());
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-void
 StateManager::Trigger()
 {
-    this->currentState->Trigger();
+    if (this->currentState != NULL)
+    {
+        this->currentState->Trigger();
+    }
 }
 
 //------------------------------------------------------------------------------
@@ -53,16 +49,18 @@ StateManager::Trigger()
 void
 StateManager::ChangeState(State* state)
 {
-    if (NULL != currentState)
-    {
-        this->currentState->Exit();
-    }
-    
     if (state != this->currentState)
     {
+        if (this->currentState != NULL)
+        {
+            this->currentState->Exit();
+        }
+
+        CE_ASSERT(state != NULL, "StateManager::ChangeState() pointer to state is NULL\n");
         this->currentState = state;
-        state->Enter();
-    }	
+        this->currentState->Enter();
+        this->isRunning = true;
+    }
 }
 
 //------------------------------------------------------------------------------
@@ -71,7 +69,7 @@ StateManager::ChangeState(State* state)
 void
 StateManager::Exit()
 {
-    if (NULL != currentState)
+    if (this->currentState != NULL)
     {
         this->currentState->Exit();
         this->currentState = NULL;
@@ -90,4 +88,4 @@ StateManager::IsRunning()
 }
 
 } // namespace application
-
+} // namespace chrissly

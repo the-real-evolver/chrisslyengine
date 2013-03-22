@@ -22,6 +22,7 @@ LOCAL_SRC_FILES := core/android/androiddebug.cpp core/android/androidfswrapper.c
                    graphics/meshmanager.cpp graphics/mesh.cpp graphics/submesh.cpp \
                    graphics/subentity.cpp  graphics/entity.cpp \
                    graphics/renderqueuesortinggrouping.cpp \
+                   graphics/light.cpp \
                    graphics/scenemanager.cpp graphics/scenenode.cpp \
                    graphics/camera.cpp graphics/viewport.cpp \
                    graphics/animation.cpp graphics/animationtrack.cpp graphics/keyframe.cpp graphics/animationstate.cpp \

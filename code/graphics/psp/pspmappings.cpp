@@ -13,15 +13,15 @@ namespace chrissly
 /**
 */
 ScePspFMatrix4
-PSPMappings::MakePSPMatrix(const chrissly::core::Matrix4& mat)
+PSPMappings::MakePSPMatrix(const core::Matrix4& mat)
 {
     ScePspFMatrix4 m;
-    
+
     m.x.x = mat[0][0]; m.y.x = mat[0][1]; m.z.x = mat[0][2]; m.w.x = mat[0][3];
     m.x.y = mat[1][0]; m.y.y = mat[1][1]; m.z.y = mat[1][2]; m.w.y = mat[1][3];
     m.x.z = mat[2][0]; m.y.z = mat[2][1]; m.z.z = mat[2][2]; m.w.z = mat[2][3];
     m.x.w = mat[3][0]; m.y.w = mat[3][1]; m.z.w = mat[3][2]; m.w.w = mat[3][3];
-    
+
     return m;
 }
 
@@ -29,7 +29,7 @@ PSPMappings::MakePSPMatrix(const chrissly::core::Matrix4& mat)
 /**
 */
 int
-PSPMappings::Get(chrissly::graphics::SceneBlendOperation op)
+PSPMappings::Get(graphics::SceneBlendOperation op)
 {
     switch (op)
     {
@@ -41,7 +41,7 @@ PSPMappings::Get(chrissly::graphics::SceneBlendOperation op)
         case graphics::SBO_ABS:              return GU_ABS;
         default: CE_ASSERT(false, "PSPMappings::Get(): illegal SceneBlendOperation '%i'\n", op);
     }
-    
+
     return 0;
 }
 
@@ -49,7 +49,7 @@ PSPMappings::Get(chrissly::graphics::SceneBlendOperation op)
 /**
 */
 int
-PSPMappings::Get(chrissly::graphics::SceneBlendFactor sbf)
+PSPMappings::Get(graphics::SceneBlendFactor sbf)
 {
     switch (sbf)
     {
@@ -66,7 +66,7 @@ PSPMappings::Get(chrissly::graphics::SceneBlendFactor sbf)
         case graphics::SBF_FIX:                     return GU_FIX; // only PSP
         default: CE_ASSERT(false, "PSPMappings::Get(): illegal SceneBlendFactor '%i'\n", sbf);
     }
-    
+
     return 0;
 }
 
@@ -82,7 +82,7 @@ PSPMappings::Get(graphics::LayerBlendType lbt)
         case graphics::LBT_ALPHA:  return GU_TCC_RGBA;
         default: CE_ASSERT(false, "PSPMappings::Get(): illegal LayerBlendType '%i'\n", lbt);
     }
-    
+
     return 0;
 }
 
@@ -101,7 +101,7 @@ PSPMappings::Get(graphics::LayerBlendOperation lbo)
         case graphics::LBO_DECAL:       return GU_TFX_DECAL;
         default: CE_ASSERT(false, "PSPMappings::Get(): illegal LayerBlendOperation '%i'\n", lbo);
     }
-    
+
     return 0;
 }
     
@@ -111,7 +111,6 @@ PSPMappings::Get(graphics::LayerBlendOperation lbo)
 void
 PSPMappings::Get(graphics::FilterOptions minFilter, graphics::FilterOptions magFilter, graphics::FilterOptions mipFilter, int& min, int& mag)
 {
-    
     switch (mipFilter)
     {
         case graphics::FO_NONE:
@@ -123,18 +122,9 @@ PSPMappings::Get(graphics::FilterOptions minFilter, graphics::FilterOptions magF
                     case graphics::FO_LINEAR: min = GU_LINEAR;  break;
                     default: CE_ASSERT(false, "PSPMappings::Get(): illegal FilterOptions '%i'\n", minFilter);        
                 }
-                
-                switch (magFilter)
-                {
-                    case graphics::FO_NONE:   mag = GU_NEAREST; break;
-                    case graphics::FO_POINT:  mag = GU_NEAREST; break;
-                    case graphics::FO_LINEAR: mag = GU_LINEAR;  break;
-                    default: CE_ASSERT(false, "PSPMappings::Get(): illegal FilterOptions '%i'\n", magFilter);        
-                }
-                
-                return;
             }
-        
+            break;
+
         case graphics::FO_POINT:
             {
                 switch (minFilter)
@@ -144,18 +134,9 @@ PSPMappings::Get(graphics::FilterOptions minFilter, graphics::FilterOptions magF
                     case graphics::FO_LINEAR: min = GU_LINEAR_MIPMAP_NEAREST;  break;
                     default: CE_ASSERT(false, "PSPMappings::Get(): illegal FilterOptions '%i'\n", minFilter);        
                 }
-                
-                switch (magFilter)
-                {
-                    case graphics::FO_NONE:   mag = GU_NEAREST_MIPMAP_NEAREST; break;
-                    case graphics::FO_POINT:  mag = GU_NEAREST_MIPMAP_NEAREST; break;
-                    case graphics::FO_LINEAR: mag = GU_LINEAR_MIPMAP_NEAREST;  break;
-                    default: CE_ASSERT(false, "PSPMappings::Get(): illegal FilterOptions '%i'\n", magFilter);        
-                }
-
-                return;
             }
-            
+            break;
+
         case graphics::FO_LINEAR:
             {
                 switch (minFilter)
@@ -165,19 +146,18 @@ PSPMappings::Get(graphics::FilterOptions minFilter, graphics::FilterOptions magF
                     case graphics::FO_LINEAR: min = GU_LINEAR_MIPMAP_LINEAR;  break;
                     default: CE_ASSERT(false, "PSPMappings::Get(): illegal FilterOptions '%i'\n", minFilter);        
                 }
-                
-                switch (magFilter)
-                {
-                    case graphics::FO_NONE:   mag = GU_NEAREST_MIPMAP_LINEAR; break;
-                    case graphics::FO_POINT:  mag = GU_NEAREST_MIPMAP_LINEAR; break;
-                    case graphics::FO_LINEAR: mag = GU_LINEAR_MIPMAP_LINEAR;  break;
-                    default: CE_ASSERT(false, "PSPMappings::Get(): illegal FilterOptions '%i'\n", magFilter);        
-                }
- 
-                return;
             }
+            break;
 
         default: CE_ASSERT(false, "PSPMappings::Get(): illegal FilterOptions '%i'\n", mipFilter);
+    }
+
+    switch (magFilter)
+    {
+        case graphics::FO_NONE:   mag = GU_NEAREST; break;
+        case graphics::FO_POINT:  mag = GU_NEAREST; break;
+        case graphics::FO_LINEAR: mag = GU_LINEAR;  break;
+        default: CE_ASSERT(false, "PSPMappings::Get(): illegal FilterOptions '%i'\n", magFilter);
     }
 }
 
@@ -189,11 +169,12 @@ PSPMappings::Get(graphics::TextureUnitState::TextureAddressingMode tam)
 {
     switch (tam)
     {
-        case graphics::TextureUnitState::TAM_WRAP: return GU_REPEAT;
-        case graphics::TextureUnitState::TAM_CLAMP: return GU_CLAMP; 
+        case graphics::TextureUnitState::TAM_WRAP:   return GU_REPEAT;
+        case graphics::TextureUnitState::TAM_CLAMP:  return GU_CLAMP;
+        case graphics::TextureUnitState::TAM_BORDER: return GU_CLAMP;
         default: CE_ASSERT(false, "PSPMappings::Get(): illegal TextureAddressingMode '%i'\n", tam);
     }
-    
+
     return 0;
 }
 
@@ -210,7 +191,7 @@ PSPMappings::Get(graphics::TextureUnitState::TextureMappingMode tmm)
         case graphics::TextureUnitState::TMM_ENVIRONMENT_MAP: return GU_ENVIRONMENT_MAP;
         default: CE_ASSERT(false, "PSPMappings::Get(): illegal TextureMappingMode '%i'\n", tmm);
     }
-    
+
     return 0;
 }
 
@@ -280,12 +261,12 @@ int
 PSPMappings::Get(graphics::TrackVertexColourType tvct)
 {
     int colorComponent = 0;
-    
+
     if (tvct & graphics::TVC_NONE)     return GU_UNKNOWN_LIGHT_COMPONENT;
     if (tvct & graphics::TVC_AMBIENT)  colorComponent |= GU_AMBIENT;
     if (tvct & graphics::TVC_DIFFUSE)  colorComponent |= GU_DIFFUSE;
     if (tvct & graphics::TVC_SPECULAR) colorComponent |= GU_SPECULAR;
- 
+
     return colorComponent;
 }
 

@@ -11,7 +11,7 @@
 namespace chrissly
 {
 
-const char* PSPFSWrapper::APP_EXPORT_PATH = "ms0:/PSP/GAME/ChrisslyEngine_PSP/export/";
+const char* PSPFSWrapper::AppExportPath = "ms0:/PSP/GAME/ChrisslyEngine_PSP/export/";
 
 //------------------------------------------------------------------------------
 /**
@@ -20,7 +20,7 @@ core::FileHandle
 PSPFSWrapper::Open(const char* fileName, core::AccessMode flags, int mode)
 {
     char filePath[128];
-    strcpy(filePath, APP_EXPORT_PATH);
+    strcpy(filePath, AppExportPath);
     strcat(filePath, fileName);
     core::FileHandle fileHandle;
     fileHandle.handle = sceIoOpen(filePath, PSPFSWrapper::Get(flags), mode);
@@ -63,6 +63,15 @@ PSPFSWrapper::Read(core::FileHandle fileHandle, void* buf, unsigned int numBytes
 //------------------------------------------------------------------------------
 /**
 */
+void
+PSPFSWrapper::Seek(core::FileHandle fileHandle, int offset, core::SeekOrigin whence)
+{
+    sceIoLseek32(fileHandle.handle, (SceOff)offset, PSPFSWrapper::Get(whence));
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
 int
 PSPFSWrapper::Get(core::AccessMode mode)
 {
@@ -74,7 +83,24 @@ PSPFSWrapper::Get(core::AccessMode mode)
         case core::AppendAccess:    return PSP_O_APPEND;
         default: CE_ASSERT(false, "FSWrapper::Get(): illegal AccessMode '%i'\n", mode);
     }
-    
+
+    return 0;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+int
+PSPFSWrapper::Get(core::SeekOrigin origin)
+{
+    switch (origin)
+    {
+        case core::Begin:   return PSP_SEEK_SET;
+        case core::Current: return PSP_SEEK_CUR;
+        case core::End:     return PSP_SEEK_END;
+        default: CE_ASSERT(false, "FSWrapper::Get(): illegal SeekOrigin '%i'\n", origin);
+    }
+
     return 0;
 }
 

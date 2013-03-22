@@ -2,7 +2,7 @@
 #define STATEMANAGER_H_
 //------------------------------------------------------------------------------
 /**
-    @class application::StateManager
+    @class chrissly::application::StateManager
 
     11.06.2007 -> Creation
 
@@ -11,24 +11,24 @@
 #include "state.h"
 
 //------------------------------------------------------------------------------
+namespace chrissly
+{
 namespace application
 {
 
 class StateManager
-{		
+{
 public:
     /// get pointer to the singleton
     static StateManager* Instance()
     {
-        return Singleton; 
+        return Singleton;
     };
 
     /// default constructor
     StateManager();
     /// destructor
     ~StateManager();
-    /// initialise the statemanager
-    void Initialise();
     /// updates the statemanager
     void Trigger();
     /// changes the state
@@ -43,10 +43,11 @@ private:
     StateManager(const StateManager&cc) {};
 
     static StateManager* Singleton;
-    State* currentState;		
-    bool isRunning;	
+    State* currentState;
+    bool isRunning;
 };
 
 } // namespace application
+} // namespace chrissly
 //------------------------------------------------------------------------------
 #endif

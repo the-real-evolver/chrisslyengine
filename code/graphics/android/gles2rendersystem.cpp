@@ -274,6 +274,7 @@ GLES2RenderSystem::_EndFrame()
 void
 GLES2RenderSystem::_SetPass(graphics::Pass* pass)
 {
+    // set gpu program to use
     if (pass->IsProgrammable())
     {
         this->currentGpuProgram = pass->GetGpuProgram();
@@ -324,8 +325,26 @@ GLES2RenderSystem::_SetPass(graphics::Pass* pass)
         graphics::TextureUnitState* tus = pass->GetTextureUnitState(0);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, tus->GetTexture()->GetName());
+
+        GLint min, mag;
+        GLES2Mappings::Get(tus->GetTextureFiltering(graphics::FT_MIN), tus->GetTextureFiltering(graphics::FT_MAG), tus->GetTextureFiltering(graphics::FT_MIP), min, mag);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mag);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GLES2Mappings::Get(tus->GetTextureAddressingMode().u));
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GLES2Mappings::Get(tus->GetTextureAddressingMode().v));
+
         glUniform1i(this->currentGpuProgram->GetTextureUniformLocation(), 0 /* index of the textureunit */);
     }
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+GLES2RenderSystem::_UseLights(HashTable* lights)
+{
+
 }
 
 //------------------------------------------------------------------------------

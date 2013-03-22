@@ -2,10 +2,10 @@
 #define STATEANIMATIONTEST_H_
 //------------------------------------------------------------------------------
 /**
-    @class application::StateAnimationTest
+    @class StateAnimationTest
 
     13.03.2011 -> Creation
-    
+
     (C) 2011 Christian Bleicher
 */
 #include "state.h"
@@ -14,26 +14,25 @@
 #include "mesh.h"
 #include "entity.h"
 #include "camera.h"
+#include "light.h"
 #include <pspctrl.h>
 
 //------------------------------------------------------------------------------
-namespace application
-{
 
-class StateAnimationTest : public State
+class StateAnimationTest : public chrissly::application::State
 {
 public:
     /// get pointer to the singleton
     static StateAnimationTest* Instance()
     {
-        return Singleton; 
+        return Singleton;
     };
 
     /// default constructor
     StateAnimationTest();
-    /// destructor	
+    /// destructor
     virtual	~StateAnimationTest();
-    /// called when entering the state 
+    /// called when entering the state
     void Enter();
     /// called when leaving the state
     void Exit();
@@ -62,7 +61,6 @@ private:
     SceCtrlData pad;
 };
 
-} // namespace application
 //------------------------------------------------------------------------------
 #endif
 

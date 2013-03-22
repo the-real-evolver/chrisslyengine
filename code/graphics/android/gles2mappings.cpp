@@ -32,28 +32,120 @@ GLES2Mappings::MakeGLMatrix(GLfloat gl_matrix[16], const core::Matrix4& m)
 //------------------------------------------------------------------------------
 /**
 */
-GLbitfield
-GLES2Mappings::Get(graphics::FrameBufferType fbt)
+GLenum
+GLES2Mappings::Get(graphics::SceneBlendOperation op)
 {
-    GLbitfield clearBits = 0;
+    switch (op)
+    {
+        case graphics::SBO_ADD:              return GL_FUNC_ADD;
+        case graphics::SBO_SUBTRACT:         return GL_FUNC_SUBTRACT;
+        case graphics::SBO_REVERSE_SUBTRACT: return GL_FUNC_REVERSE_SUBTRACT;
+        case graphics::SBO_MIN:
+        case graphics::SBO_MAX:
+        case graphics::SBO_ABS:
+        default: CE_ASSERT(false, "GLES2Mappings::Get(): illegal SceneBlendOperation '%i'\n", op);
+    }
 
-    if (fbt & graphics::FBT_COLOUR)  clearBits |= GL_COLOR_BUFFER_BIT;
-    if (fbt & graphics::FBT_DEPTH)   clearBits |= GL_DEPTH_BUFFER_BIT;
-    if (fbt & graphics::FBT_STENCIL) clearBits |= GL_STENCIL_BUFFER_BIT;
- 
-    return clearBits;
+    return 0;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+GLenum
+GLES2Mappings::Get(graphics::SceneBlendFactor sbf)
+{
+    switch (sbf)
+    {
+        case graphics::SBF_ONE:                     return GL_ONE;
+        case graphics::SBF_ZERO:                    return GL_ZERO;
+        case graphics::SBF_DEST_COLOUR:             return GL_DST_COLOR;
+        case graphics::SBF_SOURCE_COLOUR:           return GL_SRC_COLOR;
+        case graphics::SBF_ONE_MINUS_DEST_COLOUR:   return GL_ONE_MINUS_DST_COLOR;
+        case graphics::SBF_ONE_MINUS_SOURCE_COLOUR: return GL_ONE_MINUS_SRC_COLOR;
+        case graphics::SBF_DEST_ALPHA:              return GL_DST_ALPHA;
+        case graphics::SBF_SOURCE_ALPHA:            return GL_SRC_ALPHA;
+        case graphics::SBF_ONE_MINUS_DEST_ALPHA:    return GL_ONE_MINUS_DST_ALPHA;
+        case graphics::SBF_ONE_MINUS_SOURCE_ALPHA:  return GL_ONE_MINUS_SRC_ALPHA;
+        case graphics::SBF_FIX: // only PSP
+        default: CE_ASSERT(false, "GLES2Mappings::Get(): illegal SceneBlendFactor '%i'\n", sbf);
+    }
+
+    return 0;
 }
 
 //------------------------------------------------------------------------------
 /**
 */
 void
-GLES2Mappings::Get(unsigned int colour, float& red, float& green, float& blue, float& alpha)
+GLES2Mappings::Get(graphics::FilterOptions minFilter, graphics::FilterOptions magFilter, graphics::FilterOptions mipFilter, GLint& min, GLint& mag)
 {
-    alpha = ((colour & 0xff000000) >> 24) / 255.0f;
-    blue  = ((colour & 0x00ff0000) >> 16) / 255.0f;
-    green = ((colour & 0x0000ff00) >> 8) / 255.0f;
-    red   = ((colour & 0x000000ff)) / 255.0f;
+    switch (mipFilter)
+    {
+        case graphics::FO_NONE:
+            {
+                switch (minFilter)
+                {
+                    case graphics::FO_NONE:   min = GL_NEAREST; break;
+                    case graphics::FO_POINT:  min = GL_NEAREST; break;
+                    case graphics::FO_LINEAR: min = GL_LINEAR;  break;
+                    default: CE_ASSERT(false, "GLES2Mappings::Get(): illegal FilterOptions '%i'\n", minFilter);
+                }
+            }
+            break;
+
+        case graphics::FO_POINT:
+            {
+                switch (minFilter)
+                {
+                    case graphics::FO_NONE:   min = GL_NEAREST_MIPMAP_NEAREST; break;
+                    case graphics::FO_POINT:  min = GL_NEAREST_MIPMAP_NEAREST; break;
+                    case graphics::FO_LINEAR: min = GL_LINEAR_MIPMAP_NEAREST;  break;
+                    default: CE_ASSERT(false, "GLES2Mappings::Get(): illegal FilterOptions '%i'\n", minFilter);
+                }
+            }
+            break;
+
+        case graphics::FO_LINEAR:
+            {
+                switch (minFilter)
+                {
+                    case graphics::FO_NONE:   min = GL_NEAREST_MIPMAP_LINEAR; break;
+                    case graphics::FO_POINT:  min = GL_NEAREST_MIPMAP_LINEAR; break;
+                    case graphics::FO_LINEAR: min = GL_LINEAR_MIPMAP_LINEAR;  break;
+                    default: CE_ASSERT(false, "GLES2Mappings::Get(): illegal FilterOptions '%i'\n", minFilter);
+                }
+            }
+            break;
+
+        default: CE_ASSERT(false, "GLES2Mappings::Get(): illegal FilterOptions '%i'\n", mipFilter);
+    }
+
+    switch (magFilter)
+    {
+        case graphics::FO_NONE:   mag = GL_NEAREST; break;
+        case graphics::FO_POINT:  mag = GL_NEAREST; break;
+        case graphics::FO_LINEAR: mag = GL_LINEAR;  break;
+        default: CE_ASSERT(false, "GLES2Mappings::Get(): illegal FilterOptions '%i'\n", magFilter);
+    }
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+GLint
+GLES2Mappings::Get(graphics::TextureUnitState::TextureAddressingMode tam)
+{
+    switch (tam)
+    {
+        case graphics::TextureUnitState::TAM_WRAP:   return GL_REPEAT;
+        case graphics::TextureUnitState::TAM_MIRROR: return GL_MIRRORED_REPEAT;
+        case graphics::TextureUnitState::TAM_CLAMP:  return GL_CLAMP_TO_EDGE;
+        case graphics::TextureUnitState::TAM_BORDER: return GL_CLAMP_TO_EDGE;
+        default: CE_ASSERT(false, "GLES2Mappings::Get(): illegal TextureAddressingMode '%i'\n", tam);
+    }
+
+    return 0;
 }
 
 //------------------------------------------------------------------------------
@@ -137,46 +229,28 @@ GLES2Mappings::IsCompressed(graphics::PixelFormat pf)
 //------------------------------------------------------------------------------
 /**
 */
-GLenum
-GLES2Mappings::Get(graphics::SceneBlendOperation op)
+GLbitfield
+GLES2Mappings::Get(graphics::FrameBufferType fbt)
 {
-    switch (op)
-    {
-        case graphics::SBO_ADD:              return GL_FUNC_ADD;
-        case graphics::SBO_SUBTRACT:         return GL_FUNC_SUBTRACT;
-        case graphics::SBO_REVERSE_SUBTRACT: return GL_FUNC_REVERSE_SUBTRACT;
-        case graphics::SBO_MIN:
-        case graphics::SBO_MAX:
-        case graphics::SBO_ABS:
-        default: CE_ASSERT(false, "GLES2Mappings::Get(): illegal SceneBlendOperation '%i'\n", op);
-    }
+    GLbitfield clearBits = 0;
 
-    return 0;
+    if (fbt & graphics::FBT_COLOUR)  clearBits |= GL_COLOR_BUFFER_BIT;
+    if (fbt & graphics::FBT_DEPTH)   clearBits |= GL_DEPTH_BUFFER_BIT;
+    if (fbt & graphics::FBT_STENCIL) clearBits |= GL_STENCIL_BUFFER_BIT;
+
+    return clearBits;
 }
 
 //------------------------------------------------------------------------------
 /**
 */
-GLenum
-GLES2Mappings::Get(graphics::SceneBlendFactor sbf)
+void
+GLES2Mappings::Get(unsigned int colour, float& red, float& green, float& blue, float& alpha)
 {
-    switch (sbf)
-    {
-        case graphics::SBF_ONE:                     return GL_ONE;
-        case graphics::SBF_ZERO:                    return GL_ZERO;
-        case graphics::SBF_DEST_COLOUR:             return GL_DST_COLOR;
-        case graphics::SBF_SOURCE_COLOUR:           return GL_SRC_COLOR;
-        case graphics::SBF_ONE_MINUS_DEST_COLOUR:   return GL_ONE_MINUS_DST_COLOR;
-        case graphics::SBF_ONE_MINUS_SOURCE_COLOUR: return GL_ONE_MINUS_SRC_COLOR;
-        case graphics::SBF_DEST_ALPHA:              return GL_DST_ALPHA;
-        case graphics::SBF_SOURCE_ALPHA:            return GL_SRC_ALPHA;
-        case graphics::SBF_ONE_MINUS_DEST_ALPHA:    return GL_ONE_MINUS_DST_ALPHA;
-        case graphics::SBF_ONE_MINUS_SOURCE_ALPHA:  return GL_ONE_MINUS_SRC_ALPHA;
-        case graphics::SBF_FIX: // only PSP
-        default: CE_ASSERT(false, "GLES2Mappings::Get(): illegal SceneBlendFactor '%i'\n", sbf);
-    }
-
-    return 0;
+    alpha = ((colour & 0xff000000) >> 24) / 255.0f;
+    blue  = ((colour & 0x00ff0000) >> 16) / 255.0f;
+    green = ((colour & 0x0000ff00) >> 8) / 255.0f;
+    red   = ((colour & 0x000000ff)) / 255.0f;
 }
 
 } // namespace chrissly

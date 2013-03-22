@@ -8,11 +8,9 @@
 #include "graphicssystem.h"
 #include "debug.h"
 
-namespace application
-{
-
-using namespace chrissly;
+using namespace chrissly::core;
 using namespace chrissly::graphics;
+using namespace chrissly::application;
 
 StateAnimationTest* StateAnimationTest::Singleton = NULL;
 
@@ -42,7 +40,7 @@ StateAnimationTest::Enter()
 {
     sceCtrlSetSamplingCycle(100);
     sceCtrlSetSamplingMode(PSP_CTRL_MODE_ANALOG);
-    
+
     this->material = new Material();
     this->pass0 = this->material->CreatePass();
     this->tex0 = TextureManager::Instance()->Load("cerberus.tex");
@@ -56,13 +54,13 @@ StateAnimationTest::Enter()
     this->animState->SetEnabled(true);
 
     this->sceneNode = SceneManager::Instance()->GetRootSceneNode()->CreateChildSceneNode();
-    this->sceneNode->SetScale(3.5f, 3.5f, 3.5f);
+    this->sceneNode->SetScale(4.5f, 4.5f, 4.5f);
     this->sceneNode->SetPosition(0.0f, 0.1f, -1.4f);
     this->sceneNode->AttachObject(this->entity);
 
     this->camera = SceneManager::Instance()->GetCamera("MainCamera");
     this->camera->SetPosition(0.0f, 0.0f, 2.0f);
-    this->camera->SetOrientation(core::Quaternion());
+    this->camera->SetOrientation(Quaternion());
 }
 
 //------------------------------------------------------------------------------
@@ -116,6 +114,5 @@ StateAnimationTest::Trigger()
     }
 }
 
-} // namespace application
 
 

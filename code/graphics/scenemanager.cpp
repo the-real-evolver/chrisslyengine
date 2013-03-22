@@ -35,7 +35,9 @@ SceneManager::SceneManager() :
     shadowPass(NULL)
 {
     Singleton = this;
+
     HashTableInit(&this->cameras, 2);
+    HashTableInit(&this->lights, 4);
 
     this->renderQueueOpaque.Initialise(64);
     this->renderQueueTransparent.Initialise(64);
@@ -103,13 +105,56 @@ SceneManager::DestroyAllCameras()
         while (it != NULL)
         {
             CE_DELETE (Camera*)((KeyValuePair*)it->data)->value;
-            it = it->next;   
+            it = it->next;
         }
     }
 
     HashTableClear(&this->cameras);
 }
-    
+
+//------------------------------------------------------------------------------
+/**
+*/
+Light*
+SceneManager::CreateLight(const char* name)
+{
+    Light* light = CE_NEW Light();
+
+    HashTableInsert(&this->lights, name, light);
+
+    return light;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+Light*
+SceneManager::GetLight(const char* name) const
+{
+    return (Light*)HashTableFind(&this->lights, name);
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+SceneManager::DestroyAllLights()
+{
+    unsigned int i;
+    for (i = 0; i < this->lights.capacity; i++)
+    {
+        Chain* chain = (Chain*)DynamicArrayGet(&this->lights.entries, i);
+        LinkedList* it = chain->list;
+        while (it != NULL)
+        {
+            CE_DELETE (Light*)((KeyValuePair*)it->data)->value;
+            it = it->next;
+        }
+    }
+
+    HashTableClear(&this->lights);
+}
+
 //------------------------------------------------------------------------------
 /**
 */
@@ -184,6 +229,8 @@ SceneManager::ClearScene()
         linkedlistRemove(node);
     }
     this->sceneNodes = NULL;
+
+    this->DestroyAllLights();
 }
 
 //------------------------------------------------------------------------------
@@ -223,11 +270,11 @@ SceneManager::SetShadowTechnique(ShadowTechnique technique)
 
             this->shadowRenderTexture = CE_NEW RenderTexture();
             this->shadowRenderTexture->Create(256, 256, PF_A4R4G4B4);
+            Viewport* vp = this->shadowRenderTexture->AddViewport(this->shadowCamera, 1, 1, 254, 254);
+            vp->SetClearEveryFrame(true, FBT_COLOUR);
+            vp->SetBackgroundColour(0xffffffff);
             // GL_CLAMP_TO_EDGE
             memset(this->shadowRenderTexture->GetBuffer(), 0xff, 131072);
-            Viewport* vp = this->shadowRenderTexture->AddViewport(this->shadowCamera, 1, 1, 254, 254);
-            vp->SetBackgroundColour(0xffffffff);
-            vp->SetClearEveryFrame(true, FBT_COLOUR);
 
             this->shadowTexture = CE_NEW Texture();
             this->shadowTexture->SetFormat(this->shadowRenderTexture->GetFormat());
@@ -238,10 +285,10 @@ SceneManager::SetShadowTechnique(ShadowTechnique technique)
 
             // FragmentColor * 0xff888888 + FrameBufferPixelColor * 0xff000000 (FragmentColor = ModelVertexColor = White)
             this->shadowRttPass = CE_NEW Pass(0);
+            this->shadowRttPass->SetDepthCheckEnabled(false);
             this->shadowRttPass->SetSceneBlendingEnabled(true);
             this->shadowRttPass->SetSceneBlending(SBF_FIX, SBF_FIX);
             this->shadowRttPass->SetBlendingFixColors(0xff888888, 0xff000000);
-            this->shadowRttPass->SetDepthCheckEnabled(false); 
 
             this->shadowPass = CE_NEW Pass(0);
             this->shadowPass->SetSceneBlendingEnabled(true);
@@ -376,7 +423,7 @@ SceneManager::_RenderScene(Camera *camera, Viewport *vp)
                 }
 
                 // add to shadow receiver queue
-                if (this->IsShadowTechniqueInUse() && subEntity->parentEntity->GetReceivesShadows() && this->illuminationStage != IRS_RENDER_TO_TEXTURE)
+                if (this->IsShadowTechniqueInUse() && entity->GetReceivesShadows() && this->illuminationStage != IRS_RENDER_TO_TEXTURE)
                 {
                     this->renderQueueShadowReceiver.AddRenderable(subEntity, NULL);
                 }
@@ -395,6 +442,8 @@ SceneManager::_RenderScene(Camera *camera, Viewport *vp)
     this->destRenderSystem->_SetProjectionMatrix(camera->GetProjectionMatrixRS());
     this->destRenderSystem->_SetViewMatrix(camera->GetViewMatrix());
 
+    this->destRenderSystem->_UseLights(&this->lights);
+
     if (this->IsShadowTechniqueInUse() && this->illuminationStage == IRS_RENDER_TO_TEXTURE)
     {
         this->_RenderQueueGroupObjects(&this->renderQueueOpaque);
@@ -403,7 +452,7 @@ SceneManager::_RenderScene(Camera *camera, Viewport *vp)
     {    
         this->_RenderQueueGroupObjects(&this->renderQueueOpaque);
         this->_RenderQueueGroupObjects(&this->renderQueueTransparent);
-        
+
         if (this->IsShadowTechniqueInUse())
         {
             this->_RenderTextureShadowReceiverQueueGroupObjects(&this->renderQueueShadowReceiver);

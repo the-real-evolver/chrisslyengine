@@ -66,7 +66,6 @@ const Vector3&
 Camera::GetPosition() const
 {
     return this->position;
-    this->recalcView = true;
 }
 
 //------------------------------------------------------------------------------
@@ -76,7 +75,6 @@ const Quaternion&
 Camera::GetOrientation() const
 {
     return this->orientation;
-    this->recalcView = true;
 }
 
 

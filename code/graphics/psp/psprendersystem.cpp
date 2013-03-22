@@ -19,6 +19,8 @@ PSPRenderSystem* PSPRenderSystem::Singleton = NULL;
 /// the GE store the commands for processing in this array
 unsigned int __attribute__((aligned(16))) PSPRenderSystem::DisplayList[262144];
 
+int PSPRenderSystem::MaxLights = 4;
+
 //------------------------------------------------------------------------------
 /**
 */
@@ -261,7 +263,7 @@ PSPRenderSystem::_SetPass(graphics::Pass* pass)
     {
         graphics::TextureUnitState* tus = pass->GetTextureUnitState(0);
         graphics::Texture* texture = tus->GetTexture(); 
-    
+
         sceGuEnable(GU_TEXTURE_2D);
         sceGuTexScale(tus->GetTextureUScale(), tus->GetTextureVScale());
         sceGuTexOffset(tus->GetTextureUScroll(), tus->GetTextureVScroll());
@@ -269,7 +271,7 @@ PSPRenderSystem::_SetPass(graphics::Pass* pass)
         int min, mag;
         PSPMappings::Get(tus->GetTextureFiltering(graphics::FT_MIN), tus->GetTextureFiltering(graphics::FT_MAG), tus->GetTextureFiltering(graphics::FT_MIP), min, mag);
         sceGuTexFilter(min, mag);
-        
+
         graphics::LayerBlendOperation lbo; graphics::LayerBlendType lbt;
         tus->GetTextureBlendOperation(lbt, lbo);
         sceGuTexFunc(PSPMappings::Get(lbo), PSPMappings::Get(lbt));
@@ -302,18 +304,59 @@ PSPRenderSystem::_SetPass(graphics::Pass* pass)
 /**
 */
 void
-PSPRenderSystem::SetAmbientLight(unsigned int colour)
+PSPRenderSystem::_UseLights(HashTable* lights)
 {
-    this->ambientLight = colour;
+    int lightIndex = 0;
+
+    unsigned int i;
+    for (i = 0; i < lights->capacity; i++)
+    {
+        if (lightIndex == MaxLights) break;
+
+        Chain* chain = (Chain*)DynamicArrayGet(&lights->entries, i);
+        LinkedList* it = chain->list;
+        while (it != NULL)
+        {
+            if (lightIndex == MaxLights) break;
+
+            graphics::Light* light = (graphics::Light*)((KeyValuePair*)it->data)->value;
+
+            if (graphics::Light::LT_DIRECTIONAL != light->GetType())
+            {
+                const core::Vector3& position = light->GetPosition();
+                this->lightPos.x = position.x;
+                this->lightPos.y = position.y;
+                this->lightPos.z = position.z;
+            }
+
+            if (graphics::Light::LT_SPOTLIGHT == light->GetType())
+            {
+                const core::Vector3& direction = light->GetDirection();
+                this->lightDir.x = -direction.x;
+                this->lightDir.y = -direction.y;
+                this->lightDir.z = -direction.z;
+                sceGuLightSpot(lightIndex, &this->lightDir, light->GetSpotlightFalloff(), light->GetSpotlightOuterAngle());
+            }
+
+            sceGuEnable(GU_LIGHT0 + lightIndex);
+            sceGuLight(lightIndex, PSPMappings::Get(light->GetType()), GU_DIFFUSE_AND_SPECULAR, &this->lightPos);
+			sceGuLightColor(lightIndex, GU_DIFFUSE, light->GetDiffuseColour());
+			sceGuLightColor(lightIndex, GU_SPECULAR, light->GetSpecularColour());
+			sceGuLightAtt(lightIndex, light->GetAttenuationConstant(), light->GetAttenuationLinear(), light->GetAttenuationQuadric());
+            lightIndex++;
+
+            it = it->next;
+        }
+    }
 }
-    
+
 //------------------------------------------------------------------------------
 /**
 */
-void* 
-PSPRenderSystem::GetDisplayList() const
+void
+PSPRenderSystem::SetAmbientLight(unsigned int colour)
 {
-    return (void*)DisplayList;
+    this->ambientLight = colour;
 }
 
 //------------------------------------------------------------------------------
@@ -323,6 +366,15 @@ void
 PSPRenderSystem::_NotifyMorphKeyFrameBuild()
 {
     sceKernelDcacheWritebackAll();
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void*
+PSPRenderSystem::GetDisplayList() const
+{
+    return (void*)DisplayList;
 }
 
 } // namespace chrissly

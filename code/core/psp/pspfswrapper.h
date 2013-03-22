@@ -28,12 +28,16 @@ public:
     static unsigned int GetFileSize(core::FileHandle fileHandle);
     /// read from a file
     static int Read(core::FileHandle fileHandle, void* buf, unsigned int numBytes);
-    
+    /// seek in a file
+    static void Seek(core::FileHandle fileHandle, int offset, core::SeekOrigin whence);
+
 private:
     /// return a PSP equivalent for a AccessMode value
     static int Get(core::AccessMode mode);
-    
-    static const char* APP_EXPORT_PATH;
+    /// return a PSP equivalent for a SeekOrigin value
+    static int Get(core::SeekOrigin origin);
+
+    static const char* AppExportPath;
 };
 
 } // namespace chrissly
