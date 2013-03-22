@@ -270,4 +270,19 @@ PSPMappings::Get(graphics::TrackVertexColourType tvct)
     return colorComponent;
 }
 
+//------------------------------------------------------------------------------
+/**
+*/
+int
+PSPMappings::Get(graphics::Light::LightTypes lt)
+{
+    if (graphics::Light::LT_DIRECTIONAL == lt) return GU_DIRECTIONAL;
+    if (graphics::Light::LT_POINT == lt)       return GU_POINTLIGHT;
+    if (graphics::Light::LT_SPOTLIGHT == lt)   return GU_SPOTLIGHT;
+
+    CE_ASSERT(false, "PSPMappings::Get(): illegal LightTypes '%i'\n", lt);
+
+    return 0;
+}
+
 } // namespace chrissly

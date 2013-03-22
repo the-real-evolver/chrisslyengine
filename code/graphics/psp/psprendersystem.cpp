@@ -340,9 +340,9 @@ PSPRenderSystem::_UseLights(HashTable* lights)
 
             sceGuEnable(GU_LIGHT0 + lightIndex);
             sceGuLight(lightIndex, PSPMappings::Get(light->GetType()), GU_DIFFUSE_AND_SPECULAR, &this->lightPos);
-			sceGuLightColor(lightIndex, GU_DIFFUSE, light->GetDiffuseColour());
-			sceGuLightColor(lightIndex, GU_SPECULAR, light->GetSpecularColour());
-			sceGuLightAtt(lightIndex, light->GetAttenuationConstant(), light->GetAttenuationLinear(), light->GetAttenuationQuadric());
+            sceGuLightColor(lightIndex, GU_DIFFUSE, light->GetDiffuseColour());
+            sceGuLightColor(lightIndex, GU_SPECULAR, light->GetSpecularColour());
+            sceGuLightAtt(lightIndex, light->GetAttenuationConstant(), light->GetAttenuationLinear(), light->GetAttenuationQuadric());
             lightIndex++;
 
             it = it->next;

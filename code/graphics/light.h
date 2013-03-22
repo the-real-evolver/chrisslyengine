@@ -122,11 +122,11 @@ public:
     */
     const core::Vector3& GetDirection() const;
 
-	/// sets the angle covered by the spotlights outer cone
+    /// sets the angle covered by the spotlights outer cone
     void SetSpotlightOuterAngle(float angle);
     /// returns the angle covered by the spotlights outer cone
     float GetSpotlightOuterAngle() const;
-	/// sets the falloff between the inner and outer cones of the spotlight
+    /// sets the falloff between the inner and outer cones of the spotlight
     void SetSpotlightFalloff(float falloff);
     /// returns the falloff between the inner and outer cones of the spotlight
     float GetSpotlightFalloff() const;

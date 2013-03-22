@@ -11,6 +11,7 @@
 #include "pixelformat.h"
 #include "common.h"
 #include "textureunitstate.h"
+#include "light.h"
 #include <psptypes.h>
 
 //------------------------------------------------------------------------------
@@ -43,6 +44,8 @@ public:
     static int Get(graphics::FrameBufferType fbt);
     /// return a PSP equivalent for a TrackVertexColourType value
     static int Get(graphics::TrackVertexColourType tvct);
+    /// return a PSP equivalent for a LightType
+    static int Get(graphics::Light::LightTypes lt);
 };
 } // namespace chrissly
 //------------------------------------------------------------------------------
