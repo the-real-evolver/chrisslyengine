@@ -53,8 +53,7 @@ Entity::~Entity()
 
     for (i = 0; i < this->animationState.capacity; i++)
     {
-        Chain* chain = (Chain*)DynamicArrayGet(&this->animationState.entries, i);
-        LinkedList* it = chain->list;
+        LinkedList* it = ((Chain*)DynamicArrayGet(&this->animationState.entries, i))->list;
         while (it != NULL)
         {
             CE_DELETE (AnimationState*)((KeyValuePair*)it->data)->value;
@@ -156,8 +155,7 @@ Entity::UpdateAnimation()
     unsigned int i;
     for (i = 0; i < this->animationState.capacity; i++)
     {
-        Chain* chain = (Chain*)DynamicArrayGet(&this->animationState.entries, i);
-        LinkedList* it = chain->list;
+        LinkedList* it = ((Chain*)DynamicArrayGet(&this->animationState.entries, i))->list;
         while (it != NULL)
         {
             AnimationState* state = (AnimationState*)((KeyValuePair*)it->data)->value;

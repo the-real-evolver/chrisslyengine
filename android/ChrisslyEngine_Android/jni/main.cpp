@@ -29,7 +29,7 @@ GpuProgram* gpuProgram;
 
 const char* MorphAnimVertexShader =
     "attribute vec2 texCoordIn;\n"
-    "varying vec2 texCoordOut;\n"
+    "attribute vec3 normal;\n"
     "attribute vec4 position;\n"
     "attribute vec4 positionMorphTarget;\n"
     "uniform mat4 worldMatrix;\n"
@@ -37,19 +37,41 @@ const char* MorphAnimVertexShader =
     "uniform mat4 projectionMatrix;\n"
     "uniform mat4 worldViewProjMatrix;\n"
     "uniform float morphWeight;\n"
+    "varying vec2 texCoordOut;\n"
+    "varying vec3 fragmentNormal;\n"
+    "varying vec3 cameraVector;\n"
+    "varying vec3 lightVector;\n"
     "void main()\n"
     "{\n"
-    "    gl_Position = worldViewProjMatrix * (position + (positionMorphTarget - position) * morphWeight);\n"
+    "    vec4 pos = (position + (positionMorphTarget - position) * morphWeight);\n"
+    "    gl_Position = worldViewProjMatrix * pos;\n"
     "    texCoordOut = texCoordIn;\n"
+    "    fragmentNormal = (worldMatrix * vec4(normal, 1.0)).xyz;\n"
+    "    cameraVector = vec3(0.0, 0.0, 0.9) - (worldMatrix * pos).xyz;\n"
+    "	 lightVector = vec3(1.0, 0.0, 0.0) - (worldMatrix * pos).xyz;\n"
     "}\n";
 
 const char* FragmentShader =
+    "const lowp float MaxDist = 2.5;\n"
+    "const lowp float MaxDistSquared = MaxDist * MaxDist;\n"
+    "const lowp vec3 lightColor = vec3(0.6, 0.6, 0.6);\n"
+    "const lowp vec3 specularColor = vec3(0.9, 0.9, 0.9);\n"
     "varying lowp vec2 texCoordOut;\n"
+    "varying lowp vec3 fragmentNormal;\n"
+    "varying lowp vec3 cameraVector;\n"
+    "varying lowp vec3 lightVector;\n"
     "uniform sampler2D texture;\n"
     "precision mediump float;\n"
     "void main()\n"
     "{\n"
-    "    gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0) * texture2D(texture, texCoordOut);\n"
+    "    vec3 normal = normalize(fragmentNormal);\n"
+    "	 float attenuation = 1.0 - min(dot(lightVector, lightVector), MaxDistSquared) / MaxDistSquared;\n"
+    "    vec3 lightDir = normalize(lightVector);\n"
+    "    vec3 diffuse = lightColor * clamp(dot(normal, lightDir), 0.0, 1.0) * attenuation;\n"
+    "    vec3 halfAngle = normalize(normalize(cameraVector) + lightDir);\n"
+    "	 float specularDot = dot(normal, halfAngle);\n"
+    "    vec3 specular = specularColor * pow(clamp(specularDot, 0.0, 1.0), 16.0) * attenuation;\n"
+    "    gl_FragColor = vec4(clamp((diffuse + texture2D(texture, texCoordOut).rgb) + specular, 0.0, 1.0), 1.0);\n"
     "}\n";
 
 //------------------------------------------------------------------------------
@@ -70,6 +92,7 @@ Enter(struct android_app* state)
     pass->SetCullingMode(CULL_NONE);
     pass->SetSceneBlendingEnabled(false);
     pass->SetSceneBlending(SBF_SOURCE_COLOUR, SBF_DEST_COLOUR);
+
     gpuProgram = new GpuProgram(MorphAnimVertexShader, FragmentShader);
     pass->SetGpuProgram(gpuProgram);
     tex = TextureManager::Instance()->Load("cerberus_etc1.tex");
@@ -98,7 +121,6 @@ Exit()
     initialized = false;
 
     delete gpuProgram;
-    material->RemoveAllPasses();
     delete material;
 
     delete graphicsSystem;
@@ -177,7 +199,7 @@ HandleCommands(struct android_app* app, int32_t cmd)
 //------------------------------------------------------------------------------
 /**
     this is the main entry point of a native application that is using
-    android_native_app_glue.  It runs in its own thread, with its own
+    android_native_app_glue. It runs in its own thread, with its own
     event loop for receiving input events and doing other things
 */
 void

@@ -69,7 +69,6 @@ StateAnimationTest::Enter()
 void
 StateAnimationTest::Exit()
 {
-    this->material->RemoveAllPasses();
     delete this->material;
 
     SceneManager::Instance()->ClearScene();

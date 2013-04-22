@@ -17,6 +17,8 @@ namespace graphics
     {
         /// position, 3 reals per vertex
         VES_POSITION = 0,
+        /// normal, 3 reals per vertex
+        VES_NORMAL,
         /// texture coordinates
         VES_TEXTURE_COORDINATES,
         /// position of the morph target vertex

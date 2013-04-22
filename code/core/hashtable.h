@@ -154,8 +154,7 @@ HashTableFind(HashTable* table, const char* key)
     unsigned int hash = HashFunction(key);
     unsigned int index = hash % table->capacity;
 
-    Chain* chain = (Chain*)DynamicArrayGet(&table->entries, index);
-    LinkedList* it = chain->list;
+    LinkedList* it = ((Chain*)DynamicArrayGet(&table->entries, index))->list;
     while (it != NULL)
     {
         if (0 == strcmp(key, ((KeyValuePair*)it->data)->key))
@@ -180,8 +179,7 @@ HashTableResize(HashTable* table, unsigned int newSize)
     unsigned int i;
     for (i = 0; i < table->capacity; i++)
     {
-        Chain* chain = (Chain*)DynamicArrayGet(&table->entries, i);
-        LinkedList* it = chain->list;
+        LinkedList* it = ((Chain*)DynamicArrayGet(&table->entries, i))->list;
         while (it != NULL)
         {
             KeyValuePair* kvp = (KeyValuePair*)it->data;
@@ -189,7 +187,7 @@ HashTableResize(HashTable* table, unsigned int newSize)
             it = it->next;   
         }
     }
-    
+
     HashTableClear(table);
 
     table->entries = newTable.entries;

@@ -45,6 +45,8 @@ GLES2GpuProgram::GLES2GpuProgram(const char* vertexShaderSource, const char* fra
 
     this->attributeLocations[graphics::VES_POSITION] = glGetAttribLocation(this->gpuProgram, "position");
     GLES2RenderSystem::CheckGlError("glGetAttribLocation");
+    this->attributeLocations[graphics::VES_NORMAL] = glGetAttribLocation(this->gpuProgram, "normal");
+    GLES2RenderSystem::CheckGlError("glGetAttribLocation");
     this->attributeLocations[graphics::VES_TEXTURE_COORDINATES] = glGetAttribLocation(this->gpuProgram, "texCoordIn");
     GLES2RenderSystem::CheckGlError("glGetAttribLocation");
     this->attributeLocations[graphics::VES_POSITION_MORPH_TARGET] = glGetAttribLocation(this->gpuProgram, "positionMorphTarget");

@@ -100,8 +100,7 @@ SceneManager::DestroyAllCameras()
     unsigned int i;
     for (i = 0; i < this->cameras.capacity; i++)
     {
-        Chain* chain = (Chain*)DynamicArrayGet(&this->cameras.entries, i);
-        LinkedList* it = chain->list;
+        LinkedList* it = ((Chain*)DynamicArrayGet(&this->cameras.entries, i))->list;
         while (it != NULL)
         {
             CE_DELETE (Camera*)((KeyValuePair*)it->data)->value;
@@ -143,8 +142,7 @@ SceneManager::DestroyAllLights()
     unsigned int i;
     for (i = 0; i < this->lights.capacity; i++)
     {
-        Chain* chain = (Chain*)DynamicArrayGet(&this->lights.entries, i);
-        LinkedList* it = chain->list;
+        LinkedList* it = ((Chain*)DynamicArrayGet(&this->lights.entries, i))->list;
         while (it != NULL)
         {
             CE_DELETE (Light*)((KeyValuePair*)it->data)->value;

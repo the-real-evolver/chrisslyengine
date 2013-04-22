@@ -309,16 +309,11 @@ PSPRenderSystem::_UseLights(HashTable* lights)
     int lightIndex = 0;
 
     unsigned int i;
-    for (i = 0; i < lights->capacity; i++)
+    for (i = 0; i < lights->capacity && lightIndex < MaxLights; i++)
     {
-        if (lightIndex == MaxLights) break;
-
-        Chain* chain = (Chain*)DynamicArrayGet(&lights->entries, i);
-        LinkedList* it = chain->list;
-        while (it != NULL)
+        LinkedList* it = ((Chain*)DynamicArrayGet(&lights->entries, i))->list;
+        while (it != NULL && lightIndex < MaxLights)
         {
-            if (lightIndex == MaxLights) break;
-
             graphics::Light* light = (graphics::Light*)((KeyValuePair*)it->data)->value;
 
             if (graphics::Light::LT_DIRECTIONAL != light->GetType())
@@ -347,6 +342,11 @@ PSPRenderSystem::_UseLights(HashTable* lights)
 
             it = it->next;
         }
+    }
+
+    for (i = lightIndex; i < MaxLights; i++)
+    {
+        sceGuDisable(GU_LIGHT0 + i);
     }
 }
 

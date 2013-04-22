@@ -14,5 +14,10 @@ Running the demo on a real PSP
 
 Running the demo on the JPCSP emulator
 ========================================================================
-- copy the 'export' folder to 'jpcsp0.5\ms0\PSP\GAME\ChrisslyEngine_PSP'
+- copy the 'export' folder to 'jpcsp\ms0\PSP\GAME\ChrisslyEngine_PSP'
 - open JPCSP, then load the EBOOT.PBP with 'Load File' and press 'Run'
+
+Running the demo on the PPSSPP emulator
+========================================================================
+- copy the 'export' folder to 'ppsspp_win\memstick\PSP\GAME\ChrisslyEngine_PSP'
+- open PPSSPP, then load the EBOOT.PBP with 'File -> Open'

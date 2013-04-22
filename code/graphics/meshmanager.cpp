@@ -93,7 +93,7 @@ MeshManager::Load(const char* filename)
 
                     // add submesh
                     SubMesh* subMesh = mesh->CreateSubMesh();
-                    subMesh->vertexData = new VertexData(vertexCount, vertexBuffer, bytesPerVertex);
+                    subMesh->vertexData = CE_NEW VertexData(vertexCount, vertexBuffer, bytesPerVertex);
                 }
                 break;
             case M_ANIMATION:
@@ -129,7 +129,7 @@ MeshManager::Load(const char* filename)
                     // add morphkeyframe
                     CE_ASSERT(animationTrack != NULL, "MeshManager::Load(): can't create VertexMorphKeyFrame without VertexAnimationTrack");
                     VertexMorphKeyFrame* vertexMorphKeyFrame = animationTrack->CreateVertexMorphKeyFrame(keyTime);
-                    vertexMorphKeyFrame->vertexData = new VertexData(vertexCount, vertexBuffer, bytesPerVertex);
+                    vertexMorphKeyFrame->vertexData = CE_NEW VertexData(vertexCount, vertexBuffer, bytesPerVertex);
 
                     // Fixme: setup for multiple animationtracks
                     SubMesh* subMesh = mesh->GetSubMesh(0);

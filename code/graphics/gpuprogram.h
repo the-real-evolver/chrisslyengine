@@ -6,8 +6,9 @@
 
     (C) 2012 Christian Bleicher
 */
-#if __PSP__
+
 //------------------------------------------------------------------------------
+#if __PSP__
 namespace chrissly
 {
 namespace graphics

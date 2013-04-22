@@ -109,6 +109,7 @@ SceneNode::RemoveAllChildren()
     LinkedList* it = this->children;
     while (it != NULL)
     {
+        ((SceneNode*)it->data)->SetParent(NULL);
         LinkedList* node = it;
         it = it->next;
         linkedlistRemove(node);

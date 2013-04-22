@@ -16,7 +16,7 @@ GLES2RenderSystem* GLES2RenderSystem::Singleton = NULL;
 //------------------------------------------------------------------------------
 const char* GLES2RenderSystem::DefaultVertexShader =
     "attribute vec2 texCoordIn;\n"
-    "varying vec2 texCoordOut;\n"
+    "attribute vec3 normal;\n"
     "attribute vec4 position;\n"
     "attribute vec4 positionMorphTarget;\n"
     "uniform mat4 worldMatrix;\n"
@@ -24,6 +24,7 @@ const char* GLES2RenderSystem::DefaultVertexShader =
     "uniform mat4 projectionMatrix;\n"
     "uniform mat4 worldViewProjMatrix;\n"
     "uniform float morphWeight;\n"
+    "varying vec2 texCoordOut;\n"
     "void main()\n"
     "{\n"
     "    gl_Position = worldViewProjMatrix * position;\n"
@@ -36,7 +37,7 @@ const char* GLES2RenderSystem::DefaultFragmentShader =
     "precision mediump float;\n"
     "void main()\n"
     "{\n"
-    "    gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0) * texture2D(texture, texCoordOut);\n"
+    "    gl_FragColor = texture2D(texture, texCoordOut);\n"
     "}\n";
 
 //------------------------------------------------------------------------------
@@ -208,16 +209,22 @@ GLES2RenderSystem::_Render(graphics::SubEntity* renderable)
 
         graphics::VertexData* vertexData = renderable->_GetHardwareVertexAnimVertexData();
 
-        GLint vertexPositionHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_POSITION);
-        glVertexAttribPointer(vertexPositionHandle, 3, GL_FLOAT, GL_FALSE, 72, (unsigned char*)vertexData->vertexBuffer + 24);
-        CheckGlError("glVertexAttribPointer");
-        glEnableVertexAttribArray(vertexPositionHandle);
-        CheckGlError("glEnableVertexAttribArray");
-
         GLint vertexTexCoordHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_TEXTURE_COORDINATES);
         glVertexAttribPointer(vertexTexCoordHandle, 2, GL_FLOAT, GL_FALSE, 72, vertexData->vertexBuffer);
         CheckGlError("glVertexAttribPointer");
         glEnableVertexAttribArray(vertexTexCoordHandle);
+        CheckGlError("glEnableVertexAttribArray");
+
+        GLint vertexNormalHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_NORMAL);
+        glVertexAttribPointer(vertexNormalHandle, 3, GL_FLOAT, GL_FALSE, 72, (unsigned char*)vertexData->vertexBuffer + 12);
+        CheckGlError("glVertexAttribPointer");
+        glEnableVertexAttribArray(vertexNormalHandle);
+        CheckGlError("glEnableVertexAttribArray");
+
+        GLint vertexPositionHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_POSITION);
+        glVertexAttribPointer(vertexPositionHandle, 3, GL_FLOAT, GL_FALSE, 72, (unsigned char*)vertexData->vertexBuffer + 24);
+        CheckGlError("glVertexAttribPointer");
+        glEnableVertexAttribArray(vertexPositionHandle);
         CheckGlError("glEnableVertexAttribArray");
 
         GLint vertexPositionMorphTargetHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_POSITION_MORPH_TARGET);
@@ -233,16 +240,22 @@ GLES2RenderSystem::_Render(graphics::SubEntity* renderable)
     {
         graphics::VertexData* vertexData = renderable->GetSubMesh()->vertexData;
 
-        GLint vertexPositionHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_POSITION);
-        glVertexAttribPointer(vertexPositionHandle, 3, GL_FLOAT, GL_FALSE, 36, (unsigned char*)vertexData->vertexBuffer + 24);
-        CheckGlError("glVertexAttribPointer");
-        glEnableVertexAttribArray(vertexPositionHandle);
-        CheckGlError("glEnableVertexAttribArray");
-
         GLint vertexTexCoordHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_TEXTURE_COORDINATES);
         glVertexAttribPointer(vertexTexCoordHandle, 2, GL_FLOAT, GL_FALSE, 36, vertexData->vertexBuffer);
         CheckGlError("glVertexAttribPointer");
         glEnableVertexAttribArray(vertexTexCoordHandle);
+        CheckGlError("glEnableVertexAttribArray");
+
+        GLint vertexNormalHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_NORMAL);
+        glVertexAttribPointer(vertexNormalHandle, 3, GL_FLOAT, GL_FALSE, 72, (unsigned char*)vertexData->vertexBuffer + 12);
+        CheckGlError("glVertexAttribPointer");
+        glEnableVertexAttribArray(vertexNormalHandle);
+        CheckGlError("glEnableVertexAttribArray");
+
+        GLint vertexPositionHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_POSITION);
+        glVertexAttribPointer(vertexPositionHandle, 3, GL_FLOAT, GL_FALSE, 36, (unsigned char*)vertexData->vertexBuffer + 24);
+        CheckGlError("glVertexAttribPointer");
+        glEnableVertexAttribArray(vertexPositionHandle);
         CheckGlError("glEnableVertexAttribArray");
 
         glDrawArrays(GL_TRIANGLES, 0, vertexData->vertexCount);

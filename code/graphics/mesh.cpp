@@ -103,8 +103,7 @@ Mesh::RemoveAllAnimations()
     unsigned int i;
     for (i = 0; i < this->animationsList.capacity; i++)
     {
-        Chain* chain = (Chain*)DynamicArrayGet(&this->animationsList.entries, i);
-        LinkedList* it = chain->list;
+        LinkedList* it = ((Chain*)DynamicArrayGet(&this->animationsList.entries, i))->list;
         while (it != NULL)
         {
             CE_DELETE (Animation*)((KeyValuePair*)it->data)->value;
@@ -133,8 +132,7 @@ Mesh::_InitAnimationState(HashTable* animSet)
     unsigned int i;
     for (i = 0; i < this->animationsList.capacity; i++)
     {
-        Chain* chain = (Chain*)DynamicArrayGet(&this->animationsList.entries, i);
-        LinkedList* it = chain->list;
+        LinkedList* it = ((Chain*)DynamicArrayGet(&this->animationsList.entries, i))->list;
         while (it != NULL)
         {
             Animation* animation = (Animation*)((KeyValuePair*)it->data)->value;

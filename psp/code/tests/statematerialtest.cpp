@@ -65,7 +65,7 @@ StateMaterialTest::Enter()
     pass->SetSpecular(12.0f);
     tus = pass->CreateTextureUnitState();
     tus->SetTexture(tex);
-    tus->SetTextureBlendOperation(LBT_ALPHA, LBO_REPLACE);
+    tus->SetTextureBlendOperation(LBT_ALPHA, LBO_MODULATE);
 
     // create entity and set materials
     this->gothEntity = SceneManager::Instance()->CreateEntity("gothic_woman.mesh");
@@ -120,11 +120,11 @@ StateMaterialTest::Enter()
     this->camera->SetPosition(0.0f, 0.0f, 5.0f);
     this->camera->SetOrientation(Quaternion());
 
-    SceneManager::Instance()->SetAmbientLight(0x00222222);
+    SceneManager::Instance()->SetAmbientLight(0xff222222);
     Light* light = SceneManager::Instance()->CreateLight("SpotLight");
     light->SetType(Light::LT_SPOTLIGHT);
-    light->SetDiffuseColour(0xffff0000);
-    light->SetSpecularColour(0xffff0000);
+    light->SetDiffuseColour(0xff0077ff);
+    light->SetSpecularColour(0x00000000);
     light->SetAttenuation(1.0f, 0.0f, 0.0f);
     light->SetPosition(6.0f, 6.0f, -1.4f);
     light->SetDirection(-1.0f, -1.0f, 0.0f);
@@ -132,10 +132,10 @@ StateMaterialTest::Enter()
     light->SetSpotlightOuterAngle(0.6f);
     light = SceneManager::Instance()->CreateLight("PointLight");
     light->SetType(Light::LT_POINT);
-    light->SetDiffuseColour(0xffff00ff);
-    light->SetSpecularColour(0xffff00ff);
-    light->SetAttenuation(0.0f, 0.5f, 0.0f);
-    light->SetPosition(0.0f, -7.0f, -1.4f);
+    light->SetDiffuseColour(0xff777777);
+    light->SetSpecularColour(0x00000000);
+    light->SetAttenuation(1.0f, 0.0f, 0.0f);
+    light->SetPosition(0.0f, -6.0f, -1.4f);
 
     sceKernelDcacheWritebackAll();
 }
@@ -146,15 +146,9 @@ StateMaterialTest::Enter()
 void
 StateMaterialTest::Exit()
 {
-    this->solidMaterial->RemoveAllPasses();
     delete this->solidMaterial;
-    this->alphaMaterial->RemoveAllPasses();
     delete this->alphaMaterial;
-
-    this->cubeMaterial->RemoveAllPasses();
     delete this->cubeMaterial;
-
-    this->lightConeMaterial->RemoveAllPasses();
     delete this->lightConeMaterial;
 
     SceneManager::Instance()->ClearScene();
