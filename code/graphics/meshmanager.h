@@ -7,7 +7,7 @@
     (C) 2010 Christian Bleicher
 */
 #include "mesh.h"
-#include "linkedlist.h"
+#include "hashtable.h"
 
 //------------------------------------------------------------------------------
 namespace chrissly
@@ -38,14 +38,8 @@ private:
     MeshManager(const MeshManager&cc) {}; 
 
     static MeshManager* Singleton;
-    
-    struct MeshResource
-    {
-        Mesh* mesh;
-        const char* fileName;
-    };
 
-    LinkedList* resources;
+    chrissly::core::HashTable resources;
 
     enum MeshChunkID
     {

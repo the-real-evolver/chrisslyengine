@@ -304,17 +304,17 @@ PSPRenderSystem::_SetPass(graphics::Pass* pass)
 /**
 */
 void
-PSPRenderSystem::_UseLights(HashTable* lights)
+PSPRenderSystem::_UseLights(core::HashTable* lights)
 {
     int lightIndex = 0;
 
     unsigned int i;
     for (i = 0; i < lights->capacity && lightIndex < MaxLights; i++)
     {
-        LinkedList* it = ((Chain*)DynamicArrayGet(&lights->entries, i))->list;
+        LinkedList* it = ((core::Chain*)DynamicArrayGet(&lights->entries, i))->list;
         while (it != NULL && lightIndex < MaxLights)
         {
-            graphics::Light* light = (graphics::Light*)((KeyValuePair*)it->data)->value;
+            graphics::Light* light = (graphics::Light*)((core::KeyValuePair*)it->data)->value;
 
             if (graphics::Light::LT_DIRECTIONAL != light->GetType())
             {

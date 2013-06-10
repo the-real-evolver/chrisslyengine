@@ -161,8 +161,7 @@ SceneManager::CreateEntity(const char* meshName)
 {
     Entity* entity = CE_NEW Entity("", MeshManager::Instance()->Load(meshName));
 
-    this->movableObjectCollectionMap = linkedlistAdd(&this->movableObjectCollectionMap, entity);
-    this->movableObjectCollectionMap->data = entity;
+    linkedlistAdd(&this->movableObjectCollectionMap, entity);
 
     return entity;
 }
@@ -176,8 +175,7 @@ SceneManager::CreateSceneNode()
     SceneNode* sceneNode = CE_NEW SceneNode();
     sceneNode->SetParent(NULL);
 
-    this->sceneNodes = linkedlistAdd(&this->sceneNodes, sceneNode);
-    this->sceneNodes->data = sceneNode;
+    linkedlistAdd(&this->sceneNodes, sceneNode);
 
     return sceneNode;
 }
@@ -344,7 +342,7 @@ SceneManager::PrepareShadowTextures()
     this->illuminationStage = IRS_RENDER_TO_TEXTURE;
 
     this->shadowRenderTexture->Update();
-    
+
     this->illuminationStage = IRS_NONE;
 }
 

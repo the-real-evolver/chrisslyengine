@@ -111,6 +111,7 @@ public:
         by viewports, which are not destroyed during this process.
     */
     void ClearScene();
+
     /// sets the ambient light level to be used for the scene
     /**
         @remarks
@@ -149,9 +150,9 @@ private:
 
     static SceneManager* Singleton;
 
-    mutable HashTable cameras;
+    mutable chrissly::core::HashTable cameras;
 
-    mutable HashTable lights;
+    mutable chrissly::core::HashTable lights;
 
     LinkedList* movableObjectCollectionMap;
  

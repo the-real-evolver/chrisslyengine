@@ -25,6 +25,13 @@
 */
 #include "linkedlist.h"
 #include "dynamicarray.h"
+#include "chrisslystring.h"
+
+//------------------------------------------------------------------------------
+namespace chrissly
+{
+namespace core
+{
 
 /// hashtable
 struct HashTable
@@ -44,7 +51,7 @@ struct Chain
 /// a key value pair
 struct KeyValuePair
 {
-    const char* key;
+    String key;
     void* value;
 };
 
@@ -102,7 +109,7 @@ HashTableClear(HashTable* table)
         while (it != NULL)
         {
             LinkedList* node = it;
-            CE_FREE((KeyValuePair*)node->data);
+            CE_DELETE((KeyValuePair*)node->data);
             it = it->next;
             linkedlistRemove(node);
         }
@@ -133,13 +140,12 @@ HashTableInsert(HashTable* table, const char* key, void* value)
     unsigned int hash = HashFunction(key);
     unsigned int index = hash % table->capacity;
 
-    KeyValuePair* keyValuePair = (KeyValuePair*)CE_MALLOC(sizeof(KeyValuePair));
+    KeyValuePair* keyValuePair = CE_NEW KeyValuePair();
     keyValuePair->key = key;
     keyValuePair->value = value;
 
     Chain* chain = (Chain*)DynamicArrayGet(&table->entries, index);
-    chain->list = linkedlistAdd(&(chain->list), keyValuePair);
-    chain->list->data = keyValuePair;
+    linkedlistAdd(&(chain->list), keyValuePair);
     chain->size++;
 
     table->currentSize++;
@@ -151,13 +157,18 @@ HashTableInsert(HashTable* table, const char* key, void* value)
 static inline void*
 HashTableFind(HashTable* table, const char* key)
 {
+    if (0 == table->capacity)
+    {
+        return NULL;
+    }
+
     unsigned int hash = HashFunction(key);
     unsigned int index = hash % table->capacity;
 
     LinkedList* it = ((Chain*)DynamicArrayGet(&table->entries, index))->list;
     while (it != NULL)
     {
-        if (0 == strcmp(key, ((KeyValuePair*)it->data)->key))
+        if (0 == strcmp(key, ((KeyValuePair*)it->data)->key.C_Str()))
         {
             return ((KeyValuePair*)it->data)->value;
         }
@@ -183,7 +194,7 @@ HashTableResize(HashTable* table, unsigned int newSize)
         while (it != NULL)
         {
             KeyValuePair* kvp = (KeyValuePair*)it->data;
-            HashTableInsert(&newTable, kvp->key, kvp->value);
+            HashTableInsert(&newTable, kvp->key.C_Str(), kvp->value);
             it = it->next;   
         }
     }
@@ -194,4 +205,8 @@ HashTableResize(HashTable* table, unsigned int newSize)
     table->capacity = newTable.capacity;
     table->currentSize = newTable.currentSize;
 }
+
+} // namespace core
+} // namespace chrissly
+//------------------------------------------------------------------------------
 #endif

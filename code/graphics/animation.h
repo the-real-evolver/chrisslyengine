@@ -8,6 +8,7 @@
 */
 #include "animationtrack.h"
 #include "dynamicarray.h"
+#include "chrisslystring.h"
 
 //------------------------------------------------------------------------------
 namespace chrissly
@@ -45,7 +46,7 @@ public:
     void Apply(Entity* entity, float timePos);
 
 private:
-    const char* name;
+    chrissly::core::String name;
     float length;
     mutable DynamicArray vertexTrackList;
     unsigned short numVertexTracks;

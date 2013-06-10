@@ -18,10 +18,10 @@ using namespace chrissly::core;
 /**
 */
 Animation::Animation(const char* name, float length) :
-    name(name),
     length(length),
     numVertexTracks(0)
 {
+	this->name = name;
     DynamicArrayInit(&this->vertexTrackList, 0);
 }
 
@@ -39,7 +39,7 @@ Animation::~Animation()
 const char*
 Animation::GetName() const
 {
-    return this->name;
+    return this->name.C_Str();
 }
 
 //------------------------------------------------------------------------------

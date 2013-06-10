@@ -157,6 +157,7 @@ GLES2Mappings::Get(graphics::PixelFormat pf)
     switch (pf)
     {
         case graphics::PF_R5G6B5:        return GL_UNSIGNED_SHORT_5_6_5;
+        case graphics::PF_R8G8B8:        return GL_UNSIGNED_BYTE;
         case graphics::PF_A1R5G5B5:      return GL_UNSIGNED_SHORT_5_5_5_1;
         case graphics::PF_A4R4G4B4:      return GL_UNSIGNED_SHORT_4_4_4_4;
         case graphics::PF_R8G8B8A8:      return GL_UNSIGNED_BYTE;
@@ -183,6 +184,7 @@ GLES2Mappings::GetInternalFormat(graphics::PixelFormat pf)
     switch (pf)
     {
         case graphics::PF_R5G6B5:        return GL_RGB;
+        case graphics::PF_R8G8B8:        return GL_RGB;
         case graphics::PF_A1R5G5B5:      return GL_RGBA;
         case graphics::PF_A4R4G4B4:      return GL_RGBA;
         case graphics::PF_R8G8B8A8:      return GL_RGBA;
@@ -209,6 +211,7 @@ GLES2Mappings::IsCompressed(graphics::PixelFormat pf)
     switch (pf)
     {
         case graphics::PF_R5G6B5:        return false;
+        case graphics::PF_R8G8B8:        return false;
         case graphics::PF_A1R5G5B5:      return false;
         case graphics::PF_A4R4G4B4:      return false;
         case graphics::PF_R8G8B8A8:      return false;

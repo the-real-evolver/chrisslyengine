@@ -75,7 +75,7 @@ public:
         @param
             linear The linear factor in the attenuation formula: 1 means attenuate evenly over the distance
         @param
-            quadratic The quadratic factor in the attenuation formula: adds a curvature to the attenuation formula.
+            quadratic The quadratic factor in the attenuation formula: adds a curvature to the attenuation formula
     */
     void SetAttenuation(float constant, float linear, float quadratic);
     /// returns the constant factor in the attenuation formula

@@ -43,6 +43,7 @@ GLES2Texture::CreateInternalResourcesImpl()
     }
     else
     {
+        // glPixelStorei(GL_UNPACK_ALIGNMENT, (PF_R8G8B8 == this->format) ? 1 : 4);
         glTexImage2D(GL_TEXTURE_2D, 0, GLES2Mappings::GetInternalFormat(this->format), this->width, this->height, 0,
                         GLES2Mappings::GetInternalFormat(this->format), GLES2Mappings::Get(this->format), this->textureBuffer);
     }

@@ -22,9 +22,10 @@ MeshManager* MeshManager::Singleton = NULL;
 //------------------------------------------------------------------------------
 /**
 */
-MeshManager::MeshManager() : resources(NULL)
+MeshManager::MeshManager()
 {
     Singleton = this;
+    HashTableInit(&this->resources, 4);
 }
 
 //------------------------------------------------------------------------------
@@ -42,22 +43,14 @@ MeshManager::~MeshManager()
 Mesh*
 MeshManager::Load(const char* filename)
 {
-    LinkedList* it = this->resources;
-    while (it != NULL)
+    Mesh* mesh = (Mesh*)HashTableFind(&this->resources, filename);
+    if (mesh != NULL)
     {
-        if (0 == strcmp(filename, ((MeshResource*)it->data)->fileName))
-        {
-            return ((MeshResource*)it->data)->mesh;
-        }
-        it = it->next;
+        return mesh;
     }
 
-    Mesh* mesh = CE_NEW Mesh();
-    MeshResource* meshResource = CE_NEW MeshResource;
-    meshResource->mesh = mesh;
-    meshResource->fileName = filename;
-    this->resources = linkedlistAdd(&this->resources, meshResource);
-    this->resources->data = meshResource;
+    mesh = CE_NEW Mesh();
+    HashTableInsert(&this->resources, filename, mesh);
 
     unsigned int bytesToRead = 0;
     unsigned int bytesPerVertex = 36;
@@ -83,7 +76,7 @@ MeshManager::Load(const char* filename)
                     {
                         bytesToRead = vertexCount * bytesPerVertex;
                         vertexBuffer = CE_MALLOC_ALIGN(16, bytesToRead);
-                        CE_ASSERT(vertexBuffer != NULL, "MeshManager::Load(): can't allocate '%i' bytes", bytesToRead);
+                        CE_ASSERT(vertexBuffer != NULL, "MeshManager::Load(): failed to allocate '%i' bytes for SubMesh", bytesToRead);
                         FSWrapper::Read(fd, vertexBuffer, bytesToRead);
                     }
                     else
@@ -123,7 +116,7 @@ MeshManager::Load(const char* filename)
                     // read vertex buffer
                     bytesToRead = vertexCount * bytesPerVertex;
                     vertexBuffer = CE_MALLOC_ALIGN(16, bytesToRead);
-                    CE_ASSERT(vertexBuffer != NULL, "MeshManager::Load(): can't allocate '%i' bytes", bytesToRead);
+                    CE_ASSERT(vertexBuffer != NULL, "MeshManager::Load(): failed to allocate '%i' bytes for VertexMorphKeyFrame", bytesToRead);
                     FSWrapper::Read(fd, vertexBuffer, bytesToRead);
 
                     // add morphkeyframe
@@ -152,19 +145,18 @@ MeshManager::Load(const char* filename)
 void
 MeshManager::RemoveAll()
 {
-    LinkedList* it = this->resources;
-    while (it != NULL)
+    unsigned int i;
+    for (i = 0; i < this->resources.capacity; i++)
     {
-        LinkedList* node = it;        
-        MeshResource* resource = (MeshResource*)node->data;
-
-        CE_DELETE resource->mesh;
-        CE_DELETE resource;
-
-        it = it->next;
-        linkedlistRemove(node);
+        LinkedList* it = ((Chain*)DynamicArrayGet(&this->resources.entries, i))->list;
+        while (it != NULL)
+        {
+            CE_DELETE (Mesh*)((KeyValuePair*)it->data)->value;
+            it = it->next;
+        }
     }
-    this->resources = NULL;
+
+    HashTableClear(&this->resources);
 }
 
 } // namespace graphics

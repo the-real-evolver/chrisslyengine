@@ -16,13 +16,12 @@ using namespace chrissly::core;
 /**
 */
 AnimationState::AnimationState(const char* animName, float length, bool enabled) :
-    animationName(animName),
     timePos(0.0f),
     enabled(enabled),
     loop(false),
     length(length)
 {
-
+	this->animationName = animName;
 }
 
 //------------------------------------------------------------------------------
@@ -113,7 +112,7 @@ AnimationState::GetLoop() const
 const char*
 AnimationState::GetAnimationName() const
 {
-    return this->animationName;
+    return this->animationName.C_Str();
 }
 
 //------------------------------------------------------------------------------

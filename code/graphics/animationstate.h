@@ -6,6 +6,7 @@
 
     (C) 2012 Christian Bleicher
 */
+#include "chrisslystring.h"
 
 //------------------------------------------------------------------------------
 namespace chrissly
@@ -50,7 +51,7 @@ public:
     void SetLength(float len);
 
 private:
-    const char* animationName;
+    chrissly::core::String animationName;
     float timePos;
     bool enabled;
     bool loop;

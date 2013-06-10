@@ -39,7 +39,7 @@ public:
     void MoveRelative(const chrissly::core::Vector3& vec);
     /// rolls the camera anticlockwise, around its local z axis
     void Roll(float angle);
-    /// pitches the camera up/down anticlockwise around it's local z axis
+    /// pitches the camera up/down anticlockwise around it's local x axis
     void Pitch(float angle);
     /// rotates the camera anticlockwise around it's local y axis
     void Yaw(float angle);

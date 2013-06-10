@@ -75,7 +75,7 @@ private:
     /// does this object receive shadows?
     bool receivesShadows;
     /// state of animation for animable meshes
-    mutable HashTable animationState;
+    mutable chrissly::core::HashTable animationState;
 };
 
 } // namespace graphics

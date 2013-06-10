@@ -20,9 +20,10 @@ TextureManager* TextureManager::Singleton = NULL;
 //------------------------------------------------------------------------------
 /**
 */
-TextureManager::TextureManager() : resources(NULL)
+TextureManager::TextureManager()
 {
     Singleton = this;
+    HashTableInit(&this->resources, 4);
 }
 
 //------------------------------------------------------------------------------
@@ -40,14 +41,10 @@ TextureManager::~TextureManager()
 Texture*
 TextureManager::Load(const char* name)
 {
-    LinkedList* it = this->resources;
-    while (it != NULL)
+    Texture* texture = (Texture*)HashTableFind(&this->resources, name);
+    if (texture != NULL)
     {
-        if (0 == strcmp(name, ((TextureResource*)it->data)->fileName))
-        {
-            return ((TextureResource*)it->data)->texture;
-        }
-        it = it->next;
+        return texture;
     }
 
     FileHandle fd = FSWrapper::Open(name, ReadAccess, 0777);
@@ -68,20 +65,16 @@ TextureManager::Load(const char* name)
     FSWrapper::Read(fd, textureBuffer, fileSize - headerSizeBytes);
     FSWrapper::Close(fd);
     
-    Texture* texture = CE_NEW Texture();
+    texture = CE_NEW Texture();
     texture->SetFormat((PixelFormat)format);
     texture->SetWidth(width);
     texture->SetHeight(height);
     texture->SetSwizzleEnabled(1 == swizzled ? true : false);
     texture->SetBuffer(textureBuffer);
     texture->CreateInternalResourcesImpl();
-    
-    TextureResource* textureResource = CE_NEW TextureResource;
-    textureResource->texture = texture;
-    textureResource->fileName = name;
-    this->resources = linkedlistAdd(&this->resources, textureResource);
-    this->resources->data = textureResource;
-    
+
+    HashTableInsert(&this->resources, name, texture);
+
     return texture;
 }
 
@@ -91,20 +84,20 @@ TextureManager::Load(const char* name)
 void
 TextureManager::RemoveAll()
 {
-    LinkedList* it = this->resources;
-    while (it != NULL)
+    unsigned int i;
+    for (i = 0; i < this->resources.capacity; i++)
     {
-        LinkedList* node = it;
-        
-        TextureResource* resource = (TextureResource*)node->data;
-        CE_FREE((void*)resource->texture->GetBuffer());
-        CE_DELETE resource->texture;
-        CE_DELETE resource;
-
-        it = it->next;
-        linkedlistRemove(node);
+        LinkedList* it = ((Chain*)DynamicArrayGet(&this->resources.entries, i))->list;
+        while (it != NULL)
+        {
+            Texture* texture = (Texture*)((KeyValuePair*)it->data)->value;
+            CE_FREE((void*)texture->GetBuffer());
+            CE_DELETE texture;
+            it = it->next;
+        }
     }
-    this->resources = NULL;
+
+    HashTableClear(&this->resources);
 }
 
 } // namespace graphics

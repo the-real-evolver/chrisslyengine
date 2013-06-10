@@ -47,7 +47,7 @@ SceneNode::_Update()
     {
         Quaternion parentOrientation = this->parent->_GetDerivedOrientation();
         Vector3 parentScale = this->parent->_GetDerivedScale();
-    
+
         // combine orientation with that of parent
         this->derivedOrientation = parentOrientation * this->orientation;
 
@@ -67,7 +67,7 @@ SceneNode::_Update()
         this->derivedPosition = this->position;
         this->derivedScale = this->scale;
     }
-   
+
     LinkedList* it = this->children;
     while (it != NULL)
     {
@@ -84,10 +84,9 @@ SceneNode::CreateChildSceneNode()
 {
     SceneNode* sceneNode = SceneManager::Instance()->CreateSceneNode();
     sceneNode->SetParent(this);
-    
-    this->children = linkedlistAdd(&this->children, sceneNode);
-    this->children->data = sceneNode;
-    
+
+    linkedlistAdd(&this->children, sceneNode);
+
     return sceneNode;
 }
 
@@ -326,7 +325,7 @@ SceneNode::_GetFullTransform() const
         
         this->cachedTransformOutOfDate = false;
     }
-    
+
     return this->cachedTransform;
 }
 
@@ -340,9 +339,9 @@ SceneNode::AttachObject(Entity* obj)
     {
         CE_ASSERT(false, "SceneNode::AttachObject(): can't add Entity to objectmap");
     }
-    
+
     obj->_NotifyAttached(this);
-    
+
     this->numAttachedObjects++;
 }
 

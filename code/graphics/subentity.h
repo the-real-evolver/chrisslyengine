@@ -43,7 +43,7 @@ public:
 private:
     /// private constructor - don't allow creation by anybody else
     SubEntity(Entity* parent, SubMesh* subMeshBasis);
-    /// pointer to parent.
+    /// pointer to parent
     Entity* parentEntity;
     /// cached pointer to material 
     Material* pMaterial;

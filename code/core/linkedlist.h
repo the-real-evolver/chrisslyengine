@@ -29,60 +29,75 @@
 */
 
 #include "memoryallocatorconfig.h"
+#include "debug.h"
+#include <stdio.h>
 
 #ifndef __LINKEDLIST_H__
 #define __LINKEDLIST_H__
 
+//! A node for the linked list.
 typedef struct LinkedList{
-    struct LinkedList *next;
-    struct LinkedList *prev;
-    void *data;
+    struct LinkedList *next;	//!< A pointer to the next node.
+    struct LinkedList *prev;	//!< A pointer to the previous node.
+    void *data;					//!< A pointer to some data.
 }LinkedList;
 
-static inline
+/*!
+    \brief Adds data to a linked list.
 
-LinkedList* linkedlistAdd(LinkedList **front, void* data)
+    This will only store the pointer to the data, so you have to make sure that the pointer stays valid.
+
+    \param front A pointer to a pointer to the front of the linked list (or a pointer to NULL if you don't have a linked list yet).
+    \param data A pointer to the data you want to store.
+*/
+static inline
+void linkedlistAdd(LinkedList **front, void* data)
 {
     LinkedList *node = (LinkedList*)CE_MALLOC(sizeof(LinkedList));
 
-    node->prev = 0;
+    CE_ASSERT(node != NULL, "::linkedlistAdd(): failed to allocate '%i' bytes", sizeof(LinkedList));
 
-    if(*front == 0)
-    {	
-        node->next = 0;
+    node->prev = NULL;
+    node->data = data;
 
-        node->data = data;
-
-        *front = node;
-
-        return node;
+    if(*front == NULL)
+    {
+        node->next = NULL;
     }
-    
-    node->next = *front;
-    
-    (*front)->prev = node;
+    else
+    {
+        node->next = *front;
+        (*front)->prev = node;
+    }
 
-    return node;
+    *front = node;
 }
 
+/*!
+    \brief Removes a node from a linked list.
 
+    The data pointer of the node will be lost after this, so make sure you don't need it anymore.
+
+    \param node The node you want to remove.
+*/
 static inline
-
 void linkedlistRemove(LinkedList *node)
 {
-    if(node == 0) return;
+    if(node == NULL)
+    {
+        return;
+    }
 
-    if(node->prev)
+    if(node->prev != NULL)
     {
         node->prev->next = node->next;
     }
 
-    if(node->next)
+    if(node->next != NULL)
     {
         node->next->prev = node->prev;
     }
 
     CE_FREE(node);
 }
-
 #endif

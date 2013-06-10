@@ -7,7 +7,7 @@
     (C) 2010 Christian Bleicher
 */
 #include "texture.h"
-#include "linkedlist.h"
+#include "hashtable.h"
 
 //------------------------------------------------------------------------------
 namespace chrissly
@@ -39,13 +39,7 @@ private:
 
     static TextureManager* Singleton;
 
-    struct TextureResource
-    {
-        Texture* texture;
-        const char* fileName;
-    };
-
-    LinkedList* resources;
+    chrissly::core::HashTable resources;
 };
 
 } // namespace graphics
