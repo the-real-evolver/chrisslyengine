@@ -30,7 +30,7 @@ public:
     /// gets the total length of the animation
     float GetLength() const;
     /// creates a VertexAnimationTrack for animating vertex position data
-    VertexAnimationTrack* CreateVertexTrack();
+    VertexAnimationTrack* CreateVertexTrack(unsigned char handle);
     /// gets the number of VertexAnimationTrack objects contained in this animation
     unsigned short GetNumVertexTracks() const;
     /// gets a Vertex track by it's index

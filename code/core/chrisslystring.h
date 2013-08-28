@@ -32,10 +32,12 @@ public:
     unsigned int Size();
     /// returns a pointer to an array that contains a null-terminated sequence of characters
     const char* C_Str() const;
-
-private:
     /// set as char ptr
     void Set(const char* ptr);
+    /// set as char ptr, with explicit length
+    void Set(const char* ptr, unsigned int length);
+
+private:
     /// free allocated memory
     void Delete();
 

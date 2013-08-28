@@ -37,9 +37,9 @@
 
 //! A node for the linked list.
 typedef struct LinkedList{
-    struct LinkedList *next;	//!< A pointer to the next node.
-    struct LinkedList *prev;	//!< A pointer to the previous node.
-    void *data;					//!< A pointer to some data.
+    struct LinkedList *next;    //!< A pointer to the next node.
+    struct LinkedList *prev;    //!< A pointer to the previous node.
+    void *data;                 //!< A pointer to some data.
 }LinkedList;
 
 /*!

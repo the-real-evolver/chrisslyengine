@@ -101,7 +101,9 @@ MeshManager::Load(const char* filename)
                 {
                     // read animation track
                     CE_ASSERT(animation != NULL, "MeshManager::Load(): can't create VertexAnimationTrack without Animation");
-                    animationTrack = animation->CreateVertexTrack();
+                    unsigned char handle = 0;
+                    FSWrapper::Read(fd, &handle, 1);
+                    animationTrack = animation->CreateVertexTrack(handle);
                 }
                 break;
             case M_ANIMATION_MORPH_KEYFRAME:
@@ -124,8 +126,8 @@ MeshManager::Load(const char* filename)
                     VertexMorphKeyFrame* vertexMorphKeyFrame = animationTrack->CreateVertexMorphKeyFrame(keyTime);
                     vertexMorphKeyFrame->vertexData = CE_NEW VertexData(vertexCount, vertexBuffer, bytesPerVertex);
 
-                    // Fixme: setup for multiple animationtracks
-                    SubMesh* subMesh = mesh->GetSubMesh(0);
+                    // initialise submesh
+                    SubMesh* subMesh = mesh->GetSubMesh(animationTrack->GetHandle());
                     CE_ASSERT(subMesh != NULL, "MeshManager::Load(): no submesh to map to");
                     subMesh->vertexAnimationType = VAT_MORPH;
                     subMesh->vertexData->vertexCount = vertexCount;

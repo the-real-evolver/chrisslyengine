@@ -21,7 +21,7 @@ Animation::Animation(const char* name, float length) :
     length(length),
     numVertexTracks(0)
 {
-	this->name = name;
+    this->name = name;
     DynamicArrayInit(&this->vertexTrackList, 0);
 }
 
@@ -55,9 +55,9 @@ Animation::GetLength() const
 /**
 */
 VertexAnimationTrack*
-Animation::CreateVertexTrack()
+Animation::CreateVertexTrack(unsigned char handle)
 {
-    VertexAnimationTrack* vertexAnimationTrack = CE_NEW VertexAnimationTrack();
+    VertexAnimationTrack* vertexAnimationTrack = CE_NEW VertexAnimationTrack(handle);
 
     if (!DynamicArraySet(&this->vertexTrackList, this->numVertexTracks, vertexAnimationTrack))
     {
@@ -127,7 +127,7 @@ Animation::Apply(Entity* entity, float timePos)
             VertexMorphKeyFrame* nextKey = vertexAnimTrack->GetVertexMorphKeyFrame(keyIndex + 1);
             if (timePos >= key->GetTime() && timePos < nextKey->GetTime())
             {
-                SubEntity* subEntity = entity->GetSubEntity(0);
+                SubEntity* subEntity = entity->GetSubEntity(vertexAnimTrack->GetHandle());
                 subEntity->SetMorphWeight((timePos - key->GetTime()) / (nextKey->GetTime() - key->GetTime()));
                 vertexAnimTrack->ApplyToVertexData(subEntity->_GetHardwareVertexAnimVertexData(), keyIndex);
                 break;

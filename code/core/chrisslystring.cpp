@@ -89,9 +89,18 @@ String::C_Str() const
 void
 String::Set(const char* ptr)
 {
+    size_t length = strlen(ptr);
+    this->Set(ptr, length);
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+String::Set(const char* ptr, unsigned int length)
+{
     this->Delete();
 
-    size_t length = strlen(ptr);
     if (length > 0)
     {
         this->data = (char*)CE_MALLOC(length + 1);

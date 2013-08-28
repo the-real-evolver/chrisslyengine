@@ -21,8 +21,12 @@ public:
     GLES2GpuProgram(const char* vertexShaderSource, const char* fragmentShaderSource);
     /// destructor
     ~GLES2GpuProgram();
+    /// get a reference to the default parameters which are to be used for all uses of this program
+    graphics::GpuProgramParameters* GetDefaultParameters();
+    /// get the full list of named constants
+    graphics::GpuNamedConstants* GetConstantDefinitions() const;
     /// returns the location of a uniform variable
-    GLint GetUniformLocation(graphics::AutoConstantType acType) const;
+    GLint GetUniformLocation(graphics::GpuProgramParameters::AutoConstantType acType) const;
     /// returns the location of the uniform sampler2D variable
     GLint GetTextureUniformLocation() const;
     /// get the handle for the program object
@@ -33,14 +37,22 @@ public:
 private:
     /// private default constructor
     GLES2GpuProgram();
+    /// creates a new parameters object compatible with this program definition
+    graphics::GpuProgramParameters* CreateParameters();
+    /// populate named constants
+    void ExtractConstantDefs(const char* source, graphics::GpuNamedConstants* constantDefs);
     /// create and compiles a shader from the given string and returns a handle to it
     GLuint CreateShaderFromString(GLenum shaderType, const char* source);
     /// creates a gpu program from the given shader handles
     GLuint CreateProgram(GLuint vertexShader, GLuint fragmentShader);
-    
+    /// returns true if the given string names a auto constant type
+    bool IsAutoConstantType(const char* name);
+
+    graphics::GpuProgramParameters* defaultParams;
+    graphics::GpuNamedConstants* constantDefs;
     GLuint gpuProgram;
     GLint textureHandle;
-    GLint uniformLocations[graphics::ACT_COUNT];
+    GLint uniformLocations[graphics::GpuProgramParameters::ACT_COUNT];
     GLint attributeLocations[graphics::VES_COUNT];
 };
 

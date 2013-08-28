@@ -17,7 +17,8 @@ using namespace chrissly::core;
 //------------------------------------------------------------------------------
 /**
 */
-VertexAnimationTrack::VertexAnimationTrack() :
+VertexAnimationTrack::VertexAnimationTrack(unsigned char handle) :
+    handle(handle),
     numKeyFrames(0),
     currentTimeIndex(-1)
 {
@@ -30,6 +31,15 @@ VertexAnimationTrack::VertexAnimationTrack() :
 VertexAnimationTrack::~VertexAnimationTrack()
 {
     this->RemoveAllKeyFrames();
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+unsigned char
+VertexAnimationTrack::GetHandle() const
+{
+    return this->handle;
 }
 
 //------------------------------------------------------------------------------

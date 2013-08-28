@@ -4,6 +4,7 @@
 //------------------------------------------------------------------------------
 #include "gles2gpuprogram.h"
 #include "gles2rendersystem.h"
+#include "chrisslystring.h"
 #include "debug.h"
 
 namespace chrissly
@@ -31,17 +32,17 @@ GLES2GpuProgram::GLES2GpuProgram(const char* vertexShaderSource, const char* fra
 
     this->textureHandle = glGetUniformLocation(this->gpuProgram, "texture");
     GLES2RenderSystem::CheckGlError("glGetUniformLocation");
-    this->uniformLocations[graphics::ACT_WORLD_MATRIX] = glGetUniformLocation(this->gpuProgram, "worldMatrix");
+    this->uniformLocations[graphics::GpuProgramParameters::ACT_WORLD_MATRIX] = glGetUniformLocation(this->gpuProgram, "worldMatrix");
     GLES2RenderSystem::CheckGlError("glGetUniformLocation");
-    this->uniformLocations[graphics::ACT_VIEW_MATRIX] = glGetUniformLocation(this->gpuProgram, "viewMatrix");
+    this->uniformLocations[graphics::GpuProgramParameters::ACT_VIEW_MATRIX] = glGetUniformLocation(this->gpuProgram, "viewMatrix");
     GLES2RenderSystem::CheckGlError("glGetUniformLocation");
-    this->uniformLocations[graphics::ACT_PROJECTION_MATRIX] = glGetUniformLocation(this->gpuProgram, "projectionMatrix");
+    this->uniformLocations[graphics::GpuProgramParameters::ACT_PROJECTION_MATRIX] = glGetUniformLocation(this->gpuProgram, "projectionMatrix");
     GLES2RenderSystem::CheckGlError("glGetUniformLocation");
-    this->uniformLocations[graphics::ACT_WORLDVIEWPROJ_MATRIX] = glGetUniformLocation(this->gpuProgram, "worldViewProjMatrix");
+    this->uniformLocations[graphics::GpuProgramParameters::ACT_WORLDVIEWPROJ_MATRIX] = glGetUniformLocation(this->gpuProgram, "worldViewProjMatrix");
     GLES2RenderSystem::CheckGlError("glGetUniformLocation");
-    this->uniformLocations[graphics::ACT_MORPH_WEIGHT] = glGetUniformLocation(this->gpuProgram, "morphWeight");
+    this->uniformLocations[graphics::GpuProgramParameters::ACT_MORPH_WEIGHT] = glGetUniformLocation(this->gpuProgram, "morphWeight");
     GLES2RenderSystem::CheckGlError("glGetUniformLocation");
-    this->uniformLocations[graphics::ACT_TEXTURE_MATRIX] = 0;
+    this->uniformLocations[graphics::GpuProgramParameters::ACT_TEXTURE_MATRIX] = -1;
 
     this->attributeLocations[graphics::VES_POSITION] = glGetAttribLocation(this->gpuProgram, "position");
     GLES2RenderSystem::CheckGlError("glGetAttribLocation");
@@ -51,6 +52,12 @@ GLES2GpuProgram::GLES2GpuProgram(const char* vertexShaderSource, const char* fra
     GLES2RenderSystem::CheckGlError("glGetAttribLocation");
     this->attributeLocations[graphics::VES_POSITION_MORPH_TARGET] = glGetAttribLocation(this->gpuProgram, "positionMorphTarget");
     GLES2RenderSystem::CheckGlError("glGetAttribLocation");
+
+    this->constantDefs = CE_NEW graphics::GpuNamedConstants;
+    this->ExtractConstantDefs(vertexShaderSource, this->constantDefs);
+    this->ExtractConstantDefs(fragmentShaderSource, this->constantDefs);
+
+    this->defaultParams = NULL;
 }
 
 //------------------------------------------------------------------------------
@@ -58,6 +65,9 @@ GLES2GpuProgram::GLES2GpuProgram(const char* vertexShaderSource, const char* fra
 */
 GLES2GpuProgram::~GLES2GpuProgram()
 {
+    CE_DELETE this->constantDefs;
+    if (this->defaultParams != NULL) CE_DELETE this->defaultParams;
+
     GLint numAttachedShaders;
     glGetProgramiv(this->gpuProgram, GL_ATTACHED_SHADERS, &numAttachedShaders);
 
@@ -80,8 +90,31 @@ GLES2GpuProgram::~GLES2GpuProgram()
 //------------------------------------------------------------------------------
 /**
 */
+graphics::GpuProgramParameters*
+GLES2GpuProgram::GetDefaultParameters()
+{
+    if (NULL == this->defaultParams)
+    {
+        this->defaultParams = this->CreateParameters();
+    }
+
+    return this->defaultParams;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+graphics::GpuNamedConstants*
+GLES2GpuProgram::GetConstantDefinitions() const
+{
+    return this->constantDefs;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
 GLint
-GLES2GpuProgram::GetUniformLocation(graphics::AutoConstantType acType) const
+GLES2GpuProgram::GetUniformLocation(graphics::GpuProgramParameters::AutoConstantType acType) const
 {
     return this->uniformLocations[acType];
 }
@@ -111,6 +144,103 @@ GLint
 GLES2GpuProgram::GetAttributeLocation(graphics::VertexElementSemantic semantic)
 {
     return this->attributeLocations[semantic];
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+graphics::GpuProgramParameters*
+GLES2GpuProgram::CreateParameters()
+{
+    graphics::GpuProgramParameters* ret = CE_NEW graphics::GpuProgramParameters;
+
+    if (this->constantDefs != NULL)
+    {
+        ret->_SetNamedConstants(this->constantDefs);
+    }
+
+    return ret;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+GLES2GpuProgram::ExtractConstantDefs(const char* source, graphics::GpuNamedConstants* constantDefs)
+{
+    // valid white spaces in GLSL: the space character, horizontal tab, vertical tab, form feed, carriage-return, and line-feed
+    char* match = strstr(source, "uniform");
+    while (match != NULL)
+    {
+        // skip 'uniform'
+        match += 7;
+
+        // parse datatype
+        while (' ' == match[0] || '\t' == match[0]) {match++;}
+        char* start = match;
+        while (match[0] != ' ' && match[0] != '\t') {match++;}
+        char* end = match;
+        core::String dataType;
+        dataType.Set(start, end - start);
+        graphics::GpuConstantType constantType;
+        // ToDo: skip 'lowp' ect.
+        if (0 == strcmp(dataType.C_Str(), "mat4"))
+        {
+            constantType = graphics::GCT_MATRIX_4X4;
+        }
+        else if (0 == strcmp(dataType.C_Str(), "float"))
+        {
+            constantType = graphics::GCT_FLOAT1;
+        }
+        else if (0 == strcmp(dataType.C_Str(), "sampler2D"))
+        {
+            constantType = graphics::GCT_SAMPLER2D;
+        }
+        else
+        {
+            continue;
+        }
+
+        // parse uniform name
+        while (' ' == match[0] || '\t' == match[0]) {match++;}
+        start = match;
+        while (match[0] != ' ' && match[0] != '\t' && match[0] != ';') {match++;}
+        end = match;
+        core::String uniformName;
+        uniformName.Set(start, end - start);
+
+        if (!this->IsAutoConstantType(uniformName.C_Str()))
+        {
+            GLint uniformLocation = glGetUniformLocation(this->gpuProgram, uniformName.C_Str());
+            if (uniformLocation != -1)
+            {
+                graphics::GpuConstantDefinition* uniform = CE_NEW graphics::GpuConstantDefinition();
+                uniform->location = uniformLocation;
+                uniform->constType = constantType;
+                switch (constantType)
+                {
+                    case graphics::GCT_MATRIX_4X4:
+                        uniform->size = sizeof(float) * 16;
+                        uniform->buffer = CE_MALLOC(uniform->size);
+                        break;
+                    case graphics::GCT_FLOAT1:
+                        uniform->size = sizeof(float);
+                        uniform->buffer = CE_MALLOC(uniform->size);
+                        break;
+                    case graphics::GCT_SAMPLER2D:
+                        uniform->size = sizeof(int);
+                        uniform->buffer = CE_MALLOC(uniform->size);
+                        break;
+                }
+
+                CE_LOG("GLES2GpuProgram::ExtractConstantDefs: add '%s' '%s' '%u' '%i'\n", dataType.C_Str(), uniformName.C_Str(), uniform->size, uniform->location);
+
+                HashTableInsert(&constantDefs->map, uniformName.C_Str(), uniform);
+            }
+        }
+
+        match = strstr(match, "uniform");
+    }
 }
 
 //------------------------------------------------------------------------------
@@ -190,5 +320,21 @@ GLES2GpuProgram::CreateProgram(GLuint vertexShader, GLuint fragmentShader)
 
     return program;
 }
-    
+
+//------------------------------------------------------------------------------
+/**
+*/
+bool
+GLES2GpuProgram::IsAutoConstantType(const char* name)
+{
+    if (0 == strcmp(name, "worldMatrix"))         return true;
+    if (0 == strcmp(name, "viewMatrix"))          return true;
+    if (0 == strcmp(name, "projectionMatrix"))    return true;
+    if (0 == strcmp(name, "worldViewProjMatrix")) return true;
+    if (0 == strcmp(name, "morphWeight"))         return true;
+    if (0 == strcmp(name, "texture"))             return true;
+
+    return false;
+}
+
 } // namespace chrissly

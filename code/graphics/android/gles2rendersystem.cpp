@@ -53,11 +53,11 @@ GLES2RenderSystem::GLES2RenderSystem() :
 {
     Singleton = this;
 
-    memset(this->glWorldMatrix, 0, 48);
-    memset(this->glViewMatrix, 0, 48);
-    memset(this->glProjectionMatrix, 0, 48);
-    memset(this->glTextureMatrix, 0, 48);
-    memset(this->glWorldViewProjectionMatrix, 0, 48);
+    memset(this->glWorldMatrix, 0, 64);
+    memset(this->glViewMatrix, 0, 64);
+    memset(this->glProjectionMatrix, 0, 64);
+    memset(this->glTextureMatrix, 0, 64);
+    memset(this->glWorldViewProjectionMatrix, 0, 64);
 }
 
 //------------------------------------------------------------------------------
@@ -156,14 +156,14 @@ void
 GLES2RenderSystem::_SetWorldMatrix(const core::Matrix4& m)
 {
     GLES2Mappings::MakeGLMatrix(this->glWorldMatrix, m);
-    glUniformMatrix4fv(this->currentGpuProgram->GetUniformLocation(graphics::ACT_WORLD_MATRIX), 1, GL_FALSE, this->glWorldMatrix);
+    glUniformMatrix4fv(this->currentGpuProgram->GetUniformLocation(graphics::GpuProgramParameters::ACT_WORLD_MATRIX), 1, GL_FALSE, this->glWorldMatrix);
     CheckGlError("glUniformMatrix4fv");
-    glUniformMatrix4fv(this->currentGpuProgram->GetUniformLocation(graphics::ACT_VIEW_MATRIX), 1, GL_FALSE, this->glViewMatrix);
+    glUniformMatrix4fv(this->currentGpuProgram->GetUniformLocation(graphics::GpuProgramParameters::ACT_VIEW_MATRIX), 1, GL_FALSE, this->glViewMatrix);
     CheckGlError("glUniformMatrix4fv");
-    glUniformMatrix4fv(this->currentGpuProgram->GetUniformLocation(graphics::ACT_PROJECTION_MATRIX), 1, GL_FALSE, this->glProjectionMatrix);
+    glUniformMatrix4fv(this->currentGpuProgram->GetUniformLocation(graphics::GpuProgramParameters::ACT_PROJECTION_MATRIX), 1, GL_FALSE, this->glProjectionMatrix);
     CheckGlError("glUniformMatrix4fv");
     GLES2Mappings::MakeGLMatrix(this->glWorldViewProjectionMatrix, this->projectionMatrix * this->viewMatrix * m);
-    glUniformMatrix4fv(this->currentGpuProgram->GetUniformLocation(graphics::ACT_WORLDVIEWPROJ_MATRIX), 1, GL_FALSE, this->glWorldViewProjectionMatrix);
+    glUniformMatrix4fv(this->currentGpuProgram->GetUniformLocation(graphics::GpuProgramParameters::ACT_WORLDVIEWPROJ_MATRIX), 1, GL_FALSE, this->glWorldViewProjectionMatrix);
     CheckGlError("glUniformMatrix4fv");
 }
 
@@ -204,7 +204,7 @@ GLES2RenderSystem::_Render(graphics::SubEntity* renderable)
 {
     if (graphics::VAT_MORPH == renderable->GetSubMesh()->GetVertexAnimationType())
     {
-        glUniform1f(this->currentGpuProgram->GetUniformLocation(graphics::ACT_MORPH_WEIGHT), renderable->GetMorphWeight());
+        glUniform1f(this->currentGpuProgram->GetUniformLocation(graphics::GpuProgramParameters::ACT_MORPH_WEIGHT), renderable->GetMorphWeight());
         CheckGlError("glUniform1f");
 
         graphics::VertexData* vertexData = renderable->_GetHardwareVertexAnimVertexData();
@@ -349,13 +349,39 @@ GLES2RenderSystem::_SetPass(graphics::Pass* pass)
 
         glUniform1i(this->currentGpuProgram->GetTextureUniformLocation(), 0 /* index of the textureunit */);
     }
+
+    // apply shader parameters
+    graphics::GpuNamedConstants* constantDefs = this->currentGpuProgram->GetConstantDefinitions();
+    unsigned int i;
+    for (i = 0; i < constantDefs->map.capacity; i++)
+    {
+        LinkedList* it = ((core::Chain*)DynamicArrayGet(&constantDefs->map.entries, i))->list;
+        while (it != NULL)
+        {
+            graphics::GpuConstantDefinition* def = (graphics::GpuConstantDefinition*)((core::KeyValuePair*)it->data)->value;
+            switch (def->constType)
+            {
+                case graphics::GCT_MATRIX_4X4:
+                    glUniformMatrix4fv(def->location, 1, GL_FALSE, (float*)def->buffer);
+                    break;
+                case graphics::GCT_FLOAT1:
+                    glUniform1f(def->location, *(float*)def->buffer);
+                    break;
+                case graphics::GCT_SAMPLER2D:
+                    glUniform1i(def->location, *(int*)def->buffer);
+                    break;
+            }
+
+            it = it->next;
+        }
+    }
 }
 
 //------------------------------------------------------------------------------
 /**
 */
 void
-GLES2RenderSystem::_UseLights(HashTable* lights)
+GLES2RenderSystem::_UseLights(core::HashTable* lights)
 {
 
 }
@@ -382,7 +408,7 @@ GLES2RenderSystem::_NotifyMorphKeyFrameBuild()
 /**
 */
 void
-GLES2RenderSystem::PrintGLString(const char *name, GLenum s)
+GLES2RenderSystem::PrintGLString(const char* name, GLenum s)
 {
     const char *v = (const char *)glGetString(s);
     CE_LOG("GL %s = %s\n", name, v);

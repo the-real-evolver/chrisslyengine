@@ -40,6 +40,8 @@ public:
     void Normalise(); 
     /// squared-length
     float Norm() const;
+    /// returns a Quaternion with the inverse orientation of this Quaternion
+    Quaternion Inverse() const;
 
     float w;
     float x;

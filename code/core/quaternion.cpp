@@ -175,5 +175,24 @@ Quaternion::Norm() const
     return this->w * this->w + this->x * this->x + this->y * this->y + this->z * this->z;
 }
 
+//------------------------------------------------------------------------------
+/**
+*/
+Quaternion
+Quaternion::Inverse() const
+{
+    float fNorm = this->Norm();
+    if (fNorm > 0.0f)
+    {
+        float fInvNorm = 1.0f / fNorm;
+        return Quaternion(this->w * fInvNorm, -this->x * fInvNorm, -this->y * fInvNorm, -this->z * fInvNorm);
+    }
+    else
+    {
+        // return an invalid result to flag the error
+        return Quaternion(0.0f, 0.0f, 0.0f, 0.0f);
+    }
+}
+
 } // namespace core
 } // namespace chrissly

@@ -36,11 +36,13 @@ enum VertexAnimationType
 class VertexAnimationTrack
 {
 public:
-    /// constructor
-    VertexAnimationTrack();
+    /// constructor with submesh handle
+    VertexAnimationTrack(unsigned char handle);
     /// destructor
     ~VertexAnimationTrack();
 
+    /// get the handle associated with this track
+    unsigned char GetHandle() const;
     /// creates a new morph KeyFrame and adds it to this animation at the given time index
     /**
         @param timePos the time from which this KeyFrame will apply
@@ -59,6 +61,7 @@ public:
     void ApplyToVertexData(VertexData* data, int timeIndex);
 
 private:
+    unsigned char handle;
     mutable DynamicArray keyFrames;
     unsigned short numKeyFrames;
     int currentTimeIndex;

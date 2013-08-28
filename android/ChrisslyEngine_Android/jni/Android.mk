@@ -28,7 +28,7 @@ LOCAL_SRC_FILES := core/android/androiddebug.cpp core/android/androidfswrapper.c
                    graphics/animation.cpp graphics/animationtrack.cpp graphics/keyframe.cpp graphics/animationstate.cpp \
                    graphics/rendertarget.cpp graphics/android/gles2rendertexture.cpp graphics/android/gles2renderwindow.cpp \
                    graphics/android/gles2mappings.cpp graphics/android/gles2texture.cpp graphics/android/gles2rendersystem.cpp \
-                   graphics/android/gles2gpuprogram.cpp \
+                   graphics/android/gles2gpuprogram.cpp graphics/gpuprogramparams.cpp \
                    main.cpp
 
 LOCAL_LDLIBS := -llog -lGLESv2 -landroid -lEGL

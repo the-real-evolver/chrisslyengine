@@ -26,6 +26,8 @@ Camera* camera;
 int32_t lastX, lastY, distance;
 AnimationState* animState;
 GpuProgram* gpuProgram;
+GpuProgramParameters* params;
+Matrix4 mat;
 
 const char* MorphAnimVertexShader =
     "attribute vec2 texCoordIn;\n"
@@ -52,16 +54,16 @@ const char* MorphAnimVertexShader =
     "}\n";
 
 const char* FragmentShader =
-    "const lowp float MaxDist = 2.5;\n"
-    "const lowp float MaxDistSquared = MaxDist * MaxDist;\n"
-    "const lowp vec3 lightColor = vec3(0.6, 0.6, 0.6);\n"
-    "const lowp vec3 specularColor = vec3(0.9, 0.9, 0.9);\n"
-    "varying lowp vec2 texCoordOut;\n"
-    "varying lowp vec3 fragmentNormal;\n"
-    "varying lowp vec3 cameraVector;\n"
-    "varying lowp vec3 lightVector;\n"
-    "uniform sampler2D texture;\n"
     "precision mediump float;\n"
+    "const float MaxDist = 2.5;\n"
+    "const float MaxDistSquared = MaxDist * MaxDist;\n"
+    "const vec3 lightColor = vec3(0.6, 0.6, 0.6);\n"
+    "varying vec2 texCoordOut;\n"
+    "varying vec3 fragmentNormal;\n"
+    "varying vec3 cameraVector;\n"
+    "varying vec3 lightVector;\n"
+    "uniform sampler2D texture;\n"
+    "uniform mat4 specularColor;\n"
     "void main()\n"
     "{\n"
     "    vec3 normal = normalize(fragmentNormal);\n"
@@ -70,7 +72,7 @@ const char* FragmentShader =
     "    vec3 diffuse = lightColor * clamp(dot(normal, lightDir), 0.0, 1.0) * attenuation;\n"
     "    vec3 halfAngle = normalize(normalize(cameraVector) + lightDir);\n"
     "	 float specularDot = dot(normal, halfAngle);\n"
-    "    vec3 specular = specularColor * pow(clamp(specularDot, 0.0, 1.0), 16.0) * attenuation;\n"
+    "    vec3 specular = vec3(specularColor[0][0], specularColor[0][1], specularColor[0][2]) * pow(clamp(specularDot, 0.0, 1.0), 32.0) * attenuation;\n"
     "    gl_FragColor = vec4(clamp((diffuse + texture2D(texture, texCoordOut).rgb) + specular, 0.0, 1.0), 1.0);\n"
     "}\n";
 
@@ -109,6 +111,10 @@ Enter(struct android_app* state)
     sceneNode->AttachObject(entity);
     sceneNode->SetPosition(0.0f, 0.0f, 0.0f);
 
+    params = gpuProgram->GetDefaultParameters();
+    mat[0][0] = 0.9f; mat[0][1] = 0.9f; mat[0][2] = 0.9f;
+    params->SetNamedConstant("specularColor", mat);
+
     initialized = true;
 }
 
@@ -136,6 +142,9 @@ Trigger()
     {
         animState->AddTime(0.016f);
         sceneNode->Yaw((float)distance * 0.02f);
+        float val = (float)lastX * 0.003f;
+        mat[0][0] = val; mat[0][1] = val; mat[0][2] = val;
+        params->SetNamedConstant("specularColor", mat);
         graphicsSystem->RenderOneFrame();
     }
 }

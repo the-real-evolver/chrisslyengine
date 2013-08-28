@@ -7,9 +7,9 @@
 set NDK=C:\dev\android\android-ndk-r8
 set CE=..\..
 
-XCOPY /y %CE%\code\core             %CE%\android\ChrisslyEngine_Android\jni\core
-XCOPY /y %CE%\code\core\android     %CE%\android\ChrisslyEngine_Android\jni\core\android
-XCOPY /y %CE%\code\graphics         %CE%\android\ChrisslyEngine_Android\jni\graphics
-XCOPY /y %CE%\code\graphics\android %CE%\android\ChrisslyEngine_Android\jni\graphics\android
+XCOPY /i /y %CE%\code\core             %CE%\android\ChrisslyEngine_Android\jni\core
+XCOPY /i /y %CE%\code\core\android     %CE%\android\ChrisslyEngine_Android\jni\core\android
+XCOPY /i /y %CE%\code\graphics         %CE%\android\ChrisslyEngine_Android\jni\graphics
+XCOPY /i /y %CE%\code\graphics\android %CE%\android\ChrisslyEngine_Android\jni\graphics\android
 
 %NDK%\ndk-build

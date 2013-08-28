@@ -37,7 +37,7 @@ private:
     /// return a PSP equivalent for a SeekOrigin value
     static int Get(core::SeekOrigin origin);
 
-    static const char* AppExportPath;
+    static const char* RootDirectory;
 };
 
 } // namespace chrissly

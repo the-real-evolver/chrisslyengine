@@ -204,9 +204,7 @@ SceneManager::ClearScene()
     while (it != NULL)
     {
         LinkedList* node = it;
-
         CE_DELETE (Entity*)node->data;
-
         it = it->next;
         linkedlistRemove(node);
     }
@@ -218,9 +216,7 @@ SceneManager::ClearScene()
     while (it != NULL)
     {
         LinkedList* node = it;
-
         CE_DELETE (SceneNode*)node->data;
-
         it = it->next;
         linkedlistRemove(node);
     }
@@ -269,7 +265,7 @@ SceneManager::SetShadowTechnique(ShadowTechnique technique)
             Viewport* vp = this->shadowRenderTexture->AddViewport(this->shadowCamera, 1, 1, 254, 254);
             vp->SetClearEveryFrame(true, FBT_COLOUR);
             vp->SetBackgroundColour(0xffffffff);
-            // GL_CLAMP_TO_EDGE
+            // GL_CLAMP_TO_BORDER
             memset(this->shadowRenderTexture->GetBuffer(), 0xff, 131072);
 
             this->shadowTexture = CE_NEW Texture();

@@ -31,12 +31,30 @@ Entity::Entity(const char* name, Mesh* mesh) :
     {
         this->mesh->_InitAnimationState(&this->animationState);
 
-        // Fixme: setup for multiple animationtracks
-        SubEntity* subEntity = this->GetSubEntity(0);
-        CE_ASSERT(subEntity != NULL, "Entity::Entity(): subEntity not valid");
-        VertexData* subMeshVertexData = subEntity->GetSubMesh()->vertexData;
-        void* vertexBuffer = CE_MALLOC(2 * subMeshVertexData->bytesPerVertex * subMeshVertexData->vertexCount);
-        subEntity->hardwareVertexAnimVertexData = CE_NEW VertexData(subMeshVertexData->vertexCount, vertexBuffer, subMeshVertexData->bytesPerVertex);
+        unsigned int i;
+        for (i = 0; i < this->animationState.capacity; i++)
+        {
+            LinkedList* it = ((Chain*)DynamicArrayGet(&this->animationState.entries, i))->list;
+            while (it != NULL)
+            {
+                AnimationState* state = (AnimationState*)((KeyValuePair*)it->data)->value;
+                Animation* anim = this->mesh->GetAnimation(state->GetAnimationName());
+
+                unsigned short numVertexTracks = anim->GetNumVertexTracks();
+                unsigned short trackIndex;
+                for (trackIndex = 0; trackIndex < numVertexTracks; trackIndex++)
+                {
+                    VertexAnimationTrack* vertexTrack = anim->GetVertexTrack(trackIndex);
+                    SubEntity* subEntity = this->GetSubEntity(vertexTrack->GetHandle());
+                    CE_ASSERT(subEntity != NULL, "Entity::Entity(): subEntity not valid");
+                    VertexData* subMeshVertexData = subEntity->GetSubMesh()->vertexData;
+                    void* vertexBuffer = CE_MALLOC(2 * subMeshVertexData->bytesPerVertex * subMeshVertexData->vertexCount);
+                    subEntity->hardwareVertexAnimVertexData = CE_NEW VertexData(subMeshVertexData->vertexCount, vertexBuffer, subMeshVertexData->bytesPerVertex);
+                }
+
+                it = it->next;
+            }
+        }
     }
 }
 

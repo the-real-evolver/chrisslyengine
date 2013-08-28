@@ -21,7 +21,7 @@ AnimationState::AnimationState(const char* animName, float length, bool enabled)
     loop(false),
     length(length)
 {
-	this->animationName = animName;
+    this->animationName = animName;
 }
 
 //------------------------------------------------------------------------------

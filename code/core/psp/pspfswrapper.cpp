@@ -11,7 +11,11 @@
 namespace chrissly
 {
 
-const char* PSPFSWrapper::AppExportPath = "ms0:/PSP/GAME/ChrisslyEngine_PSP/export/";
+#ifdef ROOT_DIR
+const char* PSPFSWrapper::RootDirectory = ROOT_DIR;
+#else
+const char* PSPFSWrapper::RootDirectory = "ms0:/PSP/GAME/ChrisslyEngine_PSP/export/";
+#endif
 
 //------------------------------------------------------------------------------
 /**
@@ -20,7 +24,7 @@ core::FileHandle
 PSPFSWrapper::Open(const char* fileName, core::AccessMode flags, int mode)
 {
     char filePath[128];
-    strcpy(filePath, AppExportPath);
+    strcpy(filePath, RootDirectory);
     strcat(filePath, fileName);
     core::FileHandle fileHandle;
     fileHandle.handle = sceIoOpen(filePath, PSPFSWrapper::Get(flags), mode);
