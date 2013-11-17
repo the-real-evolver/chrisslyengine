@@ -1,12 +1,12 @@
-#ifndef MESHMANAGER_H_
-#define MESHMANAGER_H_
+#ifndef MATERIALMANAGER_H_
+#define MATERIALMANAGER_H_
 //------------------------------------------------------------------------------
 /**
-    @class chrissly::graphics::MeshManager
+    @class chrissly::graphics::MaterialManager
 
-    (C) 2010 Christian Bleicher
+    (C) 2013 Christian Bleicher
 */
-#include "mesh.h"
+#include "material.h"
 #include "hashtable.h"
 
 //------------------------------------------------------------------------------
@@ -15,39 +15,31 @@ namespace chrissly
 namespace graphics
 {
 
-class MeshManager
+class MaterialManager
 {
 public:
     /// get pointer to the singleton
-    static MeshManager* Instance()
+    static MaterialManager* Instance()
     {
         return Singleton;
     }
 
     /// default constructor
-    MeshManager();
+    MaterialManager();
     /// destructor
-    ~MeshManager();
-    /// loads a mesh from a file, making it immediately available for use
-    Mesh* Load(const char* filename);
+    ~MaterialManager();
+    /// creates a new blank material, but does not immediately load it
+    Material* Create(const char* name);
     /// removes all resources
     void RemoveAll();
 
 private:
     /// copy constructor
-    MeshManager(const MeshManager&cc) {};
+    MaterialManager(const MaterialManager&cc) {};
 
-    static MeshManager* Singleton;
+    static MaterialManager* Singleton;
 
     chrissly::core::HashTable resources;
-
-    enum MeshChunkID
-    {
-        M_SUBMESH = 0x01,
-        M_ANIMATION = 0x02,
-        M_ANIMATION_TRACK = 0x03,
-        M_ANIMATION_MORPH_KEYFRAME = 0x04
-    };
 };
 
 } // namespace graphics

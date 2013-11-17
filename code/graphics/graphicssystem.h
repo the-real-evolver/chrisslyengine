@@ -10,6 +10,7 @@
 #include "meshmanager.h"
 #include "texturemanager.h"
 #include "scenemanager.h"
+#include "materialmanager.h"
 #include "renderwindow.h"
 #include "rendersystem.h"
 
@@ -51,6 +52,7 @@ private:
     MeshManager* meshManager;
     TextureManager* textureManager;
     SceneManager* sceneManager;
+    MaterialManager* materialManager;
     RenderWindow* autoWindow;
     DynamicArray renderTargets;
     unsigned short numRenderTargets;

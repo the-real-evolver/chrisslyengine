@@ -176,14 +176,22 @@ GLES2GpuProgram::ExtractConstantDefs(const char* source, graphics::GpuNamedConst
         match += 7;
 
         // parse datatype
-        while (' ' == match[0] || '\t' == match[0]) {match++;}
+        while (' ' == match[0] || '\t' == match[0]  || '\v' == match[0] || '\f' == match[0] || '\r' == match[0] || '\n' == match[0]) {match++;}
         char* start = match;
-        while (match[0] != ' ' && match[0] != '\t') {match++;}
+        while (' ' != match[0] && '\t' != match[0]  && '\v' != match[0] && '\f' != match[0] && '\r' != match[0] && '\n' != match[0] && match[0] != ';') {match++;}
         char* end = match;
         core::String dataType;
         dataType.Set(start, end - start);
+        if (0 == strcmp(dataType.C_Str(), "lowp") || 0 == strcmp(dataType.C_Str(), "mediump") || 0 == strcmp(dataType.C_Str(), "highp"))
+        {
+            // skip precision if specified
+            while (' ' == match[0] || '\t' == match[0]  || '\v' == match[0] || '\f' == match[0] || '\r' == match[0] || '\n' == match[0]) {match++;}
+            start = match;
+            while (' ' != match[0] && '\t' != match[0]  && '\v' != match[0] && '\f' != match[0] && '\r' != match[0] && '\n' != match[0] && match[0] != ';') {match++;}
+            end = match;
+            dataType.Set(start, end - start);
+        }
         graphics::GpuConstantType constantType;
-        // ToDo: skip 'lowp' ect.
         if (0 == strcmp(dataType.C_Str(), "mat4"))
         {
             constantType = graphics::GCT_MATRIX_4X4;
@@ -202,9 +210,9 @@ GLES2GpuProgram::ExtractConstantDefs(const char* source, graphics::GpuNamedConst
         }
 
         // parse uniform name
-        while (' ' == match[0] || '\t' == match[0]) {match++;}
+        while (' ' == match[0] || '\t' == match[0]  || '\v' == match[0] || '\f' == match[0] || '\r' == match[0] || '\n' == match[0]) {match++;}
         start = match;
-        while (match[0] != ' ' && match[0] != '\t' && match[0] != ';') {match++;}
+        while (' ' != match[0] && '\t' != match[0]  && '\v' != match[0] && '\f' != match[0] && '\r' != match[0] && '\n' != match[0] && match[0] != ';') {match++;}
         end = match;
         core::String uniformName;
         uniformName.Set(start, end - start);

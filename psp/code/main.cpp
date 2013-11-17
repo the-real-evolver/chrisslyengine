@@ -55,7 +55,7 @@ main (int argc, char* argv[])
     StateMaterialTest* smt = new StateMaterialTest();
     // initialise statemanager
     StateManager* sm = new StateManager();
-    StateManager::Instance()->ChangeState(smt);
+    StateManager::Instance()->ChangeState(sat);
 
     while (StateManager::Instance()->IsRunning() && !exitRequest)
     {

@@ -32,9 +32,9 @@ const char* GLES2RenderSystem::DefaultVertexShader =
     "}\n";
 
 const char* GLES2RenderSystem::DefaultFragmentShader =
-    "varying lowp vec2 texCoordOut;\n"
-    "uniform sampler2D texture;\n"
     "precision mediump float;\n"
+    "varying vec2 texCoordOut;\n"
+    "uniform sampler2D texture;\n"
     "void main()\n"
     "{\n"
     "    gl_FragColor = texture2D(texture, texCoordOut);\n"

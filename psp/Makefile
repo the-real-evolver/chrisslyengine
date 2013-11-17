@@ -3,6 +3,7 @@
 #  (C) 2011 Christian Bleicher
 #------------------------------------------------------------------------------
 TARGET = ChrisslyEngine_PSP
+# for a custom root directroy use: -DROOT_DIR=\"ms0:/PSP/GAME/YourApplication/\"
 CFLAGS = -O2 -G0 -Wall -D__PSP__
 CXXFLAGS = $(CFLAGS) -fno-exceptions
 ASFLAGS = $(CFLAGS)
@@ -23,7 +24,7 @@ OBJS = $(CE)/code/core/quaternion.o $(CE)/code/core/vector3.o $(CE)/code/core/ma
        $(CE)/code/graphics/psp/pspmappings.o $(CE)/code/graphics/psp/psphardwarebuffermanager.o $(CE)/code/graphics/psp/psprendersystem.o \
        $(CE)/code/graphics/graphicssystem.o \
        $(CE)/code/graphics/texturemanager.o $(CE)/code/graphics/texturebase.o \
-       $(CE)/code/graphics/textureunitstate.o $(CE)/code/graphics/pass.o $(CE)/code/graphics/material.o \
+       $(CE)/code/graphics/materialmanager.o $(CE)/code/graphics/textureunitstate.o $(CE)/code/graphics/pass.o $(CE)/code/graphics/material.o \
        $(CE)/code/graphics/meshmanager.o $(CE)/code/graphics/mesh.o $(CE)/code/graphics/submesh.o \
        $(CE)/code/graphics/subentity.o $(CE)/code/graphics/entity.o \
        $(CE)/code/graphics/renderqueuesortinggrouping.o \

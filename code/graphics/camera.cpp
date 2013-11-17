@@ -141,7 +141,7 @@ void
 Camera::Rotate(const Vector3& axis, float angle)
 {
     Quaternion q;
-    q.FromAngleAxis(angle,axis);
+    q.FromAngleAxis(angle, axis);
     this->Rotate(q);
 }
 

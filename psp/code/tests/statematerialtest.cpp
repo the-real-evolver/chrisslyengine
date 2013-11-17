@@ -41,9 +41,9 @@ StateMaterialTest::Enter()
     sceCtrlSetSamplingMode(PSP_CTRL_MODE_ANALOG);
 
     // solid material
-    this->solidMaterial = new Material();
+    Material* solidMaterial = MaterialManager::Instance()->Create("solidMaterial");
     Texture* tex = TextureManager::Instance()->Load("gothic_solid.tex");
-    Pass* pass = this->solidMaterial->CreatePass();
+    Pass* pass = solidMaterial->CreatePass();
     pass->SetFog(FOG_LINEAR, 0xff0080ff, 0.0f, 50.0f);
     pass->SetLightingEnabled(true);
     pass->SetVertexColourTracking(TVC_DIFFUSE | TVC_AMBIENT | TVC_SPECULAR);
@@ -53,9 +53,9 @@ StateMaterialTest::Enter()
     tus->SetTextureBlendOperation(LBT_COLOUR, LBO_MODULATE);
 
     // transparent material
-    this->alphaMaterial = new Material();
+    Material* alphaMaterial = MaterialManager::Instance()->Create("alphaMaterial");
     tex = TextureManager::Instance()->Load("gothic_alpha.tex");
-    pass = this->alphaMaterial->CreatePass();
+    pass = alphaMaterial->CreatePass();
     pass->SetSceneBlendingEnabled(true);
     pass->SetSceneBlending(SBF_SOURCE_ALPHA, SBF_ONE_MINUS_SOURCE_ALPHA);
     pass->SetCullingMode(CULL_NONE);
@@ -67,27 +67,23 @@ StateMaterialTest::Enter()
     tus->SetTexture(tex);
     tus->SetTextureBlendOperation(LBT_ALPHA, LBO_MODULATE);
 
-    // create entity and set materials
-    this->gothEntity = SceneManager::Instance()->CreateEntity("gothic_woman.mesh");
-    this->gothEntity->SetCastShadows(true);
-    this->gothEntity->GetSubEntity(1)->SetMaterial(this->solidMaterial);
-    this->gothEntity->GetSubEntity(0)->SetMaterial(this->alphaMaterial);
-    this->gothEntity->GetSubEntity(2)->SetMaterial(this->alphaMaterial);
-
-    // create scenenode
+    // create scenenode, entity and set materials
+    Entity* gothEntity = SceneManager::Instance()->CreateEntity("gothic_woman.mesh");
+    gothEntity->SetCastShadows(true);
+    gothEntity->GetSubEntity(1)->SetMaterial(solidMaterial);
+    gothEntity->GetSubEntity(0)->SetMaterial(alphaMaterial);
+    gothEntity->GetSubEntity(2)->SetMaterial(alphaMaterial);
     this->gothSceneNode = SceneManager::Instance()->GetRootSceneNode()->CreateChildSceneNode();
     this->gothSceneNode->SetScale(3.5f, 3.5f, 3.5f);
     this->gothSceneNode->SetPosition(-2.0f, 0.1f, -1.4f);
-    this->gothSceneNode->AttachObject(this->gothEntity);
+    this->gothSceneNode->AttachObject(gothEntity);
 
-    this->cubeMaterial = new Material();
-
+    this->cubeMaterial = MaterialManager::Instance()->Create("cubeMaterial");
     tex = TextureManager::Instance()->Load("floor.tex");
     pass = this->cubeMaterial->CreatePass();
     tus = pass->CreateTextureUnitState();
     tus->SetTextureBlendOperation(LBT_COLOUR, LBO_REPLACE);
     tus->SetTexture(tex);
-
     tex = TextureManager::Instance()->Load("water.tex");
     pass = this->cubeMaterial->CreatePass();
     pass->SetSceneBlendingEnabled(true);
@@ -96,25 +92,25 @@ StateMaterialTest::Enter()
     tus->SetTexture(tex);
     tus->SetTextureBlendOperation(LBT_COLOUR, LBO_REPLACE);
 
-    this->cubeEntity = SceneManager::Instance()->CreateEntity("cube.mesh");
-    this->cubeEntity->GetSubEntity(0)->SetMaterial(this->cubeMaterial);
-    this->cubeEntity->SetReceivesShadows(true);
-    this->cubeSceneNode = SceneManager::Instance()->GetRootSceneNode()->CreateChildSceneNode();
-    this->cubeSceneNode->SetScale(10.0f, 0.2f, 10.0f);
-    this->cubeSceneNode->SetPosition(2.0f, -2.8f, -2.0f);
-    this->cubeSceneNode->AttachObject(this->cubeEntity);
+    Entity* cubeEntity = SceneManager::Instance()->CreateEntity("cube.mesh");
+    cubeEntity->GetSubEntity(0)->SetMaterial(this->cubeMaterial);
+    cubeEntity->SetReceivesShadows(true);
+    SceneNode* cubeSceneNode = SceneManager::Instance()->GetRootSceneNode()->CreateChildSceneNode();
+    cubeSceneNode->SetScale(10.0f, 0.2f, 10.0f);
+    cubeSceneNode->SetPosition(2.0f, -2.8f, -2.0f);
+    cubeSceneNode->AttachObject(cubeEntity);
     this->vMod = 0.0f;
 
-    this->lightConeMaterial = new Material();
-    pass = this->lightConeMaterial->CreatePass();
-    this->lightConeEntity = SceneManager::Instance()->CreateEntity("cone.mesh");
-    this->lightConeEntity->GetSubEntity(0)->SetMaterial(this->lightConeMaterial);
-    this->lightConeSceneNode = SceneManager::Instance()->GetRootSceneNode()->CreateChildSceneNode();
-    this->lightConeSceneNode->SetScale(2.0f, 2.0f,2.0f);
-    this->lightConeSceneNode->SetPosition(4.0f, 3.0f, -4.0f);
-    this->lightConeSceneNode->Yaw(2.14f);
-    this->lightConeSceneNode->Pitch(-1.0f);
-    this->lightConeSceneNode->AttachObject(this->lightConeEntity);
+    Material* lightConeMaterial = MaterialManager::Instance()->Create("lightConeMaterial");
+    pass = lightConeMaterial->CreatePass();
+    Entity* lightConeEntity = SceneManager::Instance()->CreateEntity("cone.mesh");
+    lightConeEntity->GetSubEntity(0)->SetMaterial(lightConeMaterial);
+    SceneNode* lightConeSceneNode = SceneManager::Instance()->GetRootSceneNode()->CreateChildSceneNode();
+    lightConeSceneNode->SetScale(2.0f, 2.0f,2.0f);
+    lightConeSceneNode->SetPosition(4.0f, 3.0f, -4.0f);
+    lightConeSceneNode->Yaw(2.14f);
+    lightConeSceneNode->Pitch(-1.0f);
+    lightConeSceneNode->AttachObject(lightConeEntity);
 
     this->camera = SceneManager::Instance()->GetCamera("MainCamera");
     this->camera->SetPosition(0.0f, 0.0f, 5.0f);
@@ -146,14 +142,10 @@ StateMaterialTest::Enter()
 void
 StateMaterialTest::Exit()
 {
-    delete this->solidMaterial;
-    delete this->alphaMaterial;
-    delete this->cubeMaterial;
-    delete this->lightConeMaterial;
-
     SceneManager::Instance()->ClearScene();
     MeshManager::Instance()->RemoveAll();
     TextureManager::Instance()->RemoveAll();
+    MaterialManager::Instance()->RemoveAll();
 }
 
 //------------------------------------------------------------------------------

@@ -3,7 +3,7 @@
     @file core/debug.h
 
     Chrissly Engine debug macros.
-    
+
     (C) 2011 Christian Bleicher
 */
 

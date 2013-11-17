@@ -5,10 +5,6 @@
 #include <android/sensor.h>
 #include <android_native_app_glue.h>
 #include "graphics/graphicssystem.h"
-#include "graphics/scenemanager.h"
-#include "graphics/renderwindow.h"
-#include "graphics/camera.h"
-#include "graphics/animationstate.h"
 #include "core/fswrapper.h"
 
 using namespace chrissly::graphics;
@@ -18,11 +14,6 @@ using namespace chrissly;
 bool initialized = false;
 GraphicsSystem* graphicsSystem;
 SceneNode* sceneNode;
-Entity* entity;
-Material* material;
-Texture* tex;
-Mesh* mesh;
-Camera* camera;
 int32_t lastX, lastY, distance;
 AnimationState* animState;
 GpuProgram* gpuProgram;
@@ -84,12 +75,12 @@ Enter(struct android_app* state)
 {
     graphicsSystem = new GraphicsSystem();
     RenderWindow* window = graphicsSystem->Initialise(state->window);
-    camera = SceneManager::Instance()->CreateCamera("MainCamera");
+    Camera* camera = SceneManager::Instance()->CreateCamera("MainCamera");
     camera->SetAspectRatio((float)window->GetWidth() / (float)window->GetHeight());
     camera->SetPosition(0.0f, 0.0f, 0.9f);
     window->AddViewport(camera, 0, 0, window->GetWidth(), window->GetHeight());
 
-    material = new Material();
+    Material* material = MaterialManager::Instance()->Create("material");
     Pass* pass = material->CreatePass();
     pass->SetCullingMode(CULL_NONE);
     pass->SetSceneBlendingEnabled(false);
@@ -97,11 +88,11 @@ Enter(struct android_app* state)
 
     gpuProgram = new GpuProgram(MorphAnimVertexShader, FragmentShader);
     pass->SetGpuProgram(gpuProgram);
-    tex = TextureManager::Instance()->Load("cerberus_etc1.tex");
+    Texture* tex = TextureManager::Instance()->Load("cerberus_etc1.tex");
     TextureUnitState* tus = pass->CreateTextureUnitState();
     tus->SetTexture(tex);
 
-    entity = SceneManager::Instance()->CreateEntity("cerberus_walk.mesh");
+    Entity* entity = SceneManager::Instance()->CreateEntity("cerberus_walk.mesh");
     entity->GetSubEntity(0)->SetMaterial(material);
     animState = entity->GetAnimationState("default");
     animState->SetEnabled(true);
@@ -127,7 +118,6 @@ Exit()
     initialized = false;
 
     delete gpuProgram;
-    delete material;
 
     delete graphicsSystem;
 }
@@ -176,6 +166,12 @@ HandleCommands(struct android_app* app, int32_t cmd)
 {
     switch (cmd)
     {
+        case APP_CMD_DESTROY:
+            if (initialized)
+            {
+                Exit();
+            }
+            break;
         case APP_CMD_SAVE_STATE:
             // the system has asked us to save our current state
             break;

@@ -6,7 +6,6 @@
 #include "statematerialtest.h"
 #include "statemanager.h"
 #include "graphicssystem.h"
-#include "debug.h"
 
 using namespace chrissly::core;
 using namespace chrissly::graphics;
@@ -41,26 +40,26 @@ StateAnimationTest::Enter()
     sceCtrlSetSamplingCycle(100);
     sceCtrlSetSamplingMode(PSP_CTRL_MODE_ANALOG);
 
-    this->material = new Material();
-    this->pass0 = this->material->CreatePass();
-    this->tex0 = TextureManager::Instance()->Load("cerberus.tex");
-    TextureUnitState* tus = this->pass0->CreateTextureUnitState();
-    tus->SetTexture(this->tex0);
+    Material* material = MaterialManager::Instance()->Create("material");
+    Pass* pass = material->CreatePass();
+    Texture* tex = TextureManager::Instance()->Load("cerberus.tex");
+    TextureUnitState* tus = pass->CreateTextureUnitState();
+    tus->SetTexture(tex);
 
-    this->entity = SceneManager::Instance()->CreateEntity("cerberus_walk.mesh");
-    this->entity->GetSubEntity(0)->SetMaterial(this->material);
-    this->animState = this->entity->GetAnimationState("default");
+    Entity* entity = SceneManager::Instance()->CreateEntity("cerberus_walk.mesh");
+    entity->GetSubEntity(0)->SetMaterial(material);
+    this->animState = entity->GetAnimationState("default");
     CE_ASSERT(this->animState != NULL, "StateAnimationTest::Enter(): this->animState invalid");
     this->animState->SetEnabled(true);
 
     this->sceneNode = SceneManager::Instance()->GetRootSceneNode()->CreateChildSceneNode();
     this->sceneNode->SetScale(4.5f, 4.5f, 4.5f);
     this->sceneNode->SetPosition(0.0f, 0.1f, -1.4f);
-    this->sceneNode->AttachObject(this->entity);
+    this->sceneNode->AttachObject(entity);
 
-    this->camera = SceneManager::Instance()->GetCamera("MainCamera");
-    this->camera->SetPosition(0.0f, 0.0f, 2.0f);
-    this->camera->SetOrientation(Quaternion());
+    Camera* camera = SceneManager::Instance()->GetCamera("MainCamera");
+    camera->SetPosition(0.0f, 0.0f, 2.0f);
+    camera->SetOrientation(Quaternion());
 }
 
 //------------------------------------------------------------------------------
@@ -69,11 +68,10 @@ StateAnimationTest::Enter()
 void
 StateAnimationTest::Exit()
 {
-    delete this->material;
-
     SceneManager::Instance()->ClearScene();
     MeshManager::Instance()->RemoveAll();
     TextureManager::Instance()->RemoveAll();
+    MaterialManager::Instance()->RemoveAll();
 }
 
 //------------------------------------------------------------------------------

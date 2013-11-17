@@ -9,12 +9,7 @@
     (C) 2011 Christian Bleicher
 */
 #include "state.h"
-#include "texture.h"
-#include "material.h"
-#include "mesh.h"
-#include "entity.h"
-#include "camera.h"
-#include "light.h"
+#include "scenenode.h"
 #include <pspctrl.h>
 
 //------------------------------------------------------------------------------
@@ -46,14 +41,7 @@ private:
     static StateAnimationTest* Singleton;
 
     chrissly::graphics::SceneNode* sceneNode;
-    chrissly::graphics::Entity* entity;
     chrissly::graphics::AnimationState* animState;
-
-    chrissly::graphics::Material* material;
-    chrissly::graphics::Pass* pass0;
-    chrissly::graphics::Texture* tex0;
-
-    chrissly::graphics::Camera* camera;
 
     bool loop;
     bool pause;

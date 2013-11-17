@@ -261,12 +261,29 @@ SceneManager::SetShadowTechnique(ShadowTechnique technique)
             this->shadowCamera->SetAspectRatio(1.0f);
 
             this->shadowRenderTexture = CE_NEW RenderTexture();
+            this->shadowRttPass = CE_NEW Pass(0);
+            this->shadowRttPass->SetDepthCheckEnabled(false);
+            this->shadowPass = CE_NEW Pass(0);
+            TextureUnitState* tus = this->shadowPass->CreateTextureUnitState();
+            tus->SetTextureAddressingMode(TextureUnitState::TAM_CLAMP, TextureUnitState::TAM_CLAMP);
+
+#ifdef __PSP__
             this->shadowRenderTexture->Create(256, 256, PF_A4R4G4B4);
+            // GL_CLAMP_TO_BORDER
+            memset(this->shadowRenderTexture->GetBuffer(), 0xff, 131072);
             Viewport* vp = this->shadowRenderTexture->AddViewport(this->shadowCamera, 1, 1, 254, 254);
             vp->SetClearEveryFrame(true, FBT_COLOUR);
             vp->SetBackgroundColour(0xffffffff);
-            // GL_CLAMP_TO_BORDER
-            memset(this->shadowRenderTexture->GetBuffer(), 0xff, 131072);
+            // FragmentColor * 0xff888888 + FrameBufferPixelColor * 0xff000000 (FragmentColor = ModelVertexColor = White)
+            this->shadowRttPass->SetSceneBlendingEnabled(true);
+            this->shadowRttPass->SetSceneBlending(SBF_FIX, SBF_FIX);
+            this->shadowRttPass->SetBlendingFixColors(0xff888888, 0xff000000);
+            this->shadowPass->SetSceneBlendingEnabled(true);
+            this->shadowPass->SetSceneBlending(SBF_SOURCE_COLOUR, SBF_ONE_MINUS_SOURCE_ALPHA);
+            tus->SetTextureBlendOperation(LBT_COLOUR, LBO_REPLACE);
+            tus->SetTextureMappingMode(TextureUnitState::TMM_TEXTURE_MATRIX);
+            tus->SetTextureProjectionMappingMode(TextureUnitState::TPM_POSITION);
+#endif
 
             this->shadowTexture = CE_NEW Texture();
             this->shadowTexture->SetFormat(this->shadowRenderTexture->GetFormat());
@@ -274,23 +291,6 @@ SceneManager::SetShadowTechnique(ShadowTechnique technique)
             this->shadowTexture->SetHeight(this->shadowRenderTexture->GetHeight());
             this->shadowTexture->SetBuffer(this->shadowRenderTexture->GetBuffer());
             this->shadowTexture->SetSwizzleEnabled(false);
-
-            // FragmentColor * 0xff888888 + FrameBufferPixelColor * 0xff000000 (FragmentColor = ModelVertexColor = White)
-            this->shadowRttPass = CE_NEW Pass(0);
-            this->shadowRttPass->SetDepthCheckEnabled(false);
-            this->shadowRttPass->SetSceneBlendingEnabled(true);
-            this->shadowRttPass->SetSceneBlending(SBF_FIX, SBF_FIX);
-            this->shadowRttPass->SetBlendingFixColors(0xff888888, 0xff000000);
-
-            this->shadowPass = CE_NEW Pass(0);
-            this->shadowPass->SetSceneBlendingEnabled(true);
-            this->shadowPass->SetSceneBlending(SBF_SOURCE_COLOUR, SBF_ONE_MINUS_SOURCE_ALPHA);
-
-            TextureUnitState* tus = this->shadowPass->CreateTextureUnitState();
-            tus->SetTextureBlendOperation(LBT_COLOUR, LBO_REPLACE);
-            tus->SetTextureAddressingMode(TextureUnitState::TAM_CLAMP, TextureUnitState::TAM_CLAMP);
-            tus->SetTextureMappingMode(TextureUnitState::TMM_TEXTURE_MATRIX);
-            tus->SetTextureProjectionMappingMode(TextureUnitState::TPM_POSITION);
             tus->SetTexture(this->shadowTexture);
 
             this->shadowCamera->SetPosition(4.0f, 4.0f, -4.0f);

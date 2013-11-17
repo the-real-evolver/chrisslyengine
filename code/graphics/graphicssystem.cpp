@@ -25,6 +25,7 @@ GraphicsSystem::GraphicsSystem() :
     this->meshManager = CE_NEW MeshManager();
     this->textureManager = CE_NEW TextureManager();
     this->sceneManager = CE_NEW SceneManager();
+    this->materialManager = CE_NEW MaterialManager();
     DynamicArrayInit(&this->renderTargets, 0);
 }
 
@@ -39,7 +40,8 @@ GraphicsSystem::~GraphicsSystem()
     CE_DELETE this->meshManager;
     CE_DELETE this->textureManager;
     CE_DELETE this->sceneManager;
-    
+    CE_DELETE this->materialManager;
+
     unsigned int i;
     for (i = 0; i < this->numRenderTargets; i++)
     {

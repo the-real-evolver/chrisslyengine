@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 //  chrisslystring.cpp
-//  (C) 2011 Christian Bleicher
+//  (C) 2013 Christian Bleicher
 //------------------------------------------------------------------------------
 #include "chrisslystring.h"
 #include "memoryallocatorconfig.h"
