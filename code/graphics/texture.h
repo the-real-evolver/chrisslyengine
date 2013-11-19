@@ -9,13 +9,13 @@
 
 //------------------------------------------------------------------------------
 #if __PSP__
-#include "texturebase.h"
+#include "psp/psptexture.h"
 namespace chrissly
 {
 namespace graphics
 {
 
-typedef chrissly::graphics::TextureBase Texture;
+typedef chrissly::PSPTexture Texture;
 
 } // namespace graphics
 } // namespace chrissly

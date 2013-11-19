@@ -4,8 +4,6 @@
 /**
     @class chrissly::physics::RigidBody
 
-    05.02.2010 -> Creation
-
     (C) 2010 Christian Bleicher
 */
 #include "vector3.h"

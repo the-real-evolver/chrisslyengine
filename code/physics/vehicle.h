@@ -4,8 +4,6 @@
 /**
     @class chrissly::physics::Vehicle
 
-    14.02.2010 -> Creation
-
     (C) 2010 Christian Bleicher
 */
 #include "rigidbody.h"

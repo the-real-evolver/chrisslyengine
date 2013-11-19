@@ -1,4 +1,4 @@
-:: Name:        export_meshes.bat
+:: Name:        export_meshes.cmd
 :: Autor:       evolver
 :: Description: export meshes
 :: History:     30.10.2010 -> creation

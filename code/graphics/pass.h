@@ -74,7 +74,22 @@ public:
     void SetDepthCheckEnabled(bool enabled);
     /// returns whether or not this pass renders with depth-buffer checking on or not 
     bool GetDepthCheckEnabled() const;
-    
+
+    /// sets whether or not this pass renders with depth-buffer writing on or not
+    /**
+        @remarks
+        If depth-buffer writing is on, whenever a pixel is written to the frame buffer
+        the depth buffer is updated with the depth value of that new pixel, thus affecting future
+        rendering operations if future pixels are behind this one.
+        @par
+        If depth writing is off, pixels are written without updating the depth buffer Depth writing should
+        normally be on but can be turned off when rendering static backgrounds or when rendering a collection
+        of transparent objects at the end of a scene so that they overlap each other correctly.
+    */
+    void SetDepthWriteEnabled(bool enabled);
+    /// returns whether or not this pass renders with depth-buffer writing on or not
+    bool GetDepthWriteEnabled() const;
+
     /// sets the culling mode for this pass based on the 'vertex winding'
     void SetCullingMode(CullingMode mode);
     /// returns the culling mode for geometry rendered with this pass
@@ -203,6 +218,7 @@ private:
     unsigned int sourceFixColor;
     unsigned int destFixColor;
     bool depthCheck;
+    bool depthWrite;
     CullingMode cullMode;
     bool lightingEnabled;
     unsigned int ambient;

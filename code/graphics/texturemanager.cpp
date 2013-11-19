@@ -49,26 +49,29 @@ TextureManager::Load(const char* name)
 
     FileHandle fd = FSWrapper::Open(name, ReadAccess, 0777);
     unsigned int fileSize = FSWrapper::GetFileSize(fd);
-    unsigned int headerSizeBytes = 6;
+    unsigned int headerSizeBytes = 7;
 
     unsigned char format = PF_UNKNOWN;
     unsigned short width = 0;
     unsigned short height = 0;
+    unsigned char numMipmaps = 0;
     unsigned char swizzled = 0;
 
     FSWrapper::Read(fd, &format, 1);
     FSWrapper::Read(fd, &width, 2);
     FSWrapper::Read(fd, &height, 2);
+    FSWrapper::Read(fd, &numMipmaps, 1);
     FSWrapper::Read(fd, &swizzled, 1);
 
     void* textureBuffer = CE_MALLOC_ALIGN(16, fileSize - headerSizeBytes);
     FSWrapper::Read(fd, textureBuffer, fileSize - headerSizeBytes);
     FSWrapper::Close(fd);
-    
+
     texture = CE_NEW Texture();
     texture->SetFormat((PixelFormat)format);
     texture->SetWidth(width);
     texture->SetHeight(height);
+    texture->SetNumMipmaps(numMipmaps);
     texture->SetSwizzleEnabled(1 == swizzled ? true : false);
     texture->SetBuffer(textureBuffer);
     texture->CreateInternalResourcesImpl();

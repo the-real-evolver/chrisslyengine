@@ -16,6 +16,7 @@ TextureBase::TextureBase() :
     format(PF_R5G6B5),
     height(0),
     width(0),
+    numMipmaps(0),
     textureBuffer(0),
     swizzled(true)
 {
@@ -82,6 +83,24 @@ int
 TextureBase::GetWidth() const
 {
     return this->width;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+int
+TextureBase::GetNumMipmaps() const
+{
+    return this->numMipmaps;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+TextureBase::SetNumMipmaps(int num)
+{
+    this->numMipmaps = num;
 }
 
 //------------------------------------------------------------------------------

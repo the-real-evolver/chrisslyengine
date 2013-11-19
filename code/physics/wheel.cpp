@@ -47,21 +47,13 @@ Wheel::~Wheel()
 void
 Wheel::SetSteeringAngle(float newAngle)
 {
-    Vector3 forwardVector;
-    Vector3 sideVector;
-
-    forwardVector.x = 0.0f;
-    forwardVector.z = 1.0f;
-    sideVector.x = -1.0f;
-    sideVector.z = 0.0f;
-
     float sine = Math::Sin(newAngle);
     float cosine = Math::Cos(newAngle);
 
-    this->forwardAxis.x = forwardVector.x * cosine - forwardVector.z * sine;
-    this->forwardAxis.z = forwardVector.x * sine   + forwardVector.z * cosine;
-    this->sideAxis.x = sideVector.x * cosine - sideVector.z * sine;
-    this->sideAxis.z = sideVector.x * sine   + sideVector.z * cosine;
+    this->forwardAxis.x = -sine;
+    this->forwardAxis.z = cosine;
+    this->sideAxis.x = -cosine;
+    this->sideAxis.z = -sine;
 }
 
 //------------------------------------------------------------------------------

@@ -21,7 +21,7 @@ public:
     TextureBase();
     /// destructor
     ~TextureBase();
-    
+
     /// sets the pixel format for the texture surface
     void SetFormat(PixelFormat pf);
     /// gets the pixel format for the texture surface
@@ -34,17 +34,21 @@ public:
     void SetWidth(int w);
     /// set the width of the texture
     int GetWidth() const;
+    /// gets the number of mipmaps to be used for this texture
+    int GetNumMipmaps() const;
+    /// sets the number of mipmaps to be used for this texture
+    void SetNumMipmaps(int num);
 
     /// set the hardware pixel buffer to use
     void SetBuffer(const void* buffer);
     /// return hardware pixel buffer for a surface
     const void* GetBuffer() const;
-    
+
     /// enable to swizzle texture read
     void SetSwizzleEnabled(bool enabled);
     /// returns if the pixelbuffer is swizzled
     bool GetSwizzleEnabled() const;
-    
+
     /// implementation of creating internal texture resources 
     virtual void CreateInternalResourcesImpl();
 
@@ -52,6 +56,7 @@ protected:
     PixelFormat format;
     int height;
     int width;
+    int numMipmaps;
     const void* textureBuffer;
     bool swizzled;
 };

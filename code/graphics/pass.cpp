@@ -20,6 +20,7 @@ Pass::Pass(unsigned short index) :
     sourceFixColor(0xff666666),
     destFixColor(0xff000000),
     depthCheck(true),
+    depthWrite(true),
     cullMode(CULL_ANTICLOCKWISE),
     lightingEnabled(false),
     ambient(0xffffffff),
@@ -155,6 +156,24 @@ bool
 Pass::GetDepthCheckEnabled() const
 {
     return this->depthCheck;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+Pass::SetDepthWriteEnabled(bool enabled)
+{
+    this->depthWrite = enabled;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+bool
+Pass::GetDepthWriteEnabled() const
+{
+    return this->depthWrite;
 }
 
 //------------------------------------------------------------------------------

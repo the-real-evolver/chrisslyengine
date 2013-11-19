@@ -3,7 +3,7 @@
 //  (C) 2012 Christian Bleicher
 //------------------------------------------------------------------------------
 #include "psprendersystem.h"
-#include "psp/pspmappings.h"
+#include "pspmappings.h"
 #include "common.h"
 #include "animationtrack.h"
 #include "vertexdata.h"
@@ -211,6 +211,9 @@ PSPRenderSystem::_SetPass(graphics::Pass* pass)
     // depth check
     pass->GetDepthCheckEnabled() ? sceGuEnable(GU_DEPTH_TEST) : sceGuDisable(GU_DEPTH_TEST);
 
+    // depth write
+    sceGuDepthMask(pass->GetDepthWriteEnabled() ? GU_FALSE : GU_TRUE);
+
     // culling mode
     switch (pass->GetCullingMode())
     {
@@ -280,8 +283,15 @@ PSPRenderSystem::_SetPass(graphics::Pass* pass)
         sceGuTexMapMode(PSPMappings::Get(tus->GetTextureMappingMode()), 0, 0);
         sceGuTexProjMapMode(PSPMappings::Get(tus->GetTextureProjectionMappingMode()));
 
-        sceGuTexMode(PSPMappings::Get(texture->GetFormat()), 0, 0, texture->GetSwizzleEnabled());
+        int numMipmaps = texture->GetNumMipmaps();
+        sceGuTexMode(PSPMappings::Get(texture->GetFormat()), numMipmaps, 0, texture->GetSwizzleEnabled());
         sceGuTexImage(0, texture->GetWidth(), texture->GetHeight(), texture->GetWidth(), texture->GetBuffer());
+        int i;
+        for (i = 1; i <= numMipmaps; i++)
+        {
+            PSPTexture::MipmapInfo* info = texture->GetMipmapInfo(i);
+            sceGuTexImage(i, info->width, info->height, info->width, info->buffer);
+        }
     }
     else
     {
