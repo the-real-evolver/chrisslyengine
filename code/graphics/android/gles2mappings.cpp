@@ -15,18 +15,10 @@ namespace chrissly
 void
 GLES2Mappings::MakeGLMatrix(GLfloat gl_matrix[16], const core::Matrix4& m)
 {
-    unsigned int x = 0;
-
-    unsigned int i;
-    for (i = 0; i < 4; i++)
-    {
-        unsigned int j;
-        for (j = 0; j < 4; j++)
-        {
-            gl_matrix[x] = m[j][i];
-            x++;
-        }
-    }
+    gl_matrix[0]  = m[0][0]; gl_matrix[1]  = m[1][0]; gl_matrix[2]  = m[2][0];  gl_matrix[3]  = m[3][0];
+    gl_matrix[4]  = m[0][1]; gl_matrix[5]  = m[1][1]; gl_matrix[6]  = m[2][1];  gl_matrix[7]  = m[3][1];
+    gl_matrix[8]  = m[0][2]; gl_matrix[9]  = m[1][2]; gl_matrix[10] = m[2][2];  gl_matrix[11] = m[3][2];
+    gl_matrix[12] = m[0][3]; gl_matrix[13] = m[1][3]; gl_matrix[14] = m[2][3];  gl_matrix[15] = m[3][3];
 }
 
 //------------------------------------------------------------------------------

@@ -4,7 +4,7 @@
 /**
     @class chrissly::AndroidMath
 
-    Wrapper class for common mathematical functions
+    Wrapper class for common mathematical functions.
 
     (C) 2012 Christian Bleicher
 */

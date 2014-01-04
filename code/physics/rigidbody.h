@@ -29,7 +29,7 @@ public:
     /// sets the position of the rigid body
     void SetPosition(const chrissly::core::Vector3& pos);
     /// gets the position of the rigid body
-     const chrissly::core::Vector3& GetPosition() const;
+    const chrissly::core::Vector3& GetPosition() const;
 
     /// set angle of the rigid body
     void SetYaw(float angle);

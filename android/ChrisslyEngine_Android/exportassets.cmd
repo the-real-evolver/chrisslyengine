@@ -1,4 +1,4 @@
-:: Name:        exportassets.bat
+:: Name:        exportassets.cmd
 :: Autor:       evolver
 :: Description: export assets for Android platform
 :: History:     26.05.2010 -> creation

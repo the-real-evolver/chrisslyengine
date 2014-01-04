@@ -29,7 +29,7 @@ namespace graphics
 
 typedef chrissly::GLES2Texture Texture;
 
-} // namespace core
+} // namespace graphics
 } // namespace chrissly
 //------------------------------------------------------------------------------
 #else

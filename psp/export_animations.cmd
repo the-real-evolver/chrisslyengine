@@ -1,4 +1,4 @@
-:: Name:        export_animations.bat
+:: Name:        export_animations.cmd
 :: Autor:       evolver
 :: Description: export animations
 :: History:     30.10.2010 -> creation

@@ -4,7 +4,7 @@
 /**
     @class chrissly::AndroidFSWrapper
 
-    wrapper for the android assetmanager filesystem
+    Wrapper for the android assetmanager filesystem.
 
     17.05.2012 -> Creation
 

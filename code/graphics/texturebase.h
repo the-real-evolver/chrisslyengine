@@ -20,7 +20,7 @@ public:
     /// default constructor
     TextureBase();
     /// destructor
-    ~TextureBase();
+    virtual ~TextureBase();
 
     /// sets the pixel format for the texture surface
     void SetFormat(PixelFormat pf);

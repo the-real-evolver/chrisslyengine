@@ -1,4 +1,4 @@
-:: Name:        export_textures.bat
+:: Name:        export_textures.cmd
 :: Autor:       evolver
 :: Description: add header to raw texture data from intermediate folder
 :: History:     30.10.2010 -> creation

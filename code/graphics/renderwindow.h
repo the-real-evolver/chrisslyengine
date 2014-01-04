@@ -29,7 +29,7 @@ namespace graphics
 
 typedef chrissly::GLES2RenderWindow RenderWindow;
 
-} // namespace core
+} // namespace graphics
 } // namespace chrissly
 //------------------------------------------------------------------------------
 #else

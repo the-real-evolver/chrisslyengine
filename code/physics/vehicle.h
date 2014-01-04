@@ -28,7 +28,7 @@ public:
     void SetThrottle(float throttle, bool allWheel);
     /// apply brake torque apposing wheel velocity
     void SetBrakes(float brakes);
-    /// apllying all forces on the rigidbody
+    /// applying all forces on the rigidbody
     void Update(float duration);
 
 private:

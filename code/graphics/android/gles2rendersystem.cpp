@@ -313,7 +313,10 @@ GLES2RenderSystem::_SetPass(graphics::Pass* pass)
 
     // depth check
     pass->GetDepthCheckEnabled() ? glEnable(GL_DEPTH_TEST) : glDisable(GL_DEPTH_TEST);
-    
+
+    // depth write
+    glDepthMask(pass->GetDepthWriteEnabled() ? GL_TRUE : GL_FALSE);
+
     // culling mode
     switch (pass->GetCullingMode())
     {
@@ -410,7 +413,7 @@ GLES2RenderSystem::_NotifyMorphKeyFrameBuild()
 void
 GLES2RenderSystem::PrintGLString(const char* name, GLenum s)
 {
-    const char *v = (const char *)glGetString(s);
+    const char* v = (const char*)glGetString(s);
     CE_LOG("GL %s = %s\n", name, v);
 }
 

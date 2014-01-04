@@ -1,4 +1,4 @@
-:: Name:        startemulator.bat
+:: Name:        startemulator.cmd
 :: Autor:       evolver
 :: Description: starts PSP Emulator ("PPSSPP")
 :: History:     26.05.2010 -> creation

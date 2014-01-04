@@ -1,4 +1,4 @@
-:: Name:        build
+:: Name:        build.cmd
 :: Autor:       evolver
 :: Description: compile native code, build shared libary
 :: History:     13.05.2012 -> creation

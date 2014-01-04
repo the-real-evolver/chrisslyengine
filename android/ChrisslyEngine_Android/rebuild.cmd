@@ -1,4 +1,4 @@
-:: Name:        rebuild
+:: Name:        rebuild.cmd
 :: Autor:       evolver
 :: Description: copy code to 'jni' folder, compile native code, build shared libary
 :: History:     13.05.2012 -> creation
