@@ -4,7 +4,6 @@
 //------------------------------------------------------------------------------
 #include "graphicssystem.h"
 #include "memoryallocatorconfig.h"
-#include "debug.h"
 
 namespace chrissly
 {
@@ -57,14 +56,10 @@ RenderWindow*
 GraphicsSystem::Initialise(void* customParams)
 {
     this->autoWindow = this->activeRenderer->_Initialise(customParams);
-    
-    if (!DynamicArraySet(&this->renderTargets, this->numRenderTargets, this->autoWindow))
-    {
-        CE_ASSERT(false, "GraphicsSystem::Initialise(): can't add autoWindow to renderTargets");
-    }
-    
+
+    DynamicArraySet(&this->renderTargets, this->numRenderTargets, this->autoWindow);
     this->numRenderTargets++;
-    
+
     return this->autoWindow;
 }
 

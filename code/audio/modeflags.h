@@ -29,7 +29,9 @@ namespace audio
         /// Decompress at runtime, streaming from the source provided (ie from disk). Overrides MODE_CREATESAMPLE
         MODE_CREATESTREAM = 0x00000080,
         /// Decompress at loadtime, decompressing or decoding whole file into memory as the target sample format (ie PCM)
-        MODE_CREATESAMPLE = 0x00000100
+        MODE_CREATESAMPLE = 0x00000100,
+        /// Load MP2, MP3 into memory and leave it compressed. During playback the software mixer will decode it in realtime as a 'compressed sample'. Overrides MODE_CREATESAMPLE. If the sound data is not MPEG it will behave as if it was created with MODE_CREATESAMPLE and decode the sound into PCM
+        MODE_CREATECOMPRESSEDSAMPLE = 0x00000200
     };
 
 } // namespace audio

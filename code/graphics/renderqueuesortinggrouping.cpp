@@ -3,7 +3,6 @@
 //  (C) 2012 Christian Bleicher
 //------------------------------------------------------------------------------
 #include "renderqueuesortinggrouping.h"
-#include "debug.h"
 
 namespace chrissly
 {
@@ -38,11 +37,7 @@ QueuedRenderableCollection::Initialise(unsigned short capacity)
     for (i = 0; i < this->renderablePasses.cur_size; i++)
     {
         RenderablePass* renderablePass = CE_NEW RenderablePass(NULL, NULL);
-
-        if (!DynamicArraySet(&this->renderablePasses, i, renderablePass))
-        {
-            CE_ASSERT(false, "QueuedRenderableCollection::Initialise(): DynamicArraySet failed \n");
-        }
+        DynamicArraySet(&this->renderablePasses, i, renderablePass);
     }
 
     this->numRenderablePasses = 0;

@@ -354,7 +354,7 @@ PSPRenderSystem::_UseLights(core::HashTable* lights)
         }
     }
 
-    for (i = lightIndex; i < MaxLights; i++)
+    for (i = lightIndex; i < (unsigned int)MaxLights; i++)
     {
         sceGuDisable(GU_LIGHT0 + i);
     }

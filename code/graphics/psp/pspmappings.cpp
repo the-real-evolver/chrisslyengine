@@ -262,7 +262,7 @@ PSPMappings::Get(graphics::TrackVertexColourType tvct)
 {
     int colorComponent = 0;
 
-    if (tvct & graphics::TVC_NONE)     return GU_UNKNOWN_LIGHT_COMPONENT;
+    if (graphics::TVC_NONE == tvct)    return GU_UNKNOWN_LIGHT_COMPONENT;
     if (tvct & graphics::TVC_AMBIENT)  colorComponent |= GU_AMBIENT;
     if (tvct & graphics::TVC_DIFFUSE)  colorComponent |= GU_DIFFUSE;
     if (tvct & graphics::TVC_SPECULAR) colorComponent |= GU_SPECULAR;

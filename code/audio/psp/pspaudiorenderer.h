@@ -8,6 +8,7 @@
 */
 #include "sound.h"
 #include "channel.h"
+#include <pspaudio.h>
 
 //------------------------------------------------------------------------------
 namespace chrissly
@@ -36,6 +37,10 @@ public:
 private:
     /// copy constructor
     PSPAudioRenderer(const PSPAudioRenderer&cc) {};
+    /// calculate left and right volume from volume and panning
+    void CalculateVolumesFromPanning(float volume, float panning, int& leftVolume, int& rightVolume);
+    /// return a PspAudioFormats equivalent for the given number of channels
+    PspAudioFormats GetFormat(int channels);
 
     static PSPAudioRenderer* Singleton;
 };

@@ -8,6 +8,7 @@
 */
 #include "modeflags.h"
 #include "audioformat.h"
+#include "soundtype.h"
 
 //------------------------------------------------------------------------------
 namespace chrissly
@@ -23,7 +24,7 @@ public:
     /// destructor
     virtual ~Codec() {};
     /// called by Sound, create buffers ect.
-    virtual bool SetupSound(const char* name, Mode mode, void** sampleBuffer, unsigned int& length, AudioFormat& format, int& channels, int& bits) = 0;
+    virtual bool SetupSound(const char* name, Mode mode, void** sampleBuffer, unsigned int& length, AudioFormat& format, SoundType& type, int& channels, int& bits) = 0;
 };
 
 } // namespace audio

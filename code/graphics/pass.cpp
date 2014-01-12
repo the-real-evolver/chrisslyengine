@@ -383,12 +383,12 @@ TextureUnitState*
 Pass::CreateTextureUnitState()
 {
     TextureUnitState* textureUnitState = CE_NEW TextureUnitState();
-    
+
     if (!DynamicArraySet(&this->textureUnitStates, this->numTextureUnitStates, textureUnitState))
     {
         return NULL;
     }
-    
+
     this->numTextureUnitStates++;
 
     return textureUnitState;

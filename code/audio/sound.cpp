@@ -37,39 +37,40 @@ Sound::~Sound()
 //------------------------------------------------------------------------------
 /**
 */
-bool
+Result
 Sound::GetLength(unsigned int* length)
 {
     *length = this->length;
-    return true;
+    return OK;
 }
 
 //------------------------------------------------------------------------------
 /**
 */
-bool
-Sound::GetFormat(AudioFormat* format, int* channels, int* bits)
+Result
+Sound::GetFormat(SoundType* type, AudioFormat* format, int* channels, int* bits)
 {
+    if (type != NULL) *type = this->type;
     if (format != NULL) *format = this->format;
     if (channels != NULL) *channels = this->numChannels;
     if (bits != NULL) *bits = this->bitsPerSample;
-    return true;
+    return OK;
 }
 
 //------------------------------------------------------------------------------
 /**
 */
-bool
+Result
 Sound::GetMode(Mode* mode)
 {
     *mode = this->mode;
-    return true;
+    return OK;
 }
 
 //------------------------------------------------------------------------------
 /**
 */
-bool
+Result
 Sound::Release()
 {
     this->mode = MODE_DEFAULT;
@@ -89,7 +90,7 @@ Sound::Release()
         this->codec = NULL;
     }
 
-    return true;
+    return OK;
 }
 
 //------------------------------------------------------------------------------
@@ -100,22 +101,35 @@ Sound::_Setup(const char* filename, Mode mode, Codec* codec)
 {
     this->mode = mode;
     this->codec = codec;
-    this->codec->SetupSound(filename, mode, &this->sampleBuffer, this->length, this->format, this->numChannels, this->bitsPerSample);
+    this->codec->SetupSound(filename, mode, &this->sampleBuffer, this->length, this->format, this->type, this->numChannels, this->bitsPerSample);
 }
 
 //------------------------------------------------------------------------------
 /**
 */
 void*
-Sound::_GetStaticSampleBufferPointer(unsigned int position)
+Sound::_GetSampleBufferPointer(unsigned int position)
 {
-    switch (this->format)
+    if (this->mode & MODE_CREATESTREAM)
     {
-        case AUDIO_FORMAT_PCM16:
-            return (void*)((unsigned int)this->sampleBuffer + (position << 1) * this->numChannels);
-        default:
-            return NULL;
+        return NULL;
     }
+    else if (this->mode & MODE_CREATECOMPRESSEDSAMPLE && this->type != SOUND_TYPE_WAV)
+    {
+        return NULL;
+    }
+    else if (MODE_DEFAULT == this->mode || this->mode & MODE_CREATESAMPLE || SOUND_TYPE_WAV == this->type)
+    {
+        switch (this->format)
+        {
+            case AUDIO_FORMAT_PCM16:
+                return (void*)((unsigned int)this->sampleBuffer + (position << 1) * this->numChannels);
+            default:
+                return NULL;
+        }
+    }
+
+    return NULL;
 }
 
 } // namespace audio

@@ -4,7 +4,6 @@
 //------------------------------------------------------------------------------
 #include "scenenode.h"
 #include "scenemanager.h"
-#include "debug.h"
 
 namespace chrissly
 {
@@ -335,10 +334,7 @@ SceneNode::_GetFullTransform() const
 void
 SceneNode::AttachObject(Entity* obj)
 {
-    if (!DynamicArraySet(&this->objectMap, this->numAttachedObjects, obj))
-    {
-        CE_ASSERT(false, "SceneNode::AttachObject(): can't add Entity to objectmap");
-    }
+    DynamicArraySet(&this->objectMap, this->numAttachedObjects, obj);
 
     obj->_NotifyAttached(this);
 

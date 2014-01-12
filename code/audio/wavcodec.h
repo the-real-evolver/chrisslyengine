@@ -22,7 +22,7 @@ public:
     /// destructor
     ~WavCodec();
     /// called by Sound, create buffers ect.
-    bool SetupSound(const char* filename, Mode mode, void** sampleBuffer, unsigned int& length, AudioFormat& format, int& channels, int& bits);
+    bool SetupSound(const char* filename, Mode mode, void** sampleBuffer, unsigned int& length, AudioFormat& format, SoundType& type, int& channels, int& bits);
 };
 
 } // namespace audio

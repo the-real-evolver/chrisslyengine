@@ -5,7 +5,6 @@
 #include "pspaudiorenderer.h"
 #include "modeflags.h"
 #include <stdio.h>
-#include <pspaudio.h>
 
 namespace chrissly
 {
@@ -41,18 +40,11 @@ PSPAudioRenderer::StartChannel(audio::Channel* channel)
     unsigned int length;
     sound->GetLength(&length);
     int numChannels;
-    sound->GetFormat(NULL, &numChannels, NULL);
+    sound->GetFormat(NULL, NULL, &numChannels, NULL);
 
     int samplecount = (length >= PSP_AUDIO_SAMPLE_MAX) ? PSP_AUDIO_SAMPLE_MAX : length;
     samplecount = PSP_AUDIO_SAMPLE_ALIGN(samplecount);
-    PspAudioFormats audioFormat;
-    switch (numChannels)
-    {
-        case 1: audioFormat = PSP_AUDIO_FORMAT_MONO; break;
-        case 2: audioFormat = PSP_AUDIO_FORMAT_STEREO; break;
-        default: audioFormat = PSP_AUDIO_FORMAT_MONO; break;
-    }
-    index = sceAudioChReserve(index, samplecount, audioFormat);
+    index = sceAudioChReserve(index, samplecount, this->GetFormat(numChannels));
 
     channel->_SetIndex(index);
     channel->_SetIsPlaying(false);
@@ -77,6 +69,16 @@ PSPAudioRenderer::UpdateChannel(audio::Channel* channel)
             channel->_SetIsPlaying(false);
             isPlaying = false;
         }
+        else if (channel->_PropertiesHasChanged())
+        {
+            float volume;
+            channel->GetVolume(&volume);
+            float panning;
+            channel->GetPan(&panning);
+            int leftVolume, rightVolume;
+            this->CalculateVolumesFromPanning(volume, panning, leftVolume, rightVolume);
+            sceAudioChangeChannelVolume(index, leftVolume, rightVolume);
+        }
     }
 
     if (!isPlaying)
@@ -94,25 +96,24 @@ PSPAudioRenderer::UpdateChannel(audio::Channel* channel)
             int samplecount = PSP_AUDIO_SAMPLE_MAX;
             if (samplesRemaining < PSP_AUDIO_SAMPLE_MAX)
             {
-                samplecount = PSP_AUDIO_SAMPLE_ALIGN(samplesRemaining);
                 sceAudioChRelease(index);
                 int numChannels;
-                sound->GetFormat(NULL, &numChannels, NULL);
-                PspAudioFormats audioFormat;
-                switch (numChannels)
-                {
-                    case 1: audioFormat = PSP_AUDIO_FORMAT_MONO; break;
-                    case 2: audioFormat = PSP_AUDIO_FORMAT_STEREO; break;
-                    default: audioFormat = PSP_AUDIO_FORMAT_MONO; break;
-                }
-                index = sceAudioChReserve(PSP_AUDIO_NEXT_CHANNEL, samplecount, audioFormat);
+                sound->GetFormat(NULL, NULL, &numChannels, NULL);
+                samplecount = PSP_AUDIO_SAMPLE_ALIGN(samplesRemaining);
+                index = sceAudioChReserve(PSP_AUDIO_NEXT_CHANNEL, samplecount, this->GetFormat(numChannels));
                 channel->_SetIndex(index);
             }
 
             if (index >= 0)
             {
-                void* bufferPositon = sound->_GetStaticSampleBufferPointer(position);
-                sceAudioOutput(index, PSP_AUDIO_VOLUME_MAX, bufferPositon);
+                float volume;
+                channel->GetVolume(&volume);
+                float panning;
+                channel->GetPan(&panning);
+                int leftVolume, rightVolume;
+                this->CalculateVolumesFromPanning(volume, panning, leftVolume, rightVolume);
+                void* bufferPositon = sound->_GetSampleBufferPointer(position);
+                sceAudioOutputPanned(index, leftVolume, rightVolume, bufferPositon);
                 channel->_SetIsPlaying(true);
                 channel->SetPosition(position += samplecount);
             }
@@ -121,7 +122,7 @@ PSPAudioRenderer::UpdateChannel(audio::Channel* channel)
         {
             sceAudioChRelease(index);
             audio::Mode mode;
-            sound->GetMode(&mode);
+            channel->GetMode(&mode);
             if (mode & audio::MODE_LOOP_NORMAL)
             {
                 this->StartChannel(channel);
@@ -143,6 +144,35 @@ PSPAudioRenderer::ReleaseChannel(audio::Channel* channel)
     int index;
     channel->GetIndex(&index);
     sceAudioChRelease(index);
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+PSPAudioRenderer::CalculateVolumesFromPanning(float volume, float panning, int& leftVolume, int& rightVolume)
+{
+    // linear panning
+    float leftGain = 1.0f - panning;
+    float rightGain = panning + 1.0f;
+    leftVolume = (int)((float)PSP_AUDIO_VOLUME_MAX * volume * ((leftGain > 1.0f) ? 1.0f : leftGain));
+    rightVolume = (int)((float)PSP_AUDIO_VOLUME_MAX * volume * ((rightGain > 1.0f) ? 1.0f : rightGain));
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+PspAudioFormats
+PSPAudioRenderer::GetFormat(int channels)
+{
+    switch (channels)
+    {
+        case 1: return PSP_AUDIO_FORMAT_MONO;
+        case 2: return PSP_AUDIO_FORMAT_STEREO;
+        default: return PSP_AUDIO_FORMAT_MONO;
+    }
+
+    return PSP_AUDIO_FORMAT_MONO;
 }
 
 } // namespace chrissly

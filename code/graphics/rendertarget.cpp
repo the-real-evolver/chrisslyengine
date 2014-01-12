@@ -3,7 +3,6 @@
 //  (C) 2011 Christian Bleicher
 //------------------------------------------------------------------------------
 #include "rendertarget.h"
-#include "debug.h"
 
 namespace chrissly
 {
@@ -38,12 +37,8 @@ Viewport*
 RenderTarget::AddViewport(Camera *cam, int left, int top, int width, int height)
 {
     Viewport* viewport = CE_NEW Viewport(cam, this, left, top, width, height);
-    
-    if (!DynamicArraySet(&this->viewportList, this->numViewports, viewport))
-    {
-        CE_ASSERT(false, "RenderTarget::AddViewport(): DynamicArraySet failed");
-    }
-    
+
+    DynamicArraySet(&this->viewportList, this->numViewports, viewport);
     this->numViewports++;
 
     return viewport;

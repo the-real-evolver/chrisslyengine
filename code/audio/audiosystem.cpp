@@ -38,7 +38,7 @@ AudioSystem::~AudioSystem()
 //------------------------------------------------------------------------------
 /**
 */
-bool
+Result
 AudioSystem::Initialise(void* customParams)
 {
     DynamicArrayInit(&this->staticSounds, 0);
@@ -49,19 +49,16 @@ AudioSystem::Initialise(void* customParams)
     for (i = 0; i < this->channelPool.cur_size; i++)
     {
         Channel* channel = CE_NEW Channel();
-        if (!DynamicArraySet(&this->channelPool, i, channel))
-        {
-            CE_ASSERT(false, "AudioSystem::Initialise(): DynamicArraySet failed\n");
-        }
+        DynamicArraySet(&this->channelPool, i, channel);
     }
 
-    return true;
+    return OK;
 }
 
 //------------------------------------------------------------------------------
 /**
 */
-bool
+Result
 AudioSystem::Release()
 {
     unsigned int i;
@@ -74,7 +71,7 @@ AudioSystem::Release()
         {
             this->activeRenderer->ReleaseChannel(channel);
         }
-        CE_DELETE (Channel*)DynamicArrayGet(&this->channelPool, i);
+        CE_DELETE channel;
     }
     DynamicArrayDelete(&this->channelPool);
 
@@ -85,17 +82,17 @@ AudioSystem::Release()
     DynamicArrayDelete(&this->staticSounds);
     this->numStaticSounds = 0;
 
-    return true;
+    return OK;
 }
 
 //------------------------------------------------------------------------------
 /**
 */
-bool
+Result
 AudioSystem::CreateSound(const char* name, Mode mode, Sound** sound)
 {
     char* ext = strrchr(name, '.');
-    if (NULL == ext) return false;
+    if (NULL == ext) return ERR_PLUGIN_MISSING;
     ext++;
     Codec* codec;
     if (0 == strcmp(ext, "wav"))
@@ -104,7 +101,7 @@ AudioSystem::CreateSound(const char* name, Mode mode, Sound** sound)
     }
     else
     {
-        return false;
+        return ERR_PLUGIN_MISSING;
     }
 
     Sound* snd = CE_NEW Sound();
@@ -113,18 +110,17 @@ AudioSystem::CreateSound(const char* name, Mode mode, Sound** sound)
 
     if (MODE_DEFAULT == mode || mode & MODE_CREATESAMPLE)
     {
-        bool result = DynamicArraySet(&this->staticSounds, this->numStaticSounds, snd);
-        CE_ASSERT(result, "AudioSystem::CreateSound(): can't add sound to staticSounds");
+        DynamicArraySet(&this->staticSounds, this->numStaticSounds, snd);
         this->numStaticSounds++;
     }
 
-    return true;
+    return OK;
 }
 
 //------------------------------------------------------------------------------
 /**
 */
-bool
+Result
 AudioSystem::PlaySound(int channelid, Sound* sound, Channel** channel)
 {
     Channel* chn = NULL;
@@ -136,11 +132,11 @@ AudioSystem::PlaySound(int channelid, Sound* sound, Channel** channel)
         chn->GetIndex(&index);
         if (Channel::CHANNEL_FREE == index) break;
     }
-    if (i == this->channelPool.cur_size) return false;
+    if (i == this->channelPool.cur_size) return ERR_CHANNEL_ALLOC;
 
     if (channelid != Channel::CHANNEL_FREE)
     {
-        CE_ASSERT(channelid < (int)this->channelPool.cur_size, "AudioSystem::PlaySound(): invalid channelid '%i', valid range [0 - %i]", channelid, this->channelPool.cur_size);
+        CE_ASSERT(channelid < (int)this->channelPool.cur_size, "AudioSystem::PlaySound(): invalid channelid '%i' (out of range '0 - %i')", channelid, this->channelPool.cur_size);
         chn->_SetIndex(channelid);
     }
 
@@ -150,13 +146,13 @@ AudioSystem::PlaySound(int channelid, Sound* sound, Channel** channel)
 
     *channel = chn;
 
-    return true;
+    return OK;
 }
 
 //------------------------------------------------------------------------------
 /**
 */
-bool
+Result
 AudioSystem::Update()
 {
     unsigned int i;
@@ -171,7 +167,7 @@ AudioSystem::Update()
         }
     }
 
-    return true;
+    return OK;
 }
 
 //------------------------------------------------------------------------------
