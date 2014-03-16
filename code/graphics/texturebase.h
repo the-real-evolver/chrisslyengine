@@ -50,7 +50,7 @@ public:
     bool GetSwizzleEnabled() const;
 
     /// implementation of creating internal texture resources 
-    virtual void CreateInternalResourcesImpl();
+    virtual void CreateInternalResourcesImpl() = 0;
 
 protected:
     PixelFormat format;

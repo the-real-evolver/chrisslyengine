@@ -6,7 +6,6 @@
 
     (C) 2014 Christian Bleicher
 */
-#include "sound.h"
 #include "channel.h"
 #include <pspaudio.h>
 
@@ -17,6 +16,15 @@ namespace chrissly
 class PSPAudioRenderer
 {
 public:
+    /// describes the panning mode used during playback on a channel
+    enum PanningMode
+    {
+        /// linear having at least one channel at full volume -1.0 = full left muted right, 0.0 = full left and right, 1.0 = full right muted left
+        PAN_CLAMPEDLINEAR,
+        /// constant power pan = 0.0, the balance for the sound in each speaker is 71% left and 71% right
+        PAN_CONSTANTPOWER
+    };
+
     /// get pointer to the singleton
     static PSPAudioRenderer* Instance()
     {
@@ -27,6 +35,10 @@ public:
     PSPAudioRenderer();
     /// destructor
     ~PSPAudioRenderer();
+    /// start up the renderer
+    void _Initialise(void* customParams);
+    /// shutdown the renderer and cleanup resources
+    void Shutdown();
     /// start playback on the given channel
     void StartChannel(audio::Channel* channel);
     /// update playback on the given channel
@@ -38,7 +50,7 @@ private:
     /// copy constructor
     PSPAudioRenderer(const PSPAudioRenderer&cc) {};
     /// calculate left and right volume from volume and panning
-    void CalculateVolumesFromPanning(float volume, float panning, int& leftVolume, int& rightVolume);
+    void CalculateVolumesFromPanning(PanningMode mode, float volume, float panning, int& leftVolume, int& rightVolume);
     /// return a PspAudioFormats equivalent for the given number of channels
     PspAudioFormats GetFormat(int channels);
 

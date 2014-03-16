@@ -20,6 +20,18 @@ typedef chrissly::PSPAudioRenderer AudioRenderer;
 } // namespace audio
 } // namespace chrissly
 //------------------------------------------------------------------------------
+#elif __ANDROID__
+#include "android/slesaudiorenderer.h"
+namespace chrissly
+{
+namespace audio
+{
+
+typedef chrissly::SLESAudioRenderer AudioRenderer;
+
+} // namespace audio
+} // namespace chrissly
+//------------------------------------------------------------------------------
 #else
 #error "AudioRenderer class not implemented on this platform!"
 #endif

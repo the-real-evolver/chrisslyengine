@@ -1,8 +1,8 @@
 //------------------------------------------------------------------------------
-//  sound.cpp
+//  soundbase.cpp
 //  (C) 2014 Christian Bleicher
 //------------------------------------------------------------------------------
-#include "sound.h"
+#include "soundbase.h"
 #include "memoryallocatorconfig.h"
 #include <stdio.h>
 
@@ -14,7 +14,7 @@ namespace audio
 //------------------------------------------------------------------------------
 /**
 */
-Sound::Sound() :
+SoundBase::SoundBase() :
     mode(MODE_DEFAULT),
     format(AUDIO_FORMAT_NONE),
     length(0),
@@ -29,7 +29,7 @@ Sound::Sound() :
 //------------------------------------------------------------------------------
 /**
 */
-Sound::~Sound()
+SoundBase::~SoundBase()
 {
     this->Release();
 }
@@ -38,7 +38,7 @@ Sound::~Sound()
 /**
 */
 Result
-Sound::GetLength(unsigned int* length)
+SoundBase::GetLength(unsigned int* length)
 {
     *length = this->length;
     return OK;
@@ -48,7 +48,7 @@ Sound::GetLength(unsigned int* length)
 /**
 */
 Result
-Sound::GetFormat(SoundType* type, AudioFormat* format, int* channels, int* bits)
+SoundBase::GetFormat(SoundType* type, AudioFormat* format, int* channels, int* bits)
 {
     if (type != NULL) *type = this->type;
     if (format != NULL) *format = this->format;
@@ -61,7 +61,7 @@ Sound::GetFormat(SoundType* type, AudioFormat* format, int* channels, int* bits)
 /**
 */
 Result
-Sound::GetMode(Mode* mode)
+SoundBase::GetMode(Mode* mode)
 {
     *mode = this->mode;
     return OK;
@@ -71,7 +71,7 @@ Sound::GetMode(Mode* mode)
 /**
 */
 Result
-Sound::Release()
+SoundBase::Release()
 {
     this->mode = MODE_DEFAULT;
     this->format = AUDIO_FORMAT_NONE;
@@ -97,18 +97,19 @@ Sound::Release()
 /**
 */
 void
-Sound::_Setup(const char* filename, Mode mode, Codec* codec)
+SoundBase::_Setup(const char* filename, Mode mode, Codec* codec)
 {
     this->mode = mode;
     this->codec = codec;
     this->codec->SetupSound(filename, mode, &this->sampleBuffer, this->length, this->format, this->type, this->numChannels, this->bitsPerSample);
+    this->CreateInternalResourcesImpl();
 }
 
 //------------------------------------------------------------------------------
 /**
 */
 void*
-Sound::_GetSampleBufferPointer(unsigned int position)
+SoundBase::_GetSampleBufferPointer(unsigned int position)
 {
     if (this->mode & MODE_CREATESTREAM)
     {
@@ -130,6 +131,15 @@ Sound::_GetSampleBufferPointer(unsigned int position)
     }
 
     return NULL;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+SoundBase::CreateInternalResourcesImpl()
+{
+
 }
 
 } // namespace audio

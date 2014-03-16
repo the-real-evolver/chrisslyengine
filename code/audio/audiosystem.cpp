@@ -32,6 +32,7 @@ AudioSystem::~AudioSystem()
 {
     Singleton = NULL;
     this->Release();
+    this->activeRenderer->Shutdown();
     CE_DELETE this->activeRenderer;
 }
 
@@ -41,6 +42,8 @@ AudioSystem::~AudioSystem()
 Result
 AudioSystem::Initialise(void* customParams)
 {
+    this->activeRenderer->_Initialise(customParams);
+
     DynamicArrayInit(&this->staticSounds, 0);
     this->numStaticSounds = 0;
 
@@ -136,7 +139,7 @@ AudioSystem::PlaySound(int channelid, Sound* sound, Channel** channel)
 
     if (channelid != Channel::CHANNEL_FREE)
     {
-        CE_ASSERT(channelid < (int)this->channelPool.cur_size, "AudioSystem::PlaySound(): invalid channelid '%i' (out of range '0 - %i')", channelid, this->channelPool.cur_size);
+        CE_ASSERT(channelid < (int)this->channelPool.cur_size, "AudioSystem::PlaySound(): invalid channelid '%i' (exceeds channel range '0 - %i')", channelid, this->channelPool.cur_size);
         chn->_SetIndex(channelid);
     }
 

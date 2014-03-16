@@ -138,15 +138,6 @@ TextureBase::GetSwizzleEnabled() const
 {
     return this->swizzled;
 }
-
-//------------------------------------------------------------------------------
-/**
-*/
-void
-TextureBase::CreateInternalResourcesImpl()
-{
-    // overwrite in platform specific subclass
-}
     
 } // namespace graphics
 } // namespace chrissly

@@ -12,10 +12,10 @@ LOCAL_MODULE := chrisslyengine_android
 
 LOCAL_CFLAGS := -Werror -D__ANDROID__
 
-LOCAL_C_INCLUDES += $(CE)/core $(CE)/graphics
+LOCAL_C_INCLUDES += $(CE)/core $(CE)/graphics $(CE)/audio
 
 LOCAL_SRC_FILES := core/android/androiddebug.cpp core/android/androidfswrapper.cpp core/android/androidmath.cpp \
-                   core/vector3.cpp core/matrix3.cpp core/matrix4.cpp core/quaternion.cpp core/chrisslymemory.cpp core/chrisslystring.cpp \
+                   core/vector3.cpp core/matrix3.cpp core/matrix4.cpp core/quaternion.cpp core/chrisslymemory.cpp core/chrisslystring.cpp core/timer.cpp \
                    graphics/texturebase.cpp graphics/textureunitstate.cpp graphics/texturemanager.cpp \
                    graphics/pass.cpp graphics/material.cpp graphics/materialmanager.cpp \
                    graphics/graphicssystem.cpp \
@@ -29,12 +29,14 @@ LOCAL_SRC_FILES := core/android/androiddebug.cpp core/android/androidfswrapper.c
                    graphics/rendertarget.cpp graphics/android/gles2rendertexture.cpp graphics/android/gles2renderwindow.cpp \
                    graphics/android/gles2mappings.cpp graphics/android/gles2texture.cpp graphics/android/gles2rendersystem.cpp \
                    graphics/android/gles2gpuprogram.cpp graphics/gpuprogramparams.cpp \
+                   audio/wavcodec.cpp audio/soundbase.cpp audio/audiosystem.cpp audio/channelbase.cpp \
+                   audio/android/slesaudiorenderer.cpp audio/android/slessound.cpp audio/android/sleschannel.cpp \
                    main.cpp
 
-LOCAL_LDLIBS := -llog -lGLESv2 -landroid -lEGL
+LOCAL_LDLIBS := -llog -lGLESv2 -landroid -lEGL -lOpenSLES
 
 LOCAL_STATIC_LIBRARIES := android_native_app_glue
 
 include $(BUILD_SHARED_LIBRARY)
 
-$(call import-module,android/native_app_glue)
+$(call import-module, android/native_app_glue)

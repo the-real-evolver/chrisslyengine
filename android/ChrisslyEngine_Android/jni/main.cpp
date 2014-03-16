@@ -49,6 +49,7 @@ const char* FragmentShader =
     "const float MaxDist = 2.5;\n"
     "const float MaxDistSquared = MaxDist * MaxDist;\n"
     "const vec3 lightColor = vec3(0.6, 0.6, 0.6);\n"
+    "const float materialPower = 32.0;\n"
     "varying vec2 texCoordOut;\n"
     "varying vec3 fragmentNormal;\n"
     "varying vec3 cameraVector;\n"
@@ -63,7 +64,7 @@ const char* FragmentShader =
     "    vec3 diffuse = lightColor * clamp(dot(normal, lightDir), 0.0, 1.0) * attenuation;\n"
     "    vec3 halfAngle = normalize(normalize(cameraVector) + lightDir);\n"
     "	 float specularDot = dot(normal, halfAngle);\n"
-    "    vec3 specular = vec3(specularColor[0][0], specularColor[0][1], specularColor[0][2]) * pow(clamp(specularDot, 0.0, 1.0), 32.0) * attenuation;\n"
+    "    vec3 specular = vec3(specularColor[0][0], specularColor[0][1], specularColor[0][2]) * exp(-2.0 * materialPower * pow(acos(specularDot), 2.0));\n"
     "    gl_FragColor = vec4(clamp((diffuse + texture2D(texture, texCoordOut).rgb) + specular, 0.0, 1.0), 1.0);\n"
     "}\n";
 

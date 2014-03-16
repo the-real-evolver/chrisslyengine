@@ -293,15 +293,15 @@ SceneManager::SetShadowTechnique(ShadowTechnique technique)
             this->shadowTexture->SetSwizzleEnabled(false);
             tus->SetTexture(this->shadowTexture);
 
-            this->shadowCamera->SetPosition(4.0f, 4.0f, -4.0f);
-            this->shadowCamera->Yaw(2.14f);
-            this->shadowCamera->Pitch(-1.0f);
-
             this->shadowTextureProjScaleTrans = Matrix4::IDENTITY;
             this->shadowTextureProjScaleTrans[0][0] = 0.5f;
             this->shadowTextureProjScaleTrans[1][1] = -0.5f;
             this->shadowTextureProjScaleTrans[0][3] = 0.5f;
             this->shadowTextureProjScaleTrans[1][3] = 0.5f;
+
+            this->shadowCamera->SetPosition(4.0f, 4.0f, -4.0f);
+            this->shadowCamera->Yaw(2.14f);
+            this->shadowCamera->Pitch(-1.0f);
 
             this->shadowProjection = this->shadowCamera->GetProjectionMatrixRS() * this->shadowCamera->GetViewMatrix();
             this->shadowProjection = this->shadowTextureProjScaleTrans * this->shadowProjection;
@@ -346,7 +346,7 @@ SceneManager::PrepareShadowTextures()
 /**
 */
 void
-SceneManager::_RenderScene(Camera *camera, Viewport *vp)
+SceneManager::_RenderScene(Camera* camera, Viewport* vp)
 { 
     if (this->illuminationStage != IRS_RENDER_TO_TEXTURE)
     {

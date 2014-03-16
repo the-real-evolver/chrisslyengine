@@ -16,5 +16,7 @@
     </application>
     <!-- enable support for compressed textures -->
     <supports-gl-texture android:name="GL_OES_compressed_ETC1_RGB8_texture" />
+    <!-- MODIFY_AUDIO_SETTINGS is needed to use audio effects such as environmental reverb -->
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"></uses-permission>
 </manifest>
 

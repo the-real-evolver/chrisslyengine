@@ -55,7 +55,7 @@ public:
             returned vector will be on the side from which the arc from 'this'
             to rkVector is anticlockwise, e.g. UNIT_Y.crossProduct(UNIT_Z)
             = UNIT_X, whilst UNIT_Z.crossProduct(UNIT_Y) = -UNIT_X.
-            This is because OGRE uses a right-handed coordinate system.
+            This is because a right-handed coordinate system is used here.
         @par
             For a clearer explanation, look a the left and the bottom edges
             of your monitor's screen. Assume that the first vector is the

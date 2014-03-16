@@ -4,6 +4,8 @@
 //------------------------------------------------------------------------------
 #include "pspaudiorenderer.h"
 #include "modeflags.h"
+#include "sound.h"
+#include "debug.h"
 #include <stdio.h>
 
 namespace chrissly
@@ -25,6 +27,24 @@ PSPAudioRenderer::PSPAudioRenderer()
 PSPAudioRenderer::~PSPAudioRenderer()
 {
     Singleton = NULL;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+PSPAudioRenderer::_Initialise(void* customParams)
+{
+
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+PSPAudioRenderer::Shutdown()
+{
+
 }
 
 //------------------------------------------------------------------------------
@@ -76,7 +96,7 @@ PSPAudioRenderer::UpdateChannel(audio::Channel* channel)
             float panning;
             channel->GetPan(&panning);
             int leftVolume, rightVolume;
-            this->CalculateVolumesFromPanning(volume, panning, leftVolume, rightVolume);
+            this->CalculateVolumesFromPanning(PAN_CLAMPEDLINEAR, volume, panning, leftVolume, rightVolume);
             sceAudioChangeChannelVolume(index, leftVolume, rightVolume);
         }
     }
@@ -111,7 +131,7 @@ PSPAudioRenderer::UpdateChannel(audio::Channel* channel)
                 float panning;
                 channel->GetPan(&panning);
                 int leftVolume, rightVolume;
-                this->CalculateVolumesFromPanning(volume, panning, leftVolume, rightVolume);
+                this->CalculateVolumesFromPanning(PAN_CLAMPEDLINEAR, volume, panning, leftVolume, rightVolume);
                 void* bufferPositon = sound->_GetSampleBufferPointer(position);
                 sceAudioOutputPanned(index, leftVolume, rightVolume, bufferPositon);
                 channel->_SetIsPlaying(true);
@@ -150,13 +170,21 @@ PSPAudioRenderer::ReleaseChannel(audio::Channel* channel)
 /**
 */
 void
-PSPAudioRenderer::CalculateVolumesFromPanning(float volume, float panning, int& leftVolume, int& rightVolume)
+PSPAudioRenderer::CalculateVolumesFromPanning(PanningMode mode, float volume, float panning, int& leftVolume, int& rightVolume)
 {
-    // linear panning
-    float leftGain = 1.0f - panning;
-    float rightGain = panning + 1.0f;
-    leftVolume = (int)((float)PSP_AUDIO_VOLUME_MAX * volume * ((leftGain > 1.0f) ? 1.0f : leftGain));
-    rightVolume = (int)((float)PSP_AUDIO_VOLUME_MAX * volume * ((rightGain > 1.0f) ? 1.0f : rightGain));
+    switch (mode)
+    {
+        case PAN_CLAMPEDLINEAR:
+        {
+            float leftGain = 1.0f - panning;
+            float rightGain = panning + 1.0f;
+            leftVolume = (int)((float)PSP_AUDIO_VOLUME_MAX * volume * ((leftGain > 1.0f) ? 1.0f : leftGain));
+            rightVolume = (int)((float)PSP_AUDIO_VOLUME_MAX * volume * ((rightGain > 1.0f) ? 1.0f : rightGain));
+        }
+        break;
+
+        default: CE_ASSERT(false, "PSPAudioRenderer::CalculateVolumesFromPanning(): panningmode '%i' not supported\n", mode);
+    }
 }
 
 //------------------------------------------------------------------------------

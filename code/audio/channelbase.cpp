@@ -1,8 +1,8 @@
 //------------------------------------------------------------------------------
-//  channel.cpp
+//  channelbase.cpp
 //  (C) 2014 Christian Bleicher
 //------------------------------------------------------------------------------
-#include "channel.h"
+#include "channelbase.h"
 #include "audiosystem.h"
 #include <stdio.h>
 
@@ -14,7 +14,7 @@ namespace audio
 //------------------------------------------------------------------------------
 /**
 */
-Channel::Channel() :
+ChannelBase::ChannelBase() :
     currentSound(NULL),
     index(CHANNEL_FREE),
     position(0),
@@ -30,7 +30,7 @@ Channel::Channel() :
 //------------------------------------------------------------------------------
 /**
 */
-Channel::~Channel()
+ChannelBase::~ChannelBase()
 {
 
 }
@@ -39,7 +39,7 @@ Channel::~Channel()
 /**
 */
 Result
-Channel::GetCurrentSound(Sound** sound)
+ChannelBase::GetCurrentSound(Sound** sound)
 {
     *sound = this->currentSound;
     return OK;
@@ -49,7 +49,7 @@ Channel::GetCurrentSound(Sound** sound)
 /**
 */
 Result
-Channel::GetIndex(int* index)
+ChannelBase::GetIndex(int* index)
 {
     *index = this->index;
     return OK;
@@ -59,7 +59,7 @@ Channel::GetIndex(int* index)
 /**
 */
 Result
-Channel::GetPosition(unsigned int* position)
+ChannelBase::GetPosition(unsigned int* position)
 {
     *position = this->position;
     return OK;
@@ -69,7 +69,7 @@ Channel::GetPosition(unsigned int* position)
 /**
 */
 Result
-Channel::IsPlaying(bool* isplaying)
+ChannelBase::IsPlaying(bool* isplaying)
 {
     *isplaying = this->isPlaying;
     return OK;
@@ -79,7 +79,7 @@ Channel::IsPlaying(bool* isplaying)
 /**
 */
 Result
-Channel::SetPosition(unsigned int position)
+ChannelBase::SetPosition(unsigned int position)
 {
     this->position = position;
     return OK;
@@ -89,11 +89,11 @@ Channel::SetPosition(unsigned int position)
 /**
 */
 Result
-Channel::Stop()
+ChannelBase::Stop()
 {
     if (this->index != CHANNEL_FREE)
     {
-        AudioSystem::Instance()->_GetAudioRenderer()->ReleaseChannel(this);
+        AudioSystem::Instance()->_GetAudioRenderer()->ReleaseChannel((Channel*)this);
         this->index = CHANNEL_FREE;
     }
 
@@ -104,7 +104,7 @@ Channel::Stop()
 /**
 */
 Result
-Channel::SetVolume(float volume)
+ChannelBase::SetVolume(float volume)
 {
     if (volume > 1.0f)
     {
@@ -128,7 +128,7 @@ Channel::SetVolume(float volume)
 /**
 */
 Result
-Channel::GetVolume(float* volume)
+ChannelBase::GetVolume(float* volume)
 {
     *volume = this->volume;
     return OK;
@@ -138,7 +138,7 @@ Channel::GetVolume(float* volume)
 /**
 */
 Result
-Channel::SetPan(float pan)
+ChannelBase::SetPan(float pan)
 {
     if (pan > 1.0f)
     {
@@ -162,7 +162,7 @@ Channel::SetPan(float pan)
 /**
 */
 Result
-Channel::GetPan(float* pan)
+ChannelBase::GetPan(float* pan)
 {
     *pan = this->panning;
     return OK;
@@ -172,7 +172,7 @@ Channel::GetPan(float* pan)
 /**
 */
 Result
-Channel::SetMode(Mode mode)
+ChannelBase::SetMode(Mode mode)
 {
     this->mode = mode;
 
@@ -185,7 +185,7 @@ Channel::SetMode(Mode mode)
 /**
 */
 Result
-Channel::GetMode(Mode* mode)
+ChannelBase::GetMode(Mode* mode)
 {
     *mode = this->mode;
     return OK;
@@ -195,7 +195,7 @@ Channel::GetMode(Mode* mode)
 /**
 */
 void
-Channel::_AttachSound(Sound* sound)
+ChannelBase::_AttachSound(Sound* sound)
 {
     sound->GetMode(&this->mode);
     this->currentSound = sound;
@@ -205,7 +205,7 @@ Channel::_AttachSound(Sound* sound)
 /**
 */
 void
-Channel::_SetIndex(int index)
+ChannelBase::_SetIndex(int index)
 {
     this->index = index;
 }
@@ -214,7 +214,7 @@ Channel::_SetIndex(int index)
 /**
 */
 void
-Channel::_SetIsPlaying(bool isplaying)
+ChannelBase::_SetIsPlaying(bool isplaying)
 {
     this->isPlaying = isplaying;
 }
@@ -223,7 +223,7 @@ Channel::_SetIsPlaying(bool isplaying)
 /**
 */
 bool
-Channel::_PropertiesHasChanged()
+ChannelBase::_PropertiesHasChanged()
 {
     bool propertiesHasChanged = this->propertiesHasChanged;
     this->propertiesHasChanged = false;

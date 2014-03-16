@@ -110,10 +110,10 @@ public:
         transformations, provided they have been updated using the Node::_update method.
         This should only be called by a SceneManager which knows the
         derived transforms have been updated before calling this method.
-        Applications using Ogre should just use the relative transforms.
+        Applications should just use the relative transforms.
     */
     const chrissly::core::Matrix4& _GetFullTransform() const;
-    
+
     /// adds an instance of a scene object to this node
     /**
     @remarks
@@ -132,25 +132,25 @@ public:
     Entity* GetAttachedObject(unsigned short index) const;
     /// detaches all objects attached to this node
     void DetachAllObjects();
-    
+
 private:
     /// constructor, only to be called by the creator SceneManager
     SceneNode();
     /// only available internally - notification of parent.
     void SetParent(SceneNode* parent);
-    
+
     /// pointer to parent node
     SceneNode* parent;
     /// collection of pointers to direct children; hashmap for efficiency
     LinkedList* children;
-   
+
     /// stores the orientation of the node relative to it's parent.
     chrissly::core::Quaternion orientation;
     /// stores the position/translation of the node relative to its parent.
     chrissly::core::Vector3 position;
     /// stores the scaling factor applied to this node
     chrissly::core::Vector3 scale;
-    
+
     /** cached combined orientation.
         @par
             This member is the orientation derived by combining the
@@ -177,11 +177,11 @@ private:
             SceneManager or the nodes parent.
     */
     mutable chrissly::core::Vector3 derivedScale;
-    
+
     /// cached derived transform as a 4x4 matrix
     mutable chrissly::core::Matrix4 cachedTransform;
     mutable bool cachedTransformOutOfDate;
-    
+
     mutable DynamicArray objectMap;
     unsigned short numAttachedObjects;
 };

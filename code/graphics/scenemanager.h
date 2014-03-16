@@ -68,7 +68,7 @@ public:
         mesh will be loaded if it is not already.
     */
     Entity* CreateEntity(const char* meshName);
- 
+
     /// creates an instance of a SceneNode
     /**
         @remarks
@@ -93,18 +93,12 @@ public:
             The entire scene is held as a hierarchy of nodes, which
             allows things like relative transforms, general changes in
             rendering state etc (See the SceneNode class for more info).
-            In this basic SceneManager class, the application using
-            Ogre is free to structure this hierarchy however it likes,
-            since it has no real significance apart from making transforms
-            relative to each node (more specialised subclasses will
-            provide utility methods for building specific node structures
-            e.g. loading a BSP tree).
         @par
             However, in all cases there is only ever one root node of
             the hierarchy, and this method returns a pointer to it.
     */
     SceneNode* GetRootSceneNode();
-    
+
     /// empties the entire scene, inluding all SceneNodes, Entities, Lights, BillboardSets etc.
     /** 
         Cameras are not deleted at this stage since they are still referenced
@@ -136,7 +130,7 @@ public:
     /// method for preparing shadow textures ready for use in a regular render
     void PrepareShadowTextures();
     /// prompts the class to send its contents to the renderer
-    void _RenderScene(Camera *camera, Viewport *vp); 
+    void _RenderScene(Camera* camera, Viewport* vp);
     /// internal method for setting up the renderstate for a rendering pass
     void _SetPass(Pass* pass);
 
@@ -155,7 +149,7 @@ private:
     mutable chrissly::core::HashTable lights;
 
     LinkedList* movableObjectCollectionMap;
- 
+
     /// central list of SceneNodes - for easy memory management 
     LinkedList* sceneNodes;
     /// root scene node
@@ -175,7 +169,7 @@ private:
     IlluminationRenderStage illuminationStage;
     ShadowTechnique shadowTechnique;
     bool shadowTextureConfigDirty;
-    
+
     Texture* shadowTexture;
     RenderTexture* shadowRenderTexture;
     Camera* shadowCamera;
