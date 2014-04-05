@@ -51,6 +51,8 @@ private:
     SLObjectItf engine;
     SLEngineItf engineInterface;
     SLObjectItf outputMix;
+    SLEnvironmentalReverbItf outputMixEnvironmentalReverb;
+    static SLEnvironmentalReverbSettings reverbSettings;
 };
 
 } // namespace chrissly

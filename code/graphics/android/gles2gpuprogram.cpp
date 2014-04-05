@@ -10,6 +10,13 @@
 namespace chrissly
 {
 
+// valid white spaces in GLSL: the space character, horizontal tab, vertical tab, form feed, carriage-return, and line-feed
+#define CE_GLSL_FIND_NEXT_TOKEN(match, start, end) \
+    while (' ' == match[0] || '\t' == match[0]  || '\v' == match[0] || '\f' == match[0] || '\r' == match[0] || '\n' == match[0]) {match++;} \
+    start = match; \
+    while (' ' != match[0] && '\t' != match[0]  && '\v' != match[0] && '\f' != match[0] && '\r' != match[0] && '\n' != match[0] && match[0] != ';') {match++;} \
+    end = match;
+
 //------------------------------------------------------------------------------
 /**
 */
@@ -168,7 +175,7 @@ GLES2GpuProgram::CreateParameters()
 void
 GLES2GpuProgram::ExtractConstantDefs(const char* source, graphics::GpuNamedConstants* constantDefs)
 {
-    // valid white spaces in GLSL: the space character, horizontal tab, vertical tab, form feed, carriage-return, and line-feed
+    char *start, *end;
     char* match = strstr(source, "uniform");
     while (match != NULL)
     {
@@ -176,19 +183,13 @@ GLES2GpuProgram::ExtractConstantDefs(const char* source, graphics::GpuNamedConst
         match += 7;
 
         // parse datatype
-        while (' ' == match[0] || '\t' == match[0]  || '\v' == match[0] || '\f' == match[0] || '\r' == match[0] || '\n' == match[0]) {match++;}
-        char* start = match;
-        while (' ' != match[0] && '\t' != match[0]  && '\v' != match[0] && '\f' != match[0] && '\r' != match[0] && '\n' != match[0] && match[0] != ';') {match++;}
-        char* end = match;
+        CE_GLSL_FIND_NEXT_TOKEN(match, start, end);
         core::String dataType;
         dataType.Set(start, end - start);
         if (0 == strcmp(dataType.C_Str(), "lowp") || 0 == strcmp(dataType.C_Str(), "mediump") || 0 == strcmp(dataType.C_Str(), "highp"))
         {
             // skip precision if specified
-            while (' ' == match[0] || '\t' == match[0]  || '\v' == match[0] || '\f' == match[0] || '\r' == match[0] || '\n' == match[0]) {match++;}
-            start = match;
-            while (' ' != match[0] && '\t' != match[0]  && '\v' != match[0] && '\f' != match[0] && '\r' != match[0] && '\n' != match[0] && match[0] != ';') {match++;}
-            end = match;
+            CE_GLSL_FIND_NEXT_TOKEN(match, start, end);
             dataType.Set(start, end - start);
         }
         graphics::GpuConstantType constantType;
@@ -210,10 +211,7 @@ GLES2GpuProgram::ExtractConstantDefs(const char* source, graphics::GpuNamedConst
         }
 
         // parse uniform name
-        while (' ' == match[0] || '\t' == match[0]  || '\v' == match[0] || '\f' == match[0] || '\r' == match[0] || '\n' == match[0]) {match++;}
-        start = match;
-        while (' ' != match[0] && '\t' != match[0]  && '\v' != match[0] && '\f' != match[0] && '\r' != match[0] && '\n' != match[0] && match[0] != ';') {match++;}
-        end = match;
+        CE_GLSL_FIND_NEXT_TOKEN(match, start, end);
         core::String uniformName;
         uniformName.Set(start, end - start);
 

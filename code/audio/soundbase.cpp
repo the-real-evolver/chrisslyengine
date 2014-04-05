@@ -21,7 +21,8 @@ SoundBase::SoundBase() :
     numChannels(0),
     bitsPerSample(0),
     sampleBuffer(NULL),
-    codec(NULL)
+    codec(NULL),
+    realized(false)
 {
 
 }
@@ -90,6 +91,8 @@ SoundBase::Release()
         this->codec = NULL;
     }
 
+    this->realized = false;
+
     return OK;
 }
 
@@ -103,13 +106,23 @@ SoundBase::_Setup(const char* filename, Mode mode, Codec* codec)
     this->codec = codec;
     this->codec->SetupSound(filename, mode, &this->sampleBuffer, this->length, this->format, this->type, this->numChannels, this->bitsPerSample);
     this->CreateInternalResourcesImpl();
+    this->realized = true;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+bool
+SoundBase::_IsRealized() const
+{
+    return this->realized;
 }
 
 //------------------------------------------------------------------------------
 /**
 */
 void*
-SoundBase::_GetSampleBufferPointer(unsigned int position)
+SoundBase::_GetSampleBufferPointer(unsigned int position) const
 {
     if (this->mode & MODE_CREATESTREAM)
     {

@@ -247,7 +247,7 @@ GLES2RenderSystem::_Render(graphics::SubEntity* renderable)
         CheckGlError("glEnableVertexAttribArray");
 
         GLint vertexNormalHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_NORMAL);
-        glVertexAttribPointer(vertexNormalHandle, 3, GL_FLOAT, GL_FALSE, 72, (unsigned char*)vertexData->vertexBuffer + 12);
+        glVertexAttribPointer(vertexNormalHandle, 3, GL_FLOAT, GL_FALSE, 36, (unsigned char*)vertexData->vertexBuffer + 12);
         CheckGlError("glVertexAttribPointer");
         glEnableVertexAttribArray(vertexNormalHandle);
         CheckGlError("glEnableVertexAttribArray");

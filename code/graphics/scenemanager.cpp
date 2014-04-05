@@ -39,7 +39,7 @@ SceneManager::SceneManager() :
     HashTableInit(&this->cameras, 2);
     HashTableInit(&this->lights, 4);
 
-    this->renderQueueOpaque.Initialise(64);
+    this->renderQueueOpaque.Initialise(128);
     this->renderQueueTransparent.Initialise(64);
     this->renderQueueShadowReceiver.Initialise(64);
 

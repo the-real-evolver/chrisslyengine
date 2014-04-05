@@ -126,8 +126,6 @@ Vehicle::Update(float duration)
     }
 
     RigidBody::Integrate(duration);
-
-    this->SetSteering(0.0f);
 }
 
 } // namespace physics

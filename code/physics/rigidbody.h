@@ -40,6 +40,8 @@ public:
     void AddForceAtPoint(const chrissly::core::Vector3& force, const chrissly::core::Vector3& point);
     /// euler-integrates the rigid body forward in time by the given amount
     void Integrate(float duration);
+    /// sets velocity and angular velocity to zero
+    void Reset();
 
     /// gets the velocity of a point on body
     const chrissly::core::Vector3 GetVelocityAtPoint(const chrissly::core::Vector3& point);

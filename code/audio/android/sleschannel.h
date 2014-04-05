@@ -27,16 +27,19 @@ public:
     void Release();
     /// gets the player interface
     SLPlayItf GetPlayerInterface() const;
-    /// gets the player interface
+    /// gets the buffer queue interface
     SLAndroidSimpleBufferQueueItf GetBufferQueueInterface() const;
     /// gets the volume interface
     SLVolumeItf GetVolumeInterface() const;
+    /// gets the effect send interface
+    SLEffectSendItf GetEffectSendInterface() const;
 
 private:
     SLAndroidSimpleBufferQueueItf bufferQueueInterface;
     SLPlayItf playerInterface;
     SLVolumeItf volumeInterface;
     SLObjectItf player;
+    SLEffectSendItf effectSendInterface;
 };
 
 } // namespace chrissly

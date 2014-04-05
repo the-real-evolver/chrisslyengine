@@ -9,6 +9,8 @@ texturetool.exe -format PF_ETC1_RGB8 -width 512 -height 512 -data ..\assets\text
 
 meshtool.exe -morphanim -src ..\assets\animations\cerberus\cerberus_walk -dst ..\android\ChrisslyEngine_Android\assets\cerberus_walk.mesh -length 3.0 -numKeys 31
 
+XCOPY /i /y ..\assets\audio\intro.wav ..\android\ChrisslyEngine_Android\assets\intro.wav
+
 cd ..\android\ChrisslyEngine_Android
 
 

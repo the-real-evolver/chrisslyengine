@@ -26,6 +26,8 @@ public:
     static inline float ATan(float fValue) {return atan(fValue);}
     /// returns the floating-point remainder of numerator / denominator
     static inline float Fmod(float fNumerator, float fDenominator) {return fmod(fNumerator, fDenominator);}
+    /// rounds the value downward, returning the largest integral value that is not greater than value
+    static inline float Floor(float fValue) {return floor(fValue);}
 };
 } // namespace chrissly
 //------------------------------------------------------------------------------

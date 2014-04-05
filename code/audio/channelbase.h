@@ -63,7 +63,7 @@ public:
     /// retrieve if properties (volume, panning ect.) has changed
     bool _PropertiesHasChanged();
 
-private:
+protected:
     Sound* currentSound;
     int index;
     unsigned int position;

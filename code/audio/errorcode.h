@@ -19,7 +19,9 @@ namespace audio
         /// A requested output, dsp unit type or codec was not available
         ERR_PLUGIN_MISSING,
         /// Error trying to allocate a channel
-        ERR_CHANNEL_ALLOC
+        ERR_CHANNEL_ALLOC,
+        /// not enough memory or resources
+        ERR_MEMORY
     };
 
 } // namespace audio

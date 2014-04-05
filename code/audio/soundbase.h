@@ -33,8 +33,10 @@ public:
 
     /// initialize sound object
     void _Setup(const char* filename, Mode mode, Codec* codec);
+    /// returns if the sound is setup
+    bool _IsRealized() const;
     /// get pointer to the sample at the given position
-    void* _GetSampleBufferPointer(unsigned int position);
+    void* _GetSampleBufferPointer(unsigned int position) const;
     /// implementation of creating internal sound resources
     virtual void CreateInternalResourcesImpl();
 
@@ -47,6 +49,7 @@ protected:
     int bitsPerSample;
     void* sampleBuffer;
     Codec* codec;
+    bool realized;
 };
 
 } // namespace audio

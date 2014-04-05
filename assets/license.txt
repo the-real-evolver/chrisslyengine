@@ -1,4 +1,11 @@
 ------------------------------------------------------------------------------
+  "intro.wav"
+
+    Author:  Christian Bleicher (evolver)
+    License: MIT
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
   "gothic_woman.obj"
   "gothic_alpha.raw" 
   "gothic_solid.raw"
@@ -7,10 +14,10 @@
   
     http://opengameart.org/sites/default/files/fleur.tar.gz
   
-    Author:   Tiziana aka TiZeta
-    Lincense: CREATIVE COMMONS Attribution-ShareAlike 3.0 Unported (see below)
-    See:      http://opengameart.org/content/goth-female-fleur-du-mal
-              http://www.unbruco.it/offcircle/index_en.html
+    Author:  Tiziana aka TiZeta
+    License: CREATIVE COMMONS Attribution-ShareAlike 3.0 Unported (see below)
+    See:     http://opengameart.org/content/goth-female-fleur-du-mal
+             http://www.unbruco.it/offcircle/index_en.html
 ------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------
@@ -23,9 +30,9 @@
     http://opengameart.org/sites/default/files/cerberus_v002.blend
     http://opengameart.org/sites/default/files/cerberus_texture_0.png  
 
-    Authors:  Clement Wu, Nikolaus & Botanic
-    Lincense: CREATIVE COMMONS Attribution-ShareAlike 3.0 Unported (see below)
-    See:      http://opengameart.org/content/animated-cerberus
+    Authors: Clement Wu, Nikolaus & Botanic
+    License: CREATIVE COMMONS Attribution-ShareAlike 3.0 Unported (see below)
+    See:     http://opengameart.org/content/animated-cerberus
 ------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------
@@ -35,10 +42,10 @@
   
     http://opengameart.org/sites/default/files/oga-textures/ancient%20flooring.jpg
   
-    Author:   Dim
-    Lincense: CREATIVE COMMONS Attribution 3.0 Unported
-    See:      http://opengameart.org/node/8136
-              http://blenderartists.org/forum/showthread.php?131009-Free-Environment-and-Architectural-Textures
+    Author:  Dim
+    License: CREATIVE COMMONS Attribution 3.0 Unported
+    See:     http://opengameart.org/node/8136
+             http://blenderartists.org/forum/showthread.php?131009-Free-Environment-and-Architectural-Textures
 ------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------
@@ -48,9 +55,9 @@
   
     http://opengameart.org/sites/default/files/oga-textures/water.png
   
-    Author:   Mysteryem
-    Lincense: CREATIVE COMMONS Attribution-ShareAlike 3.0 Unported (see below)
-    See:      http://opengameart.org/node/8081
+    Author:  Mysteryem
+    License: CREATIVE COMMONS Attribution-ShareAlike 3.0 Unported (see below)
+    See:     http://opengameart.org/node/8081
 ------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------

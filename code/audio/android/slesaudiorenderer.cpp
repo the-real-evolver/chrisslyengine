@@ -11,13 +11,16 @@ namespace chrissly
 
 SLESAudioRenderer* SLESAudioRenderer::Singleton = NULL;
 
+SLEnvironmentalReverbSettings SLESAudioRenderer::reverbSettings = SL_I3DL2_ENVIRONMENT_PRESET_DEFAULT;
+
 //------------------------------------------------------------------------------
 /**
 */
 SLESAudioRenderer::SLESAudioRenderer() :
     engine(NULL),
     engineInterface(NULL),
-    outputMix(NULL)
+    outputMix(NULL),
+    outputMixEnvironmentalReverb(NULL)
 {
     Singleton = this;
 }
@@ -46,12 +49,18 @@ SLESAudioRenderer::_Initialise(void* customParams)
     CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::_Initialise(): failed to get engine interface\n");
 
     const SLInterfaceID  ids[1] = {SL_IID_ENVIRONMENTALREVERB};
-    const SLboolean required[1] = {SL_BOOLEAN_FALSE};
+    const SLboolean required[1] = {SL_BOOLEAN_TRUE};
     result = (*this->engineInterface)->CreateOutputMix(this->engineInterface, &this->outputMix, 1, ids, required);
     CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::_Initialise(): failed to create outputmix\n");
 
     result = (*this->outputMix)->Realize(this->outputMix, SL_BOOLEAN_FALSE);
     CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::_Initialise(): failed to realize outputmix\n");
+
+    result = (*this->outputMix)->GetInterface(this->outputMix, SL_IID_ENVIRONMENTALREVERB, &this->outputMixEnvironmentalReverb);
+    CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::_Initialise(): failed to get environmental reverb interface\n");
+
+    result = (*this->outputMixEnvironmentalReverb)->SetEnvironmentalReverbProperties(this->outputMixEnvironmentalReverb, &reverbSettings);
+    CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::_Initialise(): failed to set environmental reverb properties\n");
 }
 
 //------------------------------------------------------------------------------
@@ -89,16 +98,19 @@ SLESAudioRenderer::StartChannel(audio::Channel* channel)
     channel->GetCurrentSound(&sound);
     unsigned int length;
     sound->GetLength(&length);
-    int numChannels;
-    sound->GetFormat(NULL, NULL, &numChannels, NULL);
+    int numChannels, bits;
+    sound->GetFormat(NULL, NULL, &numChannels, &bits);
 
     SLAndroidSimpleBufferQueueItf bufferQueueInterface = channel->GetBufferQueueInterface();
-    result = (*bufferQueueInterface)->Enqueue(bufferQueueInterface, sound->_GetSampleBufferPointer(0), length * numChannels * 2);
+    result = (*bufferQueueInterface)->Enqueue(bufferQueueInterface, sound->_GetSampleBufferPointer(0), length * numChannels * (bits >> 3));
     CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::StartChannel(): failed to enqueue buffer\n");
 
     channel->_SetIndex(0);
     channel->_SetIsPlaying(true);
-    channel->SetPosition(0);
+
+    SLEffectSendItf effectSend = channel->GetEffectSendInterface();
+    result = (*effectSend)->EnableEffectSend(effectSend, this->outputMixEnvironmentalReverb, SL_BOOLEAN_TRUE, 0);
+    CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::StartChannel(): failed to enable effect send\n");
 }
 
 //------------------------------------------------------------------------------
@@ -114,15 +126,15 @@ SLESAudioRenderer::UpdateChannel(audio::Channel* channel)
     {
         if (channel->_PropertiesHasChanged())
         {
+            SLresult result;
             float volume;
             channel->GetVolume(&volume);
             SLVolumeItf volumeInterface = channel->GetVolumeInterface();
             SLmillibel slVolume = SL_MILLIBEL_MIN;
             if (volume >= 1.0f)
             {
-                SLmillibel maxVolume;
-                (*volumeInterface)->GetMaxVolumeLevel(volumeInterface, &maxVolume);
-                slVolume = maxVolume;
+                result = (*volumeInterface)->GetMaxVolumeLevel(volumeInterface, &slVolume);
+                CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::UpdateChannel(): failed to get max volume level\n");
             }
             else if (volume <= 0.0f)
             {
@@ -136,7 +148,7 @@ SLESAudioRenderer::UpdateChannel(audio::Channel* channel)
                     slVolume = SL_MILLIBEL_MIN;
                 }
             }
-            SLresult result = (*volumeInterface)->SetVolumeLevel(volumeInterface, slVolume);
+            result = (*volumeInterface)->SetVolumeLevel(volumeInterface, slVolume);
             CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::UpdateChannel(): failed to set volume\n");
         }
     }

@@ -119,7 +119,7 @@ RigidBody::Integrate(float duration)
     acceleration.x = this->forceAccum.x / this->mass;
     acceleration.z = this->forceAccum.z / this->mass;
 
-    this->velocity.x += acceleration.x * duration;
+    this->velocity.x += acceleration.x * duration; // should be duration * duration * 0.5f
     this->velocity.z += acceleration.z * duration;
 
     this->position.x += this->velocity.x * duration;
@@ -133,6 +133,19 @@ RigidBody::Integrate(float duration)
     this->angularVelocity += angularAcceleration * duration;
     this->yaw += this->angularVelocity * duration;
     this->torque = 0.0f;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+RigidBody::Reset()
+{
+    this->velocity.x = 0.0f;
+    this->velocity.y = 0.0f;
+    this->velocity.z = 0.0f;
+
+    this->angularVelocity = 0.0f;
 }
 
 //------------------------------------------------------------------------------

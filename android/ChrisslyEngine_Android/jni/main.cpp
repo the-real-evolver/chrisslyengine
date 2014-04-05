@@ -4,12 +4,15 @@
 //------------------------------------------------------------------------------
 #include <android/sensor.h>
 #include <android_native_app_glue.h>
-#include "graphics/graphicssystem.h"
 #include "core/fswrapper.h"
+#include "graphics/graphicssystem.h"
+#include "audiosystem.h"
+#include "channel.h"
 
-using namespace chrissly::graphics;
-using namespace chrissly::core;
 using namespace chrissly;
+using namespace chrissly::core;
+using namespace chrissly::graphics;
+using namespace chrissly::audio;
 
 bool initialized = false;
 GraphicsSystem* graphicsSystem;
@@ -68,6 +71,9 @@ const char* FragmentShader =
     "    gl_FragColor = vec4(clamp((diffuse + texture2D(texture, texCoordOut).rgb) + specular, 0.0, 1.0), 1.0);\n"
     "}\n";
 
+AudioSystem* audioSystem;
+Channel* channel;
+
 //------------------------------------------------------------------------------
 /**
 */
@@ -107,6 +113,12 @@ Enter(struct android_app* state)
     mat[0][0] = 0.9f; mat[0][1] = 0.9f; mat[0][2] = 0.9f;
     params->SetNamedConstant("specularColor", mat);
 
+    audioSystem = new AudioSystem();
+    audioSystem->Initialise();
+    Sound* sound;
+    audioSystem->CreateSound("intro.wav", MODE_CREATESAMPLE | MODE_LOOP_NORMAL, &sound);
+    audioSystem->PlaySound(Channel::CHANNEL_FREE, sound, &channel);
+
     initialized = true;
 }
 
@@ -121,6 +133,8 @@ Exit()
     delete gpuProgram;
 
     delete graphicsSystem;
+
+    delete audioSystem;
 }
 
 //------------------------------------------------------------------------------
@@ -137,6 +151,8 @@ Trigger()
         mat[0][0] = val; mat[0][1] = val; mat[0][2] = val;
         params->SetNamedConstant("specularColor", mat);
         graphicsSystem->RenderOneFrame();
+
+        audioSystem->Update();
     }
 }
 

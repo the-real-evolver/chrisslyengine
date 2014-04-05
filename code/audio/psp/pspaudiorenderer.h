@@ -52,7 +52,7 @@ private:
     /// calculate left and right volume from volume and panning
     void CalculateVolumesFromPanning(PanningMode mode, float volume, float panning, int& leftVolume, int& rightVolume);
     /// return a PspAudioFormats equivalent for the given number of channels
-    PspAudioFormats GetFormat(int channels);
+    PspAudioFormats GetFormat(int channels) const;
 
     static PSPAudioRenderer* Singleton;
 };

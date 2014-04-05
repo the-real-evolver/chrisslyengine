@@ -32,7 +32,6 @@ AudioSystem::~AudioSystem()
 {
     Singleton = NULL;
     this->Release();
-    this->activeRenderer->Shutdown();
     CE_DELETE this->activeRenderer;
 }
 
@@ -44,11 +43,15 @@ AudioSystem::Initialise(void* customParams)
 {
     this->activeRenderer->_Initialise(customParams);
 
-    DynamicArrayInit(&this->staticSounds, 0);
-    this->numStaticSounds = 0;
+    DynamicArrayInit(&this->soundPool, 8);
+    unsigned int i;
+    for (i = 0; i < this->soundPool.cur_size; i++)
+    {
+        Sound* sound = CE_NEW Sound();
+        DynamicArraySet(&this->soundPool, i, sound);
+    }
 
     DynamicArrayInit(&this->channelPool, 8);
-    unsigned int i;
     for (i = 0; i < this->channelPool.cur_size; i++)
     {
         Channel* channel = CE_NEW Channel();
@@ -78,12 +81,13 @@ AudioSystem::Release()
     }
     DynamicArrayDelete(&this->channelPool);
 
-    for (i = 0; i < this->numStaticSounds; i++)
+    for (i = 0; i < this->soundPool.cur_size; i++)
     {
-        CE_DELETE (Sound*)DynamicArrayGet(&this->staticSounds, i);
+        CE_DELETE (Sound*)DynamicArrayGet(&this->soundPool, i);
     }
-    DynamicArrayDelete(&this->staticSounds);
-    this->numStaticSounds = 0;
+    DynamicArrayDelete(&this->soundPool);
+
+    this->activeRenderer->Shutdown();
 
     return OK;
 }
@@ -107,15 +111,17 @@ AudioSystem::CreateSound(const char* name, Mode mode, Sound** sound)
         return ERR_PLUGIN_MISSING;
     }
 
-    Sound* snd = CE_NEW Sound();
+    Sound* snd = NULL;
+    unsigned int i;
+    for (i = 0; i < this->soundPool.cur_size; i++)
+    {
+        snd = (Sound*)DynamicArrayGet(&this->soundPool, i);
+        if (!snd->_IsRealized()) break;
+    }
+    if (i == this->soundPool.cur_size) return ERR_MEMORY;
+
     snd->_Setup(name, mode, codec);
     *sound = snd;
-
-    if (MODE_DEFAULT == mode || mode & MODE_CREATESAMPLE)
-    {
-        DynamicArraySet(&this->staticSounds, this->numStaticSounds, snd);
-        this->numStaticSounds++;
-    }
 
     return OK;
 }
@@ -139,11 +145,14 @@ AudioSystem::PlaySound(int channelid, Sound* sound, Channel** channel)
 
     if (channelid != Channel::CHANNEL_FREE)
     {
-        CE_ASSERT(channelid < (int)this->channelPool.cur_size, "AudioSystem::PlaySound(): invalid channelid '%i' (exceeds channel range '0 - %i')", channelid, this->channelPool.cur_size);
+        CE_ASSERT(channelid < (int)this->channelPool.cur_size, "AudioSystem::PlaySound(): invalid channelid '%i' (exceeds channel range '0 - %i')", channelid, this->channelPool.cur_size - 1);
         chn->_SetIndex(channelid);
     }
 
     chn->_AttachSound(sound);
+    chn->SetPosition(0);
+    chn->SetVolume(1.0f);
+    chn->SetPan(0.0f);
 
     this->activeRenderer->StartChannel(chn);
 
@@ -177,7 +186,7 @@ AudioSystem::Update()
 /**
 */
 AudioRenderer*
-AudioSystem::_GetAudioRenderer()
+AudioSystem::_GetAudioRenderer() const
 {
     return this->activeRenderer;
 }

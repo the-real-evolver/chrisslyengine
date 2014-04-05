@@ -3,10 +3,10 @@
 //------------------------------------------------------------------------------
 /**
     @class chrissly::PSPMath
-    
+
     Wrapper class for common mathematical functions using the FPU of the
     Playstation Portable. 
-    
+
     (C) 2012 Christian Bleicher
 */
 #include <pspfpu.h>
@@ -27,6 +27,8 @@ public:
     static inline float ATan(float fValue) {return pspFpuAtan(fValue);}
     /// returns the floating-point remainder of numerator / denominator
     static inline float Fmod(float fNumerator, float fDenominator) {return pspFpuFmod(fNumerator, fDenominator);}
+    /// rounds the value downward, returning the largest integral value that is not greater than value
+    static inline float Floor(float fValue) {return pspFpuFloor(fValue);}
 };
 } // namespace chrissly
 //------------------------------------------------------------------------------

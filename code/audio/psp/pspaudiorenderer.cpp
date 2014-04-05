@@ -68,7 +68,6 @@ PSPAudioRenderer::StartChannel(audio::Channel* channel)
 
     channel->_SetIndex(index);
     channel->_SetIsPlaying(false);
-    channel->SetPosition(0);
 }
 
 //------------------------------------------------------------------------------
@@ -191,13 +190,13 @@ PSPAudioRenderer::CalculateVolumesFromPanning(PanningMode mode, float volume, fl
 /**
 */
 PspAudioFormats
-PSPAudioRenderer::GetFormat(int channels)
+PSPAudioRenderer::GetFormat(int channels) const
 {
     switch (channels)
     {
         case 1: return PSP_AUDIO_FORMAT_MONO;
         case 2: return PSP_AUDIO_FORMAT_STEREO;
-        default: return PSP_AUDIO_FORMAT_MONO;
+        default: CE_ASSERT(false, "PSPAudioRenderer::GetFormat(): %i channel audio output not supported\n", channels);
     }
 
     return PSP_AUDIO_FORMAT_MONO;

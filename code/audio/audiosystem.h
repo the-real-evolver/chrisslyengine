@@ -42,7 +42,7 @@ public:
     Result Update();
 
     /// internal method to retrieve a pointer to the currently selected audiorenderer
-    AudioRenderer* _GetAudioRenderer();
+    AudioRenderer* _GetAudioRenderer() const;
 
 private:
     /// copy constructor
@@ -52,8 +52,7 @@ private:
 
     AudioRenderer* activeRenderer;
 
-    DynamicArray staticSounds;
-    unsigned int numStaticSounds;
+    DynamicArray soundPool;
 
     DynamicArray channelPool;
 };

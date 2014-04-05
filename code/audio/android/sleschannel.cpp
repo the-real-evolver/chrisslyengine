@@ -17,7 +17,8 @@ SLESChannel::SLESChannel() :
     bufferQueueInterface(NULL),
     playerInterface(NULL),
     volumeInterface(NULL),
-    player(NULL)
+    player(NULL),
+    effectSendInterface(NULL)
 {
 
 }
@@ -44,9 +45,9 @@ SLESChannel::SetupAudioPlayer(SLEngineItf engineInterface, SLObjectItf outputMix
     audioSink.pFormat  = NULL;
 
     SLDataSource audioSource = this->currentSound->GetAudioSource();
-    const SLInterfaceID  ids[2] = {SL_IID_BUFFERQUEUE, SL_IID_VOLUME};
-    const SLboolean required[2] = {SL_BOOLEAN_TRUE, SL_BOOLEAN_TRUE};
-    SLresult result = (*engineInterface)->CreateAudioPlayer(engineInterface, &this->player, &audioSource, &audioSink, 2, ids, required);
+    const SLInterfaceID  ids[3] = {SL_IID_BUFFERQUEUE, SL_IID_VOLUME, SL_IID_EFFECTSEND};
+    const SLboolean required[3] = {SL_BOOLEAN_TRUE, SL_BOOLEAN_TRUE, SL_BOOLEAN_TRUE};
+    SLresult result = (*engineInterface)->CreateAudioPlayer(engineInterface, &this->player, &audioSource, &audioSink, 3, ids, required);
     CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESChannel::SetupAudioPlayer(): failed to create audio player\n");
     result = (*player)->Realize(player, SL_BOOLEAN_FALSE);
     CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESChannel::SetupAudioPlayer(): failed to realize audio player\n");
@@ -63,8 +64,15 @@ SLESChannel::SetupAudioPlayer(SLEngineItf engineInterface, SLObjectItf outputMix
     result = (*this->player)->GetInterface(this->player, SL_IID_VOLUME, &this->volumeInterface);
     CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESChannel::SetupAudioPlayer(): failed to get volume interface\n");
 
-    result = (*this->volumeInterface)->SetVolumeLevel(this->volumeInterface, -300);
+    SLmillibel volume;
+    result = (*volumeInterface)->GetMaxVolumeLevel(volumeInterface, &volume);
+    CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESChannel::SetupAudioPlayer(): failed to get max volume level\n");
+
+    result = (*this->volumeInterface)->SetVolumeLevel(this->volumeInterface, volume);
     CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESChannel::SetupAudioPlayer(): failed to set volume\n");
+
+    result = (*this->player)->GetInterface(this->player, SL_IID_EFFECTSEND, &this->effectSendInterface);
+    CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESChannel::SetupAudioPlayer(): failed to get effect send interface\n");
 }
 
 //------------------------------------------------------------------------------
@@ -77,6 +85,7 @@ SLESChannel::Release()
     CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESChannel::SetupAudioPlayer(): failed to stop player\n");
     (*this->player)->Destroy(this->player);
     this->player = NULL;
+    this->effectSendInterface = NULL;
 }
 
 //------------------------------------------------------------------------------
@@ -104,6 +113,15 @@ SLVolumeItf
 SLESChannel::GetVolumeInterface() const
 {
     return this->volumeInterface;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+SLEffectSendItf
+SLESChannel::GetEffectSendInterface() const
+{
+    return this->effectSendInterface;
 }
 
 } // namespace chrissly
