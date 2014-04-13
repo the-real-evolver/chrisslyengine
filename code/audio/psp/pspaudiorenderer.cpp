@@ -50,6 +50,15 @@ PSPAudioRenderer::Shutdown()
 //------------------------------------------------------------------------------
 /**
 */
+unsigned short
+PSPAudioRenderer::GetNumHardwareChannels() const
+{
+    return PSP_AUDIO_CHANNEL_MAX;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
 void
 PSPAudioRenderer::StartChannel(audio::Channel* channel)
 {
@@ -76,17 +85,16 @@ PSPAudioRenderer::StartChannel(audio::Channel* channel)
 void
 PSPAudioRenderer::UpdateChannel(audio::Channel* channel)
 {
-    bool isPlaying;
-    channel->IsPlaying(&isPlaying);
+    bool outputting;
+    channel->IsPlaying(&outputting);
     int index;
     channel->GetIndex(&index);
 
-    if (isPlaying)
+    if (outputting)
     {
         if (sceAudioGetChannelRestLen(index) <= 0)
         {
-            channel->_SetIsPlaying(false);
-            isPlaying = false;
+            outputting = false;
         }
         else if (channel->_PropertiesHasChanged())
         {
@@ -100,7 +108,7 @@ PSPAudioRenderer::UpdateChannel(audio::Channel* channel)
         }
     }
 
-    if (!isPlaying)
+    if (!outputting)
     {
         audio::Sound* sound;
         channel->GetCurrentSound(&sound);
@@ -136,6 +144,10 @@ PSPAudioRenderer::UpdateChannel(audio::Channel* channel)
                 channel->_SetIsPlaying(true);
                 channel->SetPosition(position += samplecount);
             }
+            else
+            {
+                channel->_SetIsPlaying(false);
+            }
         }
         else
         {
@@ -144,11 +156,13 @@ PSPAudioRenderer::UpdateChannel(audio::Channel* channel)
             channel->GetMode(&mode);
             if (mode & audio::MODE_LOOP_NORMAL)
             {
+                channel->SetPosition(0);
                 this->StartChannel(channel);
             }
             else
             {
                 channel->_SetIndex(audio::Channel::CHANNEL_FREE);
+                channel->_SetIsPlaying(false);
             }
         }
     }
@@ -163,6 +177,7 @@ PSPAudioRenderer::ReleaseChannel(audio::Channel* channel)
     int index;
     channel->GetIndex(&index);
     sceAudioChRelease(index);
+    channel->_SetIsPlaying(false);
 }
 
 //------------------------------------------------------------------------------
@@ -182,7 +197,8 @@ PSPAudioRenderer::CalculateVolumesFromPanning(PanningMode mode, float volume, fl
         }
         break;
 
-        default: CE_ASSERT(false, "PSPAudioRenderer::CalculateVolumesFromPanning(): panningmode '%i' not supported\n", mode);
+        default:
+            CE_ASSERT(false, "PSPAudioRenderer::CalculateVolumesFromPanning(): panningmode '%i' not supported\n", mode);
     }
 }
 
@@ -194,9 +210,12 @@ PSPAudioRenderer::GetFormat(int channels) const
 {
     switch (channels)
     {
-        case 1: return PSP_AUDIO_FORMAT_MONO;
-        case 2: return PSP_AUDIO_FORMAT_STEREO;
-        default: CE_ASSERT(false, "PSPAudioRenderer::GetFormat(): %i channel audio output not supported\n", channels);
+        case 1:
+            return PSP_AUDIO_FORMAT_MONO;
+        case 2:
+            return PSP_AUDIO_FORMAT_STEREO;
+        default:
+            CE_ASSERT(false, "PSPAudioRenderer::GetFormat(): %i channel audio output not supported\n", channels);
     }
 
     return PSP_AUDIO_FORMAT_MONO;

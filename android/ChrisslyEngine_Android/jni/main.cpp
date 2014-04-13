@@ -152,6 +152,8 @@ Trigger()
         params->SetNamedConstant("specularColor", mat);
         graphicsSystem->RenderOneFrame();
 
+        float pan = (((float)lastX / 240.0f) - 0.5f) * 2.0f;
+        channel->SetPan(pan);
         audioSystem->Update();
     }
 }

@@ -51,7 +51,7 @@ AudioSystem::Initialise(void* customParams)
         DynamicArraySet(&this->soundPool, i, sound);
     }
 
-    DynamicArrayInit(&this->channelPool, 8);
+    DynamicArrayInit(&this->channelPool, this->activeRenderer->GetNumHardwareChannels());
     for (i = 0; i < this->channelPool.cur_size; i++)
     {
         Channel* channel = CE_NEW Channel();
@@ -98,6 +98,15 @@ AudioSystem::Release()
 Result
 AudioSystem::CreateSound(const char* name, Mode mode, Sound** sound)
 {
+    Sound* snd = NULL;
+    unsigned int i;
+    for (i = 0; i < this->soundPool.cur_size; i++)
+    {
+        snd = (Sound*)DynamicArrayGet(&this->soundPool, i);
+        if (!snd->_IsRealized()) break;
+    }
+    if (i == this->soundPool.cur_size) return ERR_MEMORY;
+
     char* ext = strrchr(name, '.');
     if (NULL == ext) return ERR_PLUGIN_MISSING;
     ext++;
@@ -111,16 +120,8 @@ AudioSystem::CreateSound(const char* name, Mode mode, Sound** sound)
         return ERR_PLUGIN_MISSING;
     }
 
-    Sound* snd = NULL;
-    unsigned int i;
-    for (i = 0; i < this->soundPool.cur_size; i++)
-    {
-        snd = (Sound*)DynamicArrayGet(&this->soundPool, i);
-        if (!snd->_IsRealized()) break;
-    }
-    if (i == this->soundPool.cur_size) return ERR_MEMORY;
-
     snd->_Setup(name, mode, codec);
+
     *sound = snd;
 
     return OK;

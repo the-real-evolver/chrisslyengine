@@ -11,11 +11,11 @@ namespace chrissly
 {
 
 // valid white spaces in GLSL: the space character, horizontal tab, vertical tab, form feed, carriage-return, and line-feed
-#define CE_GLSL_FIND_NEXT_TOKEN(match, start, end) \
-    while (' ' == match[0] || '\t' == match[0]  || '\v' == match[0] || '\f' == match[0] || '\r' == match[0] || '\n' == match[0]) {match++;} \
-    start = match; \
-    while (' ' != match[0] && '\t' != match[0]  && '\v' != match[0] && '\f' != match[0] && '\r' != match[0] && '\n' != match[0] && match[0] != ';') {match++;} \
-    end = match;
+#define CE_GLSL_FIND_NEXT_TOKEN(str, start, end) \
+    while (' ' == str[0] || '\t' == str[0]  || '\v' == str[0] || '\f' == str[0] || '\r' == str[0] || '\n' == str[0]) {str++;} \
+    start = str; \
+    while (' ' != str[0] && '\t' != str[0]  && '\v' != str[0] && '\f' != str[0] && '\r' != str[0] && '\n' != str[0] && str[0] != ';') {str++;} \
+    end = str;
 
 //------------------------------------------------------------------------------
 /**
@@ -268,7 +268,7 @@ GLES2GpuProgram::CreateShaderFromString(GLenum shaderType, const char* source)
             glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLen);
             if (infoLen > 0)
             {
-                char* buf = (char*) CE_MALLOC(infoLen);
+                char* buf = (char*)CE_MALLOC(infoLen);
                 if (buf != NULL)
                 {
                     glGetShaderInfoLog(shader, infoLen, NULL, buf);
@@ -311,7 +311,7 @@ GLES2GpuProgram::CreateProgram(GLuint vertexShader, GLuint fragmentShader)
             glGetProgramiv(program, GL_INFO_LOG_LENGTH, &bufLength);
             if (bufLength > 0)
             {
-                char* buf = (char*) CE_MALLOC(bufLength);
+                char* buf = (char*)CE_MALLOC(bufLength);
                 if (buf != NULL)
                 {
                     glGetProgramInfoLog(program, bufLength, NULL, buf);

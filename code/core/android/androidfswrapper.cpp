@@ -37,8 +37,7 @@ AndroidFSWrapper::Close(core::FileHandle fileHandle)
 unsigned int
 AndroidFSWrapper::GetFileSize(core::FileHandle fileHandle)
 {
-    off_t fileSize = AAsset_getLength(fileHandle.handle);
-    return (unsigned int)fileSize;
+    return (unsigned int)AAsset_getLength(fileHandle.handle);
 }
 
 //------------------------------------------------------------------------------

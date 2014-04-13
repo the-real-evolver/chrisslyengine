@@ -13,10 +13,12 @@ SLESAudioRenderer* SLESAudioRenderer::Singleton = NULL;
 
 SLEnvironmentalReverbSettings SLESAudioRenderer::reverbSettings = SL_I3DL2_ENVIRONMENT_PRESET_DEFAULT;
 
+
 //------------------------------------------------------------------------------
 /**
 */
 SLESAudioRenderer::SLESAudioRenderer() :
+    numHardwareChannels(8),
     engine(NULL),
     engineInterface(NULL),
     outputMix(NULL),
@@ -85,6 +87,15 @@ SLESAudioRenderer::Shutdown()
 //------------------------------------------------------------------------------
 /**
 */
+unsigned short
+SLESAudioRenderer::GetNumHardwareChannels() const
+{
+    return (unsigned short)this->numHardwareChannels;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
 void
 SLESAudioRenderer::StartChannel(audio::Channel* channel)
 {
@@ -143,13 +154,16 @@ SLESAudioRenderer::UpdateChannel(audio::Channel* channel)
             else
             {
                 slVolume = M_LN2 / log(1.0f / (1.0f - volume)) * -1000.0f;
-                if (slVolume > 0)
-                {
-                    slVolume = SL_MILLIBEL_MIN;
-                }
             }
             result = (*volumeInterface)->SetVolumeLevel(volumeInterface, slVolume);
             CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::UpdateChannel(): failed to set volume\n");
+
+            float pan;
+            channel->GetPan(&pan);
+            result = (*volumeInterface)->EnableStereoPosition(volumeInterface, SL_BOOLEAN_TRUE);
+            CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::UpdateChannel(): failed to enable stereo position\n");
+            result = (*volumeInterface)->SetStereoPosition(volumeInterface, (SLpermille)(pan * 1000.0f));
+            CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::UpdateChannel(): failed to set stereo position\n");
         }
     }
     else
@@ -175,6 +189,7 @@ void
 SLESAudioRenderer::ReleaseChannel(audio::Channel* channel)
 {
     channel->Release();
+    channel->_SetIsPlaying(false);
 }
 
 //------------------------------------------------------------------------------

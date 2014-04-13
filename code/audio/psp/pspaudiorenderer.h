@@ -39,6 +39,8 @@ public:
     void _Initialise(void* customParams);
     /// shutdown the renderer and cleanup resources
     void Shutdown();
+    /// gets the number of hardware channels
+    unsigned short GetNumHardwareChannels() const;
     /// start playback on the given channel
     void StartChannel(audio::Channel* channel);
     /// update playback on the given channel
