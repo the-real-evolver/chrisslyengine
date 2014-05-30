@@ -155,16 +155,8 @@ GLES2RenderSystem::_SetViewport(graphics::Viewport *vp)
 void
 GLES2RenderSystem::_SetWorldMatrix(const core::Matrix4& m)
 {
+    this->worldMatrix = m;
     GLES2Mappings::MakeGLMatrix(this->glWorldMatrix, m);
-    glUniformMatrix4fv(this->currentGpuProgram->GetUniformLocation(graphics::GpuProgramParameters::ACT_WORLD_MATRIX), 1, GL_FALSE, this->glWorldMatrix);
-    CheckGlError("glUniformMatrix4fv");
-    glUniformMatrix4fv(this->currentGpuProgram->GetUniformLocation(graphics::GpuProgramParameters::ACT_VIEW_MATRIX), 1, GL_FALSE, this->glViewMatrix);
-    CheckGlError("glUniformMatrix4fv");
-    glUniformMatrix4fv(this->currentGpuProgram->GetUniformLocation(graphics::GpuProgramParameters::ACT_PROJECTION_MATRIX), 1, GL_FALSE, this->glProjectionMatrix);
-    CheckGlError("glUniformMatrix4fv");
-    GLES2Mappings::MakeGLMatrix(this->glWorldViewProjectionMatrix, this->projectionMatrix * this->viewMatrix * m);
-    glUniformMatrix4fv(this->currentGpuProgram->GetUniformLocation(graphics::GpuProgramParameters::ACT_WORLDVIEWPROJ_MATRIX), 1, GL_FALSE, this->glWorldViewProjectionMatrix);
-    CheckGlError("glUniformMatrix4fv");
 }
 
 //------------------------------------------------------------------------------
@@ -200,8 +192,27 @@ GLES2RenderSystem::_SetTextureMatrix(const core::Matrix4& xform)
 /**
 */
 void
+GLES2RenderSystem::SetMatrices()
+{
+    glUniformMatrix4fv(this->currentGpuProgram->GetUniformLocation(graphics::GpuProgramParameters::ACT_WORLD_MATRIX), 1, GL_FALSE, this->glWorldMatrix);
+    CheckGlError("glUniformMatrix4fv");
+    glUniformMatrix4fv(this->currentGpuProgram->GetUniformLocation(graphics::GpuProgramParameters::ACT_VIEW_MATRIX), 1, GL_FALSE, this->glViewMatrix);
+    CheckGlError("glUniformMatrix4fv");
+    glUniformMatrix4fv(this->currentGpuProgram->GetUniformLocation(graphics::GpuProgramParameters::ACT_PROJECTION_MATRIX), 1, GL_FALSE, this->glProjectionMatrix);
+    CheckGlError("glUniformMatrix4fv");
+    GLES2Mappings::MakeGLMatrix(this->glWorldViewProjectionMatrix, this->projectionMatrix * this->viewMatrix * this->worldMatrix);
+    glUniformMatrix4fv(this->currentGpuProgram->GetUniformLocation(graphics::GpuProgramParameters::ACT_WORLDVIEWPROJ_MATRIX), 1, GL_FALSE, this->glWorldViewProjectionMatrix);
+    CheckGlError("glUniformMatrix4fv");
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
 GLES2RenderSystem::_Render(graphics::SubEntity* renderable)
 {
+    this->SetMatrices();
+
     if (graphics::VAT_MORPH == renderable->GetSubMesh()->GetVertexAnimationType())
     {
         glUniform1f(this->currentGpuProgram->GetUniformLocation(graphics::GpuProgramParameters::ACT_MORPH_WEIGHT), renderable->GetMorphWeight());

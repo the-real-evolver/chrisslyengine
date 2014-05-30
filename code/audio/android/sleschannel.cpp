@@ -82,10 +82,8 @@ void
 SLESChannel::Release()
 {
     SLresult result = (*this->playerInterface)->SetPlayState(this->playerInterface, SL_PLAYSTATE_STOPPED);
-    CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESChannel::SetupAudioPlayer(): failed to stop player\n");
+    CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESChannel::Release(): failed to stop player\n");
     (*this->player)->Destroy(this->player);
-    this->player = NULL;
-    this->effectSendInterface = NULL;
 }
 
 //------------------------------------------------------------------------------

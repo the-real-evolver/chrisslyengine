@@ -44,7 +44,7 @@ const char* MorphAnimVertexShader =
     "    texCoordOut = texCoordIn;\n"
     "    fragmentNormal = (worldMatrix * vec4(normal, 1.0)).xyz;\n"
     "    cameraVector = vec3(0.0, 0.0, 0.9) - (worldMatrix * pos).xyz;\n"
-    "	 lightVector = vec3(1.0, 0.0, 0.0) - (worldMatrix * pos).xyz;\n"
+    "    lightVector = vec3(1.0, 0.0, 0.0) - (worldMatrix * pos).xyz;\n"
     "}\n";
 
 const char* FragmentShader =
@@ -62,11 +62,11 @@ const char* FragmentShader =
     "void main()\n"
     "{\n"
     "    vec3 normal = normalize(fragmentNormal);\n"
-    "	 float attenuation = 1.0 - min(dot(lightVector, lightVector), MaxDistSquared) / MaxDistSquared;\n"
+    "    float attenuation = 1.0 - min(dot(lightVector, lightVector), MaxDistSquared) / MaxDistSquared;\n"
     "    vec3 lightDir = normalize(lightVector);\n"
     "    vec3 diffuse = lightColor * clamp(dot(normal, lightDir), 0.0, 1.0) * attenuation;\n"
     "    vec3 halfAngle = normalize(normalize(cameraVector) + lightDir);\n"
-    "	 float specularDot = dot(normal, halfAngle);\n"
+    "    float specularDot = dot(normal, halfAngle);\n"
     "    vec3 specular = vec3(specularColor[0][0], specularColor[0][1], specularColor[0][2]) * exp(-2.0 * materialPower * pow(acos(specularDot), 2.0));\n"
     "    gl_FragColor = vec4(clamp((diffuse + texture2D(texture, texCoordOut).rgb) + specular, 0.0, 1.0), 1.0);\n"
     "}\n";
@@ -116,8 +116,8 @@ Enter(struct android_app* state)
     audioSystem = new AudioSystem();
     audioSystem->Initialise();
     Sound* sound;
-    audioSystem->CreateSound("intro.wav", MODE_CREATESAMPLE | MODE_LOOP_NORMAL, &sound);
-    audioSystem->PlaySound(Channel::CHANNEL_FREE, sound, &channel);
+    audioSystem->CreateSound("intro.ogg", MODE_CREATESAMPLE | MODE_LOOP_NORMAL, &sound);
+    audioSystem->PlaySound(Channel::CHANNEL_FREE, sound, false, &channel);
 
     initialized = true;
 }

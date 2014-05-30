@@ -29,18 +29,14 @@ public:
     ChannelBase();
     /// destructor
     virtual ~ChannelBase();
-    /// returns the currently playing sound for this channel
-    Result GetCurrentSound(Sound** sound);
-    /// retrieves the internal channel index for a channel
-    Result GetIndex(int* index);
-    /// returns the current PCM offset or playback position for the specified channel
-    Result GetPosition(unsigned int* position);
-    /// returns the playing state for the current channel
-    Result IsPlaying(bool* isplaying);
-    /// sets the current playback position for the currently playing sound to the specified PCM offset
-    Result SetPosition(unsigned int  position);
     /// stops the channel from playing. Makes it available for re-use by the priority system
     Result Stop();
+    /// returns the playing state for the current channel
+    Result IsPlaying(bool* isplaying);
+    /// sets the paused state of the channel
+    Result SetPaused(bool paused);
+    /// retrieves the paused state of the channel
+    Result GetPaused(bool* paused);
     /// sets the volume for the channel linearly (reaches from 0.0 to 1.0 inclusive. 0.0 = silent, 1.0 = full volume. Default = 1.0)
     Result SetVolume(float volume);
     /// retrieves the volume level for the channel
@@ -53,6 +49,14 @@ public:
     Result SetMode(Mode mode);
     /// retrieves the current mode bit flags for the current channel
     Result GetMode(Mode* mode);
+    /// sets the current playback position for the currently playing sound to the specified PCM offset
+    Result SetPosition(unsigned int position);
+    /// returns the current PCM offset or playback position for the specified channel
+    Result GetPosition(unsigned int* position);
+    /// returns the currently playing sound for this channel
+    Result GetCurrentSound(Sound** sound);
+    /// retrieves the internal channel index for a channel
+    Result GetIndex(int* index);
 
     /// set the sound to playback on this channel
     void _AttachSound(Sound* sound);
@@ -64,13 +68,14 @@ public:
     bool _PropertiesHasChanged();
 
 protected:
-    Sound* currentSound;
-    int index;
-    unsigned int position;
     bool isPlaying;
+    bool paused;
     float volume;
     float panning;
     Mode mode;
+    unsigned int position;
+    Sound* currentSound;
+    int index;
     bool propertiesHasChanged;
 };
 

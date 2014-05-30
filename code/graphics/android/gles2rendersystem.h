@@ -78,11 +78,14 @@ public:
 private:
     /// copy constructor
     GLES2RenderSystem(const GLES2RenderSystem&cc) {};
+    /// set uniform matrices
+    void SetMatrices();
 
     static GLES2RenderSystem* Singleton;
 
     unsigned int ambientLight;
 
+    core::Matrix4 worldMatrix;
     core::Matrix4 viewMatrix;
     core::Matrix4 projectionMatrix;
 

@@ -15,13 +15,14 @@ namespace audio
 /**
 */
 ChannelBase::ChannelBase() :
-    currentSound(NULL),
-    index(CHANNEL_FREE),
-    position(0),
     isPlaying(false),
+    paused(false),
     volume(1.0f),
     panning(0.0f),
     mode(MODE_DEFAULT),
+    position(0),
+    currentSound(NULL),
+    index(CHANNEL_FREE),
     propertiesHasChanged(false)
 {
 
@@ -39,29 +40,14 @@ ChannelBase::~ChannelBase()
 /**
 */
 Result
-ChannelBase::GetCurrentSound(Sound** sound)
+ChannelBase::Stop()
 {
-    *sound = this->currentSound;
-    return OK;
-}
+    if (this->index != CHANNEL_FREE)
+    {
+        AudioSystem::Instance()->_GetAudioRenderer()->ReleaseChannel((Channel*)this);
+        this->index = CHANNEL_FREE;
+    }
 
-//------------------------------------------------------------------------------
-/**
-*/
-Result
-ChannelBase::GetIndex(int* index)
-{
-    *index = this->index;
-    return OK;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-Result
-ChannelBase::GetPosition(unsigned int* position)
-{
-    *position = this->position;
     return OK;
 }
 
@@ -79,9 +65,12 @@ ChannelBase::IsPlaying(bool* isplaying)
 /**
 */
 Result
-ChannelBase::SetPosition(unsigned int position)
+ChannelBase::SetPaused(bool paused)
 {
-    this->position = position;
+    this->paused = paused;
+
+    this->propertiesHasChanged = true;
+
     return OK;
 }
 
@@ -89,14 +78,9 @@ ChannelBase::SetPosition(unsigned int position)
 /**
 */
 Result
-ChannelBase::Stop()
+ChannelBase::GetPaused(bool* paused)
 {
-    if (this->index != CHANNEL_FREE)
-    {
-        AudioSystem::Instance()->_GetAudioRenderer()->ReleaseChannel((Channel*)this);
-        this->index = CHANNEL_FREE;
-    }
-
+    *paused = this->paused;
     return OK;
 }
 
@@ -188,6 +172,46 @@ Result
 ChannelBase::GetMode(Mode* mode)
 {
     *mode = this->mode;
+    return OK;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+Result
+ChannelBase::SetPosition(unsigned int position)
+{
+    this->position = position;
+    return OK;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+Result
+ChannelBase::GetPosition(unsigned int* position)
+{
+    *position = this->position;
+    return OK;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+Result
+ChannelBase::GetCurrentSound(Sound** sound)
+{
+    *sound = this->currentSound;
+    return OK;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+Result
+ChannelBase::GetIndex(int* index)
+{
+    *index = this->index;
     return OK;
 }
 

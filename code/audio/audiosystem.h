@@ -37,7 +37,7 @@ public:
     /// loads a sound into memory, or opens it for streaming
     Result CreateSound(const char* name, Mode mode, Sound** sound);
     /// plays a sound object on a particular channel
-    Result PlaySound(int channelid, Sound* sound, Channel** channel);
+    Result PlaySound(int channelid, Sound* sound, bool paused, Channel** channel);
     /// updates the audio system. This should be called once per 'game' tick, or once per frame in your application
     Result Update();
 

@@ -13,7 +13,6 @@ SLESAudioRenderer* SLESAudioRenderer::Singleton = NULL;
 
 SLEnvironmentalReverbSettings SLESAudioRenderer::reverbSettings = SL_I3DL2_ENVIRONMENT_PRESET_DEFAULT;
 
-
 //------------------------------------------------------------------------------
 /**
 */
@@ -101,8 +100,10 @@ SLESAudioRenderer::StartChannel(audio::Channel* channel)
 {
     channel->SetupAudioPlayer(this->engineInterface, this->outputMix);
 
+    bool paused;
+    channel->GetPaused(&paused);
     SLPlayItf playerInterface = channel->GetPlayerInterface();
-    SLresult result = (*playerInterface)->SetPlayState(playerInterface, SL_PLAYSTATE_PLAYING);
+    SLresult result = (*playerInterface)->SetPlayState(playerInterface, paused ? SL_PLAYSTATE_PAUSED : SL_PLAYSTATE_PLAYING);
     CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::StartChannel(): failed to set play state\n");
 
     audio::Sound* sound;
@@ -164,6 +165,12 @@ SLESAudioRenderer::UpdateChannel(audio::Channel* channel)
             CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::UpdateChannel(): failed to enable stereo position\n");
             result = (*volumeInterface)->SetStereoPosition(volumeInterface, (SLpermille)(pan * 1000.0f));
             CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::UpdateChannel(): failed to set stereo position\n");
+
+            bool paused;
+            channel->GetPaused(&paused);
+            SLPlayItf playerInterface = channel->GetPlayerInterface();
+            result = (*playerInterface)->SetPlayState(playerInterface, paused ? SL_PLAYSTATE_PAUSED : SL_PLAYSTATE_PLAYING);
+            CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::UpdateChannel(): failed to set play state\n");
         }
     }
     else

@@ -4,6 +4,7 @@
 //------------------------------------------------------------------------------
 #include "audiosystem.h"
 #include "wavcodec.h"
+#include "vorbiscodec.h"
 #include "memoryallocatorconfig.h"
 #include "debug.h"
 #include <stdio.h>
@@ -115,6 +116,10 @@ AudioSystem::CreateSound(const char* name, Mode mode, Sound** sound)
     {
         codec = CE_NEW WavCodec();
     }
+    if (0 == strcmp(ext, "ogg"))
+    {
+        codec = CE_NEW VorbisCodec();
+    }
     else
     {
         return ERR_PLUGIN_MISSING;
@@ -131,7 +136,7 @@ AudioSystem::CreateSound(const char* name, Mode mode, Sound** sound)
 /**
 */
 Result
-AudioSystem::PlaySound(int channelid, Sound* sound, Channel** channel)
+AudioSystem::PlaySound(int channelid, Sound* sound, bool paused, Channel** channel)
 {
     Channel* chn = NULL;
     unsigned int i;
@@ -151,6 +156,7 @@ AudioSystem::PlaySound(int channelid, Sound* sound, Channel** channel)
     }
 
     chn->_AttachSound(sound);
+    chn->SetPaused(paused);
     chn->SetPosition(0);
     chn->SetVolume(1.0f);
     chn->SetPan(0.0f);

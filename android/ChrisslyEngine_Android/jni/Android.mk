@@ -12,7 +12,7 @@ LOCAL_MODULE := chrisslyengine_android
 
 LOCAL_CFLAGS := -Werror -D__ANDROID__
 
-LOCAL_C_INCLUDES += $(CE)/core $(CE)/graphics $(CE)/audio
+LOCAL_C_INCLUDES += $(CE)/core $(CE)/graphics $(CE)/audio $(CE)/thirdparty/stb_vorbis
 
 LOCAL_SRC_FILES := core/android/androiddebug.cpp core/android/androidfswrapper.cpp core/android/androidmath.cpp \
                    core/vector3.cpp core/matrix3.cpp core/matrix4.cpp core/quaternion.cpp core/chrisslymemory.cpp core/chrisslystring.cpp core/timer.cpp \
@@ -29,7 +29,7 @@ LOCAL_SRC_FILES := core/android/androiddebug.cpp core/android/androidfswrapper.c
                    graphics/rendertarget.cpp graphics/android/gles2rendertexture.cpp graphics/android/gles2renderwindow.cpp \
                    graphics/android/gles2mappings.cpp graphics/android/gles2texture.cpp graphics/android/gles2rendersystem.cpp \
                    graphics/android/gles2gpuprogram.cpp graphics/gpuprogramparams.cpp \
-                   audio/wavcodec.cpp audio/soundbase.cpp audio/audiosystem.cpp audio/channelbase.cpp \
+                   audio/wavcodec.cpp audio/vorbiscodec.cpp audio/soundbase.cpp audio/audiosystem.cpp audio/channelbase.cpp \
                    audio/android/slesaudiorenderer.cpp audio/android/slessound.cpp audio/android/sleschannel.cpp \
                    main.cpp
 

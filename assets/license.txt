@@ -1,5 +1,5 @@
 ------------------------------------------------------------------------------
-  "intro.wav"
+  "intro.ogg"
 
     Author:  Christian Bleicher (evolver)
     License: MIT
@@ -23,7 +23,7 @@
 ------------------------------------------------------------------------------
   "cerberus_walk1.obj" - "cerberus_walk31.obj"
   "cerberus.raw"
-  "cerberus_etc1.raw"
+  "cerberus_etc1.pkg"
 
   are generated from the following original files:
   

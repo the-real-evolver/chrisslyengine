@@ -85,6 +85,10 @@ PSPAudioRenderer::StartChannel(audio::Channel* channel)
 void
 PSPAudioRenderer::UpdateChannel(audio::Channel* channel)
 {
+    bool paused;
+    channel->GetPaused(&paused);
+    if (paused) return;
+
     bool outputting;
     channel->IsPlaying(&outputting);
     int index;
