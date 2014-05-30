@@ -116,7 +116,7 @@ AudioSystem::CreateSound(const char* name, Mode mode, Sound** sound)
     {
         codec = CE_NEW WavCodec();
     }
-    if (0 == strcmp(ext, "ogg"))
+    else if (0 == strcmp(ext, "ogg"))
     {
         codec = CE_NEW VorbisCodec();
     }
