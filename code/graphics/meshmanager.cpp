@@ -54,11 +54,14 @@ MeshManager::Load(const char* filename)
 
     unsigned int bytesToRead = 0;
     unsigned int bytesPerVertex = 36;
-    unsigned char currentChunk;
+    unsigned char currentChunk = 0;
     unsigned int vertexCount = 0;
     void* vertexBuffer = NULL;
     Animation* animation = NULL;
     VertexAnimationTrack* animationTrack = NULL;
+    char stringBuffer[256] = {'\0'};
+    String materialName;
+    unsigned char materialNameLength = 0;
 
     FileHandle fd = FSWrapper::Open(filename, ReadAccess, 0777);
 
@@ -68,6 +71,11 @@ MeshManager::Load(const char* filename)
         {
             case M_SUBMESH:
                 {
+                    // read material name
+                    FSWrapper::Read(fd, &materialNameLength, 1);
+                    FSWrapper::Read(fd, &stringBuffer, materialNameLength);
+                    materialName.Set(stringBuffer, materialNameLength);
+
                     // read vertex count
                     FSWrapper::Read(fd, &vertexCount, 4);
 
@@ -87,6 +95,7 @@ MeshManager::Load(const char* filename)
                     // add submesh
                     SubMesh* subMesh = mesh->CreateSubMesh();
                     subMesh->vertexData = CE_NEW VertexData(vertexCount, vertexBuffer, bytesPerVertex);
+                    subMesh->SetMaterialName(materialName);
                 }
                 break;
             case M_ANIMATION:

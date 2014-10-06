@@ -38,8 +38,8 @@
 //! A resizable array
 typedef struct DynamicArray
 {
-    void** data; 			//!< pointer to array of void pointers
-    unsigned int cur_size; 	//!< currently allocated size of the array
+    void** data;            //!< pointer to array of void pointers
+    unsigned int cur_size;  //!< currently allocated size of the array
 }DynamicArray;
 
 

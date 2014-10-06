@@ -11,6 +11,8 @@ namespace chrissly
 namespace graphics
 {
 
+using namespace chrissly::core;
+
 //------------------------------------------------------------------------------
 /**
 */
@@ -31,6 +33,24 @@ SubMesh::~SubMesh()
         CE_FREE(this->vertexData->vertexBuffer);
     }
     CE_DELETE this->vertexData;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+SubMesh::SetMaterialName(const String& matName)
+{
+    this->materialName = matName;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+const String&
+SubMesh::GetMaterialName() const
+{
+    return this->materialName;
 }
 
 //------------------------------------------------------------------------------

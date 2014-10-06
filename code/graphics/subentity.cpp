@@ -3,11 +3,14 @@
 //  (C) 2010 Christian Bleicher
 //------------------------------------------------------------------------------
 #include "subentity.h"
+#include "materialmanager.h"
 
 namespace chrissly
 {
 namespace graphics
 {
+
+using namespace chrissly::core;
 
 //------------------------------------------------------------------------------
 /**
@@ -39,9 +42,24 @@ SubEntity::~SubEntity()
 /**
 */
 void
+SubEntity::SetMaterialName(const String& matName)
+{
+    Material* material = MaterialManager::Instance()->GetByName(matName.C_Str());
+    this->SetMaterial(material);
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
 SubEntity::SetMaterial(Material* material)
 {
     this->pMaterial = material;
+
+    if (this->pMaterial != NULL)
+    {
+        // load material
+    }
 }
  
 //------------------------------------------------------------------------------

@@ -74,7 +74,7 @@ PSPRenderSystem::Shutdown()
 /**
 */
 void
-PSPRenderSystem::_SetRenderTarget(graphics::RenderTarget *target)
+PSPRenderSystem::_SetRenderTarget(graphics::RenderTarget* target)
 {
     sceGuDrawBufferList(PSPMappings::Get(target->GetFormat()), target->GetBuffer(), target->GetWidth());
 }
@@ -83,7 +83,7 @@ PSPRenderSystem::_SetRenderTarget(graphics::RenderTarget *target)
 /**
 */
 void
-PSPRenderSystem::_SetViewport(graphics::Viewport *vp)
+PSPRenderSystem::_SetViewport(graphics::Viewport* vp)
 {
     int width = vp->GetActualWidth();
     int height = vp->GetActualHeight();
@@ -222,11 +222,11 @@ PSPRenderSystem::_SetPass(graphics::Pass* pass)
             break;
         case graphics::CULL_CLOCKWISE:
             sceGuEnable(GU_CULL_FACE);
-            sceGuFrontFace(GU_CW);
+            sceGuFrontFace(GU_CCW);
             break;
         case graphics::CULL_ANTICLOCKWISE:
             sceGuEnable(GU_CULL_FACE);
-            sceGuFrontFace(GU_CCW);
+            sceGuFrontFace(GU_CW);
             break;
     }
 

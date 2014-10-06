@@ -40,7 +40,7 @@ StateAnimationTest::Enter()
     sceCtrlSetSamplingCycle(100);
     sceCtrlSetSamplingMode(PSP_CTRL_MODE_ANALOG);
 
-    Material* material = MaterialManager::Instance()->Create("material");
+    Material* material = MaterialManager::Instance()->CreateOrRetrieve("material");
     Pass* pass = material->CreatePass();
     Texture* tex = TextureManager::Instance()->Load("cerberus.tex");
     TextureUnitState* tus = pass->CreateTextureUnitState();
@@ -58,7 +58,7 @@ StateAnimationTest::Enter()
     this->sceneNode->AttachObject(entity);
 
     Camera* camera = SceneManager::Instance()->GetCamera("MainCamera");
-    camera->SetPosition(0.0f, 0.0f, 2.0f);
+    camera->SetPosition(0.0f, 0.2f, 2.0f);
     camera->SetOrientation(Quaternion());
 }
 

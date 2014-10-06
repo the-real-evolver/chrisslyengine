@@ -4,8 +4,8 @@
 //------------------------------------------------------------------------------
 #include <android/sensor.h>
 #include <android_native_app_glue.h>
-#include "core/fswrapper.h"
-#include "graphics/graphicssystem.h"
+#include "fswrapper.h"
+#include "graphicssystem.h"
 #include "audiosystem.h"
 #include "channel.h"
 
@@ -17,7 +17,7 @@ using namespace chrissly::audio;
 bool initialized = false;
 GraphicsSystem* graphicsSystem;
 SceneNode* sceneNode;
-int32_t lastX, lastY, distance;
+int32_t lastX, distance;
 AnimationState* animState;
 GpuProgram* gpuProgram;
 GpuProgramParameters* params;
@@ -87,12 +87,10 @@ Enter(struct android_app* state)
     camera->SetPosition(0.0f, 0.0f, 0.9f);
     window->AddViewport(camera, 0, 0, window->GetWidth(), window->GetHeight());
 
-    Material* material = MaterialManager::Instance()->Create("material");
+    Material* material = MaterialManager::Instance()->CreateOrRetrieve("material");
     Pass* pass = material->CreatePass();
-    pass->SetCullingMode(CULL_NONE);
     pass->SetSceneBlendingEnabled(false);
     pass->SetSceneBlending(SBF_SOURCE_COLOUR, SBF_DEST_COLOUR);
-
     gpuProgram = new GpuProgram(MorphAnimVertexShader, FragmentShader);
     pass->SetGpuProgram(gpuProgram);
     Texture* tex = TextureManager::Instance()->Load("cerberus_etc1.tex");
@@ -170,7 +168,6 @@ HandleInputEvents(struct android_app* app, AInputEvent* event)
         int32_t x = AMotionEvent_getX(event, 0);
         distance = x - lastX;
         lastX = x;
-        lastY = AMotionEvent_getY(event, 0);
         return 1;
     }
     return 0;

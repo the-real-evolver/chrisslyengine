@@ -36,7 +36,7 @@ MaterialManager::~MaterialManager()
 /**
 */
 Material*
-MaterialManager::Create(const char* name)
+MaterialManager::CreateOrRetrieve(const char* name)
 {
     Material* material = (Material*)HashTableFind(&this->resources, name);
     if (material != NULL)
@@ -49,6 +49,15 @@ MaterialManager::Create(const char* name)
     HashTableInsert(&this->resources, name, material);
 
     return material;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+Material*
+MaterialManager::GetByName(const char* name)
+{
+    return (Material*)HashTableFind(&this->resources, name);
 }
 
 //------------------------------------------------------------------------------

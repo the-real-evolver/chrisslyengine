@@ -198,8 +198,10 @@ Entity::BuildSubEntityList(Mesh* mesh, DynamicArray* sublist)
     unsigned int i;
     for (i = 0; i < mesh->GetNumSubMeshes(); i++)
     {
-        SubEntity* subEntity = CE_NEW SubEntity(this, mesh->GetSubMesh(i));
-        // ToDo: set material
+        SubMesh* subMesh = mesh->GetSubMesh(i);
+        SubEntity* subEntity = CE_NEW SubEntity(this, subMesh);
+        subEntity->SetMaterialName(subMesh->GetMaterialName());
+
         DynamicArraySet(sublist, i, subEntity);
         this->numSubEntities++;
     }

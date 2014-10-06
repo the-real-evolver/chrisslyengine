@@ -267,9 +267,10 @@ SceneManager::SetShadowTechnique(ShadowTechnique technique)
             TextureUnitState* tus = this->shadowPass->CreateTextureUnitState();
             tus->SetTextureAddressingMode(TextureUnitState::TAM_CLAMP, TextureUnitState::TAM_CLAMP);
 
-#ifdef __PSP__
+#if __PSP__
             this->shadowRenderTexture->Create(256, 256, PF_A4R4G4B4);
-            // GL_CLAMP_TO_BORDER
+            // fake GL_CLAMP_TO_BORDER by clearing the rendertarget with transparency and setting the viewport one pixel
+            // smaller than the rendertarget on every side
             memset(this->shadowRenderTexture->GetBuffer(), 0xff, 131072);
             Viewport* vp = this->shadowRenderTexture->AddViewport(this->shadowCamera, 1, 1, 254, 254);
             vp->SetClearEveryFrame(true, FBT_COLOUR);

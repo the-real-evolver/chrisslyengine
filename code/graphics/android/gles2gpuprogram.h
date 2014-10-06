@@ -27,12 +27,10 @@ public:
     graphics::GpuNamedConstants* GetConstantDefinitions() const;
     /// returns the location of a uniform variable
     GLint GetUniformLocation(graphics::GpuProgramParameters::AutoConstantType acType) const;
-    /// returns the location of the uniform sampler2D variable
-    GLint GetTextureUniformLocation() const;
     /// get the handle for the program object
     GLint GetProgramHandle() const;
     /// get the index of a non-standard attribute bound in the linked code
-    GLint GetAttributeLocation(graphics::VertexElementSemantic semantic);
+    GLint GetAttributeLocation(graphics::VertexElementSemantic semantic) const;
 
 private:
     /// private default constructor
@@ -51,7 +49,6 @@ private:
     graphics::GpuProgramParameters* defaultParams;
     graphics::GpuNamedConstants* constantDefs;
     GLuint gpuProgram;
-    GLint textureHandle;
     GLint uniformLocations[graphics::GpuProgramParameters::ACT_COUNT];
     GLint attributeLocations[graphics::VES_COUNT];
 };

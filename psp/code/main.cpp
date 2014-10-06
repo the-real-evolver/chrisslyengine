@@ -34,7 +34,7 @@ ExitCallback(int arg1, int arg2, void *common)
 /**
 */
 int
-main (int argc, char* argv[])
+main(int argc, char* argv[])
 {
     int cbid = sceKernelCreateCallback("ExitCallback", ExitCallback, NULL);
     sceKernelRegisterExitCallback(cbid);

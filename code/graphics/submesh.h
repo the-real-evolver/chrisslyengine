@@ -8,6 +8,7 @@
 */
 #include "vertexdata.h"
 #include "animationtrack.h"
+#include "chrisslystring.h"
 
 //------------------------------------------------------------------------------
 namespace chrissly
@@ -24,8 +25,11 @@ public:
     SubMesh();
     /// destructor
     ~SubMesh();
-
-    /// Get the type of any vertex animation used by dedicated geometry.
+    /// sets the name of the Material which this SubMesh will use
+    void SetMaterialName(const chrissly::core::String& matName);
+    /// gets the name of the Material this SubMesh is using
+    const chrissly::core::String& GetMaterialName() const;
+    /// get the type of any vertex animation used by dedicated geometry
     VertexAnimationType GetVertexAnimationType() const;
 
     /// dedicated vertex data
@@ -33,7 +37,7 @@ public:
 
 private:
     /// name of the material this SubMesh uses 
-    char* materialName;
+    chrissly::core::String materialName;
     /// type of vertex animation for dedicated vertex data (populated by Mesh)
     VertexAnimationType vertexAnimationType;
 };

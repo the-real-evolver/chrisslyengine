@@ -21,7 +21,7 @@ Pass::Pass(unsigned short index) :
     destFixColor(0xff000000),
     depthCheck(true),
     depthWrite(true),
-    cullMode(CULL_ANTICLOCKWISE),
+    cullMode(CULL_CLOCKWISE),
     lightingEnabled(false),
     ambient(0xffffffff),
     diffuse(0xffffffff),

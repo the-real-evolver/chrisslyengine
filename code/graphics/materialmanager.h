@@ -28,8 +28,10 @@ public:
     MaterialManager();
     /// destructor
     ~MaterialManager();
-    /// creates a new blank material, but does not immediately load it
-    Material* Create(const char* name);
+    /// create a new material, or retrieve an existing one with the same name if it already exists
+    Material* CreateOrRetrieve(const char* name);
+    /// retrieves a pointer to a material by name, or null if the resource does not exist
+    Material* GetByName(const char* name);
     /// removes all resources
     void RemoveAll();
 

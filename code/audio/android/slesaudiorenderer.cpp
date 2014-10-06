@@ -131,61 +131,41 @@ SLESAudioRenderer::StartChannel(audio::Channel* channel)
 void
 SLESAudioRenderer::UpdateChannel(audio::Channel* channel)
 {
-    bool isPlaying;
-    channel->IsPlaying(&isPlaying);
-
-    if (isPlaying)
+    if (channel->_PropertiesHasChanged())
     {
-        if (channel->_PropertiesHasChanged())
+        SLresult result;
+        float volume;
+        channel->GetVolume(&volume);
+        SLVolumeItf volumeInterface = channel->GetVolumeInterface();
+        SLmillibel slVolume = SL_MILLIBEL_MIN;
+        if (volume >= 1.0f)
         {
-            SLresult result;
-            float volume;
-            channel->GetVolume(&volume);
-            SLVolumeItf volumeInterface = channel->GetVolumeInterface();
-            SLmillibel slVolume = SL_MILLIBEL_MIN;
-            if (volume >= 1.0f)
-            {
-                result = (*volumeInterface)->GetMaxVolumeLevel(volumeInterface, &slVolume);
-                CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::UpdateChannel(): failed to get max volume level\n");
-            }
-            else if (volume <= 0.0f)
-            {
-                slVolume = SL_MILLIBEL_MIN;
-            }
-            else
-            {
-                slVolume = M_LN2 / log(1.0f / (1.0f - volume)) * -1000.0f;
-            }
-            result = (*volumeInterface)->SetVolumeLevel(volumeInterface, slVolume);
-            CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::UpdateChannel(): failed to set volume\n");
-
-            float pan;
-            channel->GetPan(&pan);
-            result = (*volumeInterface)->EnableStereoPosition(volumeInterface, SL_BOOLEAN_TRUE);
-            CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::UpdateChannel(): failed to enable stereo position\n");
-            result = (*volumeInterface)->SetStereoPosition(volumeInterface, (SLpermille)(pan * 1000.0f));
-            CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::UpdateChannel(): failed to set stereo position\n");
-
-            bool paused;
-            channel->GetPaused(&paused);
-            SLPlayItf playerInterface = channel->GetPlayerInterface();
-            result = (*playerInterface)->SetPlayState(playerInterface, paused ? SL_PLAYSTATE_PAUSED : SL_PLAYSTATE_PLAYING);
-            CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::UpdateChannel(): failed to set play state\n");
+            result = (*volumeInterface)->GetMaxVolumeLevel(volumeInterface, &slVolume);
+            CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::UpdateChannel(): failed to get max volume level\n");
         }
-    }
-    else
-    {
-        channel->Release();
-        audio::Mode mode;
-        channel->GetMode(&mode);
-        if (mode & audio::MODE_LOOP_NORMAL)
+        else if (volume <= 0.0f)
         {
-            this->StartChannel(channel);
+            slVolume = SL_MILLIBEL_MIN;
         }
         else
         {
-            channel->_SetIndex(audio::Channel::CHANNEL_FREE);
+            slVolume = M_LN2 / log(1.0f / (1.0f - volume)) * -1000.0f;
         }
+        result = (*volumeInterface)->SetVolumeLevel(volumeInterface, slVolume);
+        CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::UpdateChannel(): failed to set volume\n");
+
+        float pan;
+        channel->GetPan(&pan);
+        result = (*volumeInterface)->EnableStereoPosition(volumeInterface, SL_BOOLEAN_TRUE);
+        CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::UpdateChannel(): failed to enable stereo position\n");
+        result = (*volumeInterface)->SetStereoPosition(volumeInterface, (SLpermille)(pan * 1000.0f));
+        CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::UpdateChannel(): failed to set stereo position\n");
+
+        bool paused;
+        channel->GetPaused(&paused);
+        SLPlayItf playerInterface = channel->GetPlayerInterface();
+        result = (*playerInterface)->SetPlayState(playerInterface, paused ? SL_PLAYSTATE_PAUSED : SL_PLAYSTATE_PLAYING);
+        CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::UpdateChannel(): failed to set play state\n");
     }
 }
 
@@ -206,7 +186,18 @@ void
 SLESAudioRenderer::BufferQueueCallback(SLAndroidSimpleBufferQueueItf bufferQueueInterface, void* context)
 {
     audio::Channel* channel = (audio::Channel*)context;
-    channel->_SetIsPlaying(false);
+    channel->Release();
+    audio::Mode mode;
+    channel->GetMode(&mode);
+    if (mode & audio::MODE_LOOP_NORMAL)
+    {
+        SLESAudioRenderer::Instance()->StartChannel(channel);
+    }
+    else
+    {
+        channel->_SetIndex(audio::Channel::CHANNEL_FREE);
+        channel->_SetIsPlaying(false);
+    }
 }
 
 } // namespace chrissly

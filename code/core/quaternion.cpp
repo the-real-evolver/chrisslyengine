@@ -43,18 +43,18 @@ Quaternion::~Quaternion()
 void
 Quaternion::ToRotationMatrix(Matrix3& kRot) const
 {
-    float fTx  = x + x;
-    float fTy  = y + y;
-    float fTz  = z + z;
-    float fTwx = fTx * w;
-    float fTwy = fTy * w;
-    float fTwz = fTz * w;
-    float fTxx = fTx * x;
-    float fTxy = fTy * x;
-    float fTxz = fTz * x;
-    float fTyy = fTy * y;
-    float fTyz = fTz * y;
-    float fTzz = fTz * z;
+    float fTx  = this->x + this->x;
+    float fTy  = this->y + this->y;
+    float fTz  = this->z + this->z;
+    float fTwx = fTx * this->w;
+    float fTwy = fTy * this->w;
+    float fTwz = fTz * this->w;
+    float fTxx = fTx * this->x;
+    float fTxy = fTy * this->x;
+    float fTxz = fTz * this->x;
+    float fTyy = fTy * this->y;
+    float fTyz = fTz * this->y;
+    float fTzz = fTz * this->z;
 
     kRot[0][0] = 1.0f - (fTyy + fTzz);
     kRot[0][1] = fTxy - fTwz;
@@ -102,10 +102,10 @@ Quaternion::operator * (const Quaternion& rkQ) const
     
     return Quaternion
     (
-        w * rkQ.w - x * rkQ.x - y * rkQ.y - z * rkQ.z,
-        w * rkQ.x + x * rkQ.w + y * rkQ.z - z * rkQ.y,
-        w * rkQ.y + y * rkQ.w + z * rkQ.x - x * rkQ.z,
-        w * rkQ.z + z * rkQ.w + x * rkQ.y - y * rkQ.x
+        this->w * rkQ.w - this->x * rkQ.x - this->y * rkQ.y - this->z * rkQ.z,
+        this->w * rkQ.x + this->x * rkQ.w + this->y * rkQ.z - this->z * rkQ.y,
+        this->w * rkQ.y + this->y * rkQ.w + this->z * rkQ.x - this->x * rkQ.z,
+        this->w * rkQ.z + this->z * rkQ.w + this->x * rkQ.y - this->y * rkQ.x
     );
 }
 
@@ -148,8 +148,8 @@ Quaternion::FromAngleAxis(float rfAngle, const Vector3& rkAxis)
     //   q = cos(A/2) + sin(A/2) * (x*i+y*j+z*k)
     
     float fHalfAngle = 0.5f * rfAngle;
-    float fSin = chrissly::core::Math::Sin(fHalfAngle);
-    this->w = chrissly::core::Math::Cos(fHalfAngle);
+    float fSin = Math::Sin(fHalfAngle);
+    this->w = Math::Cos(fHalfAngle);
     this->x = fSin * rkAxis.x;
     this->y = fSin * rkAxis.y;
     this->z = fSin * rkAxis.z;
@@ -162,7 +162,7 @@ void
 Quaternion::Normalise()
 {
     float len = this->Norm();
-    float factor = 1.0f / chrissly::core::Math::Sqrt(len);
+    float factor = 1.0f / Math::Sqrt(len);
     *this = *this * factor;
 }
 

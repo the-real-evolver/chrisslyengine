@@ -41,7 +41,7 @@ StateMaterialTest::Enter()
     sceCtrlSetSamplingMode(PSP_CTRL_MODE_ANALOG);
 
     // solid material
-    Material* solidMaterial = MaterialManager::Instance()->Create("solidMaterial");
+    Material* solidMaterial = MaterialManager::Instance()->CreateOrRetrieve("solidMaterial");
     Texture* tex = TextureManager::Instance()->Load("gothic_solid.tex");
     Pass* pass = solidMaterial->CreatePass();
     pass->SetFog(FOG_LINEAR, 0xff0080ff, 0.0f, 50.0f);
@@ -53,7 +53,7 @@ StateMaterialTest::Enter()
     tus->SetTextureBlendOperation(LBT_COLOUR, LBO_MODULATE);
 
     // transparent material
-    Material* alphaMaterial = MaterialManager::Instance()->Create("alphaMaterial");
+    Material* alphaMaterial = MaterialManager::Instance()->CreateOrRetrieve("alphaMaterial");
     tex = TextureManager::Instance()->Load("gothic_alpha.tex");
     pass = alphaMaterial->CreatePass();
     pass->SetSceneBlendingEnabled(true);
@@ -67,18 +67,8 @@ StateMaterialTest::Enter()
     tus->SetTexture(tex);
     tus->SetTextureBlendOperation(LBT_ALPHA, LBO_MODULATE);
 
-    // create scenenode, entity and set materials
-    Entity* gothEntity = SceneManager::Instance()->CreateEntity("gothic_woman.mesh");
-    gothEntity->SetCastShadows(true);
-    gothEntity->GetSubEntity(1)->SetMaterial(solidMaterial);
-    gothEntity->GetSubEntity(0)->SetMaterial(alphaMaterial);
-    gothEntity->GetSubEntity(2)->SetMaterial(alphaMaterial);
-    this->gothSceneNode = SceneManager::Instance()->GetRootSceneNode()->CreateChildSceneNode();
-    this->gothSceneNode->SetScale(3.5f, 3.5f, 3.5f);
-    this->gothSceneNode->SetPosition(-2.0f, 0.1f, -1.4f);
-    this->gothSceneNode->AttachObject(gothEntity);
-
-    this->cubeMaterial = MaterialManager::Instance()->Create("cubeMaterial");
+    // create a multi-pass material
+    this->cubeMaterial = MaterialManager::Instance()->CreateOrRetrieve("cubeMaterial");
     tex = TextureManager::Instance()->Load("floor.tex");
     pass = this->cubeMaterial->CreatePass();
     tus = pass->CreateTextureUnitState();
@@ -92,8 +82,19 @@ StateMaterialTest::Enter()
     tus->SetTexture(tex);
     tus->SetTextureBlendOperation(LBT_COLOUR, LBO_REPLACE);
 
+    // create a simple material without texture
+    Material* lightConeMaterial = MaterialManager::Instance()->CreateOrRetrieve("coneMaterial");
+    pass = lightConeMaterial->CreatePass();
+
+    // create entities and attach them to the scene
+    Entity* gothEntity = SceneManager::Instance()->CreateEntity("gothic_woman.mesh");
+    gothEntity->SetCastShadows(true);
+    this->gothSceneNode = SceneManager::Instance()->GetRootSceneNode()->CreateChildSceneNode();
+    this->gothSceneNode->SetScale(3.5f, 3.5f, 3.5f);
+    this->gothSceneNode->SetPosition(-2.0f, 0.1f, -1.4f);
+    this->gothSceneNode->AttachObject(gothEntity);
+
     Entity* cubeEntity = SceneManager::Instance()->CreateEntity("cube.mesh");
-    cubeEntity->GetSubEntity(0)->SetMaterial(this->cubeMaterial);
     cubeEntity->SetReceivesShadows(true);
     SceneNode* cubeSceneNode = SceneManager::Instance()->GetRootSceneNode()->CreateChildSceneNode();
     cubeSceneNode->SetScale(10.0f, 0.2f, 10.0f);
@@ -101,10 +102,7 @@ StateMaterialTest::Enter()
     cubeSceneNode->AttachObject(cubeEntity);
     this->vMod = 0.0f;
 
-    Material* lightConeMaterial = MaterialManager::Instance()->Create("lightConeMaterial");
-    pass = lightConeMaterial->CreatePass();
     Entity* lightConeEntity = SceneManager::Instance()->CreateEntity("cone.mesh");
-    lightConeEntity->GetSubEntity(0)->SetMaterial(lightConeMaterial);
     SceneNode* lightConeSceneNode = SceneManager::Instance()->GetRootSceneNode()->CreateChildSceneNode();
     lightConeSceneNode->SetScale(2.0f, 2.0f,2.0f);
     lightConeSceneNode->SetPosition(4.0f, 3.0f, -4.0f);

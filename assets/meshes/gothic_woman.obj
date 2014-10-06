@@ -163,7 +163,7 @@ vt 0.441842 0.955983
 vt 0.506750 0.937381
 vt 0.535075 0.931754
 vt 0.401883 0.957850
-usemtl Material_capgonnacol.png
+usemtl alphaMaterial
 s 1
 f 24/1 13/2 45/3
 f 24/1 12/4 13/2
@@ -2900,7 +2900,7 @@ vt 0.435201 0.860343
 vt 0.446587 0.833379
 vt 0.421802 0.828821
 vt 0.345970 0.940316
-usemtl Material.007_corpoDefinitivoOpt.png
+usemtl solidMaterial
 s 1
 f 85/82 86/83 87/84
 f 85/82 87/84 84/85
@@ -5496,7 +5496,7 @@ vt 0.124805 0.233309
 vt 0.562492 0.318745
 vt 0.533105 0.369879
 vt 0.621460 0.392667
-usemtl capelli_nuoviCap.png
+usemtl alphaMaterial
 s 1
 f 1251/1522 1256/1523 1255/1524
 f 1251/1522 1255/1524 1250/1525

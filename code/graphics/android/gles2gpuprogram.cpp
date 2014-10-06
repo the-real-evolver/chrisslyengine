@@ -37,8 +37,6 @@ GLES2GpuProgram::GLES2GpuProgram(const char* vertexShaderSource, const char* fra
     this->gpuProgram = this->CreateProgram(vertexShader, fragmentShader);
     CE_ASSERT(0 != this->gpuProgram, "Could not create program.");
 
-    this->textureHandle = glGetUniformLocation(this->gpuProgram, "texture");
-    GLES2RenderSystem::CheckGlError("glGetUniformLocation");
     this->uniformLocations[graphics::GpuProgramParameters::ACT_WORLD_MATRIX] = glGetUniformLocation(this->gpuProgram, "worldMatrix");
     GLES2RenderSystem::CheckGlError("glGetUniformLocation");
     this->uniformLocations[graphics::GpuProgramParameters::ACT_VIEW_MATRIX] = glGetUniformLocation(this->gpuProgram, "viewMatrix");
@@ -130,15 +128,6 @@ GLES2GpuProgram::GetUniformLocation(graphics::GpuProgramParameters::AutoConstant
 /**
 */
 GLint
-GLES2GpuProgram::GetTextureUniformLocation() const
-{
-    return this->textureHandle;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-GLint
 GLES2GpuProgram::GetProgramHandle() const
 {
     return this->gpuProgram;
@@ -148,7 +137,7 @@ GLES2GpuProgram::GetProgramHandle() const
 /**
 */
 GLint
-GLES2GpuProgram::GetAttributeLocation(graphics::VertexElementSemantic semantic)
+GLES2GpuProgram::GetAttributeLocation(graphics::VertexElementSemantic semantic) const
 {
     return this->attributeLocations[semantic];
 }
@@ -177,6 +166,7 @@ GLES2GpuProgram::ExtractConstantDefs(const char* source, graphics::GpuNamedConst
 {
     char *start, *end;
     char* match = strstr(source, "uniform");
+    int samplerIndex = 0;
     while (match != NULL)
     {
         // skip 'uniform'
@@ -207,6 +197,7 @@ GLES2GpuProgram::ExtractConstantDefs(const char* source, graphics::GpuNamedConst
         }
         else
         {
+            match = strstr(match, "uniform");
             continue;
         }
 
@@ -236,6 +227,8 @@ GLES2GpuProgram::ExtractConstantDefs(const char* source, graphics::GpuNamedConst
                     case graphics::GCT_SAMPLER2D:
                         uniform->size = sizeof(int);
                         uniform->buffer = CE_MALLOC(uniform->size);
+                        memcpy(uniform->buffer, &samplerIndex, uniform->size);
+                        samplerIndex++;
                         break;
                 }
 
@@ -338,7 +331,6 @@ GLES2GpuProgram::IsAutoConstantType(const char* name)
     if (0 == strcmp(name, "projectionMatrix"))    return true;
     if (0 == strcmp(name, "worldViewProjMatrix")) return true;
     if (0 == strcmp(name, "morphWeight"))         return true;
-    if (0 == strcmp(name, "texture"))             return true;
 
     return false;
 }

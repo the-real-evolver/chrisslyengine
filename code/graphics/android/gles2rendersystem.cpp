@@ -35,9 +35,13 @@ const char* GLES2RenderSystem::DefaultFragmentShader =
     "precision mediump float;\n"
     "varying vec2 texCoordOut;\n"
     "uniform sampler2D texture;\n"
+    "uniform float uMod;\n"
+    "uniform float vMod;\n"
+    "uniform float uScale;\n"
+    "uniform float vScale;\n"
     "void main()\n"
     "{\n"
-    "    gl_FragColor = texture2D(texture, texCoordOut);\n"
+    "    gl_FragColor = texture2D(texture, vec2(uScale * texCoordOut.x + uMod, vScale * texCoordOut.y + vMod));\n"
     "}\n";
 
 //------------------------------------------------------------------------------
@@ -45,6 +49,7 @@ const char* GLES2RenderSystem::DefaultFragmentShader =
 */
 GLES2RenderSystem::GLES2RenderSystem() :
     ambientLight(0x00000000),
+    worldMatrix(core::Matrix4::ZERO),
     viewMatrix(core::Matrix4::ZERO),
     projectionMatrix(core::Matrix4::ZERO),
     defaultGpuProgram(NULL),
@@ -253,21 +258,21 @@ GLES2RenderSystem::_Render(graphics::SubEntity* renderable)
 
         GLint vertexTexCoordHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_TEXTURE_COORDINATES);
         glVertexAttribPointer(vertexTexCoordHandle, 2, GL_FLOAT, GL_FALSE, 36, vertexData->vertexBuffer);
-        CheckGlError("glVertexAttribPointer");
+        CheckGlError("glVertexAttribPointer: texturecoords");
         glEnableVertexAttribArray(vertexTexCoordHandle);
-        CheckGlError("glEnableVertexAttribArray");
+        CheckGlError("glEnableVertexAttribArray: texturecoords");
 
         GLint vertexNormalHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_NORMAL);
         glVertexAttribPointer(vertexNormalHandle, 3, GL_FLOAT, GL_FALSE, 36, (unsigned char*)vertexData->vertexBuffer + 12);
-        CheckGlError("glVertexAttribPointer");
+        CheckGlError("glVertexAttribPointer: normal");
         glEnableVertexAttribArray(vertexNormalHandle);
-        CheckGlError("glEnableVertexAttribArray");
+        CheckGlError("glEnableVertexAttribArray: normal");
 
         GLint vertexPositionHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_POSITION);
         glVertexAttribPointer(vertexPositionHandle, 3, GL_FLOAT, GL_FALSE, 36, (unsigned char*)vertexData->vertexBuffer + 24);
-        CheckGlError("glVertexAttribPointer");
+        CheckGlError("glVertexAttribPointer: position");
         glEnableVertexAttribArray(vertexPositionHandle);
-        CheckGlError("glEnableVertexAttribArray");
+        CheckGlError("glEnableVertexAttribArray: position");
 
         glDrawArrays(GL_TRIANGLES, 0, vertexData->vertexCount);
         CheckGlError("glDrawArrays");
@@ -346,11 +351,12 @@ GLES2RenderSystem::_SetPass(graphics::Pass* pass)
             break;
     }
 
-    // texture unit parameters    
-    if (pass->GetNumTextureUnitStates() > 0)
+    // texture unit parameters
+    unsigned short textureUnitState;
+    for (textureUnitState = 0; textureUnitState < pass->GetNumTextureUnitStates() && textureUnitState < this->numTextureUnits; textureUnitState++)
     {
-        graphics::TextureUnitState* tus = pass->GetTextureUnitState(0);
-        glActiveTexture(GL_TEXTURE0);
+        graphics::TextureUnitState* tus = pass->GetTextureUnitState(textureUnitState);
+        glActiveTexture(GL_TEXTURE0 + textureUnitState);
         glBindTexture(GL_TEXTURE_2D, tus->GetTexture()->GetName());
 
         GLint min, mag;
@@ -360,8 +366,20 @@ GLES2RenderSystem::_SetPass(graphics::Pass* pass)
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GLES2Mappings::Get(tus->GetTextureAddressingMode().u));
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GLES2Mappings::Get(tus->GetTextureAddressingMode().v));
+    }
 
-        glUniform1i(this->currentGpuProgram->GetTextureUniformLocation(), 0 /* index of the textureunit */);
+    // set default shader parameters
+    if (!pass->IsProgrammable())
+    {
+        graphics::GpuProgramParameters* params = this->currentGpuProgram->GetDefaultParameters();
+        if (pass->GetNumTextureUnitStates() > 0)
+        {
+            graphics::TextureUnitState* tus = pass->GetTextureUnitState(0);
+            params->SetNamedConstant("uMod", tus->GetTextureUScroll());
+            params->SetNamedConstant("vMod", tus->GetTextureVScroll());
+            params->SetNamedConstant("uScale", tus->GetTextureUScale());
+            params->SetNamedConstant("vScale", tus->GetTextureVScale());
+        }
     }
 
     // apply shader parameters

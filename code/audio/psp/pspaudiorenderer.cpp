@@ -127,31 +127,19 @@ PSPAudioRenderer::UpdateChannel(audio::Channel* channel)
             int samplecount = PSP_AUDIO_SAMPLE_MAX;
             if (samplesRemaining < PSP_AUDIO_SAMPLE_MAX)
             {
-                sceAudioChRelease(index);
-                int numChannels;
-                sound->GetFormat(NULL, NULL, &numChannels, NULL);
                 samplecount = PSP_AUDIO_SAMPLE_ALIGN(samplesRemaining);
-                index = sceAudioChReserve(PSP_AUDIO_NEXT_CHANNEL, samplecount, this->GetFormat(numChannels));
-                channel->_SetIndex(index);
+                sceAudioSetChannelDataLen(index, samplecount);
             }
 
-            if (index >= 0)
-            {
-                float volume;
-                channel->GetVolume(&volume);
-                float panning;
-                channel->GetPan(&panning);
-                int leftVolume, rightVolume;
-                this->CalculateVolumesFromPanning(PAN_CLAMPEDLINEAR, volume, panning, leftVolume, rightVolume);
-                void* bufferPositon = sound->_GetSampleBufferPointer(position);
-                sceAudioOutputPanned(index, leftVolume, rightVolume, bufferPositon);
-                channel->_SetIsPlaying(true);
-                channel->SetPosition(position += samplecount);
-            }
-            else
-            {
-                channel->_SetIsPlaying(false);
-            }
+            float volume;
+            channel->GetVolume(&volume);
+            float panning;
+            channel->GetPan(&panning);
+            int leftVolume, rightVolume;
+            this->CalculateVolumesFromPanning(PAN_CLAMPEDLINEAR, volume, panning, leftVolume, rightVolume);
+            sceAudioOutputPanned(index, leftVolume, rightVolume, sound->_GetSampleBufferPointer(position));
+            channel->_SetIsPlaying(true);
+            channel->SetPosition(position += samplecount);
         }
         else
         {
