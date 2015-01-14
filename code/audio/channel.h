@@ -9,13 +9,13 @@
 
 //------------------------------------------------------------------------------
 #if __PSP__
-#include "channelbase.h"
+#include "psp/pspchannel.h"
 namespace chrissly
 {
 namespace audio
 {
 
-typedef chrissly::audio::ChannelBase Channel;
+typedef chrissly::PSPChannel Channel;
 
 } // namespace audio
 } // namespace chrissly
