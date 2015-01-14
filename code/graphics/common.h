@@ -84,7 +84,7 @@ namespace graphics
     enum FogMode
     {
         /// disable fog
-        FOG_NONE,
+        FOG_NONE = 0,
         /// fog density increases linearly between the start and end distances
         FOG_LINEAR
     };

@@ -195,6 +195,10 @@ GLES2GpuProgram::ExtractConstantDefs(const char* source, graphics::GpuNamedConst
         {
             constantType = graphics::GCT_SAMPLER2D;
         }
+        else if (0 == strcmp(dataType.C_Str(), "int"))
+        {
+            constantType = graphics::GCT_INT1;
+        }
         else
         {
             match = strstr(match, "uniform");
@@ -222,6 +226,10 @@ GLES2GpuProgram::ExtractConstantDefs(const char* source, graphics::GpuNamedConst
                         break;
                     case graphics::GCT_FLOAT1:
                         uniform->size = sizeof(float);
+                        uniform->buffer = CE_MALLOC(uniform->size);
+                        break;
+                    case graphics::GCT_INT1:
+                        uniform->size = sizeof(int);
                         uniform->buffer = CE_MALLOC(uniform->size);
                         break;
                     case graphics::GCT_SAMPLER2D:

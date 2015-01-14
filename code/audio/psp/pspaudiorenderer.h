@@ -48,13 +48,17 @@ public:
     /// release the given channel
     void ReleaseChannel(audio::Channel* channel);
 
-private:
-    /// copy constructor
-    PSPAudioRenderer(const PSPAudioRenderer&cc) {};
     /// calculate left and right volume from volume and panning
     void CalculateVolumesFromPanning(PanningMode mode, float volume, float panning, int& leftVolume, int& rightVolume);
     /// return a PspAudioFormats equivalent for the given number of channels
     PspAudioFormats GetFormat(int channels) const;
+
+    /// channel thread
+    static int ChannelThread(SceSize args, void* argp);
+
+private:
+    /// copy constructor
+    PSPAudioRenderer(const PSPAudioRenderer&cc) {};
 
     static PSPAudioRenderer* Singleton;
 };

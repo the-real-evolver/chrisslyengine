@@ -7,6 +7,7 @@
 #include "sound.h"
 #include "debug.h"
 #include <stdio.h>
+#include <pspthreadman.h>
 
 namespace chrissly
 {
@@ -62,6 +63,9 @@ PSPAudioRenderer::GetNumHardwareChannels() const
 void
 PSPAudioRenderer::StartChannel(audio::Channel* channel)
 {
+    int error = sceKernelWaitSema(channel->GetSemaphoreId(), 1, 0);
+    CE_ASSERT(error >= 0, "PSPAudioRenderer::StartChannel(): sceKernelWaitSema() failed: %08x\n", error);
+
     int index;
     channel->GetIndex(&index);
     audio::Sound* sound;
@@ -76,7 +80,10 @@ PSPAudioRenderer::StartChannel(audio::Channel* channel)
     index = sceAudioChReserve(index, samplecount, this->GetFormat(numChannels));
 
     channel->_SetIndex(index);
-    channel->_SetIsPlaying(false);
+    channel->_SetIsPlaying(true);
+
+    error = sceKernelSignalSema(channel->GetSemaphoreId(), 1);
+    CE_ASSERT(error >= 0, "PSPAudioRenderer::StartChannel(): sceKernelSignalSema() failed: %08x\n", error);
 }
 
 //------------------------------------------------------------------------------
@@ -85,78 +92,20 @@ PSPAudioRenderer::StartChannel(audio::Channel* channel)
 void
 PSPAudioRenderer::UpdateChannel(audio::Channel* channel)
 {
-    bool paused;
-    channel->GetPaused(&paused);
-    if (paused) return;
+    bool isPlaying;
+    channel->IsPlaying(&isPlaying);
 
-    bool outputting;
-    channel->IsPlaying(&outputting);
-    int index;
-    channel->GetIndex(&index);
-
-    if (outputting)
+    if (isPlaying && channel->_PropertiesHasChanged())
     {
-        if (sceAudioGetChannelRestLen(index) <= 0)
-        {
-            outputting = false;
-        }
-        else if (channel->_PropertiesHasChanged())
-        {
-            float volume;
-            channel->GetVolume(&volume);
-            float panning;
-            channel->GetPan(&panning);
-            int leftVolume, rightVolume;
-            this->CalculateVolumesFromPanning(PAN_CLAMPEDLINEAR, volume, panning, leftVolume, rightVolume);
-            sceAudioChangeChannelVolume(index, leftVolume, rightVolume);
-        }
-    }
-
-    if (!outputting)
-    {
-        audio::Sound* sound;
-        channel->GetCurrentSound(&sound);
-        unsigned int length;
-        sound->GetLength(&length);
-        unsigned int position;
-        channel->GetPosition(&position);
-
-        int samplesRemaining = length - position;
-        if (samplesRemaining > 0)
-        {
-            int samplecount = PSP_AUDIO_SAMPLE_MAX;
-            if (samplesRemaining < PSP_AUDIO_SAMPLE_MAX)
-            {
-                samplecount = PSP_AUDIO_SAMPLE_ALIGN(samplesRemaining);
-                sceAudioSetChannelDataLen(index, samplecount);
-            }
-
-            float volume;
-            channel->GetVolume(&volume);
-            float panning;
-            channel->GetPan(&panning);
-            int leftVolume, rightVolume;
-            this->CalculateVolumesFromPanning(PAN_CLAMPEDLINEAR, volume, panning, leftVolume, rightVolume);
-            sceAudioOutputPanned(index, leftVolume, rightVolume, sound->_GetSampleBufferPointer(position));
-            channel->_SetIsPlaying(true);
-            channel->SetPosition(position += samplecount);
-        }
-        else
-        {
-            sceAudioChRelease(index);
-            audio::Mode mode;
-            channel->GetMode(&mode);
-            if (mode & audio::MODE_LOOP_NORMAL)
-            {
-                channel->SetPosition(0);
-                this->StartChannel(channel);
-            }
-            else
-            {
-                channel->_SetIndex(audio::Channel::CHANNEL_FREE);
-                channel->_SetIsPlaying(false);
-            }
-        }
+        int index;
+        channel->GetIndex(&index);
+        float volume;
+        channel->GetVolume(&volume);
+        float panning;
+        channel->GetPan(&panning);
+        int leftVolume, rightVolume;
+        this->CalculateVolumesFromPanning(PAN_CLAMPEDLINEAR, volume, panning, leftVolume, rightVolume);
+        sceAudioChangeChannelVolume(index, leftVolume, rightVolume);
     }
 }
 
@@ -166,12 +115,107 @@ PSPAudioRenderer::UpdateChannel(audio::Channel* channel)
 void
 PSPAudioRenderer::ReleaseChannel(audio::Channel* channel)
 {
+    int error = sceKernelWaitSema(channel->GetSemaphoreId(), 1, 0);
+    CE_ASSERT(error >= 0, "PSPAudioRenderer::ReleaseChannel(): sceKernelWaitSema() failed: %08x\n", error);
+
     int index;
     channel->GetIndex(&index);
     sceAudioChRelease(index);
     channel->_SetIsPlaying(false);
+
+    error = sceKernelSignalSema(channel->GetSemaphoreId(), 1);
+    CE_ASSERT(error >= 0, "PSPAudioRenderer::ReleaseChannel(): sceKernelSignalSema() failed: %08x\n", error);
 }
 
+//------------------------------------------------------------------------------
+/**
+*/
+int
+PSPAudioRenderer::ChannelThread(SceSize args, void* argp)
+{
+    audio::Channel* channel = (audio::Channel*)(*(unsigned int*)argp);
+    while (true)
+    {
+        bool paused;
+        channel->GetPaused(&paused);
+        if (paused) continue;
+
+        int error = sceKernelWaitSema(channel->GetSemaphoreId(), 1, 0);
+        CE_ASSERT(error >= 0, "PSPAudioRenderer::ChannelThreadl(): sceKernelWaitSema() failed: %08x\n", error);
+
+        bool isPlaying;
+        channel->IsPlaying(&isPlaying);
+        int index;
+        channel->GetIndex(&index);
+
+        if (isPlaying)
+        {
+            audio::Sound* sound;
+            channel->GetCurrentSound(&sound);
+            unsigned int length;
+            sound->GetLength(&length);
+            unsigned int position;
+            channel->GetPosition(&position);
+
+            int samplesRemaining = length - position;
+            if (samplesRemaining > 0)
+            {
+                int samplecount = PSP_AUDIO_SAMPLE_MAX;
+                if (samplesRemaining < PSP_AUDIO_SAMPLE_MAX)
+                {
+                    samplecount = PSP_AUDIO_SAMPLE_ALIGN(samplesRemaining);
+                    sceAudioSetChannelDataLen(index, samplecount);
+                }
+
+                float volume;
+                channel->GetVolume(&volume);
+                float panning;
+                channel->GetPan(&panning);
+                int leftVolume, rightVolume;
+                PSPAudioRenderer::Instance()->CalculateVolumesFromPanning(PAN_CLAMPEDLINEAR, volume, panning, leftVolume, rightVolume);
+                audio::Sound* sound;
+                channel->GetCurrentSound(&sound);
+                channel->SetPosition(position + samplecount);
+
+                error = sceKernelSignalSema(channel->GetSemaphoreId(), 1);
+                CE_ASSERT(error >= 0, "PSPAudioRenderer::ChannelThreadl(): sceKernelSignalSema() state[playing] failed: %08x\n", error);
+
+                sceAudioOutputPannedBlocking(index, leftVolume, rightVolume, sound->_GetSampleBufferPointer(position));
+            }
+            else
+            {
+                sceAudioChRelease(index);
+                audio::Mode mode;
+                channel->GetMode(&mode);
+                if (mode & audio::MODE_LOOP_NORMAL)
+                {
+                    channel->SetPosition(0);
+
+                    error = sceKernelSignalSema(channel->GetSemaphoreId(), 1);
+                    CE_ASSERT(error >= 0, "PSPAudioRenderer::ChannelThreadl(): sceKernelSignalSema() state[restart loop] failed: %08x\n", error);
+
+                    PSPAudioRenderer::Instance()->StartChannel(channel);
+                }
+                else
+                {
+                    channel->_SetIndex(audio::Channel::CHANNEL_FREE);
+                    channel->_SetIsPlaying(false);
+
+                    error = sceKernelSignalSema(channel->GetSemaphoreId(), 1);
+                    CE_ASSERT(error >= 0, "PSPAudioRenderer::ChannelThreadl(): sceKernelSignalSema() state[stoping] failed: %08x\n", error);
+                }
+            }
+        }
+        else
+        {
+            error = sceKernelSignalSema(channel->GetSemaphoreId(), 1);
+            CE_ASSERT(error >= 0, "PSPAudioRenderer::ChannelThreadl(): sceKernelSignalSema() state[idling] failed: %08x\n", error);
+            sceKernelDelayThread(10000);
+        }
+    }
+
+    return 0;
+}
 //------------------------------------------------------------------------------
 /**
 */

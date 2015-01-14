@@ -24,7 +24,7 @@ bool volatile exitRequest = false;
 /**
 */
 int
-ExitCallback(int arg1, int arg2, void *common)
+ExitCallback(int arg1, int arg2, void* common)
 {
     exitRequest = true;
     return 0;

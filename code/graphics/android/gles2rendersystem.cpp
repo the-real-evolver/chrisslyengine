@@ -24,15 +24,29 @@ const char* GLES2RenderSystem::DefaultVertexShader =
     "uniform mat4 projectionMatrix;\n"
     "uniform mat4 worldViewProjMatrix;\n"
     "uniform float morphWeight;\n"
+    "uniform int fogMode;\n"
+    "uniform float fogStart;\n"
+    "uniform float fogEnd;\n"
+    "varying float fogFactor;\n"
     "varying vec2 texCoordOut;\n"
     "void main()\n"
     "{\n"
     "    gl_Position = worldViewProjMatrix * position;\n"
     "    texCoordOut = texCoordIn;\n"
+    "	 if (1 == fogMode)\n"
+    "    {\n"
+    "        // range based linear fog\n"
+    "        fogFactor = clamp((fogEnd - length(viewMatrix * worldMatrix * position)) / (fogEnd - fogStart), 0.0, 1.0);\n"
+    "    }\n"
+    "    else\n"
+    "    {\n"
+    "        fogFactor = 1.0;\n"
+    "    }\n"
     "}\n";
 
 const char* GLES2RenderSystem::DefaultFragmentShader =
     "precision mediump float;\n"
+    "varying float fogFactor;\n"
     "varying vec2 texCoordOut;\n"
     "uniform sampler2D texture;\n"
     "uniform float uMod;\n"
@@ -41,7 +55,8 @@ const char* GLES2RenderSystem::DefaultFragmentShader =
     "uniform float vScale;\n"
     "void main()\n"
     "{\n"
-    "    gl_FragColor = texture2D(texture, vec2(uScale * texCoordOut.x + uMod, vScale * texCoordOut.y + vMod));\n"
+    "    vec4 fogColour = vec4(0.0, 0.0, 0.0, 1.0);\n"
+    "    gl_FragColor = mix(fogColour, texture2D(texture, vec2(uScale * texCoordOut.x + uMod, vScale * texCoordOut.y + vMod)), fogFactor);\n"
     "}\n";
 
 //------------------------------------------------------------------------------
@@ -372,6 +387,7 @@ GLES2RenderSystem::_SetPass(graphics::Pass* pass)
     if (!pass->IsProgrammable())
     {
         graphics::GpuProgramParameters* params = this->currentGpuProgram->GetDefaultParameters();
+
         if (pass->GetNumTextureUnitStates() > 0)
         {
             graphics::TextureUnitState* tus = pass->GetTextureUnitState(0);
@@ -379,6 +395,13 @@ GLES2RenderSystem::_SetPass(graphics::Pass* pass)
             params->SetNamedConstant("vMod", tus->GetTextureVScroll());
             params->SetNamedConstant("uScale", tus->GetTextureUScale());
             params->SetNamedConstant("vScale", tus->GetTextureVScale());
+        }
+
+        params->SetNamedConstant("fogMode", (int)pass->GetFogMode());
+        if (graphics::FOG_LINEAR == pass->GetFogMode())
+        {
+            params->SetNamedConstant("fogStart", pass->GetFogStart());
+            params->SetNamedConstant("fogEnd", pass->GetFogEnd());
         }
     }
 
@@ -398,6 +421,9 @@ GLES2RenderSystem::_SetPass(graphics::Pass* pass)
                     break;
                 case graphics::GCT_FLOAT1:
                     glUniform1f(def->location, *(float*)def->buffer);
+                    break;
+                case graphics::GCT_INT1:
+                    glUniform1i(def->location, *(int*)def->buffer);
                     break;
                 case graphics::GCT_SAMPLER2D:
                     glUniform1i(def->location, *(int*)def->buffer);
