@@ -45,7 +45,6 @@ ChannelBase::Stop()
     if (this->index != CHANNEL_FREE)
     {
         AudioSystem::Instance()->_GetAudioRenderer()->ReleaseChannel((Channel*)this);
-        this->index = CHANNEL_FREE;
     }
 
     return OK;

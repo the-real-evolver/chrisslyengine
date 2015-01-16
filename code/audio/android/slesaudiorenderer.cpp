@@ -177,6 +177,7 @@ SLESAudioRenderer::ReleaseChannel(audio::Channel* channel)
 {
     channel->Release();
     channel->_SetIsPlaying(false);
+    channel->_SetIndex(audio::Channel::CHANNEL_FREE);
 }
 
 //------------------------------------------------------------------------------

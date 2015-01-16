@@ -22,10 +22,15 @@ public:
     ~PSPChannel();
     /// returns the semaphore id of this channel
     SceUID GetSemaphoreId() const;
+    /// signal the channel thread to stop playback
+    void RequestStop();
+    /// returns if the playback stop was requested
+    bool GetStopRequest();
 
 private:
     SceUID semaphoreId;
     SceUID threadId;
+    volatile bool requestStop;
 
     static int ChannelNumber;
 };
