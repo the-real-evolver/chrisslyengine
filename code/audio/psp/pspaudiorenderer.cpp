@@ -5,6 +5,7 @@
 #include "pspaudiorenderer.h"
 #include "modeflags.h"
 #include "sound.h"
+#include "chrisslymath.h"
 #include "debug.h"
 #include <stdio.h>
 #include <pspthreadman.h>
@@ -77,7 +78,21 @@ PSPAudioRenderer::StartChannel(audio::Channel* channel)
 
     int samplecount = (length >= PSP_AUDIO_SAMPLE_MAX) ? PSP_AUDIO_SAMPLE_MAX : length;
     samplecount = PSP_AUDIO_SAMPLE_ALIGN(samplecount);
-    index = sceAudioChReserve(index, samplecount, GetFormat(numChannels));
+
+    PspAudioFormats format = PSP_AUDIO_FORMAT_MONO;
+    switch (numChannels)
+    {
+        case 1:
+            format = PSP_AUDIO_FORMAT_MONO;
+            break;
+        case 2:
+            format = PSP_AUDIO_FORMAT_STEREO;
+            break;
+        default:
+            CE_ASSERT(false, "PSPAudioRenderer::StartChannel(): %i channel audio output not supported\n", numChannels);
+    }
+
+    index = sceAudioChReserve(index, samplecount, format);
 
     channel->_SetIndex(index);
     if (index != audio::Channel::CHANNEL_FREE) channel->_SetIsPlaying(true);
@@ -118,8 +133,6 @@ PSPAudioRenderer::ReleaseChannel(audio::Channel* channel)
     int error = sceKernelWaitSema(channel->GetSemaphoreId(), 1, 0);
     CE_ASSERT(error >= 0, "PSPAudioRenderer::ReleaseChannel(): sceKernelWaitSema() failed: %08x\n", error);
 
-    int index;
-    channel->GetIndex(&index);
     channel->RequestStop();
     channel->_SetIsPlaying(false);
 
@@ -155,6 +168,7 @@ PSPAudioRenderer::ChannelThread(SceSize args, void* argp)
         {
             error = sceKernelSignalSema(channel->GetSemaphoreId(), 1);
             CE_ASSERT(error >= 0, "PSPAudioRenderer::ChannelThread(): sceKernelSignalSema() state[paused] failed: %08x\n", error);
+            sceKernelDelayThread(10000);
             continue;
         }
 
@@ -178,6 +192,7 @@ PSPAudioRenderer::ChannelThread(SceSize args, void* argp)
                     samplecount = PSP_AUDIO_SAMPLE_ALIGN(samplesRemaining);
                     sceAudioSetChannelDataLen(index, samplecount);
                 }
+                channel->SetPosition(position + samplecount);
 
                 float volume;
                 channel->GetVolume(&volume);
@@ -185,7 +200,6 @@ PSPAudioRenderer::ChannelThread(SceSize args, void* argp)
                 channel->GetPan(&panning);
                 int leftVolume, rightVolume;
                 CalculateVolumesFromPanning(PAN_CLAMPEDLINEAR, volume, panning, leftVolume, rightVolume);
-                channel->SetPosition(position + samplecount);
 
                 error = sceKernelSignalSema(channel->GetSemaphoreId(), 1);
                 CE_ASSERT(error >= 0, "PSPAudioRenderer::ChannelThread(): sceKernelSignalSema() state[playing] failed: %08x\n", error);
@@ -212,7 +226,7 @@ PSPAudioRenderer::ChannelThread(SceSize args, void* argp)
                     channel->_SetIsPlaying(false);
 
                     error = sceKernelSignalSema(channel->GetSemaphoreId(), 1);
-                    CE_ASSERT(error >= 0, "PSPAudioRenderer::ChannelThread(): sceKernelSignalSema() state[stoping] failed: %08x\n", error);
+                    CE_ASSERT(error >= 0, "PSPAudioRenderer::ChannelThread(): sceKernelSignalSema() state[stopping] failed: %08x\n", error);
                 }
             }
         }
@@ -226,6 +240,7 @@ PSPAudioRenderer::ChannelThread(SceSize args, void* argp)
 
     return 0;
 }
+
 //------------------------------------------------------------------------------
 /**
 */
@@ -235,36 +250,25 @@ PSPAudioRenderer::CalculateVolumesFromPanning(PanningMode mode, float volume, fl
     switch (mode)
     {
         case PAN_CLAMPEDLINEAR:
-        {
-            float leftGain = 1.0f - panning;
-            float rightGain = panning + 1.0f;
-            leftVolume = (int)((float)PSP_AUDIO_VOLUME_MAX * volume * ((leftGain > 1.0f) ? 1.0f : leftGain));
-            rightVolume = (int)((float)PSP_AUDIO_VOLUME_MAX * volume * ((rightGain > 1.0f) ? 1.0f : rightGain));
-        }
-        break;
+            {
+                float leftGain = 1.0f - panning;
+                float rightGain = panning + 1.0f;
+                leftVolume = (int)((float)PSP_AUDIO_VOLUME_MAX * volume * ((leftGain > 1.0f) ? 1.0f : leftGain));
+                rightVolume = (int)((float)PSP_AUDIO_VOLUME_MAX * volume * ((rightGain > 1.0f) ? 1.0f : rightGain));
+            }
+            break;
+
+        case PAN_CONSTANTPOWER:
+            {
+                float var = 3.141593f * (panning + 1.0f) / 4.0f;
+                leftVolume = (int)((float)PSP_AUDIO_VOLUME_MAX * volume * core::Math::Cos(var));
+                rightVolume = (int)((float)PSP_AUDIO_VOLUME_MAX * volume * core::Math::Sin(var));
+            }
+            break;
 
         default:
             CE_ASSERT(false, "PSPAudioRenderer::CalculateVolumesFromPanning(): panningmode '%i' not supported\n", mode);
     }
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-PspAudioFormats
-PSPAudioRenderer::GetFormat(int channels)
-{
-    switch (channels)
-    {
-        case 1:
-            return PSP_AUDIO_FORMAT_MONO;
-        case 2:
-            return PSP_AUDIO_FORMAT_STEREO;
-        default:
-            CE_ASSERT(false, "PSPAudioRenderer::GetFormat(): %i channel audio output not supported\n", channels);
-    }
-
-    return PSP_AUDIO_FORMAT_MONO;
 }
 
 } // namespace chrissly

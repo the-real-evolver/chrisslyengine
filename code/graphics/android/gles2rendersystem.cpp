@@ -33,7 +33,7 @@ const char* GLES2RenderSystem::DefaultVertexShader =
     "{\n"
     "    gl_Position = worldViewProjMatrix * position;\n"
     "    texCoordOut = texCoordIn;\n"
-    "	 if (1 == fogMode)\n"
+    "    if (1 == fogMode)\n"
     "    {\n"
     "        // range based linear fog\n"
     "        fogFactor = clamp((fogEnd - length(viewMatrix * worldMatrix * position)) / (fogEnd - fogStart), 0.0, 1.0);\n"

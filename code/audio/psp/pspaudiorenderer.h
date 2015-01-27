@@ -48,13 +48,11 @@ public:
     /// release the given channel
     void ReleaseChannel(audio::Channel* channel);
 
-    /// calculate left and right volume from volume and panning
-    static void CalculateVolumesFromPanning(PanningMode mode, float volume, float panning, int& leftVolume, int& rightVolume);
-    /// return a PspAudioFormats equivalent for the given number of channels
-    static PspAudioFormats GetFormat(int channels);
-
     /// channel thread
     static int ChannelThread(SceSize args, void* argp);
+
+    /// calculate left and right volume from volume and panning
+    static void CalculateVolumesFromPanning(PanningMode mode, float volume, float panning, int& leftVolume, int& rightVolume);
 
 private:
     /// copy constructor
