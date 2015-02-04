@@ -76,9 +76,6 @@ PSPAudioRenderer::StartChannel(audio::Channel* channel)
     int numChannels;
     sound->GetFormat(NULL, NULL, &numChannels, NULL);
 
-    int samplecount = (length >= PSP_AUDIO_SAMPLE_MAX) ? PSP_AUDIO_SAMPLE_MAX : length;
-    samplecount = PSP_AUDIO_SAMPLE_ALIGN(samplecount);
-
     PspAudioFormats format = PSP_AUDIO_FORMAT_MONO;
     switch (numChannels)
     {
@@ -92,7 +89,7 @@ PSPAudioRenderer::StartChannel(audio::Channel* channel)
             CE_ASSERT(false, "PSPAudioRenderer::StartChannel(): %i channel audio output not supported\n", numChannels);
     }
 
-    index = sceAudioChReserve(index, samplecount, format);
+    index = sceAudioChReserve(index, PSP_AUDIO_SAMPLE_ALIGN((length >= PSP_AUDIO_SAMPLE_MAX) ? PSP_AUDIO_SAMPLE_MAX : length), format);
 
     channel->_SetIndex(index);
     if (index != audio::Channel::CHANNEL_FREE) channel->_SetIsPlaying(true);
@@ -208,20 +205,19 @@ PSPAudioRenderer::ChannelThread(SceSize args, void* argp)
             }
             else
             {
-                sceAudioChRelease(index);
                 audio::Mode mode;
                 channel->GetMode(&mode);
                 if (mode & audio::MODE_LOOP_NORMAL)
                 {
                     channel->SetPosition(0);
+                    sceAudioSetChannelDataLen(index, PSP_AUDIO_SAMPLE_ALIGN((length >= PSP_AUDIO_SAMPLE_MAX) ? PSP_AUDIO_SAMPLE_MAX : length));
 
                     error = sceKernelSignalSema(channel->GetSemaphoreId(), 1);
                     CE_ASSERT(error >= 0, "PSPAudioRenderer::ChannelThread(): sceKernelSignalSema() state[restart loop] failed: %08x\n", error);
-
-                    PSPAudioRenderer::Instance()->StartChannel(channel);
                 }
                 else
                 {
+                    sceAudioChRelease(index);
                     channel->_SetIndex(audio::Channel::CHANNEL_FREE);
                     channel->_SetIsPlaying(false);
 
