@@ -210,6 +210,9 @@ public:
     /// gets the gpu program used by this pass
     GpuProgram* GetGpuProgram() const;
 
+    /// internal method for loading this pass
+    void _Load();
+
 private:
     SceneBlendOperation blendOperation;
     SceneBlendFactor sourceBlendFactor; // fragment

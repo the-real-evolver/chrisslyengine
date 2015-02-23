@@ -9,6 +9,7 @@
 #include "common.h"
 #include "texture.h"
 #include "blendmode.h"
+#include "chrisslystring.h"
 
 //------------------------------------------------------------------------------
 namespace chrissly
@@ -135,10 +136,16 @@ public:
     /// get the texture projection mapping mode
     TextureProjectionMappingMode GetTextureProjectionMappingMode() const;
 
+    /// set the name of the texture to use
+    void SetTextureName(const char* name);
+
     /// set texture to use
     void SetTexture(Texture* texture);
     /// get the used texture
     Texture* GetTexture() const;
+
+    /// internal method for loading this object as part of Material::load
+    void _Load();
 
 private:
     float uScale;
@@ -153,6 +160,7 @@ private:
     UVWAddressingMode addressMode;
     TextureMappingMode mappingMode;
     TextureProjectionMappingMode projectionMappingMode;
+    core::String textureName;
     Texture* texture;
 };
 

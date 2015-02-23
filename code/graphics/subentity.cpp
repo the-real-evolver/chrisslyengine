@@ -58,7 +58,7 @@ SubEntity::SetMaterial(Material* material)
 
     if (this->pMaterial != NULL)
     {
-        // load material
+        this->pMaterial->Load();
     }
 }
  

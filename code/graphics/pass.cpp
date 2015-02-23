@@ -456,5 +456,18 @@ Pass::GetGpuProgram() const
     return this->gpuProgram;
 }
 
+//------------------------------------------------------------------------------
+/**
+*/
+void
+Pass::_Load()
+{
+    unsigned int i;
+    for (i = 0; i < this->numTextureUnitStates; i++)
+    {
+        ((TextureUnitState*)DynamicArrayGet(&this->textureUnitStates, i))->_Load();
+    }
+}
+
 } // namespace graphics
 } // namespace chrissly

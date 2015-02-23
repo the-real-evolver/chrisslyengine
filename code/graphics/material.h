@@ -32,10 +32,15 @@ public:
     /// removes all Passes from this Material 
     void RemoveAllPasses();
 
+    /// loads the material, if it is not already (e.g. loads all textures)
+    void Load();
+
 private:
     /// list of primary passes
     mutable DynamicArray passes;
     unsigned short numPasses;
+
+    bool loaded;
 };
 
 } // namespace graphics

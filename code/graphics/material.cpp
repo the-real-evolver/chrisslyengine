@@ -13,7 +13,9 @@ namespace graphics
 //------------------------------------------------------------------------------
 /**
 */
-Material::Material() : numPasses(0)
+Material::Material() :
+    numPasses(0),
+    loaded(false)
 {
     DynamicArrayInit(&this->passes, 0);
 }
@@ -77,6 +79,23 @@ Material::RemoveAllPasses()
     DynamicArrayDelete(&this->passes);
 
     this->numPasses = 0;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+Material::Load()
+{
+    if (!this->loaded)
+    {
+        unsigned int i;
+        for (i = 0; i < this->numPasses; i++)
+        {
+            ((Pass*)DynamicArrayGet(&this->passes, i))->_Load();
+        }
+        this->loaded = true;
+    }
 }
 
 } // namespace graphics

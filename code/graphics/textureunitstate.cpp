@@ -3,6 +3,7 @@
 //  (C) 2012 Christian Bleicher
 //------------------------------------------------------------------------------
 #include "textureunitstate.h"
+#include "texturemanager.h"
 #include <stddef.h>
 
 namespace chrissly
@@ -207,6 +208,15 @@ TextureUnitState::GetTextureProjectionMappingMode() const
 /**
 */
 void
+TextureUnitState::SetTextureName(const char* name)
+{
+    this->textureName = name;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
 TextureUnitState::SetTexture(Texture* texture)
 {
     this->texture = texture;
@@ -219,6 +229,18 @@ Texture*
 TextureUnitState::GetTexture() const
 {
     return this->texture;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+TextureUnitState::_Load()
+{
+    if (this->textureName.C_Str() != NULL)
+    {
+        this->texture = TextureManager::Instance()->Load(this->textureName.C_Str());
+    }
 }
 
 } // namespace graphics
