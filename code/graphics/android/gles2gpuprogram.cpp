@@ -10,13 +10,6 @@
 namespace chrissly
 {
 
-// valid white spaces in GLSL: the space character, horizontal tab, vertical tab, form feed, carriage-return, and line-feed
-#define CE_GLSL_FIND_NEXT_TOKEN(str, start, end) \
-    while (' ' == str[0] || '\t' == str[0]  || '\v' == str[0] || '\f' == str[0] || '\r' == str[0] || '\n' == str[0]) {str++;} \
-    start = str; \
-    while (' ' != str[0] && '\t' != str[0]  && '\v' != str[0] && '\f' != str[0] && '\r' != str[0] && '\n' != str[0] && str[0] != ';') {str++;} \
-    end = str;
-
 //------------------------------------------------------------------------------
 /**
 */
@@ -59,8 +52,7 @@ GLES2GpuProgram::GLES2GpuProgram(const char* vertexShaderSource, const char* fra
     GLES2RenderSystem::CheckGlError("glGetAttribLocation");
 
     this->constantDefs = CE_NEW graphics::GpuNamedConstants;
-    this->ExtractConstantDefs(vertexShaderSource, this->constantDefs);
-    this->ExtractConstantDefs(fragmentShaderSource, this->constantDefs);
+    this->ExtractConstantDefs(this->constantDefs);
 
     this->defaultParams = NULL;
 }
@@ -162,92 +154,60 @@ GLES2GpuProgram::CreateParameters()
 /**
 */
 void
-GLES2GpuProgram::ExtractConstantDefs(const char* source, graphics::GpuNamedConstants* constantDefs)
+GLES2GpuProgram::ExtractConstantDefs(graphics::GpuNamedConstants* constantDefs)
 {
-    char *start, *end;
-    char* match = strstr(source, "uniform");
     int samplerIndex = 0;
-    while (match != NULL)
+
+    GLint activeUniformMaxLength = -1;
+    glGetProgramiv(this->gpuProgram, GL_ACTIVE_UNIFORM_MAX_LENGTH, &activeUniformMaxLength);
+    GLchar* stringBuffer = (GLchar*)CE_MALLOC(activeUniformMaxLength);
+
+    GLint numActiveUniforms = -1;
+    glGetProgramiv(this->gpuProgram, GL_ACTIVE_UNIFORMS, &numActiveUniforms);
+    GLint i;
+    for (i = 0; i < numActiveUniforms; i++)
     {
-        // skip 'uniform'
-        match += 7;
-
-        // parse datatype
-        CE_GLSL_FIND_NEXT_TOKEN(match, start, end);
-        core::String dataType;
-        dataType.Set(start, end - start);
-        if (0 == strcmp(dataType.C_Str(), "lowp") || 0 == strcmp(dataType.C_Str(), "mediump") || 0 == strcmp(dataType.C_Str(), "highp"))
+        GLsizei uniformNameLength = -1;
+        GLint arraySize = -1;
+        GLenum type;
+        glGetActiveUniform(this->gpuProgram, i, activeUniformMaxLength, &uniformNameLength, &arraySize, &type, stringBuffer);
+        if (!this->IsAutoConstantType(stringBuffer))
         {
-            // skip precision if specified
-            CE_GLSL_FIND_NEXT_TOKEN(match, start, end);
-            dataType.Set(start, end - start);
-        }
-        graphics::GpuConstantType constantType;
-        if (0 == strcmp(dataType.C_Str(), "mat4"))
-        {
-            constantType = graphics::GCT_MATRIX_4X4;
-        }
-        else if (0 == strcmp(dataType.C_Str(), "float"))
-        {
-            constantType = graphics::GCT_FLOAT1;
-        }
-        else if (0 == strcmp(dataType.C_Str(), "sampler2D"))
-        {
-            constantType = graphics::GCT_SAMPLER2D;
-        }
-        else if (0 == strcmp(dataType.C_Str(), "int"))
-        {
-            constantType = graphics::GCT_INT1;
-        }
-        else
-        {
-            match = strstr(match, "uniform");
-            continue;
-        }
-
-        // parse uniform name
-        CE_GLSL_FIND_NEXT_TOKEN(match, start, end);
-        core::String uniformName;
-        uniformName.Set(start, end - start);
-
-        if (!this->IsAutoConstantType(uniformName.C_Str()))
-        {
-            GLint uniformLocation = glGetUniformLocation(this->gpuProgram, uniformName.C_Str());
-            if (uniformLocation != -1)
+            graphics::GpuConstantDefinition* uniform = CE_NEW graphics::GpuConstantDefinition();
+            uniform->location = glGetUniformLocation(this->gpuProgram, stringBuffer);
+            switch (type)
             {
-                graphics::GpuConstantDefinition* uniform = CE_NEW graphics::GpuConstantDefinition();
-                uniform->location = uniformLocation;
-                uniform->constType = constantType;
-                switch (constantType)
-                {
-                    case graphics::GCT_MATRIX_4X4:
-                        uniform->size = sizeof(float) * 16;
-                        uniform->buffer = CE_MALLOC(uniform->size);
-                        break;
-                    case graphics::GCT_FLOAT1:
-                        uniform->size = sizeof(float);
-                        uniform->buffer = CE_MALLOC(uniform->size);
-                        break;
-                    case graphics::GCT_INT1:
-                        uniform->size = sizeof(int);
-                        uniform->buffer = CE_MALLOC(uniform->size);
-                        break;
-                    case graphics::GCT_SAMPLER2D:
-                        uniform->size = sizeof(int);
-                        uniform->buffer = CE_MALLOC(uniform->size);
-                        memcpy(uniform->buffer, &samplerIndex, uniform->size);
-                        samplerIndex++;
-                        break;
-                }
-
-                CE_LOG("GLES2GpuProgram::ExtractConstantDefs: add '%s' '%s' '%u' '%i'\n", dataType.C_Str(), uniformName.C_Str(), uniform->size, uniform->location);
-
-                HashTableInsert(&constantDefs->map, uniformName.C_Str(), uniform);
+                case GL_FLOAT_MAT4:
+                    uniform->constType = graphics::GCT_MATRIX_4X4;
+                    uniform->size = sizeof(float) * 16;
+                    uniform->buffer = CE_MALLOC(uniform->size);
+                    break;
+                case GL_FLOAT:
+                    uniform->constType = graphics::GCT_FLOAT1;
+                    uniform->size = sizeof(float);
+                    uniform->buffer = CE_MALLOC(uniform->size);
+                    break;
+                case GL_INT:
+                    uniform->constType = graphics::GCT_INT1;
+                    uniform->size = sizeof(int);
+                    uniform->buffer = CE_MALLOC(uniform->size);
+                    break;
+                case GL_SAMPLER_2D:
+                    uniform->constType = graphics::GCT_SAMPLER2D;
+                    uniform->size = sizeof(int);
+                    uniform->buffer = CE_MALLOC(uniform->size);
+                    memcpy(uniform->buffer, &samplerIndex, uniform->size);
+                    samplerIndex++;
+                    break;
             }
-        }
 
-        match = strstr(match, "uniform");
+            CE_LOG("GLES2GpuProgram::ExtractConstantDefs: add '%i' '%s' '%u' '%i' '%i'\n", type, stringBuffer, uniform->size, uniform->location, arraySize);
+
+            HashTableInsert(&constantDefs->map, stringBuffer, uniform);
+        }
     }
+
+    CE_FREE(stringBuffer);
 }
 
 //------------------------------------------------------------------------------
