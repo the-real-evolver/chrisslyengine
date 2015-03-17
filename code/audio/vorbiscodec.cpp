@@ -34,7 +34,7 @@ VorbisCodec::~VorbisCodec()
 //------------------------------------------------------------------------------
 /**
 */
-bool
+void
 VorbisCodec::SetupSound(const char* filename, Mode mode, void** sampleBuffer, unsigned int& length, AudioFormat& format, SoundType& type, int& channels, int& bits)
 {
     if (MODE_DEFAULT == mode || mode & MODE_CREATESAMPLE)
@@ -51,10 +51,64 @@ VorbisCodec::SetupSound(const char* filename, Mode mode, void** sampleBuffer, un
         bits = 16;
         length = stb_vorbis_decode_memory((unsigned char*)fileBuffer, fileSize, &channels, NULL, (short int**)sampleBuffer);
         CE_FREE(fileBuffer);
-
-        return true;
     }
+    else if (mode & MODE_CREATESTREAM)
+    {
+        CE_ASSERT(false, "VorbisCodec::SetupSound(): vorbis codec does not support streaming");
+    }
+}
 
+//------------------------------------------------------------------------------
+/**
+*/
+void
+VorbisCodec::InitialiseStream()
+{
+
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+VorbisCodec::FillStreamBackBuffer()
+{
+
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+VorbisCodec::SwapStreamBuffers()
+{
+
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void*
+VorbisCodec::GetStreamBufferPointer() const
+{
+    return NULL;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+unsigned int
+VorbisCodec::GetStreamBufferLength() const
+{
+    return 0;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+bool
+VorbisCodec::EndOfStream() const
+{
     return false;
 }
 

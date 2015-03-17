@@ -152,6 +152,15 @@ SoundBase::_GetSampleBufferPointer(unsigned int position) const
 //------------------------------------------------------------------------------
 /**
 */
+Codec*
+SoundBase::_GetCodec() const
+{
+    return this->codec;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
 void
 SoundBase::CreateInternalResourcesImpl()
 {

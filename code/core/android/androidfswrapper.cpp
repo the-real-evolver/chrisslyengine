@@ -55,10 +55,37 @@ AndroidFSWrapper::Read(core::FileHandle fileHandle, void* buf, unsigned int numB
 /**
 */
 void
+AndroidFSWrapper::Seek(core::FileHandle fileHandle, int offset, core::SeekOrigin whence)
+{
+    off_t result = AAsset_seek(fileHandle.handle, (off_t)offset, AndroidFSWrapper::Get(whence));
+    CE_ASSERT(result != -1, "FSWrapper::Seek(): failed to seek file '%i'\n", fileHandle.handle);
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
 AndroidFSWrapper::_Initialise(AAssetManager* assetManager)
 {
     AndroidFSWrapper::AssetManager = assetManager;
     CE_LOG("AndroidFSWrapper::_Initialise\n");
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+int
+AndroidFSWrapper::Get(core::SeekOrigin origin)
+{
+    switch (origin)
+    {
+        case core::Begin:   return SEEK_SET;
+        case core::Current: return SEEK_CUR;
+        case core::End:     return SEEK_END;
+        default: CE_ASSERT(false, "FSWrapper::Get(): illegal SeekOrigin '%i'\n", origin);
+    }
+
+    return 0;
 }
 
 } // namespace chrissly

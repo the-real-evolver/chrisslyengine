@@ -69,7 +69,7 @@ GLES2GpuProgram::~GLES2GpuProgram()
     glGetProgramiv(this->gpuProgram, GL_ATTACHED_SHADERS, &numAttachedShaders);
 
     GLsizei shaderCount = 0;
-    GLuint* shaders = (GLuint*) CE_MALLOC(numAttachedShaders * sizeof(GLuint));
+    GLuint* shaders = (GLuint*)CE_MALLOC(numAttachedShaders * sizeof(GLuint));
     glGetAttachedShaders(this->gpuProgram, numAttachedShaders, &shaderCount, shaders);
 
     GLint i;

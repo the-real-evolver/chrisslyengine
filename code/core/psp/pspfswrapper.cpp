@@ -70,7 +70,7 @@ PSPFSWrapper::Read(core::FileHandle fileHandle, void* buf, unsigned int numBytes
 void
 PSPFSWrapper::Seek(core::FileHandle fileHandle, int offset, core::SeekOrigin whence)
 {
-    sceIoLseek32(fileHandle.handle, (SceOff)offset, PSPFSWrapper::Get(whence));
+    sceIoLseek(fileHandle.handle, (SceOff)offset, PSPFSWrapper::Get(whence));
 }
 
 //------------------------------------------------------------------------------

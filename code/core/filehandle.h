@@ -11,6 +11,7 @@
 
 //------------------------------------------------------------------------------
 #if __PSP__
+#include "pspiofilemgr.h"
 namespace chrissly
 {
 namespace core
@@ -19,9 +20,9 @@ namespace core
 struct FileHandle
 {
     /// default constructor
-    FileHandle() : handle(0) {};
+    FileHandle() : handle(-1) {};
 
-    int handle;
+    SceUID handle;
 };
 
 } // namespace core

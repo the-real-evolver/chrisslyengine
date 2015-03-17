@@ -7,12 +7,12 @@
 set NDK=C:\dev\android\android-ndk-r8
 set CE=..\..
 
-XCOPY /i /y %CE%\code\core                  %CE%\android\ChrisslyEngine_Android\jni\core
-XCOPY /i /y %CE%\code\core\android          %CE%\android\ChrisslyEngine_Android\jni\core\android
-XCOPY /i /y %CE%\code\graphics              %CE%\android\ChrisslyEngine_Android\jni\graphics
-XCOPY /i /y %CE%\code\graphics\android      %CE%\android\ChrisslyEngine_Android\jni\graphics\android
-XCOPY /i /y %CE%\code\audio                 %CE%\android\ChrisslyEngine_Android\jni\audio
-XCOPY /i /y %CE%\code\audio\android         %CE%\android\ChrisslyEngine_Android\jni\audio\android
-XCOPY /i /y %CE%\code\thirdparty\stb_vorbis %CE%\android\ChrisslyEngine_Android\jni\thirdparty\stb_vorbis
+XCOPY /i /y %CE%\code\core             %CE%\android\ChrisslyEngine_Android\jni\core
+XCOPY /i /y %CE%\code\core\android     %CE%\android\ChrisslyEngine_Android\jni\core\android
+XCOPY /i /y %CE%\code\graphics         %CE%\android\ChrisslyEngine_Android\jni\graphics
+XCOPY /i /y %CE%\code\graphics\android %CE%\android\ChrisslyEngine_Android\jni\graphics\android
+XCOPY /i /y %CE%\code\audio            %CE%\android\ChrisslyEngine_Android\jni\audio
+XCOPY /i /y %CE%\code\audio\android    %CE%\android\ChrisslyEngine_Android\jni\audio\android
+XCOPY /i /y %CE%\code\thirdparty\stb   %CE%\android\ChrisslyEngine_Android\jni\thirdparty\stb
 
 %NDK%\ndk-build

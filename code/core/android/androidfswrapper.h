@@ -29,10 +29,15 @@ public:
     static unsigned int GetFileSize(core::FileHandle fileHandle);
     /// read from a file
     static int Read(core::FileHandle fileHandle, void* buf, unsigned int numBytes);
+    /// seek in a file
+    static void Seek(core::FileHandle fileHandle, int offset, core::SeekOrigin whence);
     /// initialise the filesystem
     static void _Initialise(AAssetManager* assetManager);
 
 private:
+    /// return a Posix equivalent for a SeekOrigin value
+    static int Get(core::SeekOrigin origin);
+
     static AAssetManager* AssetManager;
 };
 

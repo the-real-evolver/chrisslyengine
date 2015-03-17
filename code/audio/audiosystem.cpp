@@ -182,6 +182,15 @@ AudioSystem::Update()
         channel->GetIndex(&index);
         if (index != Channel::CHANNEL_FREE)
         {
+            audio::Mode mode;
+            channel->GetMode(&mode);
+            if (mode & audio::MODE_CREATESTREAM)
+            {
+                audio::Sound* sound;
+                channel->GetCurrentSound(&sound);
+                sound->_GetCodec()->FillStreamBackBuffer();
+            }
+
             this->activeRenderer->UpdateChannel(channel);
         }
     }

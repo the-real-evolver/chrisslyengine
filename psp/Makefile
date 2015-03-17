@@ -20,7 +20,7 @@ INCDIR = $(PSPSDK) $(CE)/code/core $(CE)/code/graphics $(CE)/code/application co
 # object files
 #------------------------------------------------------------------------------
 OBJS = $(CE)/code/core/quaternion.o $(CE)/code/core/vector3.o $(CE)/code/core/matrix3.o $(CE)/code/core/matrix4.o $(CE)/code/core/chrisslymemory.o $(CE)/code/core/chrisslystring.o \
-       $(CE)/code/core/psp/pspmath.o $(CE)/code/core/psp/pspfswrapper.o $(CE)/code/core/psp/pspdebug.o \
+       $(CE)/code/core/psp/pspfswrapper.o $(CE)/code/core/psp/pspdebug.o \
        $(CE)/code/graphics/psp/pspmappings.o $(CE)/code/graphics/psp/psphardwarebuffermanager.o $(CE)/code/graphics/psp/psprendersystem.o \
        $(CE)/code/graphics/graphicssystem.o \
        $(CE)/code/graphics/texturemanager.o $(CE)/code/graphics/texturebase.o $(CE)/code/graphics/psp/psptexture.o \

@@ -7,6 +7,7 @@
     (C) 2014 Christian Bleicher
 */
 #include "codec.h"
+#include "filehandle.h"
 
 //------------------------------------------------------------------------------
 namespace chrissly
@@ -22,7 +23,33 @@ public:
     /// destructor
     ~WavCodec();
     /// called by Sound, create buffers ect.
-    bool SetupSound(const char* filename, Mode mode, void** sampleBuffer, unsigned int& length, AudioFormat& format, SoundType& type, int& channels, int& bits);
+    void SetupSound(const char* filename, Mode mode, void** sampleBuffer, unsigned int& length, AudioFormat& format, SoundType& type, int& channels, int& bits);
+    /// initialise the codec for streaming
+    void InitialiseStream();
+    /// loads data into the current streambackbuffer
+    void FillStreamBackBuffer();
+    /// swaps the streambuffers, called when a buffer finishes playing
+    void SwapStreamBuffers();
+    /// get pointer to the current streambuffer
+    void* GetStreamBufferPointer() const;
+    /// retrieves the length of the current streambuffer
+    unsigned int GetStreamBufferLength() const;
+    /// gets a value that indicates whether the current stream position is at the end of the stream
+    bool EndOfStream() const;
+
+private:
+    unsigned int lengthInBytes;
+    unsigned char bytesPerSample;
+    bool openedAsStream;
+    chrissly::core::FileHandle streamFileHandle;
+    unsigned int seekPosition;
+    bool endOfStream;
+    mutable void* streamBuffers[2];
+    volatile unsigned char currentStreamBufferIndex;
+    unsigned int currentStreamBufferLength;
+    unsigned int bytesToLoadToBackBuffer;
+    unsigned int bytesWrittenToBackBuffer;
+    unsigned int bytesToLoadPerFrame;
 };
 
 } // namespace audio

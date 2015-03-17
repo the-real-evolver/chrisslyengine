@@ -37,6 +37,8 @@ public:
     bool _IsRealized() const;
     /// get pointer to the sample at the given position
     void* _GetSampleBufferPointer(unsigned int position) const;
+    /// get pointer to the attached codec
+    Codec* _GetCodec() const;
     /// implementation of creating internal sound resources
     virtual void CreateInternalResourcesImpl();
 

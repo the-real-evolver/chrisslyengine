@@ -73,8 +73,10 @@ PSPAudioRenderer::StartChannel(audio::Channel* channel)
     channel->GetCurrentSound(&sound);
     unsigned int length;
     sound->GetLength(&length);
-    int numChannels;
-    sound->GetFormat(NULL, NULL, &numChannels, NULL);
+    int numChannels, bits;
+    sound->GetFormat(NULL, NULL, &numChannels, &bits);
+    audio::Mode mode;
+    channel->GetMode(&mode);
 
     PspAudioFormats format = PSP_AUDIO_FORMAT_MONO;
     switch (numChannels)
@@ -89,8 +91,20 @@ PSPAudioRenderer::StartChannel(audio::Channel* channel)
             CE_ASSERT(false, "PSPAudioRenderer::StartChannel(): %i channel audio output not supported\n", numChannels);
     }
 
-    index = sceAudioChReserve(index, PSP_AUDIO_SAMPLE_ALIGN((length >= PSP_AUDIO_SAMPLE_MAX) ? PSP_AUDIO_SAMPLE_MAX : length), format);
+    unsigned int samplecount = 0;
+    if (mode & audio::MODE_CREATESTREAM)
+    {
+        audio::Codec* codec = sound->_GetCodec();
+        codec->InitialiseStream();
+        samplecount = codec->GetStreamBufferLength() / (numChannels * (bits >> 3));
+    }
+    else
+    {
+        samplecount = PSP_AUDIO_SAMPLE_MAX;
+    }
+    if (length < samplecount) samplecount = length;
 
+    index = sceAudioChReserve(index, PSP_AUDIO_SAMPLE_ALIGN(samplecount), format);
     channel->_SetIndex(index);
     if (index != audio::Channel::CHANNEL_FREE) channel->_SetIsPlaying(true);
 
@@ -179,12 +193,25 @@ PSPAudioRenderer::ChannelThread(SceSize args, void* argp)
             sound->GetLength(&length);
             unsigned int position;
             channel->GetPosition(&position);
+            audio::Mode mode;
+            channel->GetMode(&mode);
+            int numChannels, bits;
+            sound->GetFormat(NULL, NULL, &numChannels, &bits);
+            audio::Codec* codec = sound->_GetCodec();
+            unsigned int samplecount = 0;
 
             int samplesRemaining = length - position;
             if (samplesRemaining > 0)
             {
-                int samplecount = PSP_AUDIO_SAMPLE_MAX;
-                if (samplesRemaining < PSP_AUDIO_SAMPLE_MAX)
+                if (mode & audio::MODE_CREATESTREAM)
+                {
+                    samplecount = codec->GetStreamBufferLength() / (numChannels * (bits >> 3));
+                }
+                else
+                {
+                    samplecount = PSP_AUDIO_SAMPLE_MAX;
+                }
+                if (samplesRemaining < samplecount)
                 {
                     samplecount = PSP_AUDIO_SAMPLE_ALIGN(samplesRemaining);
                     sceAudioSetChannelDataLen(index, samplecount);
@@ -201,16 +228,33 @@ PSPAudioRenderer::ChannelThread(SceSize args, void* argp)
                 error = sceKernelSignalSema(channel->GetSemaphoreId(), 1);
                 CE_ASSERT(error >= 0, "PSPAudioRenderer::ChannelThread(): sceKernelSignalSema() state[playing] failed: %08x\n", error);
 
-                sceAudioOutputPannedBlocking(index, leftVolume, rightVolume, sound->_GetSampleBufferPointer(position));
+                if (mode & audio::MODE_CREATESTREAM)
+                {
+                    if (position > 0) codec->SwapStreamBuffers();
+                    sceAudioOutputPannedBlocking(index, leftVolume, rightVolume, codec->GetStreamBufferPointer());
+                }
+                else
+                {
+                    sceAudioOutputPannedBlocking(index, leftVolume, rightVolume, sound->_GetSampleBufferPointer(position));
+                }
             }
             else
             {
-                audio::Mode mode;
-                channel->GetMode(&mode);
                 if (mode & audio::MODE_LOOP_NORMAL)
                 {
+                    if (mode & audio::MODE_CREATESTREAM)
+                    {
+                        codec->InitialiseStream();
+                        samplecount = codec->GetStreamBufferLength() / (numChannels * (bits >> 3));
+                    }
+                    else
+                    {
+                        samplecount = PSP_AUDIO_SAMPLE_MAX;
+                    }
+                    if (length < samplecount) samplecount = length;
+
                     channel->SetPosition(0);
-                    sceAudioSetChannelDataLen(index, PSP_AUDIO_SAMPLE_ALIGN((length >= PSP_AUDIO_SAMPLE_MAX) ? PSP_AUDIO_SAMPLE_MAX : length));
+                    sceAudioSetChannelDataLen(index, PSP_AUDIO_SAMPLE_ALIGN(samplecount));
 
                     error = sceKernelSignalSema(channel->GetSemaphoreId(), 1);
                     CE_ASSERT(error >= 0, "PSPAudioRenderer::ChannelThread(): sceKernelSignalSema() state[restart loop] failed: %08x\n", error);

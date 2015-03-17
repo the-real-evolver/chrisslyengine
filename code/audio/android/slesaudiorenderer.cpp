@@ -3,6 +3,7 @@
 //  (C) 2014 Christian Bleicher
 //------------------------------------------------------------------------------
 #include "slesaudiorenderer.h"
+#include "codec.h"
 #include <stdio.h>
 #include <math.h>
 
@@ -11,7 +12,7 @@ namespace chrissly
 
 SLESAudioRenderer* SLESAudioRenderer::Singleton = NULL;
 
-SLEnvironmentalReverbSettings SLESAudioRenderer::reverbSettings = SL_I3DL2_ENVIRONMENT_PRESET_DEFAULT;
+SLEnvironmentalReverbSettings SLESAudioRenderer::ReverbSettings = SL_I3DL2_ENVIRONMENT_PRESET_DEFAULT;
 
 //------------------------------------------------------------------------------
 /**
@@ -60,7 +61,7 @@ SLESAudioRenderer::_Initialise(void* customParams)
     result = (*this->outputMix)->GetInterface(this->outputMix, SL_IID_ENVIRONMENTALREVERB, &this->outputMixEnvironmentalReverb);
     CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::_Initialise(): failed to get environmental reverb interface\n");
 
-    result = (*this->outputMixEnvironmentalReverb)->SetEnvironmentalReverbProperties(this->outputMixEnvironmentalReverb, &reverbSettings);
+    result = (*this->outputMixEnvironmentalReverb)->SetEnvironmentalReverbProperties(this->outputMixEnvironmentalReverb, &ReverbSettings);
     CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::_Initialise(): failed to set environmental reverb properties\n");
 }
 
@@ -112,9 +113,20 @@ SLESAudioRenderer::StartChannel(audio::Channel* channel)
     sound->GetLength(&length);
     int numChannels, bits;
     sound->GetFormat(NULL, NULL, &numChannels, &bits);
+    audio::Mode mode;
+    channel->GetMode(&mode);
 
     SLAndroidSimpleBufferQueueItf bufferQueueInterface = channel->GetBufferQueueInterface();
-    result = (*bufferQueueInterface)->Enqueue(bufferQueueInterface, sound->_GetSampleBufferPointer(0), length * numChannels * (bits >> 3));
+    if (mode & audio::MODE_CREATESTREAM)
+    {
+        audio::Codec* codec = sound->_GetCodec();
+        codec->InitialiseStream();
+        result = (*bufferQueueInterface)->Enqueue(bufferQueueInterface, codec->GetStreamBufferPointer(), codec->GetStreamBufferLength());
+    }
+    else
+    {
+        result = (*bufferQueueInterface)->Enqueue(bufferQueueInterface, sound->_GetSampleBufferPointer(0), length * numChannels * (bits >> 3));
+    }
     CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::StartChannel(): failed to enqueue buffer\n");
 
     channel->_SetIndex(0);
@@ -187,26 +199,54 @@ void
 SLESAudioRenderer::BufferQueueCallback(SLAndroidSimpleBufferQueueItf bufferQueueInterface, void* context)
 {
     audio::Channel* channel = (audio::Channel*)context;
+    SLresult result;
+    audio::Sound* sound;
+    channel->GetCurrentSound(&sound);
     audio::Mode mode;
     channel->GetMode(&mode);
-    if (mode & audio::MODE_LOOP_NORMAL)
+    if (mode & audio::MODE_CREATESTREAM)
     {
-        audio::Sound* sound;
-        channel->GetCurrentSound(&sound);
-        unsigned int length;
-        sound->GetLength(&length);
-        int numChannels, bits;
-        sound->GetFormat(NULL, NULL, &numChannels, &bits);
-
-        SLAndroidSimpleBufferQueueItf bufferQueueInterface = channel->GetBufferQueueInterface();
-        SLresult result = (*bufferQueueInterface)->Enqueue(bufferQueueInterface, sound->_GetSampleBufferPointer(0), length * numChannels * (bits >> 3));
-        CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::BufferQueueCallback(): failed to enqueue buffer\n");
+        audio::Codec* codec = sound->_GetCodec();
+        if (codec->EndOfStream())
+        {
+            if (mode & audio::MODE_LOOP_NORMAL)
+            {
+                codec->InitialiseStream();
+                result = (*bufferQueueInterface)->Enqueue(bufferQueueInterface, codec->GetStreamBufferPointer(), codec->GetStreamBufferLength());
+                CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::BufferQueueCallback(): failed to enqueue buffer for streaming\n");
+            }
+            else
+            {
+                channel->Release();
+                channel->_SetIsPlaying(false);
+                channel->_SetIndex(audio::Channel::CHANNEL_FREE);
+            }
+        }
+        else
+        {
+            codec->SwapStreamBuffers();
+            result = (*bufferQueueInterface)->Enqueue(bufferQueueInterface, codec->GetStreamBufferPointer(), codec->GetStreamBufferLength());
+            CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::BufferQueueCallback(): failed to enqueue buffer for streaming\n");
+        }
     }
     else
     {
-        channel->Release();
-        channel->_SetIsPlaying(false);
-        channel->_SetIndex(audio::Channel::CHANNEL_FREE);
+        if (mode & audio::MODE_LOOP_NORMAL)
+        {
+            unsigned int length;
+            sound->GetLength(&length);
+            int numChannels, bits;
+            sound->GetFormat(NULL, NULL, &numChannels, &bits);
+
+            result = (*bufferQueueInterface)->Enqueue(bufferQueueInterface, sound->_GetSampleBufferPointer(0), length * numChannels * (bits >> 3));
+            CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::BufferQueueCallback(): failed to enqueue buffer\n");
+        }
+        else
+        {
+            channel->Release();
+            channel->_SetIsPlaying(false);
+            channel->_SetIndex(audio::Channel::CHANNEL_FREE);
+        }
     }
 }
 
