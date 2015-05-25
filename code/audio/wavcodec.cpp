@@ -117,6 +117,7 @@ WavCodec::SetupSound(const char* filename, Mode mode, void** sampleBuffer, unsig
         this->lengthInBytes = dataSize;
         this->streamBuffers[0] = CE_MALLOC_ALIGN(16, MaxStreamBufferSamples * this->bytesPerSample);
         this->streamBuffers[1] = CE_MALLOC_ALIGN(16, MaxStreamBufferSamples * this->bytesPerSample);
+        *sampleBuffer = NULL;
     }
 }
 

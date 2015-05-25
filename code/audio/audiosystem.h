@@ -10,6 +10,7 @@
 #include "channel.h"
 #include "audiorenderer.h"
 #include "dynamicarray.h"
+#include "vector3.h"
 
 //------------------------------------------------------------------------------
 namespace chrissly
@@ -40,6 +41,8 @@ public:
     Result PlaySound(int channelid, Sound* sound, bool paused, Channel** channel);
     /// updates the audio system. This should be called once per 'game' tick, or once per frame in your application
     Result Update();
+    /// updates the position and orientation of the 3D sound listener
+    Result Set3DListenerAttributes(const core::Vector3* pos, const core::Vector3* forward, const core::Vector3* up);
 
     /// internal method to retrieve a pointer to the currently selected audiorenderer
     AudioRenderer* _GetAudioRenderer() const;
@@ -55,6 +58,10 @@ private:
     DynamicArray soundPool;
 
     DynamicArray channelPool;
+
+    core::Vector3 listenerPos;
+    core::Vector3 listenerForward;
+    core::Vector3 listenerUp;
 };
 
 } // namespace audio

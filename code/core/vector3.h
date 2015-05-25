@@ -33,6 +33,10 @@ public:
     Vector3 operator + (const Vector3& rkVector) const;
     /// vector addition
     Vector3& operator += (const Vector3& rkVector);
+    /// vector subtraction
+    Vector3 operator - (const Vector3& rkVector) const;
+    /// vector subtraction
+    Vector3& operator -= (const Vector3& rkVector);
     /// access to the components by index operator
     float& operator [] (const size_t i);
     /// access to the components by index operator
@@ -66,6 +70,17 @@ public:
             (assuming you're using a CRT monitor, of course).
     */
     Vector3 CrossProduct(const Vector3& rkVector) const;
+    /// normalises the vector
+    /**
+        @note
+            This function will not crash for zero-sized vectors, but there
+            will be no changes made to their components.
+    */
+    void Normalise();
+    /// calculates the dot (scalar) product of this vector with another
+    float DotProduct(const Vector3& vec);
+    /// returns the length (magnitude) of the vector
+    float Length() const;
 
     float x;
     float y; 

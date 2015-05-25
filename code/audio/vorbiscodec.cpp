@@ -37,25 +37,28 @@ VorbisCodec::~VorbisCodec()
 void
 VorbisCodec::SetupSound(const char* filename, Mode mode, void** sampleBuffer, unsigned int& length, AudioFormat& format, SoundType& type, int& channels, int& bits)
 {
+    FileHandle fd = FSWrapper::Open(filename, ReadAccess, 0777);
+
     if (MODE_DEFAULT == mode || mode & MODE_CREATESAMPLE)
     {
-        FileHandle fd = FSWrapper::Open(filename, ReadAccess, 0777);
         unsigned int fileSize = FSWrapper::GetFileSize(fd);
         void* fileBuffer = CE_MALLOC_ALIGN(16, fileSize);
         CE_ASSERT(fileBuffer != NULL, "VorbisCodec::SetupSound(): failed to allocate '%i' bytes for samplebuffer", fileSize);
         FSWrapper::Read(fd, fileBuffer, fileSize);
         FSWrapper::Close(fd);
 
-        format = AUDIO_FORMAT_PCM16;
-        type = SOUND_TYPE_OGGVORBIS;
-        bits = 16;
         length = stb_vorbis_decode_memory((unsigned char*)fileBuffer, fileSize, &channels, NULL, (short int**)sampleBuffer);
         CE_FREE(fileBuffer);
     }
-    else if (mode & MODE_CREATESTREAM)
+    else if (mode & MODE_CREATECOMPRESSEDSAMPLE || mode & MODE_CREATESTREAM)
     {
+        FSWrapper::Close(fd);
         CE_ASSERT(false, "VorbisCodec::SetupSound(): vorbis codec does not support streaming");
     }
+
+    format = AUDIO_FORMAT_PCM16;
+    type = SOUND_TYPE_OGGVORBIS;
+    bits = 16;
 }
 
 //------------------------------------------------------------------------------

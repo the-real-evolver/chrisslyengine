@@ -4,12 +4,16 @@
 //------------------------------------------------------------------------------
 #include "channelbase.h"
 #include "audiosystem.h"
+#include "chrisslymath.h"
+#include "debug.h"
 #include <stdio.h>
 
 namespace chrissly
 {
 namespace audio
 {
+
+using namespace chrissly::core;
 
 //------------------------------------------------------------------------------
 /**
@@ -21,8 +25,11 @@ ChannelBase::ChannelBase() :
     panning(0.0f),
     mode(MODE_DEFAULT),
     position(0),
+    minDistance(1.0f),
+    maxDistance(10000.0f),
     currentSound(NULL),
     index(CHANNEL_FREE),
+    attenuationFactor(0.0f),
     propertiesHasChanged(false)
 {
 
@@ -121,6 +128,30 @@ ChannelBase::GetVolume(float* volume)
 /**
 */
 Result
+ChannelBase::SetPressureLevel(float decibel)
+{
+    if (decibel > 0.0f)
+    {
+        this->volume = 1.0f;
+    }
+    else if (decibel < -32.0f)
+    {
+        this->volume = 0.0f;
+    }
+    else
+    {
+        this->volume = Math::Pow(10, decibel / 20.0f);
+    }
+
+    this->propertiesHasChanged = true;
+
+    return OK;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+Result
 ChannelBase::SetPan(float pan)
 {
     if (pan > 1.0f)
@@ -198,6 +229,50 @@ ChannelBase::GetPosition(unsigned int* position)
 /**
 */
 Result
+ChannelBase::Set3DAttributes(const Vector3* pos)
+{
+    if (pos != NULL) this->pos = *pos;
+    return OK;
+}
+
+ //------------------------------------------------------------------------------
+/**
+*/
+Result
+ChannelBase::Get3DAttributes(Vector3* pos)
+{
+    if (pos != NULL) *pos = this->pos;
+    return OK;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+Result
+ChannelBase::Set3DMinMaxDistance(float mindistance, float maxdistance)
+{
+    CE_ASSERT(mindistance >= 0.0f && maxdistance > mindistance, "Channel::Set3DMinMaxDistance: invalid parameters\n");
+
+    this->minDistance = mindistance;
+    this->maxDistance = maxdistance;
+    return OK;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+Result
+ChannelBase::Get3DMinMaxDistance(float* mindistance, float* maxdistance)
+{
+    if (mindistance != NULL) *mindistance = this->minDistance;
+    if (maxdistance != NULL) *maxdistance = this->maxDistance;
+    return OK;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+Result
 ChannelBase::GetCurrentSound(Sound** sound)
 {
     *sound = this->currentSound;
@@ -240,6 +315,24 @@ void
 ChannelBase::_SetIsPlaying(bool isplaying)
 {
     this->isPlaying = isplaying;
+}
+
+ //------------------------------------------------------------------------------
+/**
+*/
+void
+ChannelBase::_SetAttenuationFactor(float attenuation)
+{
+    this->attenuationFactor = attenuation;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+float
+ChannelBase::_GetAttenuationFactor() const
+{
+    return this->attenuationFactor;
 }
 
 //------------------------------------------------------------------------------

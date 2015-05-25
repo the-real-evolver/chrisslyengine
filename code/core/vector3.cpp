@@ -3,6 +3,7 @@
 //  (C) 2011 Christian Bleicher
 //------------------------------------------------------------------------------
 #include "vector3.h"
+#include "chrisslymath.h"
 #include "debug.h"
 
 namespace chrissly
@@ -106,6 +107,33 @@ Vector3::operator += (const Vector3& rkVector)
 //------------------------------------------------------------------------------
 /**
 */
+Vector3
+Vector3::operator - (const Vector3& rkVector) const
+{
+    return Vector3
+    (
+        this->x - rkVector.x,
+        this->y - rkVector.y,
+        this->z - rkVector.z
+    );
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+Vector3&
+Vector3::operator -= (const Vector3& rkVector)
+{
+    this->x -= rkVector.x;
+    this->y -= rkVector.y;
+    this->z -= rkVector.z;
+
+    return *this;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
 float&
 Vector3::operator [] (const size_t i)
 {
@@ -137,6 +165,41 @@ Vector3::CrossProduct(const Vector3& rkVector) const
         this->z * rkVector.x - this->x * rkVector.z,
         this->x * rkVector.y - this->y * rkVector.x
     );
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+Vector3::Normalise()
+{
+    float length = Math::Sqrt(this->x * this->x + this->y * this->y + this->z * this->z);
+
+    if (length > 0.0f)
+    {
+        float invLength = 1.0f / length;
+        this->x *= invLength;
+        this->y *= invLength;
+        this->z *= invLength;
+    }
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+float
+Vector3::DotProduct(const Vector3& vec)
+{
+    return this->x * vec.x + this->y * vec.y + this->z * vec.z;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+float
+Vector3::Length() const
+{
+    return Math::Sqrt(this->x * this->x + this->y * this->y + this->z * this->z);
 }
 
 } // namespace core

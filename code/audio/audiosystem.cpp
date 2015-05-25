@@ -6,6 +6,7 @@
 #include "wavcodec.h"
 #include "vorbiscodec.h"
 #include "memoryallocatorconfig.h"
+#include "chrisslymath.h"
 #include "debug.h"
 #include <stdio.h>
 #include <string.h>
@@ -14,6 +15,8 @@ namespace chrissly
 {
 namespace audio
 {
+
+using namespace chrissly::core;
 
 AudioSystem* AudioSystem::Singleton = NULL;
 
@@ -151,7 +154,7 @@ AudioSystem::PlaySound(int channelid, Sound* sound, bool paused, Channel** chann
 
     if (channelid != Channel::CHANNEL_FREE)
     {
-        CE_ASSERT(channelid < (int)this->channelPool.cur_size, "AudioSystem::PlaySound(): invalid channelid '%i' (exceeds channel range '0 - %i')", channelid, this->channelPool.cur_size - 1);
+        CE_ASSERT(channelid < (int)this->channelPool.cur_size, "AudioSystem::PlaySound(): invalid channelid '%i' (exceeds channel range '0 - %i')\n", channelid, this->channelPool.cur_size - 1);
         chn->_SetIndex(channelid);
     }
 
@@ -160,6 +163,7 @@ AudioSystem::PlaySound(int channelid, Sound* sound, bool paused, Channel** chann
     chn->SetPosition(0);
     chn->SetVolume(1.0f);
     chn->SetPan(0.0f);
+    chn->_SetAttenuationFactor(0.0f);
 
     this->activeRenderer->StartChannel(chn);
 
@@ -191,9 +195,44 @@ AudioSystem::Update()
                 sound->_GetCodec()->FillStreamBackBuffer();
             }
 
+            if (mode & audio::MODE_3D)
+            {
+                Vector3 sideVec = this->listenerUp.CrossProduct(this->listenerForward);
+                sideVec.Normalise();
+                Vector3 channelPos;
+                channel->Get3DAttributes(&channelPos);
+                Vector3 distanceVec = channelPos - this->listenerPos;
+                channel->SetPan(-Math::Sin(Math::ATan2(distanceVec.DotProduct(sideVec), distanceVec.DotProduct(this->listenerForward))));
+
+                float minDistance, maxDistance;
+                channel->Get3DMinMaxDistance(&minDistance, &maxDistance);
+                float distance = distanceVec.Length();
+                if (distance >= minDistance && distance <= maxDistance)
+                {
+                    channel->_SetAttenuationFactor(1.0f - (distance - minDistance) / (maxDistance - minDistance));
+                }
+                else
+                {
+                    channel->_SetAttenuationFactor(0.0f);
+                }
+            }
+
             this->activeRenderer->UpdateChannel(channel);
         }
     }
+
+    return OK;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+Result
+AudioSystem::Set3DListenerAttributes(const Vector3* pos, const Vector3* forward, const Vector3* up)
+{
+    if (pos != NULL) this->listenerPos = *pos;
+    if (forward != NULL) this->listenerForward = *forward;
+    if (up != NULL) this->listenerUp = *up;
 
     return OK;
 }

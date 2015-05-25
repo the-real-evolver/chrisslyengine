@@ -92,6 +92,24 @@ Camera::SetOrientation(const Quaternion& q)
 //------------------------------------------------------------------------------
 /**
 */
+Vector3
+Camera::GetDirection() const
+{
+    return this->orientation * Vector3(0.0f, 0.0f, -1.0f);
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+Vector3
+Camera::GetUp() const
+{
+    return this->orientation * Vector3(0.0f, 1.0f, 0.0f);
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
 void
 Camera::MoveRelative(const Vector3& vec)
 {

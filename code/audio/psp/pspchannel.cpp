@@ -18,7 +18,7 @@ int PSPChannel::ChannelNumber = 0;
 */
 PSPChannel::PSPChannel()
 {
-    this->requestStop = false;
+    this->requestRelease = false;
 
     char str[23];
     strcpy(str, "audioChannelSemaphoreX");
@@ -65,20 +65,20 @@ PSPChannel::GetSemaphoreId() const
 /**
 */
 void
-PSPChannel::RequestStop()
+PSPChannel::RequestRelease()
 {
-    this->requestStop = true;
+    this->requestRelease = true;
 }
 
 //------------------------------------------------------------------------------
 /**
 */
 bool
-PSPChannel::GetStopRequest()
+PSPChannel::GetReleaseRequest()
 {
-    bool requestStop = this->requestStop;
-    this->requestStop = false;
-    return requestStop;
+    bool requestRelease = this->requestRelease;
+    this->requestRelease = false;
+    return requestRelease;
 }
 
 } // namespace chrissly

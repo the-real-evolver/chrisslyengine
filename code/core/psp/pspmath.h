@@ -10,6 +10,7 @@
     (C) 2012 Christian Bleicher
 */
 #include <pspfpu.h>
+#include <math.h>
 
 //------------------------------------------------------------------------------
 namespace chrissly 
@@ -17,6 +18,8 @@ namespace chrissly
 class PSPMath
 {
 public:
+    /// returns base raised to the power exponent
+    static inline float Pow(float base, float exponent);
     /// returns the squareroot of the given value
     static inline float Sqrt(float fValue);
     /// returns the sine of the given value
@@ -25,11 +28,22 @@ public:
     static inline float Cos(float fValue);
     /// returns the arc tangent of the given value
     static inline float ATan(float fValue);
+    /// returns the principal value of the arc tangent of [y, x] in radians
+    static inline float ATan2(float y, float x);
     /// returns the floating-point remainder of numerator / denominator
     static inline float Fmod(float fNumerator, float fDenominator);
     /// rounds the value downward, returning the largest integral value that is not greater than value
     static inline float Floor(float fValue);
 };
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline float
+PSPMath::Pow(float base, float exponent)
+{
+    return pow(base, exponent);
+}
 
 //------------------------------------------------------------------------------
 /**
@@ -65,6 +79,15 @@ inline float
 PSPMath::ATan(float fValue)
 {
     return pspFpuAtan(fValue);
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline float
+PSPMath::ATan2(float y, float x)
+{
+    return atan2(y, x);
 }
 
 //------------------------------------------------------------------------------

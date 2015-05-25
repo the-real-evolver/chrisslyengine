@@ -11,7 +11,7 @@
 
 //------------------------------------------------------------------------------
 #if __PSP__
-#include "pspiofilemgr.h"
+#include <pspiofilemgr.h>
 namespace chrissly
 {
 namespace core

@@ -130,7 +130,16 @@ PSPAudioRenderer::UpdateChannel(audio::Channel* channel)
         float panning;
         channel->GetPan(&panning);
         int leftVolume, rightVolume;
-        CalculateVolumesFromPanning(PAN_CLAMPEDLINEAR, volume, panning, leftVolume, rightVolume);
+        audio::Mode mode;
+        channel->GetMode(&mode);
+        if (mode & audio::MODE_3D)
+        {
+            CalculateVolumesFromPanning(PAN_CONSTANTPOWER, volume *= channel->_GetAttenuationFactor(), panning, leftVolume, rightVolume);
+        }
+        else
+        {
+            CalculateVolumesFromPanning(PAN_CLAMPEDLINEAR, volume, panning, leftVolume, rightVolume);
+        }
         sceAudioChangeChannelVolume(index, leftVolume, rightVolume);
     }
 }
@@ -144,7 +153,7 @@ PSPAudioRenderer::ReleaseChannel(audio::Channel* channel)
     int error = sceKernelWaitSema(channel->GetSemaphoreId(), 1, 0);
     CE_ASSERT(error >= 0, "PSPAudioRenderer::ReleaseChannel(): sceKernelWaitSema() failed: %08x\n", error);
 
-    channel->RequestStop();
+    channel->RequestRelease();
     channel->_SetIsPlaying(false);
 
     error = sceKernelSignalSema(channel->GetSemaphoreId(), 1);
@@ -166,7 +175,7 @@ PSPAudioRenderer::ChannelThread(SceSize args, void* argp)
         int index;
         channel->GetIndex(&index);
 
-        if (channel->GetStopRequest())
+        if (channel->GetReleaseRequest())
         {
             sceAudioChangeChannelVolume(index, 0, 0);
             sceAudioChRelease(index);
@@ -223,14 +232,21 @@ PSPAudioRenderer::ChannelThread(SceSize args, void* argp)
                 float panning;
                 channel->GetPan(&panning);
                 int leftVolume, rightVolume;
-                CalculateVolumesFromPanning(PAN_CLAMPEDLINEAR, volume, panning, leftVolume, rightVolume);
+                if (mode & audio::MODE_3D)
+                {
+                    CalculateVolumesFromPanning(PAN_CONSTANTPOWER, volume *= channel->_GetAttenuationFactor(), panning, leftVolume, rightVolume);
+                }
+                else
+                {
+                    CalculateVolumesFromPanning(PAN_CLAMPEDLINEAR, volume, panning, leftVolume, rightVolume);
+                }
 
                 error = sceKernelSignalSema(channel->GetSemaphoreId(), 1);
                 CE_ASSERT(error >= 0, "PSPAudioRenderer::ChannelThread(): sceKernelSignalSema() state[playing] failed: %08x\n", error);
 
                 if (mode & audio::MODE_CREATESTREAM)
                 {
-                    if (position > 0) codec->SwapStreamBuffers();
+                    if (position > 0) codec->SwapStreamBuffers(); // dont swap buffers on the first frame
                     sceAudioOutputPannedBlocking(index, leftVolume, rightVolume, codec->GetStreamBufferPointer());
                 }
                 else

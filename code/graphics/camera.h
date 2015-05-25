@@ -35,6 +35,10 @@ public:
     const chrissly::core::Quaternion& GetOrientation() const;
     /// sets the camera's orientation
     void SetOrientation(const chrissly::core::Quaternion& q);
+    /// gets the camera's direction
+    chrissly::core::Vector3 GetDirection() const;
+    /// gets the camera's up vector
+    chrissly::core::Vector3 GetUp() const;
     /// moves the camera's position by the vector offset provided along it's own axes (relative to orientation)
     void MoveRelative(const chrissly::core::Vector3& vec);
     /// rolls the camera anticlockwise, around its local z axis
