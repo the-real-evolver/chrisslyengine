@@ -178,6 +178,9 @@ AudioSystem::PlaySound(int channelid, Sound* sound, bool paused, Channel** chann
 Result
 AudioSystem::Update()
 {
+    Vector3 sideVec = this->listenerUp.CrossProduct(this->listenerForward);
+    sideVec.Normalise();
+
     unsigned int i;
     for (i = 0; i < this->channelPool.cur_size; i++)
     {
@@ -197,18 +200,16 @@ AudioSystem::Update()
 
             if (mode & audio::MODE_3D)
             {
-                Vector3 sideVec = this->listenerUp.CrossProduct(this->listenerForward);
-                sideVec.Normalise();
+                float minDistance, maxDistance;
+                channel->Get3DMinMaxDistance(&minDistance, &maxDistance);
+
                 Vector3 channelPos;
                 channel->Get3DAttributes(&channelPos);
                 Vector3 distanceVec = channelPos - this->listenerPos;
-                channel->SetPan(-Math::Sin(Math::ATan2(distanceVec.DotProduct(sideVec), distanceVec.DotProduct(this->listenerForward))));
-
-                float minDistance, maxDistance;
-                channel->Get3DMinMaxDistance(&minDistance, &maxDistance);
                 float distance = distanceVec.Length();
                 if (distance >= minDistance && distance <= maxDistance)
                 {
+                    channel->SetPan(-Math::Sin(Math::ATan2(distanceVec.DotProduct(sideVec), distanceVec.DotProduct(this->listenerForward))));
                     channel->_SetAttenuationFactor(1.0f - (distance - minDistance) / (maxDistance - minDistance));
                 }
                 else

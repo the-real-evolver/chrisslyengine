@@ -152,22 +152,20 @@ SLESAudioRenderer::UpdateChannel(audio::Channel* channel)
         if (mode & audio::MODE_3D) volume *= channel->_GetAttenuationFactor();
         SLresult result;
         SLVolumeItf volumeInterface = channel->GetVolumeInterface();
-        SLmillibel slVolume = SL_MILLIBEL_MIN;
+        SLmillibel slVolume;
         if (volume >= 1.0f)
         {
             result = (*volumeInterface)->GetMaxVolumeLevel(volumeInterface, &slVolume);
             CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::UpdateChannel(): failed to get max volume level\n");
         }
-        else if (volume <= 0.0f)
-        {
-            slVolume = SL_MILLIBEL_MIN;
-        }
         else
         {
-            slVolume = M_LN2 / log(1.0f / (1.0f - volume)) * -1000.0f;
+            float l = M_LN2 / log(1.0f / (1.0f - volume));
+            if (l > 32.768f) l = 32.768f;
+            slVolume = l * -1000.0f;
         }
         result = (*volumeInterface)->SetVolumeLevel(volumeInterface, slVolume);
-        if (SL_RESULT_SUCCESS != result) CE_LOG("SLESAudioRenderer::UpdateChannel(): failed to set volume level to: '%f' (SLmillibel '%i')\n", volume, slVolume);
+        CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::UpdateChannel(): failed to set volume level to: '%f' (SLmillibel '%i')\n", volume, slVolume);
 
         float pan;
         channel->GetPan(&pan);

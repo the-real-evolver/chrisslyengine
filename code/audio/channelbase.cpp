@@ -324,6 +324,8 @@ void
 ChannelBase::_SetAttenuationFactor(float attenuation)
 {
     this->attenuationFactor = attenuation;
+
+    this->propertiesHasChanged = true;
 }
 
 //------------------------------------------------------------------------------

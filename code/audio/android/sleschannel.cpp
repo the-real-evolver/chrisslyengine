@@ -64,11 +64,11 @@ SLESChannel::SetupAudioPlayer(SLEngineItf engineInterface, SLObjectItf outputMix
     result = (*this->player)->GetInterface(this->player, SL_IID_VOLUME, &this->volumeInterface);
     CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESChannel::SetupAudioPlayer(): failed to get volume interface\n");
 
-    SLmillibel volume;
-    result = (*this->volumeInterface)->GetMaxVolumeLevel(this->volumeInterface, &volume);
+    SLmillibel maxVolume;
+    result = (*this->volumeInterface)->GetMaxVolumeLevel(this->volumeInterface, &maxVolume);
     CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESChannel::SetupAudioPlayer(): failed to get max volume level\n");
 
-    result = (*this->volumeInterface)->SetVolumeLevel(this->volumeInterface, volume);
+    result = (*this->volumeInterface)->SetVolumeLevel(this->volumeInterface, this->mode & audio::MODE_3D ? SL_MILLIBEL_MIN : maxVolume);
     CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESChannel::SetupAudioPlayer(): failed to set volume\n");
 
     result = (*this->player)->GetInterface(this->player, SL_IID_EFFECTSEND, &this->effectSendInterface);
