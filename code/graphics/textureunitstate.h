@@ -138,6 +138,8 @@ public:
 
     /// set the name of the texture to use
     void SetTextureName(const char* name);
+    /// gets the name of the texture to use
+    const core::String& GetTextureName() const;
 
     /// set texture to use
     void SetTexture(Texture* texture);

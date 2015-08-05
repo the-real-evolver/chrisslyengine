@@ -87,15 +87,10 @@ Enter(struct android_app* state)
     camera->SetPosition(0.0f, 0.0f, 0.9f);
     window->AddViewport(camera, 0, 0, window->GetWidth(), window->GetHeight());
 
-    Material* material = MaterialManager::Instance()->CreateOrRetrieve("material");
-    Pass* pass = material->CreatePass();
-    pass->SetSceneBlendingEnabled(false);
-    pass->SetSceneBlending(SBF_SOURCE_COLOUR, SBF_DEST_COLOUR);
+	MaterialManager::Instance()->Initialise();
+    Material* material = MaterialManager::Instance()->CreateOrRetrieve("cerberus_material_gles");
     gpuProgram = new GpuProgram(MorphAnimVertexShader, FragmentShader);
-    pass->SetGpuProgram(gpuProgram);
-    Texture* tex = TextureManager::Instance()->Load("cerberus_etc1.tex");
-    TextureUnitState* tus = pass->CreateTextureUnitState();
-    tus->SetTexture(tex);
+    material->GetPass(0)->SetGpuProgram(gpuProgram);
 
     Entity* entity = SceneManager::Instance()->CreateEntity("cerberus_walk.mesh");
     entity->GetSubEntity(0)->SetMaterial(material);

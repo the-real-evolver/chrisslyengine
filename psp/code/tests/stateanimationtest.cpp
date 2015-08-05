@@ -40,14 +40,11 @@ StateAnimationTest::Enter()
     sceCtrlSetSamplingCycle(100);
     sceCtrlSetSamplingMode(PSP_CTRL_MODE_ANALOG);
 
-    Material* material = MaterialManager::Instance()->CreateOrRetrieve("material");
-    Pass* pass = material->CreatePass();
-    Texture* tex = TextureManager::Instance()->Load("cerberus.tex");
-    TextureUnitState* tus = pass->CreateTextureUnitState();
-    tus->SetTexture(tex);
-
+    MaterialManager::Instance()->Initialise();
+    Material* material = MaterialManager::Instance()->GetByName("cerberus_material_psp");
     Entity* entity = SceneManager::Instance()->CreateEntity("cerberus_walk.mesh");
     entity->GetSubEntity(0)->SetMaterial(material);
+
     this->animState = entity->GetAnimationState("default");
     CE_ASSERT(this->animState != NULL, "StateAnimationTest::Enter(): this->animState invalid");
     this->animState->SetEnabled(true);

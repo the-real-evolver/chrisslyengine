@@ -216,6 +216,15 @@ TextureUnitState::SetTextureName(const char* name)
 //------------------------------------------------------------------------------
 /**
 */
+const core::String&
+TextureUnitState::GetTextureName() const
+{
+    return this->textureName;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
 void
 TextureUnitState::SetTexture(Texture* texture)
 {

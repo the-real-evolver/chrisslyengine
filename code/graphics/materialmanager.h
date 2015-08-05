@@ -6,6 +6,7 @@
 
     (C) 2013 Christian Bleicher
 */
+#include "materialparser.h"
 #include "material.h"
 #include "hashtable.h"
 
@@ -28,6 +29,8 @@ public:
     MaterialManager();
     /// destructor
     ~MaterialManager();
+    /// create all materials defined in the material file
+    void Initialise();
     /// create a new material, or retrieve an existing one with the same name if it already exists
     Material* CreateOrRetrieve(const char* name);
     /// retrieves a pointer to a material by name, or null if the resource does not exist
@@ -42,6 +45,7 @@ private:
     static MaterialManager* Singleton;
 
     chrissly::core::HashTable resources;
+    MaterialParser parser;
 };
 
 } // namespace graphics

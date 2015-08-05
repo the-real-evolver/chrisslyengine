@@ -40,51 +40,7 @@ StateMaterialTest::Enter()
     sceCtrlSetSamplingCycle(100);
     sceCtrlSetSamplingMode(PSP_CTRL_MODE_ANALOG);
 
-    // solid material
-    Material* solidMaterial = MaterialManager::Instance()->CreateOrRetrieve("solidMaterial");
-    Texture* tex = TextureManager::Instance()->Load("gothic_solid.tex");
-    Pass* pass = solidMaterial->CreatePass();
-    pass->SetFog(FOG_LINEAR, 0xff0080ff, 0.0f, 50.0f);
-    pass->SetLightingEnabled(true);
-    pass->SetVertexColourTracking(TVC_DIFFUSE | TVC_AMBIENT | TVC_SPECULAR);
-    pass->SetSpecular(12.0f);
-    TextureUnitState* tus = pass->CreateTextureUnitState();
-    tus->SetTexture(tex);
-    tus->SetTextureBlendOperation(LBT_COLOUR, LBO_MODULATE);
-
-    // transparent material
-    Material* alphaMaterial = MaterialManager::Instance()->CreateOrRetrieve("alphaMaterial");
-    tex = TextureManager::Instance()->Load("gothic_alpha.tex");
-    pass = alphaMaterial->CreatePass();
-    pass->SetSceneBlendingEnabled(true);
-    pass->SetSceneBlending(SBF_SOURCE_ALPHA, SBF_ONE_MINUS_SOURCE_ALPHA);
-    pass->SetCullingMode(CULL_NONE);
-    pass->SetFog(FOG_LINEAR, 0xff0080ff, 0.0f, 50.0f);
-    pass->SetLightingEnabled(true);
-    pass->SetVertexColourTracking(TVC_DIFFUSE | TVC_AMBIENT | TVC_SPECULAR);
-    pass->SetSpecular(12.0f);
-    tus = pass->CreateTextureUnitState();
-    tus->SetTexture(tex);
-    tus->SetTextureBlendOperation(LBT_ALPHA, LBO_MODULATE);
-
-    // create a multi-pass material
-    this->cubeMaterial = MaterialManager::Instance()->CreateOrRetrieve("cubeMaterial");
-    tex = TextureManager::Instance()->Load("floor.tex");
-    pass = this->cubeMaterial->CreatePass();
-    tus = pass->CreateTextureUnitState();
-    tus->SetTextureBlendOperation(LBT_COLOUR, LBO_REPLACE);
-    tus->SetTexture(tex);
-    tex = TextureManager::Instance()->Load("water.tex");
-    pass = this->cubeMaterial->CreatePass();
-    pass->SetSceneBlendingEnabled(true);
-    pass->SetSceneBlending(SBF_SOURCE_COLOUR, SBF_DEST_COLOUR);
-    tus = pass->CreateTextureUnitState();
-    tus->SetTexture(tex);
-    tus->SetTextureBlendOperation(LBT_COLOUR, LBO_REPLACE);
-
-    // create a simple material without texture
-    Material* lightConeMaterial = MaterialManager::Instance()->CreateOrRetrieve("coneMaterial");
-    pass = lightConeMaterial->CreatePass();
+    MaterialManager::Instance()->Initialise();
 
     // create entities and attach them to the scene
     Entity* gothEntity = SceneManager::Instance()->CreateEntity("gothic_woman.mesh");
@@ -101,6 +57,7 @@ StateMaterialTest::Enter()
     cubeSceneNode->SetPosition(2.0f, -2.8f, -2.0f);
     cubeSceneNode->AttachObject(cubeEntity);
     this->vMod = 0.0f;
+    this->cubeMaterial = MaterialManager::Instance()->CreateOrRetrieve("cube_material");
 
     Entity* lightConeEntity = SceneManager::Instance()->CreateEntity("cone.mesh");
     SceneNode* lightConeSceneNode = SceneManager::Instance()->GetRootSceneNode()->CreateChildSceneNode();

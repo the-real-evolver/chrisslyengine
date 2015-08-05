@@ -61,7 +61,7 @@ vt 0.000000 1.000000 0.0
 vt 0.000000 1.000000 0.0
 vt 1.000000 0.000000 0.0
 vt 1.000000 1.000000 0.0
-usemtl cubeMaterial
+usemtl cube_material
 s off
 f 1/1 3/2 2/3
 f 2/4 3/5 4/6

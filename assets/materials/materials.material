@@ -1,0 +1,85 @@
+material cerberus_material_psp
+{
+    pass
+    {
+        texture_unit
+        {
+            texture cerberus.tex
+        }
+    }
+}
+
+material cerberus_material_gles
+{
+    pass
+    {
+        texture_unit
+        {
+            texture cerberus_etc1.tex
+        }
+    }
+}
+
+material opaque_material
+{
+    pass
+    {
+        lighting on
+        diffuse vertexcolour
+        ambient vertexcolour
+        specular vertexcolour 12.0
+        fog_override true 1.0 0.5 0.0 0.0 50.0
+        texture_unit
+        {
+            texture gothic_solid.tex
+            colour_op modulate colour
+        }
+    }
+}
+
+material transparent_material
+{
+    pass
+    {
+        lighting on
+        diffuse vertexcolour
+        ambient vertexcolour
+        specular vertexcolour 12.0
+        fog_override true 1.0 0.5 0.0 0.0 50.0
+        scene_blend src_alpha one_minus_src_alpha
+        cull_hardware none
+        texture_unit
+        {
+            texture gothic_alpha.tex
+            colour_op modulate alpha
+        }
+    }
+}
+
+material cube_material
+{
+    pass
+    {
+        texture_unit
+        {
+            texture floor.tex
+            colour_op replace colour
+        }
+    }
+    pass
+    {
+        scene_blend src_colour dest_colour
+        texture_unit
+        {
+            texture water.tex
+            colour_op replace colour
+        }
+    }
+}
+
+material cone_material
+{
+    pass
+    {
+    }
+}

@@ -17,7 +17,7 @@ LOCAL_C_INCLUDES += $(CE)/core $(CE)/graphics $(CE)/audio $(CE)/thirdparty/stb
 LOCAL_SRC_FILES := core/android/androiddebug.cpp core/android/androidfswrapper.cpp \
                    core/vector3.cpp core/matrix3.cpp core/matrix4.cpp core/quaternion.cpp core/chrisslymemory.cpp core/chrisslystring.cpp core/timer.cpp \
                    graphics/texturebase.cpp graphics/textureunitstate.cpp graphics/texturemanager.cpp \
-                   graphics/pass.cpp graphics/material.cpp graphics/materialmanager.cpp \
+                   graphics/pass.cpp graphics/material.cpp graphics/materialmanager.cpp graphics/materialparser.cpp \
                    graphics/graphicssystem.cpp \
                    graphics/meshmanager.cpp graphics/mesh.cpp graphics/submesh.cpp \
                    graphics/subentity.cpp  graphics/entity.cpp \

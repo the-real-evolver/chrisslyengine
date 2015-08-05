@@ -14,7 +14,7 @@ CE = ../
 # includes
 # PSPSDK = C:/dev/devkitpro/devkitPSP/psp/sdk
 #------------------------------------------------------------------------------ 
-INCDIR = $(PSPSDK) $(CE)/code/core $(CE)/code/graphics $(CE)/code/application code/tests
+INCDIR = $(PSPSDK) $(CE)/code/core $(CE)/code/graphics $(CE)/code/thirdparty/stb $(CE)/code/application code/tests
 
 #------------------------------------------------------------------------------
 # object files
@@ -24,7 +24,7 @@ OBJS = $(CE)/code/core/quaternion.o $(CE)/code/core/vector3.o $(CE)/code/core/ma
        $(CE)/code/graphics/psp/pspmappings.o $(CE)/code/graphics/psp/psphardwarebuffermanager.o $(CE)/code/graphics/psp/psprendersystem.o \
        $(CE)/code/graphics/graphicssystem.o \
        $(CE)/code/graphics/texturemanager.o $(CE)/code/graphics/texturebase.o $(CE)/code/graphics/psp/psptexture.o \
-       $(CE)/code/graphics/materialmanager.o $(CE)/code/graphics/textureunitstate.o $(CE)/code/graphics/pass.o $(CE)/code/graphics/material.o \
+       $(CE)/code/graphics/materialmanager.o $(CE)/code/graphics/materialparser.o $(CE)/code/graphics/textureunitstate.o $(CE)/code/graphics/pass.o $(CE)/code/graphics/material.o \
        $(CE)/code/graphics/meshmanager.o $(CE)/code/graphics/mesh.o $(CE)/code/graphics/submesh.o \
        $(CE)/code/graphics/subentity.o $(CE)/code/graphics/entity.o \
        $(CE)/code/graphics/renderqueuesortinggrouping.o \
