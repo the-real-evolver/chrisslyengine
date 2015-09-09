@@ -338,7 +338,7 @@ SceneNode::AttachObject(Entity* obj)
 
     obj->_NotifyAttached(this);
 
-    this->numAttachedObjects++;
+    ++this->numAttachedObjects;
 }
 
 //------------------------------------------------------------------------------

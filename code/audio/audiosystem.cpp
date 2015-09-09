@@ -49,14 +49,14 @@ AudioSystem::Initialise(void* customParams)
 
     DynamicArrayInit(&this->soundPool, 8);
     unsigned int i;
-    for (i = 0; i < this->soundPool.cur_size; i++)
+    for (i = 0; i < this->soundPool.cur_size; ++i)
     {
         Sound* sound = CE_NEW Sound();
         DynamicArraySet(&this->soundPool, i, sound);
     }
 
     DynamicArrayInit(&this->channelPool, this->activeRenderer->GetNumHardwareChannels());
-    for (i = 0; i < this->channelPool.cur_size; i++)
+    for (i = 0; i < this->channelPool.cur_size; ++i)
     {
         Channel* channel = CE_NEW Channel();
         DynamicArraySet(&this->channelPool, i, channel);
@@ -72,7 +72,7 @@ Result
 AudioSystem::Release()
 {
     unsigned int i;
-    for (i = 0; i < this->channelPool.cur_size; i++)
+    for (i = 0; i < this->channelPool.cur_size; ++i)
     {
         Channel* channel = (Channel*)DynamicArrayGet(&this->channelPool, i);
         int index;
@@ -85,7 +85,7 @@ AudioSystem::Release()
     }
     DynamicArrayDelete(&this->channelPool);
 
-    for (i = 0; i < this->soundPool.cur_size; i++)
+    for (i = 0; i < this->soundPool.cur_size; ++i)
     {
         CE_DELETE (Sound*)DynamicArrayGet(&this->soundPool, i);
     }
@@ -104,7 +104,7 @@ AudioSystem::CreateSound(const char* name, Mode mode, Sound** sound)
 {
     Sound* snd = NULL;
     unsigned int i;
-    for (i = 0; i < this->soundPool.cur_size; i++)
+    for (i = 0; i < this->soundPool.cur_size; ++i)
     {
         snd = (Sound*)DynamicArrayGet(&this->soundPool, i);
         if (!snd->_IsRealized()) break;
@@ -113,7 +113,7 @@ AudioSystem::CreateSound(const char* name, Mode mode, Sound** sound)
 
     char* ext = strrchr(name, '.');
     if (NULL == ext) return ERR_PLUGIN_MISSING;
-    ext++;
+    ++ext;
     Codec* codec;
     if (0 == strcmp(ext, "wav"))
     {
@@ -143,7 +143,7 @@ AudioSystem::PlaySound(int channelid, Sound* sound, bool paused, Channel** chann
 {
     Channel* chn = NULL;
     unsigned int i;
-    for (i = 0; i < this->channelPool.cur_size; i++)
+    for (i = 0; i < this->channelPool.cur_size; ++i)
     {
         chn = (Channel*)DynamicArrayGet(&this->channelPool, i);
         int index;
@@ -182,7 +182,7 @@ AudioSystem::Update()
     sideVec.Normalise();
 
     unsigned int i;
-    for (i = 0; i < this->channelPool.cur_size; i++)
+    for (i = 0; i < this->channelPool.cur_size; ++i)
     {
         Channel* channel = (Channel*)DynamicArrayGet(&this->channelPool, i);
         int index;

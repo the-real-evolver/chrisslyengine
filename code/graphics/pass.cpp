@@ -389,7 +389,7 @@ Pass::CreateTextureUnitState()
         return NULL;
     }
 
-    this->numTextureUnitStates++;
+    ++this->numTextureUnitStates;
 
     return textureUnitState;
 }
@@ -419,7 +419,7 @@ void
 Pass::RemoveAllTextureUnitStates()
 {
     unsigned int i;
-    for (i = 0; i < this->numTextureUnitStates; i++)
+    for (i = 0; i < this->numTextureUnitStates; ++i)
     {
         CE_DELETE (TextureUnitState*)DynamicArrayGet(&this->textureUnitStates, i);	
     }
@@ -463,7 +463,7 @@ void
 Pass::_Load()
 {
     unsigned int i;
-    for (i = 0; i < this->numTextureUnitStates; i++)
+    for (i = 0; i < this->numTextureUnitStates; ++i)
     {
         ((TextureUnitState*)DynamicArrayGet(&this->textureUnitStates, i))->_Load();
     }

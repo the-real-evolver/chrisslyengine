@@ -64,7 +64,7 @@ Animation::CreateVertexTrack(unsigned char handle)
         return NULL;
     }
 
-    this->numVertexTracks++;
+    ++this->numVertexTracks;
 
     return vertexAnimationTrack;
 }
@@ -94,7 +94,7 @@ void
 Animation::DestroyAllVertexTracks()
 {
     unsigned int i;
-    for (i = 0; i < this->numVertexTracks; i++)
+    for (i = 0; i < this->numVertexTracks; ++i)
     {
         CE_DELETE (VertexAnimationTrack*)DynamicArrayGet(&this->vertexTrackList, i);
     }
@@ -116,12 +116,12 @@ Animation::Apply(Entity* entity, float timePos)
     }
 
     unsigned int i;
-    for (i = 0; i < this->numVertexTracks; i++)
+    for (i = 0; i < this->numVertexTracks; ++i)
     {
         VertexAnimationTrack* vertexAnimTrack = (VertexAnimationTrack*)DynamicArrayGet(&this->vertexTrackList, i);
         unsigned short numKeys = vertexAnimTrack->GetNumKeyFrames() - 1;
         unsigned short keyIndex;
-        for (keyIndex = 0; keyIndex < numKeys; keyIndex++)
+        for (keyIndex = 0; keyIndex < numKeys; ++keyIndex)
         {
             VertexMorphKeyFrame* key = vertexAnimTrack->GetVertexMorphKeyFrame(keyIndex);
             VertexMorphKeyFrame* nextKey = vertexAnimTrack->GetVertexMorphKeyFrame(keyIndex + 1);

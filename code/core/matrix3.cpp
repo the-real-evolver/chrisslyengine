@@ -42,9 +42,9 @@ Matrix3::operator - () const
 {
     Matrix3 kNeg;
     size_t iRow;
-    for (iRow = 0; iRow < 3; iRow++)
+    for (iRow = 0; iRow < 3; ++iRow)
     {
-        for (size_t iCol = 0; iCol < 3; iCol++)
+        for (size_t iCol = 0; iCol < 3; ++iCol)
         {
             kNeg[iRow][iCol] = -this->m[iRow][iCol];
         }
@@ -62,7 +62,7 @@ Matrix3::operator * (const Vector3& rkPoint) const
 {
     Vector3 kProd;
     size_t iRow;
-    for (iRow = 0; iRow < 3; iRow++)
+    for (iRow = 0; iRow < 3; ++iRow)
     {
         kProd[iRow] = this->m[iRow][0] * rkPoint[0] + this->m[iRow][1] * rkPoint[1] + this->m[iRow][2] * rkPoint[2];
     }
@@ -78,9 +78,9 @@ Matrix3::Transpose() const
 {
     Matrix3 kTranspose;
     size_t iRow;
-    for (iRow = 0; iRow < 3; iRow++)
+    for (iRow = 0; iRow < 3; ++iRow)
     {
-        for (size_t iCol = 0; iCol < 3; iCol++)
+        for (size_t iCol = 0; iCol < 3; ++iCol)
         {
             kTranspose[iRow][iCol] = this->m[iCol][iRow];
         }

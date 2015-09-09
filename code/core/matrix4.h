@@ -29,6 +29,8 @@ public:
             float m30, float m31, float m32, float m33);
     /// destructor
     ~Matrix4();
+    /// returns the matrix inverse of this matrix
+    Matrix4 Inverse() const;
     /// concatenate with the given matrix
     Matrix4 Concatenate(const Matrix4& m2) const;
     /// matrix concatenation using '*'

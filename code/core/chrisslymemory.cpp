@@ -23,11 +23,11 @@ Memory::FillInterleaved(void const* src0, void const* src1, void* dst, unsigned 
     unsigned int i;
     while (dstLen)
     {
-        for (i = 0; i < stride; i++)
+        for (i = 0; i < stride; ++i)
         {
             *pDst = *pSrc0++;
             *(pDst + stride) = *pSrc1++;
-            pDst++;
+            ++pDst;
         }
         pDst += stride;
         dstLen -= doubleStride;

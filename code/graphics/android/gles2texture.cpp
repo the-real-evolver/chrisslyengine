@@ -12,7 +12,8 @@ namespace chrissly
 //------------------------------------------------------------------------------
 /**
 */
-GLES2Texture::GLES2Texture() : textureName(0)
+GLES2Texture::GLES2Texture() :
+    textureName(0)
 {
 
 }
@@ -55,7 +56,7 @@ GLES2Texture::CreateInternalResourcesImpl()
     int mipmapHeight = this->height;
     while (mipmapWidth > 1 && mipmapHeight > 1)
     {
-        this->numMipmaps++;
+        ++this->numMipmaps;
         mipmapWidth = mipmapWidth >> 1;
         mipmapHeight = mipmapHeight >> 1;
     }

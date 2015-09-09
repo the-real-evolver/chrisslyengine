@@ -11,6 +11,7 @@
 */
 #include <pspfpu.h>
 #include <math.h>
+#include <limits.h>
 
 //------------------------------------------------------------------------------
 namespace chrissly 
@@ -34,6 +35,8 @@ public:
     static inline float Fmod(float fNumerator, float fDenominator);
     /// rounds the value downward, returning the largest integral value that is not greater than value
     static inline float Floor(float fValue);
+    /// computes the absolute value of an integer number
+    static inline int Abs(int n);
 };
 
 //------------------------------------------------------------------------------
@@ -106,6 +109,16 @@ inline float
 PSPMath::Floor(float fValue)
 {
     return pspFpuFloor(fValue);
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline int
+PSPMath::Abs(int n)
+{
+    int mask = (n >> (sizeof(int) * CHAR_BIT - 1));
+    return (n + mask) ^ mask;
 }
 
 } // namespace chrissly

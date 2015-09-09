@@ -39,7 +39,7 @@ RenderTarget::AddViewport(Camera *cam, int left, int top, int width, int height)
     Viewport* viewport = CE_NEW Viewport(cam, this, left, top, width, height);
 
     DynamicArraySet(&this->viewportList, this->numViewports, viewport);
-    this->numViewports++;
+    ++this->numViewports;
 
     return viewport;
 }
@@ -69,7 +69,7 @@ void
 RenderTarget::RemoveAllViewports()
 {
     unsigned int i;
-    for (i = 0; i < this->numViewports; i++)
+    for (i = 0; i < this->numViewports; ++i)
     {
         CE_DELETE (Viewport*)DynamicArrayGet(&this->viewportList, i);	
     }

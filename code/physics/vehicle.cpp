@@ -52,7 +52,7 @@ Vehicle::Vehicle(const Vector3& halfSize, float mass, float wheelRadius)
 Vehicle::~Vehicle()
 {
     unsigned int i;
-    for (i = 0; i < 4; i++)
+    for (i = 0; i < 4; ++i)
     {
         CE_DELETE this->wheels[i];
     }
@@ -102,7 +102,7 @@ Vehicle::SetBrakes(float brakes)
 
     // apply brake torque apposing wheel velocity
     unsigned int i;
-    for (i = 0; i < 4; i++)
+    for (i = 0; i < 4; ++i)
     {
         this->wheels[i]->AddTransmissionTorque(-this->wheels[i]->GetWheelSpeed() * brakeTorque * brakes);
     }
@@ -115,7 +115,7 @@ void
 Vehicle::Update(float duration)
 {
     unsigned int i;
-    for (i = 0; i < 4; i++)
+    for (i = 0; i < 4; ++i)
     {
         Vector3 worldWheelOffset = RigidBody::LocalToWorld(this->wheels[i]->GetAttachPoint());
         Vector3 worldGroundVel = RigidBody::GetVelocityAtPoint(worldWheelOffset);

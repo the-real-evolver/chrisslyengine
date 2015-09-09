@@ -86,7 +86,7 @@ HashTableInit(HashTable* table, unsigned int initialSize)
     table->capacity = initialSize;
 
     unsigned int i;
-    for (i = 0; i < initialSize; i++)
+    for (i = 0; i < initialSize; ++i)
     {
         Chain* chain = (Chain*)CE_MALLOC(sizeof(Chain));
         chain->size = 0;
@@ -102,7 +102,7 @@ static inline void
 HashTableClear(HashTable* table)
 {
     unsigned int i;
-    for (i = 0; i < table->capacity; i++)
+    for (i = 0; i < table->capacity; ++i)
     {
         Chain* chain = (Chain*)DynamicArrayGet(&table->entries, i);
         LinkedList* it = chain->list;
@@ -146,7 +146,7 @@ HashTableInsert(HashTable* table, const char* key, void* value)
 
     Chain* chain = (Chain*)DynamicArrayGet(&table->entries, index);
     linkedlistAdd(&(chain->list), keyValuePair);
-    chain->size++;
+    ++chain->size;
 
     table->currentSize++;
 }
@@ -188,7 +188,7 @@ HashTableResize(HashTable* table, unsigned int newSize)
     HashTableInit(&newTable, newSize);
 
     unsigned int i;
-    for (i = 0; i < table->capacity; i++)
+    for (i = 0; i < table->capacity; ++i)
     {
         LinkedList* it = ((Chain*)DynamicArrayGet(&table->entries, i))->list;
         while (it != NULL)

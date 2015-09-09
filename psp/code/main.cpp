@@ -14,6 +14,7 @@
 
 PSP_MODULE_INFO("Chrissly Engine PSP", 0, 1, 1);
 PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER);
+// PSP_MAIN_THREAD_PRIORITY
 
 using namespace chrissly::graphics;
 using namespace chrissly::application;

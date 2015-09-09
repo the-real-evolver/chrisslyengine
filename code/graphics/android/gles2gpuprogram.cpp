@@ -73,7 +73,7 @@ GLES2GpuProgram::~GLES2GpuProgram()
     glGetAttachedShaders(this->gpuProgram, numAttachedShaders, &shaderCount, shaders);
 
     GLint i;
-    for (i = 0; i < shaderCount; i++)
+    for (i = 0; i < shaderCount; ++i)
     {
         glDetachShader(this->gpuProgram, shaders[i]);
         glDeleteShader(shaders[i]);
@@ -165,7 +165,7 @@ GLES2GpuProgram::ExtractConstantDefs(graphics::GpuNamedConstants* constantDefs)
     GLint numActiveUniforms = -1;
     glGetProgramiv(this->gpuProgram, GL_ACTIVE_UNIFORMS, &numActiveUniforms);
     GLint i;
-    for (i = 0; i < numActiveUniforms; i++)
+    for (i = 0; i < numActiveUniforms; ++i)
     {
         GLsizei uniformNameLength = -1;
         GLint arraySize = -1;
@@ -197,7 +197,7 @@ GLES2GpuProgram::ExtractConstantDefs(graphics::GpuNamedConstants* constantDefs)
                     uniform->size = sizeof(int);
                     uniform->buffer = CE_MALLOC(uniform->size);
                     memcpy(uniform->buffer, &samplerIndex, uniform->size);
-                    samplerIndex++;
+                    ++samplerIndex;
                     break;
             }
 

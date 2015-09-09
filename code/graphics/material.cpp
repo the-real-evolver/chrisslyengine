@@ -41,7 +41,7 @@ Material::CreatePass()
         return NULL;
     }
 
-    this->numPasses++;
+    ++this->numPasses;
 
     return pass;
 }
@@ -71,7 +71,7 @@ void
 Material::RemoveAllPasses()
 {
     unsigned int i;
-    for (i = 0; i < this->numPasses; i++)
+    for (i = 0; i < this->numPasses; ++i)
     {
         CE_DELETE (Pass*)DynamicArrayGet(&this->passes, i);
     }
@@ -90,7 +90,7 @@ Material::Load()
     if (!this->loaded)
     {
         unsigned int i;
-        for (i = 0; i < this->numPasses; i++)
+        for (i = 0; i < this->numPasses; ++i)
         {
             ((Pass*)DynamicArrayGet(&this->passes, i))->_Load();
         }

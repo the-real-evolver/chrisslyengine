@@ -368,7 +368,7 @@ GLES2RenderSystem::_SetPass(graphics::Pass* pass)
 
     // texture unit parameters
     unsigned short textureUnitState;
-    for (textureUnitState = 0; textureUnitState < pass->GetNumTextureUnitStates() && textureUnitState < this->numTextureUnits; textureUnitState++)
+    for (textureUnitState = 0; textureUnitState < pass->GetNumTextureUnitStates() && textureUnitState < this->numTextureUnits; ++textureUnitState)
     {
         graphics::TextureUnitState* tus = pass->GetTextureUnitState(textureUnitState);
         glActiveTexture(GL_TEXTURE0 + textureUnitState);
@@ -408,7 +408,7 @@ GLES2RenderSystem::_SetPass(graphics::Pass* pass)
     // apply shader parameters
     graphics::GpuNamedConstants* constantDefs = this->currentGpuProgram->GetConstantDefinitions();
     unsigned int i;
-    for (i = 0; i < constantDefs->map.capacity; i++)
+    for (i = 0; i < constantDefs->map.capacity; ++i)
     {
         LinkedList* it = ((core::Chain*)DynamicArrayGet(&constantDefs->map.entries, i))->list;
         while (it != NULL)

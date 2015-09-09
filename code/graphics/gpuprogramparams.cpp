@@ -25,7 +25,7 @@ GpuNamedConstants::GpuNamedConstants()
 GpuNamedConstants::~GpuNamedConstants()
 {
     unsigned int i;
-    for (i = 0; i < this->map.capacity; i++)
+    for (i = 0; i < this->map.capacity; ++i)
     {
         LinkedList* it = ((Chain*)DynamicArrayGet(&this->map.entries, i))->list;
         while (it != NULL)

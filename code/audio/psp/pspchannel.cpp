@@ -11,8 +11,6 @@
 namespace chrissly
 {
 
-int PSPChannel::ChannelNumber = 0;
-
 //------------------------------------------------------------------------------
 /**
 */
@@ -20,22 +18,19 @@ PSPChannel::PSPChannel()
 {
     this->requestRelease = false;
 
-    char str[23];
-    strcpy(str, "audioChannelSemaphoreX");
-    str[21] = '0' + ChannelNumber;
+    unsigned int addr = (unsigned int)this;
+
+    char str[32];
+    snprintf(str, 32, "audioChannelSemaphore%u", addr);
     this->semaphoreId = sceKernelCreateSema(str, 0, 1, 1, NULL);
     CE_ASSERT(this->semaphoreId >= 0, "PSPChannel::PSPChannel(): sceKernelCreateSema() failed: %08x\n", this->semaphoreId);
 
-    strcpy(str, "audioChannelThreadX");
-    str[18] = '0' + ChannelNumber;
+    snprintf(str, 32, "audioChannelThread%u", addr);
     this->threadId = sceKernelCreateThread(str, PSPAudioRenderer::ChannelThread, 0x12, 0x10000, 0, NULL);
     CE_ASSERT(this->threadId >= 0, "PSPChannel::PSPChannel(): sceKernelCreateThread() failed: %08x\n", this->threadId);
 
-    unsigned int addr = (unsigned int)this;
     int error = sceKernelStartThread(this->threadId, sizeof(unsigned int), &addr);
     CE_ASSERT(error == 0, "PSPChannel::PSPChannel(): sceKernelStartThread() failed: %08x\n", error);
-
-    ChannelNumber++;
 }
 
 //------------------------------------------------------------------------------
@@ -48,8 +43,6 @@ PSPChannel::~PSPChannel()
 
     error = sceKernelTerminateDeleteThread(this->threadId);
     CE_ASSERT(error >= 0, "PSPChannel::~PSPChannel(): sceKernelDeleteThread() failed: %08x\n", error);
-
-    ChannelNumber--;
 }
 
 //------------------------------------------------------------------------------

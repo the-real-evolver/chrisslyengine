@@ -235,26 +235,13 @@ PSPRenderSystem::_SetPass(graphics::Pass* pass)
     {
         sceGuEnable(GU_LIGHTING);
         sceGuAmbient(this->ambientLight);
-        graphics::TrackVertexColourType tvct = (graphics::TrackVertexColourType)pass->GetVertexColourTracking();
-        sceGuColorMaterial(PSPMappings::Get(tvct));
-        if (tvct & graphics::TVC_AMBIENT)
-        {
-            sceGuSendCommandi(0x55, pass->GetAmbient() & 0xffffff);
-            sceGuSendCommandi(0x58, pass->GetAmbient() >> 24);
-        }
-        if (tvct & graphics::TVC_DIFFUSE)
-        {
-            sceGuSendCommandi(0x56, pass->GetDiffuse() & 0xffffff);
-        }
-        if (tvct & graphics::TVC_SPECULAR)
-        {
-            sceGuSendCommandi(0x57, pass->GetSpecular() & 0xffffff);
-            sceGuSpecular(pass->GetShininess());
-        }
-        if (tvct & graphics::TVC_EMISSIVE)
-        {
-            sceGuSendCommandi(0x54, pass->GetSelfIllumination() & 0xffffff);
-        }
+        sceGuSendCommandi(0x54, pass->GetSelfIllumination() & 0xffffff);
+        sceGuSendCommandi(0x55, pass->GetAmbient() & 0xffffff);
+        sceGuSendCommandi(0x58, pass->GetAmbient() >> 24);
+        sceGuSendCommandi(0x56, pass->GetDiffuse() & 0xffffff);
+        sceGuSendCommandi(0x57, pass->GetSpecular() & 0xffffff);
+        sceGuSpecular(pass->GetShininess());
+        sceGuColorMaterial(PSPMappings::Get((graphics::TrackVertexColourType)pass->GetVertexColourTracking()));
     }
     else
     {
@@ -287,7 +274,7 @@ PSPRenderSystem::_SetPass(graphics::Pass* pass)
         sceGuTexMode(PSPMappings::Get(texture->GetFormat()), numMipmaps, 0, texture->GetSwizzleEnabled());
         sceGuTexImage(0, texture->GetWidth(), texture->GetHeight(), texture->GetWidth(), texture->GetBuffer());
         int i;
-        for (i = 1; i <= numMipmaps; i++)
+        for (i = 1; i <= numMipmaps; ++i)
         {
             PSPTexture::MipmapInfo* info = texture->GetMipmapInfo(i);
             sceGuTexImage(i, info->width, info->height, info->width, info->buffer);
@@ -319,7 +306,7 @@ PSPRenderSystem::_UseLights(core::HashTable* lights)
     int lightIndex = 0;
 
     unsigned int i;
-    for (i = 0; i < lights->capacity && lightIndex < MaxLights; i++)
+    for (i = 0; i < lights->capacity && lightIndex < MaxLights; ++i)
     {
         LinkedList* it = ((core::Chain*)DynamicArrayGet(&lights->entries, i))->list;
         while (it != NULL && lightIndex < MaxLights)
@@ -348,13 +335,13 @@ PSPRenderSystem::_UseLights(core::HashTable* lights)
             sceGuLightColor(lightIndex, GU_DIFFUSE, light->GetDiffuseColour());
             sceGuLightColor(lightIndex, GU_SPECULAR, light->GetSpecularColour());
             sceGuLightAtt(lightIndex, light->GetAttenuationConstant(), light->GetAttenuationLinear(), light->GetAttenuationQuadric());
-            lightIndex++;
+            ++lightIndex;
 
             it = it->next;
         }
     }
 
-    for (i = lightIndex; i < (unsigned int)MaxLights; i++)
+    for (i = lightIndex; i < (unsigned int)MaxLights; ++i)
     {
         sceGuDisable(GU_LIGHT0 + i);
     }

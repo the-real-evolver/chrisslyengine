@@ -76,7 +76,7 @@ void
 MaterialManager::RemoveAll()
 {
     unsigned int i;
-    for (i = 0; i < this->resources.capacity; i++)
+    for (i = 0; i < this->resources.capacity; ++i)
     {
         LinkedList* it = ((Chain*)DynamicArrayGet(&this->resources.entries, i))->list;
         while (it != NULL)

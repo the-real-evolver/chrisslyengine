@@ -30,7 +30,7 @@ Mesh::~Mesh()
     this->RemoveAllAnimations();
 
     unsigned int i;
-    for (i = 0; i < this->numSubMeshes; i++)
+    for (i = 0; i < this->numSubMeshes; ++i)
     {
         CE_DELETE (SubMesh*)DynamicArrayGet(&this->subMeshList, i);
     }
@@ -51,7 +51,7 @@ Mesh::CreateSubMesh()
         return NULL;
     }
 
-    this->numSubMeshes++;
+    ++this->numSubMeshes;
 
     return subMesh;
 }
@@ -103,7 +103,7 @@ void
 Mesh::RemoveAllAnimations()
 {
     unsigned int i;
-    for (i = 0; i < this->animationsList.capacity; i++)
+    for (i = 0; i < this->animationsList.capacity; ++i)
     {
         LinkedList* it = ((Chain*)DynamicArrayGet(&this->animationsList.entries, i))->list;
         while (it != NULL)
@@ -132,7 +132,7 @@ void
 Mesh::_InitAnimationState(HashTable* animSet)
 {
     unsigned int i;
-    for (i = 0; i < this->animationsList.capacity; i++)
+    for (i = 0; i < this->animationsList.capacity; ++i)
     {
         LinkedList* it = ((Chain*)DynamicArrayGet(&this->animationsList.entries, i))->list;
         while (it != NULL)

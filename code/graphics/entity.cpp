@@ -32,7 +32,7 @@ Entity::Entity(const char* name, Mesh* mesh) :
         this->mesh->_InitAnimationState(&this->animationState);
 
         unsigned int i;
-        for (i = 0; i < this->animationState.capacity; i++)
+        for (i = 0; i < this->animationState.capacity; ++i)
         {
             LinkedList* it = ((Chain*)DynamicArrayGet(&this->animationState.entries, i))->list;
             while (it != NULL)
@@ -42,7 +42,7 @@ Entity::Entity(const char* name, Mesh* mesh) :
 
                 unsigned short numVertexTracks = anim->GetNumVertexTracks();
                 unsigned short trackIndex;
-                for (trackIndex = 0; trackIndex < numVertexTracks; trackIndex++)
+                for (trackIndex = 0; trackIndex < numVertexTracks; ++trackIndex)
                 {
                     VertexAnimationTrack* vertexTrack = anim->GetVertexTrack(trackIndex);
                     SubEntity* subEntity = this->GetSubEntity(vertexTrack->GetHandle());
@@ -64,14 +64,14 @@ Entity::Entity(const char* name, Mesh* mesh) :
 Entity::~Entity()
 {
     unsigned int i;
-    for (i = 0; i < this->numSubEntities; i++)
+    for (i = 0; i < this->numSubEntities; ++i)
     {
         CE_DELETE (SubEntity*)DynamicArrayGet(&this->subEntityList, i);
     }
 
     DynamicArrayDelete(&this->subEntityList);
 
-    for (i = 0; i < this->animationState.capacity; i++)
+    for (i = 0; i < this->animationState.capacity; ++i)
     {
         LinkedList* it = ((Chain*)DynamicArrayGet(&this->animationState.entries, i))->list;
         while (it != NULL)
@@ -173,7 +173,7 @@ Entity::UpdateAnimation()
 {
     // loop trough all animstates, update enabled ones
     unsigned int i;
-    for (i = 0; i < this->animationState.capacity; i++)
+    for (i = 0; i < this->animationState.capacity; ++i)
     {
         LinkedList* it = ((Chain*)DynamicArrayGet(&this->animationState.entries, i))->list;
         while (it != NULL)
@@ -196,14 +196,14 @@ void
 Entity::BuildSubEntityList(Mesh* mesh, DynamicArray* sublist)
 {
     unsigned int i;
-    for (i = 0; i < mesh->GetNumSubMeshes(); i++)
+    for (i = 0; i < mesh->GetNumSubMeshes(); ++i)
     {
         SubMesh* subMesh = mesh->GetSubMesh(i);
         SubEntity* subEntity = CE_NEW SubEntity(this, subMesh);
         subEntity->SetMaterialName(subMesh->GetMaterialName());
 
         DynamicArraySet(sublist, i, subEntity);
-        this->numSubEntities++;
+        ++this->numSubEntities;
     }
 }
 

@@ -44,7 +44,7 @@ private:
     /// parse texture unit state from the material description
     void ParseTextureUnitState();
     /// gets the uint rgb colour value
-    unsigned int GetRGBValue(float red, float green, float blue) const;
+    unsigned int GetRGBAValue(float red, float green, float blue, float alpha) const;
     /// gets the blend factor enum value from the parsed string
     SceneBlendFactor GetSceneBlendFactorFromString(const char* blendFactor) const;
 

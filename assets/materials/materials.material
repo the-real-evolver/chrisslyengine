@@ -25,9 +25,6 @@ material opaque_material
     pass
     {
         lighting on
-        diffuse vertexcolour
-        ambient vertexcolour
-        specular vertexcolour 12.0
         fog_override true 1.0 0.5 0.0 0.0 50.0
         texture_unit
         {
@@ -42,9 +39,6 @@ material transparent_material
     pass
     {
         lighting on
-        diffuse vertexcolour
-        ambient vertexcolour
-        specular vertexcolour 12.0
         fog_override true 1.0 0.5 0.0 0.0 50.0
         scene_blend src_alpha one_minus_src_alpha
         cull_hardware none

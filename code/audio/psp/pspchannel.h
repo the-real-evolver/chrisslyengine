@@ -31,8 +31,6 @@ private:
     SceUID semaphoreId;
     SceUID threadId;
     volatile bool requestRelease;
-
-    static int ChannelNumber;
 };
 
 } // namespace chrissly

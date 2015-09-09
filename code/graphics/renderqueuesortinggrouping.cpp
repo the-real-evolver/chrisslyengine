@@ -34,7 +34,7 @@ QueuedRenderableCollection::Initialise(unsigned short capacity)
     DynamicArrayInit(&this->renderablePasses, capacity);
 
     unsigned int i;
-    for (i = 0; i < this->renderablePasses.cur_size; i++)
+    for (i = 0; i < this->renderablePasses.cur_size; ++i)
     {
         RenderablePass* renderablePass = CE_NEW RenderablePass(NULL, NULL);
         DynamicArraySet(&this->renderablePasses, i, renderablePass);
@@ -50,7 +50,7 @@ void
 QueuedRenderableCollection::Destroy()
 {
     unsigned int i;
-    for (i = 0; i < this->renderablePasses.cur_size; i++)
+    for (i = 0; i < this->renderablePasses.cur_size; ++i)
     {
         CE_DELETE (RenderablePass*)DynamicArrayGet(&this->renderablePasses, i);
     }
@@ -79,7 +79,7 @@ QueuedRenderableCollection::AddRenderable(SubEntity* rend, Pass* pass)
     renderablePass->renderable = rend;
     renderablePass->pass = pass;
 
-    this->numRenderablePasses++;
+    ++this->numRenderablePasses;
 }
 
 //------------------------------------------------------------------------------

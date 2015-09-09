@@ -98,7 +98,7 @@ void
 SceneManager::DestroyAllCameras()
 {
     unsigned int i;
-    for (i = 0; i < this->cameras.capacity; i++)
+    for (i = 0; i < this->cameras.capacity; ++i)
     {
         LinkedList* it = ((Chain*)DynamicArrayGet(&this->cameras.entries, i))->list;
         while (it != NULL)
@@ -140,7 +140,7 @@ void
 SceneManager::DestroyAllLights()
 {
     unsigned int i;
-    for (i = 0; i < this->lights.capacity; i++)
+    for (i = 0; i < this->lights.capacity; ++i)
     {
         LinkedList* it = ((Chain*)DynamicArrayGet(&this->lights.entries, i))->list;
         while (it != NULL)
@@ -369,7 +369,7 @@ SceneManager::_RenderScene(Camera* camera, Viewport* vp)
         SceneNode* sceneNode = (SceneNode*)sceneNodeIt->data;
 
         unsigned int entityIndex;
-        for (entityIndex = 0; entityIndex < sceneNode->NumAttachedObjects(); entityIndex++)
+        for (entityIndex = 0; entityIndex < sceneNode->NumAttachedObjects(); ++entityIndex)
         {
             // for all attached entities
             Entity* entity = sceneNode->GetAttachedObject(entityIndex);
@@ -380,7 +380,7 @@ SceneManager::_RenderScene(Camera* camera, Viewport* vp)
             if (entity->HasVertexAnimation() && this->illuminationStage != IRS_RENDER_TO_TEXTURE) entity->UpdateAnimation();
 
             unsigned int subEntityIndex;
-            for (subEntityIndex = 0; subEntityIndex < entity->GetNumSubEntities(); subEntityIndex++)
+            for (subEntityIndex = 0; subEntityIndex < entity->GetNumSubEntities(); ++subEntityIndex)
             {
                 // for all subentities
                 SubEntity* subEntity = entity->GetSubEntity(subEntityIndex);
@@ -398,7 +398,7 @@ SceneManager::_RenderScene(Camera* camera, Viewport* vp)
                 }
 
                 unsigned int passIndex;
-                for (passIndex = 0; passIndex < material->GetNumPasses(); passIndex++)
+                for (passIndex = 0; passIndex < material->GetNumPasses(); ++passIndex)
                 {
                     // for all passes
                     Pass* pass = material->GetPass(passIndex);
@@ -474,7 +474,7 @@ SceneManager::_RenderQueueGroupObjects(QueuedRenderableCollection* queue)
 
     unsigned short numRenderablePasses = queue->GetNumRenderablePasses();
     unsigned short i;
-    for (i = 0; i < numRenderablePasses; i++)
+    for (i = 0; i < numRenderablePasses; ++i)
     {
         RenderablePass* renderablePass = queue->GetRenderablePass(i);
 
@@ -505,7 +505,7 @@ SceneManager::_RenderTextureShadowReceiverQueueGroupObjects(QueuedRenderableColl
 
     unsigned short numRenderablePasses = queue->GetNumRenderablePasses();
     unsigned short i;
-    for (i = 0; i < numRenderablePasses; i++)
+    for (i = 0; i < numRenderablePasses; ++i)
     {
         SubEntity* renderable = queue->GetRenderablePass(i)->renderable;
 

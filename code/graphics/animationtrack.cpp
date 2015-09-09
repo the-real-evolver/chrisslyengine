@@ -55,7 +55,7 @@ VertexAnimationTrack::CreateVertexMorphKeyFrame(float timePos)
         return NULL;
     }
 
-    this->numKeyFrames++;
+    ++this->numKeyFrames;
 
     return vertexMorphKeyFrame;
 }
@@ -85,7 +85,7 @@ void
 VertexAnimationTrack::RemoveAllKeyFrames()
 {
     unsigned int i;
-    for (i = 0; i < this->numKeyFrames; i++)
+    for (i = 0; i < this->numKeyFrames; ++i)
     {
         CE_DELETE (VertexMorphKeyFrame*)DynamicArrayGet(&this->keyFrames, i);
     }
