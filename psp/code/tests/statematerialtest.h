@@ -41,15 +41,13 @@ private:
 
     static StateMaterialTest* Singleton;
 
+    chrissly::graphics::Camera* camera;
     chrissly::graphics::SceneNode* gothSceneNode;
-
     chrissly::graphics::Material* cubeMaterial;
     float vMod;
 
-    chrissly::graphics::Camera* camera;
     SceCtrlData pad;
 };
 
 //------------------------------------------------------------------------------
 #endif
-

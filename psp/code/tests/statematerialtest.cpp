@@ -37,12 +37,12 @@ StateMaterialTest::~StateMaterialTest()
 void
 StateMaterialTest::Enter()
 {
-    sceCtrlSetSamplingCycle(100);
-    sceCtrlSetSamplingMode(PSP_CTRL_MODE_ANALOG);
-
     MaterialManager::Instance()->Initialise();
 
-    // create entities and attach them to the scene
+    this->camera = SceneManager::Instance()->GetCamera("MainCamera");
+    this->camera->SetPosition(0.0f, 0.0f, 5.0f);
+    this->camera->SetOrientation(Quaternion());
+
     Entity* gothEntity = SceneManager::Instance()->CreateEntity("gothic_woman.mesh");
     gothEntity->SetCastShadows(true);
     this->gothSceneNode = SceneManager::Instance()->GetRootSceneNode()->CreateChildSceneNode();
@@ -56,8 +56,8 @@ StateMaterialTest::Enter()
     cubeSceneNode->SetScale(10.0f, 0.2f, 10.0f);
     cubeSceneNode->SetPosition(2.0f, -2.8f, -2.0f);
     cubeSceneNode->AttachObject(cubeEntity);
-    this->vMod = 0.0f;
     this->cubeMaterial = MaterialManager::Instance()->CreateOrRetrieve("cube_material");
+    this->vMod = 0.0f;
 
     Entity* lightConeEntity = SceneManager::Instance()->CreateEntity("cone.mesh");
     SceneNode* lightConeSceneNode = SceneManager::Instance()->GetRootSceneNode()->CreateChildSceneNode();
@@ -66,10 +66,6 @@ StateMaterialTest::Enter()
     lightConeSceneNode->Yaw(2.14f);
     lightConeSceneNode->Pitch(-1.0f);
     lightConeSceneNode->AttachObject(lightConeEntity);
-
-    this->camera = SceneManager::Instance()->GetCamera("MainCamera");
-    this->camera->SetPosition(0.0f, 0.0f, 5.0f);
-    this->camera->SetOrientation(Quaternion());
 
     SceneManager::Instance()->SetAmbientLight(0xff222222);
     Light* light = SceneManager::Instance()->CreateLight("SpotLight");
@@ -87,8 +83,6 @@ StateMaterialTest::Enter()
     light->SetSpecularColour(0x00000000);
     light->SetAttenuation(1.0f, 0.0f, 0.0f);
     light->SetPosition(0.0f, -6.0f, -1.4f);
-
-    sceKernelDcacheWritebackAll();
 }
 
 //------------------------------------------------------------------------------
@@ -161,6 +155,3 @@ StateMaterialTest::Trigger()
 
     if (this->pad.Buttons & PSP_CTRL_CROSS) StateManager::Instance()->ChangeState(StateAnimationTest::Instance());
 }
-
-
-

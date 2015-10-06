@@ -1,8 +1,8 @@
 //------------------------------------------------------------------------------
-//  gles2renderwindow.cpp
+//  eglrenderwindow.cpp
 //  (C) 2012 Christian Bleicher
 //------------------------------------------------------------------------------
-#include "gles2renderwindow.h"
+#include "eglrenderwindow.h"
 #include "core/debug.h"
 
 namespace chrissly
@@ -10,7 +10,7 @@ namespace chrissly
 //------------------------------------------------------------------------------
 /**
 */
-GLES2RenderWindow::GLES2RenderWindow()
+EGLRenderWindow::EGLRenderWindow()
 {
 
 }
@@ -18,7 +18,7 @@ GLES2RenderWindow::GLES2RenderWindow()
 //------------------------------------------------------------------------------
 /**
 */
-GLES2RenderWindow::GLES2RenderWindow(void* windowHandle)
+EGLRenderWindow::EGLRenderWindow(void* windowHandle)
 {
     this->window = (EGLNativeWindowType)windowHandle;
     this->display = EGL_NO_DISPLAY;
@@ -29,10 +29,10 @@ GLES2RenderWindow::GLES2RenderWindow(void* windowHandle)
 //------------------------------------------------------------------------------
 /**
 */
-GLES2RenderWindow::~GLES2RenderWindow()
+EGLRenderWindow::~EGLRenderWindow()
 {
     this->RemoveAllViewports();
-    
+
     if (this->display != EGL_NO_DISPLAY)
     {
         eglMakeCurrent(this->display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
@@ -52,7 +52,7 @@ GLES2RenderWindow::~GLES2RenderWindow()
 /**
 */
 void
-GLES2RenderWindow::Create()
+EGLRenderWindow::Create()
 {
     this->display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
     eglInitialize(this->display, 0, 0);
@@ -81,16 +81,17 @@ GLES2RenderWindow::Create()
     // ANativeWindow buffers to match, using EGL_NATIVE_VISUAL_ID.
     EGLint format;
     eglGetConfigAttrib(this->display, config, EGL_NATIVE_VISUAL_ID, &format);
+#if __ANDROID__
     ANativeWindow_setBuffersGeometry(this->window, 0, 0, format);
-
+#endif
     this->surface = eglCreateWindowSurface(this->display, config, this->window, NULL);
-    
+
     // create an OpenGL ES 2.0 context
     const EGLint contextAttrs[] =
     {
         EGL_CONTEXT_CLIENT_VERSION, 2,
         EGL_NONE
-    }; 
+    };
     this->context = eglCreateContext(this->display, config, NULL, contextAttrs);
 
     if (EGL_FALSE == eglMakeCurrent(this->display, this->surface, this->surface, this->context))
@@ -100,22 +101,22 @@ GLES2RenderWindow::Create()
 
     eglQuerySurface(this->display, this->surface, EGL_WIDTH, &this->width);
     eglQuerySurface(this->display, this->surface, EGL_HEIGHT, &this->height);
-    
+
     this->buffer = NULL;
     this->format = graphics::PF_R8G8B8;
 }
-    
+
 //------------------------------------------------------------------------------
 /**
 */
 void
-GLES2RenderWindow::Update()
+EGLRenderWindow::Update()
 {
     if (EGL_NO_DISPLAY == this->display)
     {
         return;
     }
-    
+
     // update all viewports
     unsigned int index;
     for (index = 0; index < this->numViewports; ++index)
@@ -129,14 +130,14 @@ GLES2RenderWindow::Update()
 /**
 */
 void
-GLES2RenderWindow::SwapBuffers()
+EGLRenderWindow::SwapBuffers()
 {
     if (EGL_NO_DISPLAY == this->display)
     {
         return;
     }
-    
-    eglSwapBuffers(this->display, this->surface); 
+
+    eglSwapBuffers(this->display, this->surface);
 }
 
 } // namespace chrissly

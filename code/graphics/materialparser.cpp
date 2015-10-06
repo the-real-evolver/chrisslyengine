@@ -296,6 +296,18 @@ MaterialParser::ParsePass()
             this->currentPass->SetCullingMode(CULL_ANTICLOCKWISE);
         }
     }
+    else if (0 == strcmp(this->lexer.string, "depth_check"))
+    {
+        if (0 == stb_c_lexer_get_token(&this->lexer)) return;
+        if (0 == strcmp(this->lexer.string, "on"))
+        {
+            this->currentPass->SetDepthCheckEnabled(true);
+        }
+        else if (0 == strcmp(this->lexer.string, "off"))
+        {
+            this->currentPass->SetDepthCheckEnabled(false);
+        }
+    }
     else if (this->lexer.token == '}')
     {
         this->parserState = StateParseMaterial;
@@ -340,6 +352,14 @@ MaterialParser::ParseTextureUnitState()
             type = LBT_ALPHA;
         }
         this->currentTextureUnitState->SetTextureBlendOperation(type, operation);
+    }
+    else if (this->lexer.token == CLEX_id && 0 == strcmp(this->lexer.string, "scroll"))
+    {
+        if (0 == stb_c_lexer_get_token(&this->lexer)) return;
+        float uMod = this->lexer.real_number;
+        if (0 == stb_c_lexer_get_token(&this->lexer)) return;
+        float vMod = this->lexer.real_number;
+        this->currentTextureUnitState->SetTextureScroll(uMod, vMod);
     }
     else if (this->lexer.token == CLEX_id && 0 == strcmp(this->lexer.string, "scale"))
     {

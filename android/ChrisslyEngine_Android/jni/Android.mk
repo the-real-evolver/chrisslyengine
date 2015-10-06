@@ -26,7 +26,7 @@ LOCAL_SRC_FILES := core/android/androiddebug.cpp core/android/androidfswrapper.c
                    graphics/scenemanager.cpp graphics/scenenode.cpp \
                    graphics/camera.cpp graphics/viewport.cpp \
                    graphics/animation.cpp graphics/animationtrack.cpp graphics/keyframe.cpp graphics/animationstate.cpp \
-                   graphics/rendertarget.cpp graphics/android/gles2rendertexture.cpp graphics/android/gles2renderwindow.cpp \
+                   graphics/rendertarget.cpp graphics/android/gles2rendertexture.cpp graphics/android/eglrenderwindow.cpp \
                    graphics/android/gles2mappings.cpp graphics/android/gles2texture.cpp graphics/android/gles2rendersystem.cpp \
                    graphics/android/gles2gpuprogram.cpp graphics/gpuprogramparams.cpp \
                    audio/wavcodec.cpp audio/vorbiscodec.cpp audio/soundbase.cpp audio/audiosystem.cpp audio/channelbase.cpp \

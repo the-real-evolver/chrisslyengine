@@ -31,6 +31,8 @@ public:
     ~MaterialManager();
     /// create all materials defined in the material file
     void Initialise();
+    /// parse material script and create the material
+    void ParseScript(const char* name);
     /// create a new material, or retrieve an existing one with the same name if it already exists
     Material* CreateOrRetrieve(const char* name);
     /// retrieves a pointer to a material by name, or null if the resource does not exist

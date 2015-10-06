@@ -37,9 +37,6 @@ StateAnimationTest::~StateAnimationTest()
 void
 StateAnimationTest::Enter()
 {
-    sceCtrlSetSamplingCycle(100);
-    sceCtrlSetSamplingMode(PSP_CTRL_MODE_ANALOG);
-
     MaterialManager::Instance()->Initialise();
     Material* material = MaterialManager::Instance()->GetByName("cerberus_material_psp");
     Entity* entity = SceneManager::Instance()->CreateEntity("cerberus_walk.mesh");
@@ -102,11 +99,5 @@ StateAnimationTest::Trigger()
     this->sceneNode->Yaw(tx * 0.05f);
     GraphicsSystem::Instance()->RenderOneFrame();
 
-    if (this->pad.Buttons & PSP_CTRL_CROSS)
-    {
-        StateManager::Instance()->ChangeState(StateMaterialTest::Instance());
-    }
+    if (this->pad.Buttons & PSP_CTRL_CROSS) StateManager::Instance()->ChangeState(StateMaterialTest::Instance());
 }
-
-
-

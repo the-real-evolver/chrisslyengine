@@ -11,6 +11,8 @@
 namespace chrissly
 {
 
+#define CE_GL_ENABLE_ERROR_CHECK (0)
+
 GLES2RenderSystem* GLES2RenderSystem::Singleton = NULL;
 
 //------------------------------------------------------------------------------
@@ -478,11 +480,13 @@ GLES2RenderSystem::PrintGLString(const char* name, GLenum s)
 void
 GLES2RenderSystem::CheckGlError(const char* op)
 {
+#if CE_GL_ENABLE_ERROR_CHECK
     GLint error;
     for (error = glGetError(); error; error = glGetError())
     {
         CE_LOG("after %s() glError (0x%x)\n", op, error);
     }
+#endif
 }
 
 } // namespace chrissly

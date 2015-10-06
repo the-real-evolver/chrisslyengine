@@ -15,7 +15,7 @@ namespace audio
 using namespace chrissly::core;
 
 static const unsigned int RiffWavHeaderSize = 44;
-static const unsigned int MaxStreamBufferSamples = 65472;
+static const unsigned int MaxStreamBufferSamples = 2048;
 
 //------------------------------------------------------------------------------
 /**
@@ -29,8 +29,7 @@ WavCodec::WavCodec() :
     currentStreamBufferIndex(0),
     currentStreamBufferLength(0),
     bytesToLoadToBackBuffer(0),
-    bytesWrittenToBackBuffer(0),
-    bytesToLoadPerFrame(0)
+    backBufferFilled(false)
 {
 
 }
@@ -101,16 +100,7 @@ WavCodec::SetupSound(const char* filename, Mode mode, void** sampleBuffer, unsig
     channels = numChannels;
     bits = bitsPerSample;
 
-    if (MODE_DEFAULT == mode || mode & MODE_CREATESAMPLE || mode & MODE_CREATECOMPRESSEDSAMPLE)
-    {
-        void* buffer = CE_MALLOC_ALIGN(16, dataSize);
-        CE_ASSERT(buffer != NULL, "WavCodec::SetupSound(): failed to allocate '%i' bytes for samplebuffer", dataSize);
-        FSWrapper::Read(fd, buffer, dataSize); // read the actual sound data
-        *sampleBuffer = buffer;
-
-        FSWrapper::Close(fd);
-    }
-    else if (mode & MODE_CREATESTREAM)
+    if (mode & MODE_CREATESTREAM)
     {
         this->openedAsStream = true;
         this->streamFileHandle = fd;
@@ -118,6 +108,14 @@ WavCodec::SetupSound(const char* filename, Mode mode, void** sampleBuffer, unsig
         this->streamBuffers[0] = CE_MALLOC_ALIGN(16, MaxStreamBufferSamples * this->bytesPerSample);
         this->streamBuffers[1] = CE_MALLOC_ALIGN(16, MaxStreamBufferSamples * this->bytesPerSample);
         *sampleBuffer = NULL;
+    }
+    else
+    {
+        void* buffer = CE_MALLOC_ALIGN(16, dataSize);
+        CE_ASSERT(buffer != NULL, "WavCodec::SetupSound(): failed to allocate '%i' bytes for samplebuffer", dataSize);
+        FSWrapper::Read(fd, buffer, dataSize); // read the actual sound data
+        FSWrapper::Close(fd);
+        *sampleBuffer = buffer;
     }
 }
 
@@ -129,13 +127,12 @@ WavCodec::InitialiseStream()
 {
     this->endOfStream = false;
     this->currentStreamBufferIndex = 0;
-    this->bytesWrittenToBackBuffer = 0;
     this->bytesToLoadToBackBuffer = this->lengthInBytes < MaxStreamBufferSamples * this->bytesPerSample ? this->lengthInBytes : MaxStreamBufferSamples * this->bytesPerSample;
     this->seekPosition = this->bytesToLoadToBackBuffer;
-    this->bytesToLoadPerFrame = this->bytesToLoadToBackBuffer >> 4;
     FSWrapper::Seek(this->streamFileHandle, RiffWavHeaderSize, Begin);
     FSWrapper::Read(this->streamFileHandle, this->streamBuffers[0], this->bytesToLoadToBackBuffer);
     this->currentStreamBufferLength = this->bytesToLoadToBackBuffer;
+    this->backBufferFilled = false;
 }
 
 //------------------------------------------------------------------------------
@@ -144,25 +141,20 @@ WavCodec::InitialiseStream()
 void
 WavCodec::FillStreamBackBuffer()
 {
-    if (this->seekPosition >= this->lengthInBytes) return;
+    if (this->endOfStream) return;
 
-    unsigned int bytesToLoadThisFrame = this->bytesToLoadPerFrame;
-    if ((this->seekPosition + this->bytesToLoadPerFrame) > this->lengthInBytes)
+    unsigned int bytesToLoadThisFrame = this->bytesToLoadToBackBuffer;
+    if ((this->seekPosition + this->bytesToLoadToBackBuffer) > this->lengthInBytes)
     {
         bytesToLoadThisFrame = this->lengthInBytes - this->seekPosition;
     }
 
-    if (this->bytesWrittenToBackBuffer < this->bytesToLoadToBackBuffer)
+    if (!this->backBufferFilled)
     {
-        if (this->bytesWrittenToBackBuffer + bytesToLoadThisFrame > this->bytesToLoadToBackBuffer)
-        {
-            bytesToLoadThisFrame = this->bytesToLoadToBackBuffer - this->bytesWrittenToBackBuffer;
-        }
-
-        FSWrapper::Read(this->streamFileHandle, (void*)(((unsigned int)this->streamBuffers[this->currentStreamBufferIndex ^ 1]) + this->bytesWrittenToBackBuffer), bytesToLoadThisFrame);
-        this->bytesWrittenToBackBuffer += bytesToLoadThisFrame;
+        FSWrapper::Read(this->streamFileHandle, this->streamBuffers[this->currentStreamBufferIndex ^ 1], bytesToLoadThisFrame);
         this->seekPosition += bytesToLoadThisFrame;
-        this->currentStreamBufferLength = this->bytesWrittenToBackBuffer;
+        this->bytesToLoadToBackBuffer = bytesToLoadThisFrame;
+        this->backBufferFilled = true;
     }
 }
 
@@ -172,8 +164,9 @@ WavCodec::FillStreamBackBuffer()
 void
 WavCodec::SwapStreamBuffers()
 {
+    this->currentStreamBufferLength = this->bytesToLoadToBackBuffer;
     this->currentStreamBufferIndex ^= 1;
-    this->bytesWrittenToBackBuffer = 0;
+    this->backBufferFilled = false;
     if (this->seekPosition >= this->lengthInBytes) this->endOfStream = true;
 }
 

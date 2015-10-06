@@ -42,7 +42,7 @@ main(int argc, char* argv[])
 
     // create and initialise graphicssystem
     GraphicsSystem* gs = new GraphicsSystem();
-    RenderWindow* window = GraphicsSystem::Instance()->Initialise();
+    RenderWindow* window = gs->Initialise();
     // add a camera
     Camera* camera = SceneManager::Instance()->CreateCamera("MainCamera");
     // add viewport
@@ -56,14 +56,19 @@ main(int argc, char* argv[])
     StateMaterialTest* smt = new StateMaterialTest();
     // initialise statemanager
     StateManager* sm = new StateManager();
-    StateManager::Instance()->ChangeState(sat);
+    sm->ChangeState(sat);
 
-    while (StateManager::Instance()->IsRunning() && !exitRequest)
+    // initialise input
+    sceCtrlSetSamplingCycle(100);
+    sceCtrlSetSamplingMode(PSP_CTRL_MODE_ANALOG);
+    sceKernelDcacheWritebackAll();
+
+    while (sm->IsRunning() && !exitRequest)
     {
-        StateManager::Instance()->Trigger();
+        sm->Trigger();
     }
 
-    StateManager::Instance()->Exit();
+    sm->Exit();
 
     delete smt;
     delete sat;

@@ -1,8 +1,8 @@
-#ifndef GLES2RENDERWINDOW_H_
-#define GLES2RENDERWINDOW_H_
+#ifndef EGLRENDERWINDOW_H_
+#define EGLRENDERWINDOW_H_
 //------------------------------------------------------------------------------
 /**
-    @class chrissly::GLES2RenderWindow
+    @class chrissly::EGLRenderWindow
 
     (C) 2012 Christian Bleicher
 */
@@ -12,15 +12,15 @@
 //------------------------------------------------------------------------------
 namespace chrissly
 {
-class GLES2RenderWindow : public graphics::RenderTarget
+class EGLRenderWindow : public graphics::RenderTarget
 {
 public:
     /// constructor with window handle
-    GLES2RenderWindow(void* windowHandle);
+    EGLRenderWindow(void* windowHandle);
     /// destructor
-    ~GLES2RenderWindow();
+    ~EGLRenderWindow();
     /// creates & displays the new window
-    void Create(); 
+    void Create();
     /// tells the window to update it's contents
     void Update();
     /// swaps the frame buffers to display the next frame
@@ -28,8 +28,8 @@ public:
 
 private:
     /// private default constructor
-    GLES2RenderWindow();
-    
+    EGLRenderWindow();
+
     EGLNativeWindowType window;
     EGLDisplay display;
     EGLSurface surface;

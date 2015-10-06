@@ -171,6 +171,23 @@ Matrix4::operator * (const Matrix4 &m2) const
 //------------------------------------------------------------------------------
 /**
 */
+Vector3
+Matrix4::operator * (const Vector3 &v) const
+{
+    Vector3 r;
+
+    float fInvW = 1.0f / (this->m[3][0] * v.x + this->m[3][1] * v.y + this->m[3][2] * v.z + this->m[3][3]);
+
+    r.x = (this->m[0][0] * v.x + this->m[0][1] * v.y + this->m[0][2] * v.z + this->m[0][3]) * fInvW;
+    r.y = (this->m[1][0] * v.x + this->m[1][1] * v.y + this->m[1][2] * v.z + this->m[1][3]) * fInvW;
+    r.z = (this->m[2][0] * v.x + this->m[2][1] * v.y + this->m[2][2] * v.z + this->m[2][3]) * fInvW;
+
+    return r;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
 float*
 Matrix4::operator[] (size_t iRow) const
 {

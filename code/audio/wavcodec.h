@@ -48,8 +48,7 @@ private:
     volatile unsigned char currentStreamBufferIndex;
     unsigned int currentStreamBufferLength;
     unsigned int bytesToLoadToBackBuffer;
-    unsigned int bytesWrittenToBackBuffer;
-    unsigned int bytesToLoadPerFrame;
+    bool backBufferFilled;
 };
 
 } // namespace audio

@@ -191,13 +191,6 @@ AudioSystem::Update()
         {
             audio::Mode mode;
             channel->GetMode(&mode);
-            if (mode & audio::MODE_CREATESTREAM)
-            {
-                audio::Sound* sound;
-                channel->GetCurrentSound(&sound);
-                sound->_GetCodec()->FillStreamBackBuffer();
-            }
-
             if (mode & audio::MODE_3D)
             {
                 float minDistance, maxDistance;

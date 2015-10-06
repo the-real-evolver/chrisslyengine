@@ -44,6 +44,15 @@ MaterialManager::Initialise()
 //------------------------------------------------------------------------------
 /**
 */
+void
+MaterialManager::ParseScript(const char* name)
+{
+    this->parser.ParseScript(name);
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
 Material*
 MaterialManager::CreateOrRetrieve(const char* name)
 {

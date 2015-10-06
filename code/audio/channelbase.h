@@ -7,6 +7,7 @@
     (C) 2014 Christian Bleicher
 */
 #include "sound.h"
+#include "propertychangedflags.h"
 #include "vector3.h"
 
 //------------------------------------------------------------------------------
@@ -80,7 +81,7 @@ public:
     /// get the internal factor the volume will be scaled with if the channel is playing in 3d mode
     float _GetAttenuationFactor() const;
     /// retrieve if properties (volume, panning ect.) has changed
-    bool _PropertiesHasChanged();
+    PropertyChange _PropertiesHasChanged();
 
 protected:
     bool isPlaying;
@@ -95,7 +96,7 @@ protected:
     Sound* currentSound;
     int index;
     float attenuationFactor;
-    bool propertiesHasChanged;
+    PropertyChange propertiesHasChanged;
 };
 
 } // namespace audio

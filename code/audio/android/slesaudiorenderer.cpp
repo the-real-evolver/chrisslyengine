@@ -143,42 +143,60 @@ SLESAudioRenderer::StartChannel(audio::Channel* channel)
 void
 SLESAudioRenderer::UpdateChannel(audio::Channel* channel)
 {
-    if (channel->_PropertiesHasChanged())
+    audio::Mode mode;
+    channel->GetMode(&mode);
+    if (mode & audio::MODE_CREATESTREAM)
     {
-        audio::Mode mode;
-        channel->GetMode(&mode);
-        float volume;
-        channel->GetVolume(&volume);
-        if (mode & audio::MODE_3D) volume *= channel->_GetAttenuationFactor();
+        audio::Sound* sound;
+        channel->GetCurrentSound(&sound);
+        sound->_GetCodec()->FillStreamBackBuffer();
+    }
+
+    audio::PropertyChange propertyChange = channel->_PropertiesHasChanged();
+    if (propertyChange != audio::UNCHANGED)
+    {
         SLresult result;
-        SLVolumeItf volumeInterface = channel->GetVolumeInterface();
-        SLmillibel slVolume;
-        if (volume >= 1.0f)
+        if (propertyChange & audio::PROPERTY_VOLUME || propertyChange & audio::PROPERTY_ATTENUATION || propertyChange & audio::PROPERTY_MODE)
         {
-            result = (*volumeInterface)->GetMaxVolumeLevel(volumeInterface, &slVolume);
-            CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::UpdateChannel(): failed to get max volume level\n");
+            float volume;
+            channel->GetVolume(&volume);
+            if (mode & audio::MODE_3D) volume *= channel->_GetAttenuationFactor();
+            SLVolumeItf volumeInterface = channel->GetVolumeInterface();
+            SLmillibel slVolume;
+            if (volume >= 1.0f)
+            {
+                result = (*volumeInterface)->GetMaxVolumeLevel(volumeInterface, &slVolume);
+                CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::UpdateChannel(): failed to get max volume level\n");
+            }
+            else
+            {
+                float l = M_LN2 / log(1.0f / (1.0f - volume));
+                if (l > 32.768f) l = 32.768f;
+                slVolume = l * -1000.0f;
+            }
+            result = (*volumeInterface)->SetVolumeLevel(volumeInterface, slVolume);
+            CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::UpdateChannel(): failed to set volume level to: '%f' (SLmillibel '%i')\n", volume, slVolume);
         }
-        else
+
+        if (propertyChange & audio::PROPERTY_PAN)
         {
-            float l = M_LN2 / log(1.0f / (1.0f - volume));
-            if (l > 32.768f) l = 32.768f;
-            slVolume = l * -1000.0f;
+            float pan;
+            channel->GetPan(&pan);
+            SLVolumeItf volumeInterface = channel->GetVolumeInterface();
+            result = (*volumeInterface)->EnableStereoPosition(volumeInterface, SL_BOOLEAN_TRUE);
+            CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::UpdateChannel(): failed to enable stereo position\n");
+            result = (*volumeInterface)->SetStereoPosition(volumeInterface, (SLpermille)(pan * 1000.0f));
+            CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::UpdateChannel(): failed to set stereo position\n");
         }
-        result = (*volumeInterface)->SetVolumeLevel(volumeInterface, slVolume);
-        CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::UpdateChannel(): failed to set volume level to: '%f' (SLmillibel '%i')\n", volume, slVolume);
 
-        float pan;
-        channel->GetPan(&pan);
-        result = (*volumeInterface)->EnableStereoPosition(volumeInterface, SL_BOOLEAN_TRUE);
-        CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::UpdateChannel(): failed to enable stereo position\n");
-        result = (*volumeInterface)->SetStereoPosition(volumeInterface, (SLpermille)(pan * 1000.0f));
-        CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::UpdateChannel(): failed to set stereo position\n");
-
-        bool paused;
-        channel->GetPaused(&paused);
-        SLPlayItf playerInterface = channel->GetPlayerInterface();
-        result = (*playerInterface)->SetPlayState(playerInterface, paused ? SL_PLAYSTATE_PAUSED : SL_PLAYSTATE_PLAYING);
-        CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::UpdateChannel(): failed to set play state\n");
+        if (propertyChange & audio::PROPERTY_PAUSED)
+        {
+            bool paused;
+            channel->GetPaused(&paused);
+            SLPlayItf playerInterface = channel->GetPlayerInterface();
+            result = (*playerInterface)->SetPlayState(playerInterface, paused ? SL_PLAYSTATE_PAUSED : SL_PLAYSTATE_PLAYING);
+            CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::UpdateChannel(): failed to set play state\n");
+        }
     }
 }
 

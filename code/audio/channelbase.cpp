@@ -30,7 +30,7 @@ ChannelBase::ChannelBase() :
     currentSound(NULL),
     index(CHANNEL_FREE),
     attenuationFactor(0.0f),
-    propertiesHasChanged(false)
+    propertiesHasChanged(UNCHANGED)
 {
 
 }
@@ -75,7 +75,7 @@ ChannelBase::SetPaused(bool paused)
 {
     this->paused = paused;
 
-    this->propertiesHasChanged = true;
+    this->propertiesHasChanged |= PROPERTY_PAUSED;
 
     return OK;
 }
@@ -109,7 +109,7 @@ ChannelBase::SetVolume(float volume)
         this->volume = volume;
     }
 
-    this->propertiesHasChanged = true;
+    this->propertiesHasChanged |= PROPERTY_VOLUME;
 
     return OK;
 }
@@ -143,7 +143,7 @@ ChannelBase::SetPressureLevel(float decibel)
         this->volume = Math::Pow(10, decibel / 20.0f);
     }
 
-    this->propertiesHasChanged = true;
+    this->propertiesHasChanged |= PROPERTY_VOLUME;
 
     return OK;
 }
@@ -167,7 +167,7 @@ ChannelBase::SetPan(float pan)
         this->panning = pan;
     }
 
-    this->propertiesHasChanged = true;
+    this->propertiesHasChanged |= PROPERTY_PAN;
 
     return OK;
 }
@@ -188,9 +188,32 @@ ChannelBase::GetPan(float* pan)
 Result
 ChannelBase::SetMode(Mode mode)
 {
-    this->mode = mode;
+    if (mode & (MODE_LOOP_OFF | MODE_LOOP_NORMAL))
+    {
+        this->mode &= ~(MODE_LOOP_OFF | MODE_LOOP_NORMAL);
 
-    this->propertiesHasChanged = true;
+        if (mode & MODE_LOOP_OFF)
+        {
+            this->mode |= MODE_LOOP_OFF;
+        }
+        else if (mode & MODE_LOOP_NORMAL)
+        {
+            this->mode |= MODE_LOOP_NORMAL;
+        }
+    }
+
+    if (mode & MODE_3D)
+    {
+        this->mode &= ~MODE_2D;
+        this->mode |= MODE_3D;
+    }
+    else if (mode & MODE_2D)
+    {
+        this->mode &= ~MODE_3D;
+        this->mode |= MODE_2D;
+    }
+
+    this->propertiesHasChanged |= PROPERTY_MODE;
 
     return OK;
 }
@@ -325,7 +348,7 @@ ChannelBase::_SetAttenuationFactor(float attenuation)
 {
     this->attenuationFactor = attenuation;
 
-    this->propertiesHasChanged = true;
+    this->propertiesHasChanged |= PROPERTY_ATTENUATION;
 }
 
 //------------------------------------------------------------------------------
@@ -340,11 +363,11 @@ ChannelBase::_GetAttenuationFactor() const
 //------------------------------------------------------------------------------
 /**
 */
-bool
+PropertyChange
 ChannelBase::_PropertiesHasChanged()
 {
-    bool propertiesHasChanged = this->propertiesHasChanged;
-    this->propertiesHasChanged = false;
+    PropertyChange propertiesHasChanged = this->propertiesHasChanged;
+    this->propertiesHasChanged = UNCHANGED;
     return propertiesHasChanged;
 }
 

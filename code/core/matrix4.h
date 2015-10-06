@@ -7,6 +7,7 @@
     (C) 2012 Christian Bleicher
 */
 #include <stddef.h>
+#include "vector3.h"
 
 //------------------------------------------------------------------------------
 namespace chrissly
@@ -35,6 +36,8 @@ public:
     Matrix4 Concatenate(const Matrix4& m2) const;
     /// matrix concatenation using '*'
     Matrix4 operator * (const Matrix4 &m2) const;
+    /// transforms the given 3-D vector by the matrix
+    Vector3 operator * (const Vector3 &v) const;
     /// member access, allows use of construct mat[r][c]
     float* operator[] (size_t iRow) const;
     /// identity matrix

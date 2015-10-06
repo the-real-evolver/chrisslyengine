@@ -1,8 +1,8 @@
-#ifndef ANDROIDMATH_H_
-#define ANDROIDMATH_H_
+#ifndef STANDARDMATH_H_
+#define STANDARDMATH_H_
 //------------------------------------------------------------------------------
 /**
-    @class chrissly::AndroidMath
+    @class chrissly::StandardMath
 
     Wrapper class for common mathematical functions.
 
@@ -11,9 +11,9 @@
 #include <math.h>
 
 //------------------------------------------------------------------------------
-namespace chrissly 
+namespace chrissly
 {
-class AndroidMath
+class StandardMath
 {
 public:
     /// returns base raised to the power exponent
@@ -40,7 +40,7 @@ public:
 /**
 */
 inline float
-AndroidMath::Pow(float base, float exponent)
+StandardMath::Pow(float base, float exponent)
 {
     return pow(base, exponent);
 }
@@ -49,7 +49,7 @@ AndroidMath::Pow(float base, float exponent)
 /**
 */
 inline float
-AndroidMath::Sqrt(float fValue)
+StandardMath::Sqrt(float fValue)
 {
     return sqrt(fValue);
 }
@@ -58,7 +58,7 @@ AndroidMath::Sqrt(float fValue)
 /**
 */
 inline float
-AndroidMath::Sin(float fValue)
+StandardMath::Sin(float fValue)
 {
     return sin(fValue);
 }
@@ -67,7 +67,7 @@ AndroidMath::Sin(float fValue)
 /**
 */
 inline float
-AndroidMath::Cos(float fValue)
+StandardMath::Cos(float fValue)
 {
     return cos(fValue);
 }
@@ -76,7 +76,7 @@ AndroidMath::Cos(float fValue)
 /**
 */
 inline float
-AndroidMath::ATan(float fValue)
+StandardMath::ATan(float fValue)
 {
     return atan(fValue);
 }
@@ -85,7 +85,7 @@ AndroidMath::ATan(float fValue)
 /**
 */
 inline float
-AndroidMath::ATan2(float y, float x)
+StandardMath::ATan2(float y, float x)
 {
     return atan2(y, x);
 }
@@ -94,7 +94,7 @@ AndroidMath::ATan2(float y, float x)
 /**
 */
 inline float
-AndroidMath::Fmod(float fNumerator, float fDenominator)
+StandardMath::Fmod(float fNumerator, float fDenominator)
 {
     return fmod(fNumerator, fDenominator);
 }
@@ -103,7 +103,7 @@ AndroidMath::Fmod(float fNumerator, float fDenominator)
 /**
 */
 inline float
-AndroidMath::Floor(float fValue)
+StandardMath::Floor(float fValue)
 {
     return floor(fValue);
 }
@@ -112,7 +112,7 @@ AndroidMath::Floor(float fValue)
 /**
 */
 inline int
-AndroidMath::Abs(int n)
+StandardMath::Abs(int n)
 {
     int mask = (n >> (sizeof(int) * CHAR_BIT - 1));
     return (n + mask) ^ mask;

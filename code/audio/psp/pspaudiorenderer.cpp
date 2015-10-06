@@ -5,6 +5,7 @@
 #include "pspaudiorenderer.h"
 #include "modeflags.h"
 #include "sound.h"
+#include "propertychangedflags.h"
 #include "chrisslymath.h"
 #include "debug.h"
 #include <stdio.h>
@@ -121,7 +122,7 @@ PSPAudioRenderer::UpdateChannel(audio::Channel* channel)
     bool isPlaying;
     channel->IsPlaying(&isPlaying);
 
-    if (isPlaying && channel->_PropertiesHasChanged())
+    if (isPlaying && channel->_PropertiesHasChanged() != audio::UNCHANGED)
     {
         int index;
         channel->GetIndex(&index);
@@ -214,13 +215,18 @@ PSPAudioRenderer::ChannelThread(SceSize args, void* argp)
             {
                 if (mode & audio::MODE_CREATESTREAM)
                 {
+                    if (position > 0)
+                    {
+                        codec->FillStreamBackBuffer();
+                        codec->SwapStreamBuffers(); // dont swap buffers on the first frame
+                    }
                     samplecount = codec->GetStreamBufferLength() / (numChannels * (bits >> 3));
                 }
                 else
                 {
                     samplecount = PSP_AUDIO_SAMPLE_MAX;
                 }
-                if (samplesRemaining < samplecount)
+                if ((unsigned int)samplesRemaining < samplecount)
                 {
                     samplecount = PSP_AUDIO_SAMPLE_ALIGN(samplesRemaining);
                     sceAudioSetChannelDataLen(index, samplecount);
@@ -246,7 +252,6 @@ PSPAudioRenderer::ChannelThread(SceSize args, void* argp)
 
                 if (mode & audio::MODE_CREATESTREAM)
                 {
-                    if (position > 0) codec->SwapStreamBuffers(); // dont swap buffers on the first frame
                     sceAudioOutputPannedBlocking(index, leftVolume, rightVolume, codec->GetStreamBufferPointer());
                 }
                 else
