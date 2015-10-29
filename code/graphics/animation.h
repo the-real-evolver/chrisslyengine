@@ -46,7 +46,7 @@ public:
     void Apply(Entity* entity, float timePos);
 
 private:
-    chrissly::core::String name;
+    core::String name;
     float length;
     mutable DynamicArray vertexTrackList;
     unsigned short numVertexTracks;

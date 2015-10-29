@@ -49,7 +49,7 @@ PSPMutex::PSPMutex()
 inline
 PSPMutex::~PSPMutex()
 {
-   int error = sceKernelDeleteSema(this->semaphoreId);
+    int error = sceKernelDeleteSema(this->semaphoreId);
     CE_ASSERT(error == 0, "PSPMutex::~PSPMutex(): sceKernelDeleteSema() failed: %08x\n", error);
 }
 

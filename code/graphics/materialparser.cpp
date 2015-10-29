@@ -44,7 +44,7 @@ MaterialParser::~MaterialParser()
 void
 MaterialParser::ParseScript(const char* name)
 {
-    FileHandle fd = FSWrapper::Open(name, ReadAccess, 0777);
+    FileHandle fd = FSWrapper::Open(name, ReadAccess, Buffer, 0777);
     unsigned int fileSize = FSWrapper::GetFileSize(fd);
     void* fileBuffer = CE_MALLOC_ALIGN(16, fileSize);
     FSWrapper::Read(fd, fileBuffer, fileSize);
@@ -374,6 +374,9 @@ MaterialParser::ParseTextureUnitState()
         CE_ASSERT(this->currentTextureUnitState->GetTextureName().C_Str() != NULL, "MaterialParser::ParseTextureUnitState(): parse error, missing 'texture' in 'texture_unit'\n");
         this->parserState = StateParsePass;
     }
+
+    // Format: filtering <minification> <magnification> <mip>
+    // Default: filtering linear linear point
 }
 
 //------------------------------------------------------------------------------

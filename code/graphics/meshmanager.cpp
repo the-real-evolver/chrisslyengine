@@ -63,7 +63,7 @@ MeshManager::Load(const char* filename)
     String materialName;
     unsigned char materialNameLength = 0;
 
-    FileHandle fd = FSWrapper::Open(filename, ReadAccess, 0777);
+    FileHandle fd = FSWrapper::Open(filename, ReadAccess, Random, 0777);
 
     while (FSWrapper::Read(fd, &currentChunk, 1) > 0)
     {

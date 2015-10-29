@@ -20,6 +20,7 @@ namespace audio
 
 class AudioSystem
 {
+    friend class ChannelBase;
 public:
     /// get pointer to the singleton
     static AudioSystem* Instance()
@@ -44,10 +45,10 @@ public:
     /// updates the position and orientation of the 3D sound listener
     Result Set3DListenerAttributes(const core::Vector3* pos, const core::Vector3* forward, const core::Vector3* up);
 
+private:
     /// internal method to retrieve a pointer to the currently selected audiorenderer
     AudioRenderer* _GetAudioRenderer() const;
 
-private:
     /// copy constructor
     AudioSystem(const AudioSystem&cc) {};
 

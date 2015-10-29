@@ -215,10 +215,11 @@ PSPAudioRenderer::ChannelThread(SceSize args, void* argp)
             {
                 if (mode & audio::MODE_CREATESTREAM)
                 {
+                    // dont swap buffers on the first frame
                     if (position > 0)
                     {
                         codec->FillStreamBackBuffer();
-                        codec->SwapStreamBuffers(); // dont swap buffers on the first frame
+                        codec->SwapStreamBuffers();
                     }
                     samplecount = codec->GetStreamBufferLength() / (numChannels * (bits >> 3));
                 }

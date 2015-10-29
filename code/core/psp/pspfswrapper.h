@@ -21,7 +21,7 @@ class PSPFSWrapper
 {
 public:
     /// open a file
-    static core::FileHandle Open(const char* fileName, core::AccessMode flags, int mode);
+    static core::FileHandle Open(const char* fileName, core::AccessMode flags, core::AccessPattern pattern, int mode);
     /// close a file
     static void Close(core::FileHandle fileHandle);
     /// get size of a file in bytes

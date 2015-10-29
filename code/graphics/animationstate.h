@@ -51,7 +51,7 @@ public:
     void SetLength(float len);
 
 private:
-    chrissly::core::String animationName;
+    core::String animationName;
     float timePos;
     bool enabled;
     bool loop;

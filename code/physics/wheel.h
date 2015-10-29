@@ -18,7 +18,7 @@ class Wheel
 {
 public:
     /// constructor with position and radius
-    Wheel(const chrissly::core::Vector3& position, float radius);
+    Wheel(const core::Vector3& position, float radius);
     /// destructor
     ~Wheel();
     /// sets the steeringangle of the wheel
@@ -28,15 +28,15 @@ public:
     /// gets the speed of the wheel
     float GetWheelSpeed();
     /// gets the position of the wheel relative to the body
-    const chrissly::core::Vector3& GetAttachPoint();
+    const core::Vector3& GetAttachPoint();
     /// calculates the force the wheel applies to the body
-    chrissly::core::Vector3 CalculateForce(const chrissly::core::Vector3& relativeGroundSpeed, float timeStep);
+    core::Vector3 CalculateForce(const core::Vector3& relativeGroundSpeed, float timeStep);
 
 private:
     /// default constructor
     Wheel();
     /// position of the wheel relative to the body
-    chrissly::core::Vector3 position;
+    core::Vector3 position;
     /// radius of the wheel
     float wheelRadius;
     /// speed of the wheel
@@ -46,9 +46,9 @@ private:
     /// inertia of the wheel
     float wheelInertia;
     /// forward axis
-    chrissly::core::Vector3 forwardAxis;
+    core::Vector3 forwardAxis;
     /// side axis
-    chrissly::core::Vector3 sideAxis;
+    core::Vector3 sideAxis;
 };
 
 } // namespace physics

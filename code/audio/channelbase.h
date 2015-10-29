@@ -18,6 +18,7 @@ namespace audio
 
 class ChannelBase
 {
+    friend class AudioSystem;
 public:
     /// special channel index values
     enum ChannelIndex
@@ -70,6 +71,7 @@ public:
     /// retrieves the internal channel index for a channel
     Result GetIndex(int* index);
 
+protected:
     /// set the sound to playback on this channel
     void _AttachSound(Sound* sound);
     /// set the internal channel index for a channel
@@ -83,7 +85,6 @@ public:
     /// retrieve if properties (volume, panning ect.) has changed
     PropertyChange _PropertiesHasChanged();
 
-protected:
     bool isPlaying;
     bool paused;
     float volume;

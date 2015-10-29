@@ -53,7 +53,7 @@ WavCodec::~WavCodec()
 void
 WavCodec::SetupSound(const char* filename, Mode mode, void** sampleBuffer, unsigned int& length, AudioFormat& format, SoundType& type, int& channels, int& bits)
 {
-    FileHandle fd = FSWrapper::Open(filename, ReadAccess, 0777);
+    FileHandle fd = FSWrapper::Open(filename, ReadAccess, (mode & MODE_CREATESTREAM) ? Streaming : Random, 0777);
     unsigned int fileSize = FSWrapper::GetFileSize(fd);
 
     char chunkID[4];

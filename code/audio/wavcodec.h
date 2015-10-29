@@ -41,7 +41,7 @@ private:
     unsigned int lengthInBytes;
     unsigned char bytesPerSample;
     bool openedAsStream;
-    chrissly::core::FileHandle streamFileHandle;
+    core::FileHandle streamFileHandle;
     unsigned int seekPosition;
     bool endOfStream;
     mutable void* streamBuffers[2];

@@ -373,11 +373,23 @@ GLES2RenderSystem::_SetPass(graphics::Pass* pass)
     for (textureUnitState = 0; textureUnitState < pass->GetNumTextureUnitStates() && textureUnitState < this->numTextureUnits; ++textureUnitState)
     {
         graphics::TextureUnitState* tus = pass->GetTextureUnitState(textureUnitState);
+        graphics::Texture* tex = tus->GetTexture();
         glActiveTexture(GL_TEXTURE0 + textureUnitState);
-        glBindTexture(GL_TEXTURE_2D, tus->GetTexture()->GetName());
+        glBindTexture(GL_TEXTURE_2D, tex->GetName());
 
         GLint min, mag;
         GLES2Mappings::Get(tus->GetTextureFiltering(graphics::FT_MIN), tus->GetTextureFiltering(graphics::FT_MAG), tus->GetTextureFiltering(graphics::FT_MIP), min, mag);
+        if (0 == tex->GetNumMipmaps())
+        {
+            if (min == GL_NEAREST_MIPMAP_NEAREST || min == GL_NEAREST_MIPMAP_LINEAR)
+            {
+                min = GL_NEAREST;
+            }
+            else if (min == GL_LINEAR_MIPMAP_NEAREST || min == GL_LINEAR_MIPMAP_LINEAR)
+            {
+                min = GL_LINEAR;
+            }
+        }
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mag);
 

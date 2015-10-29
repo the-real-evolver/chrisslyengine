@@ -19,7 +19,7 @@ class Vehicle : public RigidBody
 {
 public:
     /// construct from size, mass and wheelradius
-    Vehicle(const chrissly::core::Vector3& halfSize, float mass, float wheelRadius);
+    Vehicle(const core::Vector3& halfSize, float mass, float wheelRadius);
     /// destructor
     ~Vehicle();
     /// apply steering angle to front wheels

@@ -15,6 +15,7 @@ namespace chrissly
 
 class PSPChannel : public audio::ChannelBase
 {
+    friend class PSPAudioRenderer;
 public:
     /// constructor
     PSPChannel();

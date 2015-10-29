@@ -39,7 +39,7 @@ private:
 
     static TextureManager* Singleton;
 
-    chrissly::core::HashTable resources;
+    core::HashTable resources;
 };
 
 } // namespace graphics

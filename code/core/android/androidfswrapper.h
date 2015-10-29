@@ -22,7 +22,7 @@ class AndroidFSWrapper
 {
 public:
     /// open a file
-    static core::FileHandle Open(const char* fileName, core::AccessMode flags, int mode);
+    static core::FileHandle Open(const char* fileName, core::AccessMode flags, core::AccessPattern pattern, int mode);
     /// close a file
     static void Close(core::FileHandle fileHandle);
     /// get size of a file in bytes
@@ -37,6 +37,8 @@ public:
 private:
     /// return a Posix equivalent for a SeekOrigin value
     static int Get(core::SeekOrigin origin);
+    /// return a android asset mode equivalent for a AccessPattern value
+    static int Get(core::AccessPattern pattern);
 
     static AAssetManager* AssetManager;
 };

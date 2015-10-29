@@ -26,9 +26,9 @@ public:
     /// destructor
     ~SubMesh();
     /// sets the name of the Material which this SubMesh will use
-    void SetMaterialName(const chrissly::core::String& matName);
+    void SetMaterialName(const core::String& matName);
     /// gets the name of the Material this SubMesh is using
-    const chrissly::core::String& GetMaterialName() const;
+    const core::String& GetMaterialName() const;
     /// get the type of any vertex animation used by dedicated geometry
     VertexAnimationType GetVertexAnimationType() const;
 
@@ -37,7 +37,7 @@ public:
 
 private:
     /// name of the material this SubMesh uses 
-    chrissly::core::String materialName;
+    core::String materialName;
     /// type of vertex animation for dedicated vertex data (populated by Mesh)
     VertexAnimationType vertexAnimationType;
 };

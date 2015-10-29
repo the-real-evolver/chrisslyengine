@@ -21,7 +21,7 @@ const char* PSPFSWrapper::RootDirectory = "ms0:/PSP/GAME/ChrisslyEngine_PSP/expo
 /**
 */
 core::FileHandle
-PSPFSWrapper::Open(const char* fileName, core::AccessMode flags, int mode)
+PSPFSWrapper::Open(const char* fileName, core::AccessMode flags, core::AccessPattern pattern, int mode)
 {
     char filePath[128];
     strcpy(filePath, RootDirectory);

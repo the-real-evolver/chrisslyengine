@@ -24,7 +24,7 @@ public:
     /// destructor
     ~SubEntity();
     /// sets the name of the material to be used
-    void SetMaterialName(const chrissly::core::String& matName);
+    void SetMaterialName(const core::String& matName);
     /// sets a Material to be used
     void SetMaterial(Material* material); 
     /// retrieves a pointer to the material this renderable object uses

@@ -15,6 +15,7 @@ namespace chrissly
 
 class SLESChannel : public audio::ChannelBase
 {
+    friend class SLESAudioRenderer;
 public:
     /// default constructor
     SLESChannel();

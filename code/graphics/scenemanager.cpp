@@ -275,7 +275,7 @@ SceneManager::SetShadowTechnique(ShadowTechnique technique)
             Viewport* vp = this->shadowRenderTexture->AddViewport(this->shadowCamera, 1, 1, 254, 254);
             vp->SetClearEveryFrame(true, FBT_COLOUR);
             vp->SetBackgroundColour(0xffffffff);
-            // FragmentColor * 0xff888888 + FrameBufferPixelColor * 0xff000000 (FragmentColor = ModelVertexColor = White)
+            // Blending: FragmentColor * 0xff888888 + FrameBufferPixelColor * 0xff000000 (FragmentColor = ModelVertexColor = White)
             this->shadowRttPass->SetSceneBlendingEnabled(true);
             this->shadowRttPass->SetSceneBlending(SBF_FIX, SBF_FIX);
             this->shadowRttPass->SetBlendingFixColors(0xff888888, 0xff000000);
@@ -482,7 +482,7 @@ SceneManager::_RenderQueueGroupObjects(QueuedRenderableCollection* queue)
         Pass* pass = renderablePass->pass;
         if (pass != lastPass)
         {
-            this->_SetPass(pass);
+            this->destRenderSystem->_SetPass(pass);
         }
         lastPass = pass;
 
@@ -501,7 +501,7 @@ SceneManager::_RenderQueueGroupObjects(QueuedRenderableCollection* queue)
 void
 SceneManager::_RenderTextureShadowReceiverQueueGroupObjects(QueuedRenderableCollection* queue)
 {
-    this->_SetPass(this->shadowPass);
+    this->destRenderSystem->_SetPass(this->shadowPass);
 
     unsigned short numRenderablePasses = queue->GetNumRenderablePasses();
     unsigned short i;

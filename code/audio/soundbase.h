@@ -40,7 +40,7 @@ public:
     /// get pointer to the attached codec
     Codec* _GetCodec() const;
     /// implementation of creating internal sound resources
-    virtual void CreateInternalResourcesImpl();
+    virtual void _CreateInternalResourcesImpl();
 
 protected:
     Mode mode;

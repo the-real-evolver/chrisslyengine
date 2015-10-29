@@ -75,15 +75,16 @@ EGLRenderWindow::Create()
     // pick the first EGLConfig that matches
     eglChooseConfig(this->display, attribs, &config, 1, &numConfigs);
 
+#if __ANDROID__
     // EGL_NATIVE_VISUAL_ID is an attribute of the EGLConfig that is
     // guaranteed to be accepted by ANativeWindow_setBuffersGeometry().
     // As soon as we picked a EGLConfig, we can safely reconfigure the
     // ANativeWindow buffers to match, using EGL_NATIVE_VISUAL_ID.
     EGLint format;
     eglGetConfigAttrib(this->display, config, EGL_NATIVE_VISUAL_ID, &format);
-#if __ANDROID__
     ANativeWindow_setBuffersGeometry(this->window, 0, 0, format);
 #endif
+
     this->surface = eglCreateWindowSurface(this->display, config, this->window, NULL);
 
     // create an OpenGL ES 2.0 context

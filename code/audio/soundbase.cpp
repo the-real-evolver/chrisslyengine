@@ -106,7 +106,7 @@ SoundBase::_Setup(const char* filename, Mode mode, Codec* codec)
     this->mode = mode;
     this->codec = codec;
     this->codec->SetupSound(filename, mode, &this->sampleBuffer, this->length, this->format, this->type, this->numChannels, this->bitsPerSample);
-    this->CreateInternalResourcesImpl();
+    this->_CreateInternalResourcesImpl();
     this->realized = true;
 }
 
@@ -162,7 +162,7 @@ SoundBase::_GetCodec() const
 /**
 */
 void
-SoundBase::CreateInternalResourcesImpl()
+SoundBase::_CreateInternalResourcesImpl()
 {
 
 }

@@ -46,7 +46,7 @@ private:
 
     static MaterialManager* Singleton;
 
-    chrissly::core::HashTable resources;
+    core::HashTable resources;
     MaterialParser parser;
 };
 

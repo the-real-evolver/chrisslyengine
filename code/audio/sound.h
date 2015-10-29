@@ -15,7 +15,7 @@ namespace chrissly
 namespace audio
 {
 
-typedef chrissly::audio::SoundBase Sound;
+typedef SoundBase Sound;
 
 } // namespace audio
 } // namespace chrissly

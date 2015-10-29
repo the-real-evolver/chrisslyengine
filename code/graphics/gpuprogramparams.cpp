@@ -87,7 +87,7 @@ GpuProgramParameters::SetNamedConstant(const char* name, int val)
 /**
 */
 void
-GpuProgramParameters::SetNamedConstant(const char* name, const chrissly::core::Matrix4& m)
+GpuProgramParameters::SetNamedConstant(const char* name, const core::Matrix4& m)
 {
     GpuConstantDefinition* def = (GpuConstantDefinition*)HashTableFind(&this->constantDefs->map, name);
     if (def != NULL)

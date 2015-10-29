@@ -144,28 +144,17 @@ private:
 
     static SceneManager* Singleton;
 
-    mutable chrissly::core::HashTable cameras;
-
-    mutable chrissly::core::HashTable lights;
-
+    mutable core::HashTable cameras;
+    mutable core::HashTable lights;
     LinkedList* movableObjectCollectionMap;
-
-    /// central list of SceneNodes - for easy memory management 
     LinkedList* sceneNodes;
-    /// root scene node
     SceneNode* sceneRoot;
-
-    /// current ambient light, cached for RenderSystem
     unsigned int ambientLight;
-    /// the rendering system to send the scene to
     RenderSystem* destRenderSystem;
-
-    /// renderqueues
     QueuedRenderableCollection renderQueueOpaque;
     QueuedRenderableCollection renderQueueTransparent;
     QueuedRenderableCollection renderQueueShadowReceiver;
 
-    /// shadow related members
     IlluminationRenderStage illuminationStage;
     ShadowTechnique shadowTechnique;
     bool shadowTextureConfigDirty;

@@ -199,9 +199,13 @@ PSPRenderSystem::_SetPass(graphics::Pass* pass)
     if (pass->GetSceneBlendingEnabled())
     {
         sceGuEnable(GU_BLEND);
+        graphics::SceneBlendFactor sourceBlendFactor = pass->GetSourceBlendFactor();
+        graphics::SceneBlendFactor destBlendFactor = pass->GetDestBlendFactor();
+        unsigned int sourceFixColor = (graphics::SBF_ONE == sourceBlendFactor) ? 0xffffffff : pass->GetSourceBlendingFixColor();
+        unsigned int destFixColor = (graphics::SBF_ONE == destBlendFactor) ? 0xffffffff : pass->GetDestinationBlendingFixColor();
         sceGuBlendFunc(PSPMappings::Get(pass->GetSceneBlendingOperation()),
-                        PSPMappings::Get(pass->GetSourceBlendFactor()), PSPMappings::Get(pass->GetDestBlendFactor()),
-                        pass->GetSourceBlendingFixColor(), pass->GetDestinationBlendingFixColor());
+                        PSPMappings::Get(sourceBlendFactor), PSPMappings::Get(destBlendFactor),
+                        sourceFixColor, destFixColor);
     }
     else
     {

@@ -14,10 +14,10 @@ AAssetManager* AndroidFSWrapper::AssetManager = 0;
 /**
 */
 core::FileHandle
-AndroidFSWrapper::Open(const char* fileName, core::AccessMode flags, int mode)
+AndroidFSWrapper::Open(const char* fileName, core::AccessMode flags, core::AccessPattern pattern, int mode)
 {
     core::FileHandle fileHandle;
-    fileHandle.handle = AAssetManager_open(AndroidFSWrapper::AssetManager, fileName, AASSET_MODE_UNKNOWN);
+    fileHandle.handle = AAssetManager_open(AndroidFSWrapper::AssetManager, fileName, AndroidFSWrapper::Get(pattern));
     CE_ASSERT(fileHandle.handle >= 0, "FSWrapper::Open(): can't open file '%s'\n", fileName);
     return fileHandle;
 }
@@ -86,6 +86,24 @@ AndroidFSWrapper::Get(core::SeekOrigin origin)
     }
 
     return 0;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+int
+AndroidFSWrapper::Get(core::AccessPattern pattern)
+{
+    switch (pattern)
+    {
+        case core::Unknown:   return AASSET_MODE_UNKNOWN;
+        case core::Random:    return AASSET_MODE_RANDOM;
+        case core::Streaming: return AASSET_MODE_STREAMING;
+        case core::Buffer:    return AASSET_MODE_BUFFER;
+        default: CE_ASSERT(false, "FSWrapper::Get(): illegal AccessPattern '%i'\n", pattern);
+    }
+
+    return -1;
 }
 
 } // namespace chrissly

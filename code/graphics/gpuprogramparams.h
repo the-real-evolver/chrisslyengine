@@ -67,7 +67,7 @@ namespace graphics
         /// destructor
         ~GpuNamedConstants();
         /// map of parameter names to GpuConstantDefinition
-        chrissly::core::HashTable map;
+        core::HashTable map;
     };
 
     /// collects together the program parameters used for a GpuProgram
@@ -102,7 +102,7 @@ namespace graphics
         /// sets a single value constant integer parameter to the program
         void SetNamedConstant(const char* name, int val);
         /// sets a Matrix4 parameter to the program
-        void SetNamedConstant(const char* name, const chrissly::core::Matrix4& m);
+        void SetNamedConstant(const char* name, const core::Matrix4& m);
 
         /// internal method for providing a link to a name->definition map for parameters
         void _SetNamedConstants(GpuNamedConstants* constantmap);

@@ -47,7 +47,7 @@ TextureManager::Load(const char* name)
         return texture;
     }
 
-    FileHandle fd = FSWrapper::Open(name, ReadAccess, 0777);
+    FileHandle fd = FSWrapper::Open(name, ReadAccess, Random, 0777);
     unsigned int fileSize = FSWrapper::GetFileSize(fd);
     unsigned int headerSizeBytes = 7;
 

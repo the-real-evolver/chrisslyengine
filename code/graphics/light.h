@@ -141,8 +141,8 @@ private:
     float attenuationConst;
     float attenuationLinear;
     float attenuationQuad;
-    chrissly::core::Vector3 position;
-    chrissly::core::Vector3 direction;
+    core::Vector3 position;
+    core::Vector3 direction;
     float spotOuter;
     float spotFalloff;
 };

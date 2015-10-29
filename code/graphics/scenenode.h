@@ -44,7 +44,7 @@ public:
     */ 
     void RemoveAllChildren();
     /// returns a quaternion representing the nodes orientation
-    const chrissly::core::Quaternion& GetOrientation() const;
+    const core::Quaternion& GetOrientation() const;
     /// sets the orientation of this node via a quaternion
     /**
     @remarks
@@ -59,15 +59,15 @@ public:
     @par
         Note that rotations are oriented around the node's origin.
     */
-    void SetOrientation(const chrissly::core::Quaternion& q);
+    void SetOrientation(const core::Quaternion& q);
     /// sets the orientation of this node via quaternion parameters
     void SetOrientation(float w, float x, float y, float z);
     /// sets the position of the node relative to it's parent
-    void SetPosition(const chrissly::core::Vector3& pos);
+    void SetPosition(const core::Vector3& pos);
     /// sets the position of the node relative to it's parent
     void SetPosition(float x, float y, float z);
     /// gets the position of the node relative to it's parent
-    const chrissly::core::Vector3& GetPosition() const;
+    const core::Vector3& GetPosition() const;
     /// sets the scaling factor applied to this node
     /**
     @remarks
@@ -81,17 +81,17 @@ public:
     @par
         Note that like rotations, scalings are oriented around the node's origin.
     */
-    void SetScale(const chrissly::core::Vector3& scale);
+    void SetScale(const core::Vector3& scale);
     /// sets the scaling factor applied to this node
     void SetScale(float x, float y, float z);
     /// gets the scaling factor of this node
-    const chrissly::core::Vector3 & GetScale() const;
+    const core::Vector3 & GetScale() const;
     /// gets the orientation of the node as derived from all parents
-    const chrissly::core::Quaternion& _GetDerivedOrientation() const;
+    const core::Quaternion& _GetDerivedOrientation() const;
     /// gets the position of the node as derived from all parents
-    const chrissly::core::Vector3& _GetDerivedPosition() const;
+    const core::Vector3& _GetDerivedPosition() const;
     /// gets the scaling factor of the node as derived from all parents
-    const chrissly::core::Vector3& _GetDerivedScale() const;
+    const core::Vector3& _GetDerivedScale() const;
     /// rotate the node around the z-axis
     void Roll(float angle);
     /// rotate the node around the x-axis
@@ -99,9 +99,9 @@ public:
     /// rotate the node around the y-axis
     void Yaw(float angle);
     /// rotate the node around an arbitrary axis
-    void Rotate(const chrissly::core::Vector3& axis, float angle);
+    void Rotate(const core::Vector3& axis, float angle);
     /// rotate the node around an aritrary axis using a Quarternion
-    void Rotate(const chrissly::core::Quaternion& q);
+    void Rotate(const core::Quaternion& q);
     /// gets the full transformation matrix for this node 
     /**
     @remarks
@@ -112,7 +112,7 @@ public:
         derived transforms have been updated before calling this method.
         Applications should just use the relative transforms.
     */
-    const chrissly::core::Matrix4& _GetFullTransform() const;
+    const core::Matrix4& _GetFullTransform() const;
 
     /// adds an instance of a scene object to this node
     /**
@@ -145,11 +145,11 @@ private:
     LinkedList* children;
 
     /// stores the orientation of the node relative to it's parent.
-    chrissly::core::Quaternion orientation;
+    core::Quaternion orientation;
     /// stores the position/translation of the node relative to its parent.
-    chrissly::core::Vector3 position;
+    core::Vector3 position;
     /// stores the scaling factor applied to this node
-    chrissly::core::Vector3 scale;
+    core::Vector3 scale;
 
     /** cached combined orientation.
         @par
@@ -158,7 +158,7 @@ private:
             This is updated when _updateFromParent is called by the
             SceneManager or the nodes parent.
     */
-    mutable chrissly::core::Quaternion derivedOrientation;
+    mutable core::Quaternion derivedOrientation;
 
     /** cached combined position.
         @par
@@ -167,7 +167,7 @@ private:
             This is updated when _updateFromParent is called by the
             SceneManager or the nodes parent.
     */
-    mutable chrissly::core::Vector3 derivedPosition;
+    mutable core::Vector3 derivedPosition;
 
     /** cached combined scale.
         @par
@@ -176,10 +176,10 @@ private:
             This is updated when _updateFromParent is called by the
             SceneManager or the nodes parent.
     */
-    mutable chrissly::core::Vector3 derivedScale;
+    mutable core::Vector3 derivedScale;
 
     /// cached derived transform as a 4x4 matrix
-    mutable chrissly::core::Matrix4 cachedTransform;
+    mutable core::Matrix4 cachedTransform;
     mutable bool cachedTransformOutOfDate;
 
     mutable DynamicArray objectMap;

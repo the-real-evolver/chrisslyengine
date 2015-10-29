@@ -20,6 +20,19 @@ namespace core
         ReadWriteAccess
     };
 
+    /// access pattern
+    enum AccessPattern
+    {
+        // no specific information about how data will be accessed
+        Unknown,
+        // read chunks and seek forward and backward
+        Random,
+        // read sequentially, with an occasional forward seek
+        Streaming,
+        // caller plans to ask for a read-only buffer with all data
+        Buffer
+    };
+
     /// seek origins
     enum SeekOrigin
     {

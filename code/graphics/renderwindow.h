@@ -21,13 +21,13 @@ typedef chrissly::PSPRenderWindow RenderWindow;
 } // namespace chrissly
 //------------------------------------------------------------------------------
 #elif __ANDROID__
-#include "android/gles2renderwindow.h"
+#include "android/eglrenderwindow.h"
 namespace chrissly
 {
 namespace graphics
 {
 
-typedef chrissly::GLES2RenderWindow RenderWindow;
+typedef chrissly::EGLRenderWindow RenderWindow;
 
 } // namespace graphics
 } // namespace chrissly

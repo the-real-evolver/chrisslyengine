@@ -39,7 +39,7 @@ private:
 
     static MeshManager* Singleton;
 
-    chrissly::core::HashTable resources;
+    core::HashTable resources;
 
     enum MeshChunkID
     {
