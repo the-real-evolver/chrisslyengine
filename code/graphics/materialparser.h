@@ -47,6 +47,8 @@ private:
     unsigned int GetRGBAValue(float red, float green, float blue, float alpha) const;
     /// gets the blend factor enum value from the parsed string
     SceneBlendFactor GetSceneBlendFactorFromString(const char* blendFactor) const;
+    /// gets the filter option enum value from the parsed string
+    FilterOptions GetFilterOptionsFromString(const char* filterOption) const;
 
     ParserState parserState;
     stb_lexer lexer;

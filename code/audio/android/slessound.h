@@ -23,7 +23,7 @@ public:
     ~SLESSound();
 
     /// implementation of creating internal sound resources
-    void CreateInternalResourcesImpl();
+    void _CreateInternalResourcesImpl();
     /// gets the sl audio source
     SLDataSource GetAudioSource() const;
 

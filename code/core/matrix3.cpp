@@ -41,15 +41,11 @@ Matrix3
 Matrix3::operator - () const
 {
     Matrix3 kNeg;
-    size_t iRow;
-    for (iRow = 0; iRow < 3; ++iRow)
-    {
-        for (size_t iCol = 0; iCol < 3; ++iCol)
-        {
-            kNeg[iRow][iCol] = -this->m[iRow][iCol];
-        }
-    }
-    
+
+    kNeg[0][0] = -this->m[0][0]; kNeg[0][1] = -this->m[0][1]; kNeg[0][2] = -this->m[0][2];
+    kNeg[1][0] = -this->m[1][0]; kNeg[1][1] = -this->m[1][1]; kNeg[1][2] = -this->m[1][2];
+    kNeg[2][0] = -this->m[2][0]; kNeg[2][1] = -this->m[2][1]; kNeg[2][2] = -this->m[2][2];
+
     return kNeg;
 }
 
@@ -61,11 +57,10 @@ Vector3
 Matrix3::operator * (const Vector3& rkPoint) const
 {
     Vector3 kProd;
-    size_t iRow;
-    for (iRow = 0; iRow < 3; ++iRow)
-    {
-        kProd[iRow] = this->m[iRow][0] * rkPoint[0] + this->m[iRow][1] * rkPoint[1] + this->m[iRow][2] * rkPoint[2];
-    }
+
+    kProd[0] = this->m[0][0] * rkPoint[0] + this->m[0][1] * rkPoint[1] + this->m[0][2] * rkPoint[2];
+    kProd[1] = this->m[1][0] * rkPoint[0] + this->m[1][1] * rkPoint[1] + this->m[1][2] * rkPoint[2];
+    kProd[2] = this->m[2][0] * rkPoint[0] + this->m[2][1] * rkPoint[1] + this->m[2][2] * rkPoint[2];
 
     return kProd;
 }
@@ -77,14 +72,16 @@ Matrix3
 Matrix3::Transpose() const
 {
     Matrix3 kTranspose;
-    size_t iRow;
-    for (iRow = 0; iRow < 3; ++iRow)
-    {
-        for (size_t iCol = 0; iCol < 3; ++iCol)
-        {
-            kTranspose[iRow][iCol] = this->m[iCol][iRow];
-        }
-    }
+
+    kTranspose[0][0] = this->m[0][0];
+    kTranspose[0][1] = this->m[1][0];
+    kTranspose[0][2] = this->m[2][0];
+    kTranspose[1][0] = this->m[0][1];
+    kTranspose[1][1] = this->m[1][1];
+    kTranspose[1][2] = this->m[2][1];
+    kTranspose[2][0] = this->m[0][2];
+    kTranspose[2][1] = this->m[1][2];
+    kTranspose[2][2] = this->m[2][2];
 
     return kTranspose;
 }

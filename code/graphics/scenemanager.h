@@ -99,7 +99,7 @@ public:
     */
     SceneNode* GetRootSceneNode();
 
-    /// empties the entire scene, inluding all SceneNodes, Entities, Lights, BillboardSets etc.
+    /// empties the entire scene, inluding all SceneNodes, Entities, Lights etc.
     /** 
         Cameras are not deleted at this stage since they are still referenced
         by viewports, which are not destroyed during this process.

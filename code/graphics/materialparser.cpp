@@ -109,7 +109,11 @@ MaterialParser::ParseRoot()
 void
 MaterialParser::ParseMaterial()
 {
-    if (0 == strcmp(this->lexer.string, "pass"))
+    if (this->lexer.token == '}')
+    {
+        this->parserState = StateParseRoot;
+    }
+    else if (0 == strcmp(this->lexer.string, "pass"))
     {
         if (0 == stb_c_lexer_get_token(&this->lexer)) return;
         if (this->lexer.token == '{')
@@ -117,10 +121,6 @@ MaterialParser::ParseMaterial()
             this->parserState = StateParsePass;
             this->currentPass = this->currentMaterial->CreatePass();
         }
-    }
-    else if (this->lexer.token == '}')
-    {
-        this->parserState = StateParseRoot;
     }
 }
 
@@ -130,7 +130,11 @@ MaterialParser::ParseMaterial()
 void
 MaterialParser::ParsePass()
 {
-    if (0 == strcmp(this->lexer.string, "texture_unit"))
+    if (this->lexer.token == '}')
+    {
+        this->parserState = StateParseMaterial;
+    }
+    else if (0 == strcmp(this->lexer.string, "texture_unit"))
     {
         if (0 == stb_c_lexer_get_token(&this->lexer)) return;
         if (this->lexer.token == '{')
@@ -308,10 +312,6 @@ MaterialParser::ParsePass()
             this->currentPass->SetDepthCheckEnabled(false);
         }
     }
-    else if (this->lexer.token == '}')
-    {
-        this->parserState = StateParseMaterial;
-    }
 }
 
 //------------------------------------------------------------------------------
@@ -320,7 +320,12 @@ MaterialParser::ParsePass()
 void
 MaterialParser::ParseTextureUnitState()
 {
-    if (0 == strcmp(this->lexer.string, "texture"))
+    if (this->lexer.token == '}')
+    {
+        CE_ASSERT(this->currentTextureUnitState->GetTextureName().C_Str() != NULL, "MaterialParser::ParseTextureUnitState(): parse error, missing 'texture' in 'texture_unit'\n");
+        this->parserState = StateParsePass;
+    }
+    else if (0 == strcmp(this->lexer.string, "texture"))
     {
         if (0 == stb_c_lexer_get_token(&this->lexer)) return;
         this->currentTextureUnitState->SetTextureName(this->lexer.string);
@@ -353,7 +358,17 @@ MaterialParser::ParseTextureUnitState()
         }
         this->currentTextureUnitState->SetTextureBlendOperation(type, operation);
     }
-    else if (this->lexer.token == CLEX_id && 0 == strcmp(this->lexer.string, "scroll"))
+    else if (0 == strcmp(this->lexer.string, "filtering"))
+    {
+        if (0 == stb_c_lexer_get_token(&this->lexer)) return;
+        FilterOptions minFilter = this->GetFilterOptionsFromString(this->lexer.string);
+        if (0 == stb_c_lexer_get_token(&this->lexer)) return;
+        FilterOptions magFilter = this->GetFilterOptionsFromString(this->lexer.string);
+        if (0 == stb_c_lexer_get_token(&this->lexer)) return;
+        FilterOptions mipFilter = this->GetFilterOptionsFromString(this->lexer.string);
+        this->currentTextureUnitState->SetTextureFiltering(minFilter, magFilter, mipFilter);
+    }
+    else if (0 == strcmp(this->lexer.string, "scroll"))
     {
         if (0 == stb_c_lexer_get_token(&this->lexer)) return;
         float uMod = this->lexer.real_number;
@@ -361,7 +376,7 @@ MaterialParser::ParseTextureUnitState()
         float vMod = this->lexer.real_number;
         this->currentTextureUnitState->SetTextureScroll(uMod, vMod);
     }
-    else if (this->lexer.token == CLEX_id && 0 == strcmp(this->lexer.string, "scale"))
+    else if (0 == strcmp(this->lexer.string, "scale"))
     {
         if (0 == stb_c_lexer_get_token(&this->lexer)) return;
         float uScale = this->lexer.real_number;
@@ -369,14 +384,6 @@ MaterialParser::ParseTextureUnitState()
         float vScale = this->lexer.real_number;
         this->currentTextureUnitState->SetTextureScale(uScale, vScale);
     }
-    else if (this->lexer.token == '}')
-    {
-        CE_ASSERT(this->currentTextureUnitState->GetTextureName().C_Str() != NULL, "MaterialParser::ParseTextureUnitState(): parse error, missing 'texture' in 'texture_unit'\n");
-        this->parserState = StateParsePass;
-    }
-
-    // Format: filtering <minification> <magnification> <mip>
-    // Default: filtering linear linear point
 }
 
 //------------------------------------------------------------------------------
@@ -412,6 +419,19 @@ MaterialParser::GetSceneBlendFactorFromString(const char* blendFactor) const
     if (0 == strcmp(blendFactor, "fix")) return SBF_FIX;
 
     return SBF_ONE;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+FilterOptions
+MaterialParser::GetFilterOptionsFromString(const char* filterOption) const
+{
+    if (0 == strcmp(filterOption, "none")) return FO_NONE;
+    if (0 == strcmp(filterOption, "point")) return FO_POINT;
+    if (0 == strcmp(filterOption, "linear")) return FO_LINEAR;
+
+    return FO_NONE;
 }
 
 } // namespace graphics

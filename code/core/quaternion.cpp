@@ -34,7 +34,7 @@ Quaternion::Quaternion(float w, float x, float y, float z)
 */
 Quaternion::~Quaternion()
 {
-  
+
 }
 
 //------------------------------------------------------------------------------
@@ -99,7 +99,7 @@ Quaternion::operator * (const Quaternion& rkQ) const
         float y = qq - yy + (q1.wp - q1.xp) * (q2.yp + q2.zp);
         float z = qq - zz + (q1.zp + q1.yp) * (q2.wp - q2.xp);
     */
-    
+
     return Quaternion
     (
         this->w * rkQ.w - this->x * rkQ.x - this->y * rkQ.y - this->z * rkQ.z,
@@ -118,7 +118,7 @@ Quaternion::operator * (const Vector3& rkVector) const
     // nVidia SDK implementation
     Vector3 uv, uuv;
     Vector3 qvec(this->x, this->y, this->z);
-    
+
     uv = qvec.CrossProduct(rkVector);
     uuv = qvec.CrossProduct(uv);
     uv *= (2.0f * this->w);
@@ -146,7 +146,7 @@ Quaternion::FromAngleAxis(float rfAngle, const Vector3& rkAxis)
     //
     // The quaternion representing the rotation is
     //   q = cos(A/2) + sin(A/2) * (x*i+y*j+z*k)
-    
+
     float fHalfAngle = 0.5f * rfAngle;
     float fSin = Math::Sin(fHalfAngle);
     this->w = Math::Cos(fHalfAngle);
