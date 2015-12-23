@@ -21,7 +21,7 @@ SceneManager* SceneManager::Singleton = NULL;
 /**
 */
 SceneManager::SceneManager() :
-    movableObjectCollectionMap(NULL),
+    entities(NULL),
     sceneNodes(NULL),
     sceneRoot(NULL),
     ambientLight(0x00000000),
@@ -161,7 +161,7 @@ SceneManager::CreateEntity(const char* meshName)
 {
     Entity* entity = CE_NEW Entity("", MeshManager::Instance()->Load(meshName));
 
-    linkedlistAdd(&this->movableObjectCollectionMap, entity);
+    linkedlistAdd(&this->entities, entity);
 
     return entity;
 }
@@ -200,7 +200,7 @@ SceneManager::GetRootSceneNode()
 void
 SceneManager::ClearScene()
 {
-    LinkedList* it = this->movableObjectCollectionMap;
+    LinkedList* it = this->entities;
     while (it != NULL)
     {
         LinkedList* node = it;
@@ -208,7 +208,7 @@ SceneManager::ClearScene()
         it = it->next;
         linkedlistRemove(node);
     }
-    this->movableObjectCollectionMap = NULL;
+    this->entities = NULL;
 
     this->GetRootSceneNode()->RemoveAllChildren();
 
@@ -275,7 +275,7 @@ SceneManager::SetShadowTechnique(ShadowTechnique technique)
             Viewport* vp = this->shadowRenderTexture->AddViewport(this->shadowCamera, 1, 1, 254, 254);
             vp->SetClearEveryFrame(true, FBT_COLOUR);
             vp->SetBackgroundColour(0xffffffff);
-            // Blending: FragmentColor * 0xff888888 + FrameBufferPixelColor * 0xff000000 (FragmentColor = ModelVertexColor = White)
+            // blending: fragmentcolor * 0xff888888 + framebufferpixelcolor * 0xff000000 (fragmentcolor = modelvertexcolor = 0xffffffff)
             this->shadowRttPass->SetSceneBlendingEnabled(true);
             this->shadowRttPass->SetSceneBlending(SBF_FIX, SBF_FIX);
             this->shadowRttPass->SetBlendingFixColors(0xff888888, 0xff000000);
@@ -328,19 +328,6 @@ bool
 SceneManager::IsShadowTechniqueInUse() const
 {
     return this->shadowTechnique != SHADOWTYPE_NONE;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-void
-SceneManager::PrepareShadowTextures()
-{
-    this->illuminationStage = IRS_RENDER_TO_TEXTURE;
-
-    this->shadowRenderTexture->Update();
-
-    this->illuminationStage = IRS_NONE;
 }
 
 //------------------------------------------------------------------------------
@@ -462,6 +449,19 @@ void
 SceneManager::_SetPass(Pass* pass)
 {
     this->destRenderSystem->_SetPass(pass);
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+SceneManager::PrepareShadowTextures()
+{
+    this->illuminationStage = IRS_RENDER_TO_TEXTURE;
+
+    this->shadowRenderTexture->Update();
+
+    this->illuminationStage = IRS_NONE;
 }
 
 //------------------------------------------------------------------------------

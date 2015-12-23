@@ -1,8 +1,8 @@
 Building Chrissly for Android
 ========================================================================
-- edit 'android\ChrisslyEngine_Android\rebuild.cmd'
+- edit 'android\ChrisslyEngine_Android\build.cmd'
 - change 'NDK' variable to point to your NDK installation directory
-- run 'rebuild.cmd'
+- run 'build.cmd'
 - run 'exportassets.cmd'
 
 Running the demo

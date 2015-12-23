@@ -45,7 +45,7 @@ SLESSound::_CreateInternalResourcesImpl()
             this->pcm.bitsPerSample = SL_PCMSAMPLEFORMAT_FIXED_16;
             break;
         default:
-            CE_ASSERT(false, "SLESSound::CreateInternalResourcesImpl(): audio format not supported\n");
+            CE_ASSERT(false, "SLESSound::_CreateInternalResourcesImpl(): audio format not supported\n");
     }
     switch (this->numChannels)
     {
@@ -56,7 +56,7 @@ SLESSound::_CreateInternalResourcesImpl()
             this->pcm.channelMask = SL_SPEAKER_FRONT_LEFT | SL_SPEAKER_FRONT_RIGHT;
             break;
         default:
-            CE_ASSERT(false, "SLESSound::CreateInternalResourcesImpl(): %i channel audio output not supported\n", this->numChannels);
+            CE_ASSERT(false, "SLESSound::_CreateInternalResourcesImpl(): %i channel audio output not supported\n", this->numChannels);
     }
 
     // setup the data source structure for the buffer queue

@@ -32,9 +32,9 @@ public:
     int GetActualLeft() const;
     /// gets one of the actual dimensions of the viewport, a value in pixels
     int GetActualTop() const;
-     /// gets one of the actual dimensions of the viewport, a value in pixels
+    /// gets one of the actual dimensions of the viewport, a value in pixels
     int GetActualWidth() const;
-     /// gets one of the actual dimensions of the viewport, a value in pixels
+    /// gets one of the actual dimensions of the viewport, a value in pixels
     int GetActualHeight() const;
     /// sets the initial background colour of the viewport (before rendering)
     void SetBackgroundColour(unsigned int colour);

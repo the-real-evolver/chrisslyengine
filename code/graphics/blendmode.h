@@ -77,7 +77,7 @@ namespace graphics
         SBO_REVERSE_SUBTRACT,
         SBO_MIN,
         SBO_MAX,
-        SBO_ABS  // only PSP
+        SBO_ABS // only PSP
     };
     
 } // namespace graphics

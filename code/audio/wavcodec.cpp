@@ -81,8 +81,8 @@ WavCodec::SetupSound(const char* filename, Mode mode, void** sampleBuffer, unsig
     // "data" sub-chunk
     FSWrapper::Read(fd, chunkID, 4);        // Contains the letters "data"
     FSWrapper::Read(fd, &chunkSize, 4);     // numSamples * numChannels * bitsPerSample / 8
-    dataSize = fileSize - RiffWavHeaderSize;
 
+    dataSize = fileSize - RiffWavHeaderSize;
     if (8 == bitsPerSample)
     {
         length = dataSize;
@@ -143,14 +143,14 @@ WavCodec::FillStreamBackBuffer()
 {
     if (this->endOfStream) return;
 
-    unsigned int bytesToLoadThisFrame = this->bytesToLoadToBackBuffer;
-    if ((this->seekPosition + this->bytesToLoadToBackBuffer) > this->lengthInBytes)
-    {
-        bytesToLoadThisFrame = this->lengthInBytes - this->seekPosition;
-    }
-
     if (!this->backBufferFilled)
     {
+        unsigned int bytesToLoadThisFrame = this->bytesToLoadToBackBuffer;
+        if ((this->seekPosition + this->bytesToLoadToBackBuffer) > this->lengthInBytes)
+        {
+            bytesToLoadThisFrame = this->lengthInBytes - this->seekPosition;
+        }
+
         FSWrapper::Read(this->streamFileHandle, this->streamBuffers[this->currentStreamBufferIndex ^ 1], bytesToLoadThisFrame);
         this->seekPosition += bytesToLoadThisFrame;
         this->bytesToLoadToBackBuffer = bytesToLoadThisFrame;

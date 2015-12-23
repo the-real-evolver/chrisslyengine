@@ -2,7 +2,9 @@
 #  makefile for android
 #  (C) 2012 Christian Bleicher
 #------------------------------------------------------------------------------
-CE := jni
+CE_INCLUDES := ../../code
+
+CE_SRC_FILES := ../../../code
 
 LOCAL_PATH := $(call my-dir)
 
@@ -12,25 +14,25 @@ LOCAL_MODULE := chrisslyengine_android
 
 LOCAL_CFLAGS := -Werror -D__ANDROID__
 
-LOCAL_C_INCLUDES += $(CE)/core $(CE)/graphics $(CE)/audio $(CE)/thirdparty/stb
+LOCAL_C_INCLUDES += $(CE_INCLUDES) $(CE_INCLUDES)/core $(CE_INCLUDES)/graphics $(CE_INCLUDES)/audio $(CE_INCLUDES)/thirdparty/stb
 
-LOCAL_SRC_FILES := core/android/androiddebug.cpp core/android/androidfswrapper.cpp \
-                   core/vector3.cpp core/matrix3.cpp core/matrix4.cpp core/quaternion.cpp core/chrisslymemory.cpp core/chrisslystring.cpp core/timer.cpp \
-                   graphics/texturebase.cpp graphics/textureunitstate.cpp graphics/texturemanager.cpp \
-                   graphics/pass.cpp graphics/material.cpp graphics/materialmanager.cpp graphics/materialparser.cpp \
-                   graphics/graphicssystem.cpp \
-                   graphics/meshmanager.cpp graphics/mesh.cpp graphics/submesh.cpp \
-                   graphics/subentity.cpp  graphics/entity.cpp \
-                   graphics/renderqueuesortinggrouping.cpp \
-                   graphics/light.cpp \
-                   graphics/scenemanager.cpp graphics/scenenode.cpp \
-                   graphics/camera.cpp graphics/viewport.cpp \
-                   graphics/animation.cpp graphics/animationtrack.cpp graphics/keyframe.cpp graphics/animationstate.cpp \
-                   graphics/rendertarget.cpp graphics/android/gles2rendertexture.cpp graphics/android/eglrenderwindow.cpp \
-                   graphics/android/gles2mappings.cpp graphics/android/gles2texture.cpp graphics/android/gles2rendersystem.cpp \
-                   graphics/android/gles2gpuprogram.cpp graphics/gpuprogramparams.cpp \
-                   audio/wavcodec.cpp audio/vorbiscodec.cpp audio/soundbase.cpp audio/audiosystem.cpp audio/channelbase.cpp \
-                   audio/android/slesaudiorenderer.cpp audio/android/slessound.cpp audio/android/sleschannel.cpp \
+LOCAL_SRC_FILES := $(CE_SRC_FILES)/core/android/androiddebug.cpp $(CE_SRC_FILES)/core/android/androidfswrapper.cpp \
+                   $(CE_SRC_FILES)/core/vector3.cpp $(CE_SRC_FILES)/core/matrix3.cpp $(CE_SRC_FILES)/core/matrix4.cpp $(CE_SRC_FILES)/core/quaternion.cpp $(CE_SRC_FILES)/core/chrisslymemory.cpp $(CE_SRC_FILES)/core/chrisslystring.cpp $(CE_SRC_FILES)/core/timer.cpp \
+                   $(CE_SRC_FILES)/graphics/texturebase.cpp $(CE_SRC_FILES)/graphics/textureunitstate.cpp $(CE_SRC_FILES)/graphics/texturemanager.cpp \
+                   $(CE_SRC_FILES)/graphics/pass.cpp $(CE_SRC_FILES)/graphics/material.cpp $(CE_SRC_FILES)/graphics/materialmanager.cpp $(CE_SRC_FILES)/graphics/materialparser.cpp \
+                   $(CE_SRC_FILES)/graphics/graphicssystem.cpp \
+                   $(CE_SRC_FILES)/graphics/meshmanager.cpp $(CE_SRC_FILES)/graphics/mesh.cpp $(CE_SRC_FILES)/graphics/submesh.cpp \
+                   $(CE_SRC_FILES)/graphics/subentity.cpp  $(CE_SRC_FILES)/graphics/entity.cpp \
+                   $(CE_SRC_FILES)/graphics/renderqueuesortinggrouping.cpp \
+                   $(CE_SRC_FILES)/graphics/light.cpp \
+                   $(CE_SRC_FILES)/graphics/scenemanager.cpp $(CE_SRC_FILES)/graphics/scenenode.cpp \
+                   $(CE_SRC_FILES)/graphics/camera.cpp $(CE_SRC_FILES)/graphics/viewport.cpp \
+                   $(CE_SRC_FILES)/graphics/animation.cpp $(CE_SRC_FILES)/graphics/animationtrack.cpp $(CE_SRC_FILES)/graphics/keyframe.cpp $(CE_SRC_FILES)/graphics/animationstate.cpp \
+                   $(CE_SRC_FILES)/graphics/rendertarget.cpp $(CE_SRC_FILES)/graphics/android/gles2rendertexture.cpp $(CE_SRC_FILES)/graphics/android/eglrenderwindow.cpp \
+                   $(CE_SRC_FILES)/graphics/android/gles2mappings.cpp $(CE_SRC_FILES)/graphics/android/gles2texture.cpp $(CE_SRC_FILES)/graphics/android/gles2rendersystem.cpp \
+                   $(CE_SRC_FILES)/graphics/android/gles2gpuprogram.cpp $(CE_SRC_FILES)/graphics/gpuprogramparams.cpp \
+                   $(CE_SRC_FILES)/audio/wavcodec.cpp $(CE_SRC_FILES)/audio/vorbiscodec.cpp $(CE_SRC_FILES)/audio/soundbase.cpp $(CE_SRC_FILES)/audio/audiosystem.cpp $(CE_SRC_FILES)/audio/channelbase.cpp \
+                   $(CE_SRC_FILES)/audio/android/slesaudiorenderer.cpp $(CE_SRC_FILES)/audio/android/slessound.cpp $(CE_SRC_FILES)/audio/android/sleschannel.cpp \
                    main.cpp
 
 LOCAL_LDLIBS := -llog -lGLESv2 -landroid -lEGL -lOpenSLES

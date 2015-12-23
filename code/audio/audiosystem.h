@@ -46,11 +46,10 @@ public:
     Result Set3DListenerAttributes(const core::Vector3* pos, const core::Vector3* forward, const core::Vector3* up);
 
 private:
-    /// internal method to retrieve a pointer to the currently selected audiorenderer
-    AudioRenderer* _GetAudioRenderer() const;
-
     /// copy constructor
     AudioSystem(const AudioSystem&cc) {};
+    /// internal method to retrieve a pointer to the currently selected audiorenderer
+    AudioRenderer* _GetAudioRenderer() const;
 
     static AudioSystem* Singleton;
 

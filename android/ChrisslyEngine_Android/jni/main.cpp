@@ -87,7 +87,7 @@ Enter(struct android_app* state)
     camera->SetPosition(0.0f, 0.0f, 0.9f);
     window->AddViewport(camera, 0, 0, window->GetWidth(), window->GetHeight());
 
-	MaterialManager::Instance()->Initialise();
+    MaterialManager::Instance()->Initialise();
     Material* material = MaterialManager::Instance()->CreateOrRetrieve("cerberus_material_gles");
     gpuProgram = new GpuProgram(MorphAnimVertexShader, FragmentShader);
     material->GetPass(0)->SetGpuProgram(gpuProgram);

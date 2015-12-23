@@ -61,7 +61,7 @@ public:
     void SetSceneBlending(const SceneBlendFactor sourceFactor, const SceneBlendFactor destFactor);
     /// retrieves the source blending factor for the material (as set using Material::SetSceneBlending)
     SceneBlendFactor GetSourceBlendFactor() const;
-     /// retrieves the destination blending factor for the material (as set using Material::SetSceneBlending)
+    /// retrieves the destination blending factor for the material (as set using Material::SetSceneBlending)
     SceneBlendFactor GetDestBlendFactor() const;
     /// set fix colors used when GU_FIX operation is applied
     void SetBlendingFixColors(unsigned int sourceFixColor, unsigned int destFixColor);   
@@ -215,8 +215,8 @@ public:
 
 private:
     SceneBlendOperation blendOperation;
-    SceneBlendFactor sourceBlendFactor; // fragment
-    SceneBlendFactor destBlendFactor;   // framebuffer
+    SceneBlendFactor sourceBlendFactor;
+    SceneBlendFactor destBlendFactor;
     bool sceneBlend;
     unsigned int sourceFixColor;
     unsigned int destFixColor;

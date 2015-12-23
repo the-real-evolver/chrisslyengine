@@ -26,7 +26,7 @@ namespace graphics
 class SceneManager
 {
 public:
-    /// Describes the stage of rendering when performing complex illumination
+    /// describes the stage of rendering when performing complex illumination
     enum IlluminationRenderStage
     {
         /// no special illumination stage
@@ -127,26 +127,26 @@ public:
     ShadowTechnique GetShadowTechnique() const;
     /// is there any shadowing technique in use?
     bool IsShadowTechniqueInUse() const;
-    /// method for preparing shadow textures ready for use in a regular render
-    void PrepareShadowTextures();
     /// prompts the class to send its contents to the renderer
     void _RenderScene(Camera* camera, Viewport* vp);
     /// internal method for setting up the renderstate for a rendering pass
     void _SetPass(Pass* pass);
 
 private:
+    /// copy constructor
+    SceneManager(const SceneManager&cc) {};
+    /// method for preparing shadow textures ready for use in a regular render
+    void PrepareShadowTextures();
     /// render the objects in a given queue group 
     void _RenderQueueGroupObjects(QueuedRenderableCollection* queue);
     /// render a group rendering only shadow receivers
     void _RenderTextureShadowReceiverQueueGroupObjects(QueuedRenderableCollection* queue);
-    /// copy constructor
-    SceneManager(const SceneManager&cc) {}; 
 
     static SceneManager* Singleton;
 
     mutable core::HashTable cameras;
     mutable core::HashTable lights;
-    LinkedList* movableObjectCollectionMap;
+    LinkedList* entities;
     LinkedList* sceneNodes;
     SceneNode* sceneRoot;
     unsigned int ambientLight;

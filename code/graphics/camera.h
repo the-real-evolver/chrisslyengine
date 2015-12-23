@@ -61,11 +61,11 @@ public:
     float GetFOVy() const;
     /// sets the position of the near clipping plane
     void SetNearClipDistance(float nearDist);
-     /// gets the position of the near clipping plane
+    /// gets the position of the near clipping plane
     float GetNearClipDistance() const;
     /// sets the distance to the far clipping plane
     void SetFarClipDistance(float farDist);
-     /// retrieves the distance from the frustum to the far clipping plane
+    /// retrieves the distance from the frustum to the far clipping plane
     float GetFarClipDistance() const;
     /// sets the aspect ratio for the frustum viewport
     void SetAspectRatio(float ratio);

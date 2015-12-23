@@ -27,7 +27,7 @@ public:
     virtual void SetupSound(const char* name, Mode mode, void** sampleBuffer, unsigned int& length, AudioFormat& format, SoundType& type, int& channels, int& bits) = 0;
     /// initialise the codec for streaming
     virtual void InitialiseStream() = 0;
-    /// loads data into the current streambackbuffer, called per frame from the audiosystem
+    /// loads data into the current streambackbuffer
     virtual void FillStreamBackBuffer() = 0;
     /// swaps the streambuffers, called when a buffer finishes playing
     virtual void SwapStreamBuffers() = 0;

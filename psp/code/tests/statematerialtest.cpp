@@ -9,8 +9,8 @@
 #include "scenemanager.h"
 #include <psputils.h>
 
-using namespace chrissly::graphics;
 using namespace chrissly::core;
+using namespace chrissly::graphics;
 using namespace chrissly::application;
 
 StateMaterialTest* StateMaterialTest::Singleton = NULL;

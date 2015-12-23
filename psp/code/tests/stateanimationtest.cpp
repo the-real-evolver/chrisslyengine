@@ -38,6 +38,7 @@ void
 StateAnimationTest::Enter()
 {
     MaterialManager::Instance()->Initialise();
+
     Material* material = MaterialManager::Instance()->GetByName("cerberus_material_psp");
     Entity* entity = SceneManager::Instance()->CreateEntity("cerberus_walk.mesh");
     entity->GetSubEntity(0)->SetMaterial(material);
