@@ -73,7 +73,7 @@ public:
     float GetAspectRatio() const;
     /// gets the projection matrix for this frustum adjusted for the rendersystem
     const core::Matrix4& GetProjectionMatrixRS() const;
-    
+
 private:
     /// implementation of updateView (called if out of date)
     void UpdateViewImpl() const;

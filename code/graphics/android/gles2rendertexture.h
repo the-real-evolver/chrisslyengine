@@ -15,7 +15,7 @@ namespace chrissly
 class GLES2RenderTexture : public graphics::RenderTarget
 {
 public:
-    /// constructor with buffer parameters
+    /// constructor
     GLES2RenderTexture();
     /// destructor
     ~GLES2RenderTexture();

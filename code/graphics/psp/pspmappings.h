@@ -15,7 +15,7 @@
 #include <psptypes.h>
 
 //------------------------------------------------------------------------------
-namespace chrissly 
+namespace chrissly
 {
 class PSPMappings
 {

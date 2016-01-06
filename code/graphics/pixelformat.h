@@ -11,7 +11,7 @@
 namespace chrissly
 {
 namespace graphics
-{ 
+{
     enum PixelFormat
     {
         /// Unknown pixel format
@@ -47,7 +47,7 @@ namespace graphics
         /// Number of pixel formats currently defined
         PF_COUNT = 14
     };
-    
+
 } // namespace graphics
 } // namespace chrissly
 //------------------------------------------------------------------------------

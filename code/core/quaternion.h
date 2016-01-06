@@ -37,7 +37,7 @@ public:
     /// update from angle and axis
     void FromAngleAxis(float rfAngle, const Vector3& rkAxis);
     /// normalises this quaternion
-    void Normalise(); 
+    void Normalise();
     /// squared-length
     float Norm() const;
     /// returns a Quaternion with the inverse orientation of this Quaternion

@@ -25,6 +25,7 @@ SceneManager::SceneManager() :
     sceneNodes(NULL),
     sceneRoot(NULL),
     ambientLight(0x00000000),
+    suppressRenderStateChanges(false),
     illuminationStage(IRS_NONE),
     shadowTechnique(SHADOWTYPE_NONE),
     shadowTextureConfigDirty(true),
@@ -342,7 +343,7 @@ SceneManager::_RenderScene(Camera* camera, Viewport* vp)
         this->GetRootSceneNode()->_Update();
 
         // are we using any shadows at all?
-        if (this->IsShadowTechniqueInUse())
+        if (this->IsShadowTechniqueInUse() && !this->suppressRenderStateChanges)
         {
             this->PrepareShadowTextures();
         }
@@ -403,7 +404,7 @@ SceneManager::_RenderScene(Camera* camera, Viewport* vp)
                 }
 
                 // add to shadow receiver queue
-                if (this->IsShadowTechniqueInUse() && entity->GetReceivesShadows() && this->illuminationStage != IRS_RENDER_TO_TEXTURE)
+                if (this->IsShadowTechniqueInUse() && entity->GetReceivesShadows() && this->illuminationStage != IRS_RENDER_TO_TEXTURE && !this->suppressRenderStateChanges)
                 {
                     this->renderQueueShadowReceiver.AddRenderable(subEntity, NULL);
                 }
@@ -433,7 +434,7 @@ SceneManager::_RenderScene(Camera* camera, Viewport* vp)
         this->_RenderQueueGroupObjects(&this->renderQueueOpaque);
         this->_RenderQueueGroupObjects(&this->renderQueueTransparent);
 
-        if (this->IsShadowTechniqueInUse())
+        if (this->IsShadowTechniqueInUse() && !this->suppressRenderStateChanges)
         {
             this->_RenderTextureShadowReceiverQueueGroupObjects(&this->renderQueueShadowReceiver);
         }
@@ -449,6 +450,13 @@ void
 SceneManager::_SetPass(Pass* pass)
 {
     this->destRenderSystem->_SetPass(pass);
+}
+
+//---------------------------------------------------------------------
+void
+SceneManager::_SuppressRenderStateChanges(bool suppress)
+{
+    this->suppressRenderStateChanges = suppress;
 }
 
 //------------------------------------------------------------------------------
@@ -479,12 +487,15 @@ SceneManager::_RenderQueueGroupObjects(QueuedRenderableCollection* queue)
         RenderablePass* renderablePass = queue->GetRenderablePass(i);
 
         // apply pass
-        Pass* pass = renderablePass->pass;
-        if (pass != lastPass)
+        if (!this->suppressRenderStateChanges)
         {
-            this->destRenderSystem->_SetPass(pass);
+            Pass* pass = renderablePass->pass;
+            if (pass != lastPass)
+            {
+                this->destRenderSystem->_SetPass(pass);
+            }
+            lastPass = pass;
         }
-        lastPass = pass;
 
         // render entity
         SubEntity* renderable = renderablePass->renderable;

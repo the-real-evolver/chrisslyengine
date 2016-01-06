@@ -84,13 +84,11 @@ private:
     static GLES2RenderSystem* Singleton;
 
     unsigned int ambientLight;
+    core::Matrix4 defaultLightShaderParams[4];
 
     core::Matrix4 worldMatrix;
     core::Matrix4 viewMatrix;
     core::Matrix4 projectionMatrix;
-
-    static const char* DefaultVertexShader;
-    static const char* DefaultFragmentShader;
 
     GLES2GpuProgram* defaultGpuProgram;
     GLES2GpuProgram* currentGpuProgram;
@@ -100,7 +98,7 @@ private:
     GLfloat glProjectionMatrix[16];
     GLfloat glTextureMatrix[16];
     GLfloat glWorldViewProjectionMatrix[16];
-    
+
     GLint numTextureUnits;
 };
 

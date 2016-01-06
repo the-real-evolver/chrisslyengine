@@ -95,7 +95,7 @@ PSPRenderSystem::_SetViewport(graphics::Viewport* vp)
     sceGuScissor(left, top, left + width, top + height);
 
     if (vp->GetClearEveryFrame())
-    {        
+    {
         sceGuClearDepth(0);
         sceGuClearColor(vp->GetBackgroundColour());
         sceGuClear(PSPMappings::Get((graphics::FrameBufferType)vp->GetClearBuffers()));
@@ -252,7 +252,7 @@ PSPRenderSystem::_SetPass(graphics::Pass* pass)
         sceGuDisable(GU_LIGHTING);
     }
 
-    // texture unit parameters    
+    // texture unit parameters
     if (pass->GetNumTextureUnitStates() > 0)
     {
         graphics::TextureUnitState* tus = pass->GetTextureUnitState(0);

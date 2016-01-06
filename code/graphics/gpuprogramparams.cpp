@@ -87,12 +87,66 @@ GpuProgramParameters::SetNamedConstant(const char* name, int val)
 /**
 */
 void
-GpuProgramParameters::SetNamedConstant(const char* name, const core::Matrix4& m)
+GpuProgramParameters::SetNamedConstant(const char* name, const Vector3& vec)
+{
+    GpuConstantDefinition* def = (GpuConstantDefinition*)HashTableFind(&this->constantDefs->map, name);
+    if (def != NULL)
+    {
+        memcpy(def->buffer, &vec.x, def->size);
+    }
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+GpuProgramParameters::SetNamedConstant(const char* name, const Vector3* vec, unsigned int numEntries)
+{
+    GpuConstantDefinition* def = (GpuConstantDefinition*)HashTableFind(&this->constantDefs->map, name);
+    if (def != NULL)
+    {
+        CE_ASSERT(numEntries <= def->arraySize, "GpuProgramParameters::SetNamedConstant(): Vector3 numEntries: '%u' > arraySize: '%u'\n", numEntries, def->arraySize);
+        memcpy(def->buffer, vec, def->size * numEntries);
+    }
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+GpuProgramParameters::SetNamedConstant(const char* name, const Quaternion& q)
+{
+    GpuConstantDefinition* def = (GpuConstantDefinition*)HashTableFind(&this->constantDefs->map, name);
+    if (def != NULL)
+    {
+        memcpy(def->buffer, &q.w, def->size);
+    }
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+GpuProgramParameters::SetNamedConstant(const char* name, const Matrix4& m)
 {
     GpuConstantDefinition* def = (GpuConstantDefinition*)HashTableFind(&this->constantDefs->map, name);
     if (def != NULL)
     {
         memcpy(def->buffer, m[0], def->size);
+    }
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+GpuProgramParameters::SetNamedConstant(const char* name, const Matrix4* m, unsigned int numEntries)
+{
+    GpuConstantDefinition* def = (GpuConstantDefinition*)HashTableFind(&this->constantDefs->map, name);
+    if (def != NULL)
+    {
+        CE_ASSERT(numEntries <= def->arraySize, "GpuProgramParameters::SetNamedConstant(): Matrix4 numEntries: '%u' > arraySize: '%u'\n", numEntries, def->arraySize);
+        memcpy(def->buffer, m, def->size * numEntries);
     }
 }
 

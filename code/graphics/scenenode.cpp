@@ -56,7 +56,7 @@ SceneNode::_Update()
         // change position vector based on parent's orientation & scale
         this->derivedPosition = parentOrientation * (parentScale * this->position);
 
-        // Add altered position vector to parents
+        // add altered position vector to parents
         this->derivedPosition += this->parent->_GetDerivedPosition();
     }
     else
@@ -253,6 +253,7 @@ SceneNode::Pitch(float angle)
 {
     this->Rotate(Vector3(1.0f, 0.0f, 0.0f), angle);
 }
+
 //------------------------------------------------------------------------------
 /**
 */
@@ -260,8 +261,8 @@ void
 SceneNode::Yaw(float angle)
 {
     this->Rotate(Vector3(0.0f, 1.0f, 0.0f), angle);
-
 }
+
 //------------------------------------------------------------------------------
 /**
 */
@@ -279,13 +280,13 @@ SceneNode::Rotate(const Vector3& axis, float angle)
 void
 SceneNode::Rotate(const Quaternion& q)
 {
-    // Normalise quaternion to avoid drift
+    // normalise quaternion to avoid drift
     Quaternion qnorm = q;
     qnorm.Normalise();
     this->orientation = this->orientation * qnorm;
     this->cachedTransformOutOfDate = true;
 }
-    
+
 //------------------------------------------------------------------------------
 /**
 */
@@ -302,7 +303,7 @@ SceneNode::_GetFullTransform() const
         Matrix3 rot3x3;
         this->derivedOrientation.ToRotationMatrix(rot3x3);
 
-        // Set up final matrix with scale, rotation and translation
+        // set up final matrix with scale, rotation and translation
         this->cachedTransform[0][0] = this->derivedScale.x * rot3x3[0][0];
         this->cachedTransform[0][1] = this->derivedScale.y * rot3x3[0][1];
         this->cachedTransform[0][2] = this->derivedScale.z * rot3x3[0][2];
@@ -316,12 +317,12 @@ SceneNode::_GetFullTransform() const
         this->cachedTransform[2][2] = this->derivedScale.z * rot3x3[2][2];
         this->cachedTransform[2][3] = this->derivedPosition.z;
 
-        // No projection term
+        // no projection term
         this->cachedTransform[3][0] = 0.0f;
         this->cachedTransform[3][1] = 0.0f;
         this->cachedTransform[3][2] = 0.0f;
         this->cachedTransform[3][3] = 1.0f;
-        
+
         this->cachedTransformOutOfDate = false;
     }
 

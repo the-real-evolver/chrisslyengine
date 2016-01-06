@@ -37,7 +37,7 @@ TextureUnitState::TextureUnitState() :
 */
 TextureUnitState::~TextureUnitState()
 {
-    
+
 }
 
 //------------------------------------------------------------------------------
@@ -95,7 +95,7 @@ TextureUnitState::GetTextureVScroll() const
 {
     return this->vMod;
 }
-    
+
 //------------------------------------------------------------------------------
 /**
 */

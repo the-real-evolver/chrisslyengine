@@ -40,12 +40,12 @@ public:
     void SetBackgroundColour(unsigned int colour);
     /// gets the background colour
     const unsigned int GetBackgroundColour() const;
-    /// determines whether to clear the viewport before rendering.   
+    /// determines whether to clear the viewport before rendering
     void SetClearEveryFrame(bool clear, unsigned int buffers = FBT_COLOUR | FBT_DEPTH);
     /// determines if the viewport is cleared before every frame
     bool GetClearEveryFrame() const;
     /// gets which buffers are to be cleared each frame
-    unsigned int GetClearBuffers() const; 
+    unsigned int GetClearBuffers() const;
 
 private:
     Camera* camera;

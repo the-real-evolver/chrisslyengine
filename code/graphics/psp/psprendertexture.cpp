@@ -36,7 +36,7 @@ PSPRenderTexture::Create(int width, int height, graphics::PixelFormat format)
     this->height = height;
     this->format = format;
 }
-    
+
 //------------------------------------------------------------------------------
 /**
 */

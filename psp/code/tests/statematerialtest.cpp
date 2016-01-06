@@ -72,7 +72,7 @@ StateMaterialTest::Enter()
     light->SetType(Light::LT_SPOTLIGHT);
     light->SetDiffuseColour(0xff0077ff);
     light->SetSpecularColour(0x00000000);
-    light->SetAttenuation(1.0f, 0.0f, 0.0f);
+    light->SetAttenuation(100.0f, 1.0f, 0.0f, 0.0f);
     light->SetPosition(6.0f, 6.0f, -1.4f);
     light->SetDirection(-1.0f, -1.0f, 0.0f);
     light->SetSpotlightFalloff(5.0f);
@@ -81,7 +81,7 @@ StateMaterialTest::Enter()
     light->SetType(Light::LT_POINT);
     light->SetDiffuseColour(0xff777777);
     light->SetSpecularColour(0x00000000);
-    light->SetAttenuation(1.0f, 0.0f, 0.0f);
+    light->SetAttenuation(100.0f, 1.0f, 0.0f, 0.0f);
     light->SetPosition(0.0f, -6.0f, -1.4f);
 }
 

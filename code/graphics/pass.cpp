@@ -91,7 +91,7 @@ void
 Pass::SetSceneBlending(const SceneBlendFactor sourceFactor, const SceneBlendFactor destFactor)
 {
     this->sourceBlendFactor = sourceFactor;
-    this->destBlendFactor = destFactor;   
+    this->destBlendFactor = destFactor;
 }
 
 //------------------------------------------------------------------------------
@@ -264,7 +264,7 @@ Pass::GetDiffuse() const
 {
     return this->diffuse;
 }
-    
+
 //------------------------------------------------------------------------------
 /**
 */
@@ -282,7 +282,7 @@ Pass::GetSpecular() const
 {
     return this->specular;
 }
-    
+
 //------------------------------------------------------------------------------
 /**
 */
@@ -318,7 +318,7 @@ Pass::SetVertexColourTracking(unsigned int tracking)
 {
     this->tracking = tracking;
 }
-    
+
 //------------------------------------------------------------------------------
 /**
 */

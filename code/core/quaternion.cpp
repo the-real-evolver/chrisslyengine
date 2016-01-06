@@ -77,7 +77,7 @@ Quaternion::operator = (const Quaternion& rkQ)
     this->x = rkQ.x;
     this->y = rkQ.y;
     this->z = rkQ.z;
-    
+
     return *this;
 }
 

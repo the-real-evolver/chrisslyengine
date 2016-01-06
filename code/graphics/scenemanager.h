@@ -131,6 +131,13 @@ public:
     void _RenderScene(Camera* camera, Viewport* vp);
     /// internal method for setting up the renderstate for a rendering pass
     void _SetPass(Pass* pass);
+    /// indicates to the SceneManager whether it should suppress changing the RenderSystem states when rendering objects
+    /**
+        @note
+            Calling this implicitly disables shadow processing since no shadows
+            can be rendered without changing state.
+    */
+    void _SuppressRenderStateChanges(bool suppress);
 
 private:
     /// copy constructor
@@ -154,6 +161,7 @@ private:
     QueuedRenderableCollection renderQueueOpaque;
     QueuedRenderableCollection renderQueueTransparent;
     QueuedRenderableCollection renderQueueShadowReceiver;
+    bool suppressRenderStateChanges;
 
     IlluminationRenderStage illuminationStage;
     ShadowTechnique shadowTechnique;

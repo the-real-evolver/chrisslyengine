@@ -14,7 +14,7 @@
 #include <GLES2/gl2.h>
 
 //------------------------------------------------------------------------------
-namespace chrissly 
+namespace chrissly
 {
 class GLES2Mappings
 {

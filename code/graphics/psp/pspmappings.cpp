@@ -120,7 +120,7 @@ PSPMappings::Get(graphics::FilterOptions minFilter, graphics::FilterOptions magF
                     case graphics::FO_NONE:   min = GU_NEAREST; break;
                     case graphics::FO_POINT:  min = GU_NEAREST; break;
                     case graphics::FO_LINEAR: min = GU_LINEAR;  break;
-                    default: CE_ASSERT(false, "PSPMappings::Get(): illegal FilterOptions '%i'\n", minFilter);        
+                    default: CE_ASSERT(false, "PSPMappings::Get(): illegal FilterOptions '%i'\n", minFilter);
                 }
             }
             break;
@@ -132,7 +132,7 @@ PSPMappings::Get(graphics::FilterOptions minFilter, graphics::FilterOptions magF
                     case graphics::FO_NONE:   min = GU_NEAREST_MIPMAP_NEAREST; break;
                     case graphics::FO_POINT:  min = GU_NEAREST_MIPMAP_NEAREST; break;
                     case graphics::FO_LINEAR: min = GU_LINEAR_MIPMAP_NEAREST;  break;
-                    default: CE_ASSERT(false, "PSPMappings::Get(): illegal FilterOptions '%i'\n", minFilter);        
+                    default: CE_ASSERT(false, "PSPMappings::Get(): illegal FilterOptions '%i'\n", minFilter);
                 }
             }
             break;
@@ -144,7 +144,7 @@ PSPMappings::Get(graphics::FilterOptions minFilter, graphics::FilterOptions magF
                     case graphics::FO_NONE:   min = GU_NEAREST_MIPMAP_LINEAR; break;
                     case graphics::FO_POINT:  min = GU_NEAREST_MIPMAP_LINEAR; break;
                     case graphics::FO_LINEAR: min = GU_LINEAR_MIPMAP_LINEAR;  break;
-                    default: CE_ASSERT(false, "PSPMappings::Get(): illegal FilterOptions '%i'\n", minFilter);        
+                    default: CE_ASSERT(false, "PSPMappings::Get(): illegal FilterOptions '%i'\n", minFilter);
                 }
             }
             break;

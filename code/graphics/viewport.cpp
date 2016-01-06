@@ -32,7 +32,7 @@ Viewport::Viewport(Camera* camera, RenderTarget* target, int left, int top, int 
 */
 Viewport::~Viewport()
 {
-  
+
 }
 
 //------------------------------------------------------------------------------
@@ -43,7 +43,7 @@ Viewport::Update()
 {
     if (this->camera)
     {
-        // Tell Camera to render into me
+        // tell camera to render into me
         this->camera->_RenderScene(this);
     }
 }

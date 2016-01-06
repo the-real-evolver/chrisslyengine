@@ -195,7 +195,7 @@ HashTableResize(HashTable* table, unsigned int newSize)
         {
             KeyValuePair* kvp = (KeyValuePair*)it->data;
             HashTableInsert(&newTable, kvp->key.C_Str(), kvp->value);
-            it = it->next;   
+            it = it->next;
         }
     }
 

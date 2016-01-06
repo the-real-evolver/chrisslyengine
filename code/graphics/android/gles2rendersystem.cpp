@@ -4,6 +4,7 @@
 //------------------------------------------------------------------------------
 #include "gles2rendersystem.h"
 #include "gles2mappings.h"
+#include "light.h"
 #include "textureunitstate.h"
 #include "common.h"
 #include "debug.h"
@@ -16,7 +17,7 @@ namespace chrissly
 GLES2RenderSystem* GLES2RenderSystem::Singleton = NULL;
 
 //------------------------------------------------------------------------------
-const char* GLES2RenderSystem::DefaultVertexShader =
+static const char* DefaultVertexShader =
     "attribute vec2 texCoordIn;\n"
     "attribute vec3 normal;\n"
     "attribute vec4 position;\n"
@@ -29,8 +30,11 @@ const char* GLES2RenderSystem::DefaultVertexShader =
     "uniform int fogMode;\n"
     "uniform float fogStart;\n"
     "uniform float fogEnd;\n"
+    "uniform int lightingEnabled;"
     "varying float fogFactor;\n"
     "varying vec2 texCoordOut;\n"
+    "varying vec3 worldNormal;\n"
+    "varying vec3 worldPosition;\n"
     "void main()\n"
     "{\n"
     "    gl_Position = worldViewProjMatrix * position;\n"
@@ -44,22 +48,47 @@ const char* GLES2RenderSystem::DefaultVertexShader =
     "    {\n"
     "        fogFactor = 1.0;\n"
     "    }\n"
+    "    if (1 == lightingEnabled)\n"
+    "    {\n"
+    "        worldNormal = normalize(worldMatrix * vec4(normal, 1.0)).xyz;\n"
+    "        worldPosition = (worldMatrix * vec4(position.xyz, 1.0)).xyz;\n"
+    "    }\n"
     "}\n";
 
-const char* GLES2RenderSystem::DefaultFragmentShader =
+static const char* DefaultFragmentShader =
     "precision mediump float;\n"
+    "const int MaxLights = 4;\n"
     "varying float fogFactor;\n"
     "varying vec2 texCoordOut;\n"
+    "varying vec3 worldNormal;\n"
+    "varying vec3 worldPosition;\n"
     "uniform sampler2D texture;\n"
     "uniform float uMod;\n"
     "uniform float vMod;\n"
     "uniform float uScale;\n"
     "uniform float vScale;\n"
+    "uniform vec3 fogColour;\n"
+    "uniform vec3 cameraPosition;\n"
+    "uniform highp int lightingEnabled;\n"
+    "uniform mat4 lightParams[MaxLights];\n"
     "void main()\n"
     "{\n"
-    "    vec4 fogColour = vec4(0.0, 0.0, 0.0, 1.0);\n"
-    "    gl_FragColor = mix(fogColour, texture2D(texture, vec2(uScale * texCoordOut.x + uMod, vScale * texCoordOut.y + vMod)), fogFactor);\n"
+    "    vec4 colour = texture2D(texture, vec2(uScale * texCoordOut.x + uMod, vScale * texCoordOut.y + vMod));\n"
+    "    if (1 == lightingEnabled)\n"
+    "    {\n"
+    "        vec3 L;\n"
+    "        vec3 diffuse = vec3(0.0, 0.0, 0.0);\n"
+    "        for (int i = 0; i < MaxLights; ++i)\n"
+    "        {\n"
+    "            L = normalize(vec3(lightParams[i][0][0], lightParams[i][0][1], lightParams[i][0][2]) - worldPosition);\n"
+    "            diffuse += vec3(lightParams[i][1][0], lightParams[i][1][1], lightParams[i][1][2]) * max(0.0, dot(L, worldNormal));\n"
+    "        }\n"
+    "        colour.rgb = clamp(colour.rgb * diffuse, 0.0, 1.0);\n"
+    "    }\n"
+    "    gl_FragColor = mix(vec4(fogColour, 1.0), colour, fogFactor);\n"
     "}\n";
+
+static const unsigned int MaxLights = 4;
 
 //------------------------------------------------------------------------------
 /**
@@ -112,6 +141,11 @@ GLES2RenderSystem::_Initialise(void* customParams)
     glGetIntegerv(GL_MAX_TEXTURE_SIZE, &maxTextureSize);
     CheckGlError("glGetIntegerv");
     CE_LOG("GL_MAX_TEXTURE_SIZE: %i\n", maxTextureSize);
+
+    GLint maxVaryingVectors;
+    glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryingVectors);
+    CheckGlError("glGetIntegerv");
+    CE_LOG("GL_MAX_VARYING_VECTORS: %i\n", maxVaryingVectors);
 
     glEnable(GL_SCISSOR_TEST);
     CheckGlError("glEnable");
@@ -416,6 +450,19 @@ GLES2RenderSystem::_SetPass(graphics::Pass* pass)
         {
             params->SetNamedConstant("fogStart", pass->GetFogStart());
             params->SetNamedConstant("fogEnd", pass->GetFogEnd());
+            core::Vector3 fogColour;
+            float alpha;
+            GLES2Mappings::Get(pass->GetFogColour(), fogColour.x, fogColour.y, fogColour.z, alpha);
+            params->SetNamedConstant("fogColour", fogColour);
+        }
+
+        params->SetNamedConstant("lightingEnabled", (int)pass->GetLightingEnabled());
+        if (pass->GetLightingEnabled())
+        {
+            core::Matrix4 invViewMat = this->viewMatrix.Inverse();
+            core::Vector3 cameraPosition(invViewMat[0][3], invViewMat[1][3], invViewMat[2][3]);
+            params->SetNamedConstant("cameraPosition", cameraPosition);
+            params->SetNamedConstant("lightParams[0]", this->defaultLightShaderParams, 4);
         }
     }
 
@@ -430,17 +477,23 @@ GLES2RenderSystem::_SetPass(graphics::Pass* pass)
             graphics::GpuConstantDefinition* def = (graphics::GpuConstantDefinition*)((core::KeyValuePair*)it->data)->value;
             switch (def->constType)
             {
-                case graphics::GCT_MATRIX_4X4:
-                    glUniformMatrix4fv(def->location, 1, GL_FALSE, (float*)def->buffer);
+                case graphics::GCT_INT1:
+                    glUniform1iv(def->location, def->arraySize, (int*)def->buffer);
                     break;
                 case graphics::GCT_FLOAT1:
-                    glUniform1f(def->location, *(float*)def->buffer);
+                    glUniform1fv(def->location, def->arraySize, (float*)def->buffer);
                     break;
-                case graphics::GCT_INT1:
-                    glUniform1i(def->location, *(int*)def->buffer);
+                case graphics::GCT_FLOAT3:
+                    glUniform3fv(def->location, def->arraySize, (float*)def->buffer);
+                    break;
+                case graphics::GCT_FLOAT4:
+                    glUniform4fv(def->location, def->arraySize, (float*)def->buffer);
+                    break;
+                case graphics::GCT_MATRIX_4X4:
+                    glUniformMatrix4fv(def->location, def->arraySize, GL_FALSE, (float*)def->buffer);
                     break;
                 case graphics::GCT_SAMPLER2D:
-                    glUniform1i(def->location, *(int*)def->buffer);
+                    glUniform1iv(def->location, def->arraySize, (int*)def->buffer);
                     break;
             }
 
@@ -455,7 +508,36 @@ GLES2RenderSystem::_SetPass(graphics::Pass* pass)
 void
 GLES2RenderSystem::_UseLights(core::HashTable* lights)
 {
+    unsigned int lightIndex = 0;
+    unsigned int i;
+    for (i = 0; i < lights->capacity && lightIndex < MaxLights; ++i)
+    {
+        LinkedList* it = ((core::Chain*)DynamicArrayGet(&lights->entries, i))->list;
+        while (it != NULL && lightIndex < MaxLights)
+        {
+            graphics::Light* light = (graphics::Light*)((core::KeyValuePair*)it->data)->value;
+            const core::Vector3 position = light->GetPosition();
+            this->defaultLightShaderParams[lightIndex][0][0] = position.x;
+            this->defaultLightShaderParams[lightIndex][0][1] = position.y;
+            this->defaultLightShaderParams[lightIndex][0][2] = position.z;
+            float red, green, blue, alpha;
+            GLES2Mappings::Get(light->GetDiffuseColour(), red, green, blue, alpha);
+            this->defaultLightShaderParams[lightIndex][1][0] = red;
+            this->defaultLightShaderParams[lightIndex][1][1] = green;
+            this->defaultLightShaderParams[lightIndex][1][2] = blue;
+            GLES2Mappings::Get(light->GetSpecularColour(), red, green, blue, alpha);
+            this->defaultLightShaderParams[lightIndex][2][0] = red;
+            this->defaultLightShaderParams[lightIndex][2][1] = green;
+            this->defaultLightShaderParams[lightIndex][2][2] = blue;
+            ++lightIndex;
+            it = it->next;
+        }
+    }
 
+    for (i = lightIndex; i < MaxLights; ++i)
+    {
+        this->defaultLightShaderParams[lightIndex] = core::Matrix4::ZERO;
+    }
 }
 
 //------------------------------------------------------------------------------

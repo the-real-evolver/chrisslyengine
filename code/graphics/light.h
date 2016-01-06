@@ -71,13 +71,17 @@ public:
             Light attenuation is not applicable to directional lights since they have an infinite range and
             constant intensity.
         @param
+            range The absolute upper range of the light in world units
+        @param
             constant The constant factor in the attenuation formula: 1.0 means never attenuate, 0.0 is complete attenuation
         @param
             linear The linear factor in the attenuation formula: 1 means attenuate evenly over the distance
         @param
             quadratic The quadratic factor in the attenuation formula: adds a curvature to the attenuation formula
     */
-    void SetAttenuation(float constant, float linear, float quadratic);
+    void SetAttenuation(float range, float constant, float linear, float quadratic);
+    /// returns the absolute upper range of the light
+    float GetAttenuationRange() const;
     /// returns the constant factor in the attenuation formula
     float GetAttenuationConstant() const;
     /// returns the linear factor in the attenuation formula
@@ -138,6 +142,7 @@ private:
     LightTypes lightType;
     unsigned int diffuse;
     unsigned int specular;
+    float range;
     float attenuationConst;
     float attenuationLinear;
     float attenuationQuad;

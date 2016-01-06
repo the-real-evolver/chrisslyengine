@@ -205,10 +205,10 @@ Camera::UpdateViewImpl() const
 {
     // view matrix is:
     //
-    //  [ Lx  Uy  Dz  Tx  ]
-    //  [ Lx  Uy  Dz  Ty  ]
-    //  [ Lx  Uy  Dz  Tz  ]
-    //  [ 0   0   0   1   ]
+    //  [ Lx  Uy  Dz  Tx ]
+    //  [ Lx  Uy  Dz  Ty ]
+    //  [ Lx  Uy  Dz  Tz ]
+    //  [ 0   0   0   1  ]
     //
     // Where T = -(Transposed(Rot) * Pos)
 
@@ -218,7 +218,7 @@ Camera::UpdateViewImpl() const
 
     // Make the translation relative to new axes
     Matrix3 rotT = rot.Transpose();
-    Vector3 trans = -rotT * position;
+    Vector3 trans = -rotT * this->position;
 
     // make final matrix
     // fills upper 3x3
@@ -231,11 +231,11 @@ Camera::UpdateViewImpl() const
     this->viewMatrix[2][0] = rotT[2][0];
     this->viewMatrix[2][1] = rotT[2][1];
     this->viewMatrix[2][2] = rotT[2][2];
-    
+
     this->viewMatrix[0][3] = trans.x;
     this->viewMatrix[1][3] = trans.y;
     this->viewMatrix[2][3] = trans.z;
-    
+
     this->recalcView = false;
 }
 
@@ -334,27 +334,27 @@ Camera::UpdateFrustumImpl() const
 {
     // 0.5f * 3.141593f / 180.0f = 0.0087266f
     float f = 1.0f / Math::ATan(this->FOVy * 0.0087266f);
- 
+
     this->projMatrixRS[0][0] = f / this->aspect;
     this->projMatrixRS[1][0] = 0.0f;
-    this->projMatrixRS[2][0] = 0.0f; 
+    this->projMatrixRS[2][0] = 0.0f;
     this->projMatrixRS[3][0] = 0.0f;
-    
+
     this->projMatrixRS[0][1] = 0.0f;
     this->projMatrixRS[1][1] = f;
-    this->projMatrixRS[2][1] = 0.0f; 
+    this->projMatrixRS[2][1] = 0.0f;
     this->projMatrixRS[3][1] = 0.0f;
-    
+
     this->projMatrixRS[0][2] = 0.0f;
     this->projMatrixRS[1][2] = 0.0f;
     this->projMatrixRS[2][2] = (this->farDist + this->nearDist) / (this->nearDist - this->farDist);
     this->projMatrixRS[3][2] = -1.0f;
-    
+
     this->projMatrixRS[0][3] = 0.0f;
     this->projMatrixRS[1][3] = 0.0f;
-    this->projMatrixRS[2][3] = (2.0f * this->farDist * this->nearDist) / (this->nearDist - this->farDist); 
+    this->projMatrixRS[2][3] = (2.0f * this->farDist * this->nearDist) / (this->nearDist - this->farDist);
     this->projMatrixRS[3][3] = 0.0f;
-    
+
     this->recalcFrustum = false;
 }
 

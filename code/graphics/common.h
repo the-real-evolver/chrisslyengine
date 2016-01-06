@@ -74,7 +74,7 @@ namespace graphics
     enum TrackVertexColourType
     {
         TVC_NONE        = 0x0,
-        TVC_AMBIENT     = 0x1,        
+        TVC_AMBIENT     = 0x1,
         TVC_DIFFUSE     = 0x2,
         TVC_SPECULAR    = 0x4,
         TVC_EMISSIVE    = 0x8

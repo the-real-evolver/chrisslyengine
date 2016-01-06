@@ -47,12 +47,12 @@ PSPRenderWindow::Create()
     sceGuDepthBuffer(depthBuffer, bufferWidth);
     sceGuFinish();
     sceGuSync(0, 0);
-    
+
     this->format = graphics::PF_R8G8B8A8;
     this->width = bufferWidth;
     this->height = height;
 }
-    
+
 //------------------------------------------------------------------------------
 /**
 */

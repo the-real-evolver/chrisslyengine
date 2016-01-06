@@ -2,12 +2,13 @@
 #define GPUPROGRAMPARAMS_H_
 //------------------------------------------------------------------------------
 /**
-    Enumeration of the types of constant we may encounter in programs
+    @class chrissly::graphics::GpuProgramParameters
 
     (C) 2012 Christian Bleicher
 */
 #include "hashtable.h"
 #include "matrix4.h"
+#include "quaternion.h"
 
 //------------------------------------------------------------------------------
 namespace chrissly
@@ -57,6 +58,8 @@ namespace graphics
         void* buffer;
         /// size of the memoryblock that holds the data in bytes
         unsigned int size;
+        /// size of the array
+        unsigned int arraySize;
     };
 
     /// struct collecting together the information for named constants
@@ -101,8 +104,16 @@ namespace graphics
         void SetNamedConstant(const char* name, float val);
         /// sets a single value constant integer parameter to the program
         void SetNamedConstant(const char* name, int val);
+        /// sets a Vector3 parameter to the program
+        void SetNamedConstant(const char* name, const core::Vector3& vec);
+        /// sets a list of Vector3 parameters to the program
+        void SetNamedConstant(const char* name, const core::Vector3* vec, unsigned int numEntries);
+        /// sets a Quaternion (Vector4) parameter to the program
+        void SetNamedConstant(const char* name, const core::Quaternion& q);
         /// sets a Matrix4 parameter to the program
         void SetNamedConstant(const char* name, const core::Matrix4& m);
+        /// sets a list of Matrix4 parameters to the program
+        void SetNamedConstant(const char* name, const core::Matrix4* m, unsigned int numEntries);
 
         /// internal method for providing a link to a name->definition map for parameters
         void _SetNamedConstants(GpuNamedConstants* constantmap);

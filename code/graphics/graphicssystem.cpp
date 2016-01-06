@@ -44,7 +44,7 @@ GraphicsSystem::~GraphicsSystem()
     unsigned int i;
     for (i = 0; i < this->numRenderTargets; ++i)
     {
-        CE_DELETE (RenderTarget*)DynamicArrayGet(&this->renderTargets, i);	
+        CE_DELETE (RenderTarget*)DynamicArrayGet(&this->renderTargets, i);
     }
     DynamicArrayDelete(&this->renderTargets);
 }

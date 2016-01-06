@@ -20,7 +20,7 @@ TextureBase::TextureBase() :
     textureBuffer(0),
     swizzled(true)
 {
-    
+
 }
 
 //------------------------------------------------------------------------------
@@ -28,7 +28,7 @@ TextureBase::TextureBase() :
 */
 TextureBase::~TextureBase()
 {
-    
+
 }
 
 //------------------------------------------------------------------------------
@@ -138,6 +138,6 @@ TextureBase::GetSwizzleEnabled() const
 {
     return this->swizzled;
 }
-    
+
 } // namespace graphics
 } // namespace chrissly

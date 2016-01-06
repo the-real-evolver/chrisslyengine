@@ -195,7 +195,10 @@ HandleCommands(struct android_app* app, int32_t cmd)
             break;
         case APP_CMD_TERM_WINDOW:
             // the window is being hidden or closed, clean it up
-            Exit();
+            if (initialized)
+            {
+                Exit();
+            }
             break;
         case APP_CMD_CONFIG_CHANGED:
             if (initialized)
@@ -205,7 +208,6 @@ HandleCommands(struct android_app* app, int32_t cmd)
             Enter(app);
             break;
         case APP_CMD_GAINED_FOCUS:
-            // app gained focus
             break;
         case APP_CMD_LOST_FOCUS:
             break;

@@ -26,6 +26,7 @@ Light::Light() :
     lightType(LT_POINT),
     diffuse(0xffffffff),
     specular(0x00000000),
+    range(100.0f),
     attenuationConst(1.0f),
     attenuationLinear(0.0f),
     attenuationQuad(0.0f),
@@ -95,11 +96,21 @@ Light::GetSpecularColour() const
 /**
 */
 void
-Light::SetAttenuation(float constant, float linear, float quadratic)
+Light::SetAttenuation(float range, float constant, float linear, float quadratic)
 {
+    this->range = range;
     this->attenuationConst = constant;
     this->attenuationLinear = linear;
     this->attenuationQuad = quadratic;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+float
+Light::GetAttenuationRange() const
+{
+    return this->range;
 }
 
 //------------------------------------------------------------------------------

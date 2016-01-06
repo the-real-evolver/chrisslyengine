@@ -177,31 +177,47 @@ GLES2GpuProgram::ExtractConstantDefs(graphics::GpuNamedConstants* constantDefs)
             uniform->location = glGetUniformLocation(this->gpuProgram, stringBuffer);
             switch (type)
             {
-                case GL_FLOAT_MAT4:
-                    uniform->constType = graphics::GCT_MATRIX_4X4;
-                    uniform->size = sizeof(float) * 16;
-                    uniform->buffer = CE_MALLOC(uniform->size);
+                case GL_INT:
+                    uniform->constType = graphics::GCT_INT1;
+                    uniform->size = sizeof(int);
+                    uniform->arraySize = arraySize;
+                    uniform->buffer = CE_MALLOC(uniform->size * arraySize);
                     break;
                 case GL_FLOAT:
                     uniform->constType = graphics::GCT_FLOAT1;
                     uniform->size = sizeof(float);
-                    uniform->buffer = CE_MALLOC(uniform->size);
+                    uniform->arraySize = arraySize;
+                    uniform->buffer = CE_MALLOC(uniform->size * arraySize);
                     break;
-                case GL_INT:
-                    uniform->constType = graphics::GCT_INT1;
-                    uniform->size = sizeof(int);
-                    uniform->buffer = CE_MALLOC(uniform->size);
+                case GL_FLOAT_VEC3:
+                    uniform->constType = graphics::GCT_FLOAT3;
+                    uniform->size = sizeof(float) * 3;
+                    uniform->arraySize = arraySize;
+                    uniform->buffer = CE_MALLOC(uniform->size * arraySize);
+                   break;
+                case GL_FLOAT_VEC4:
+                    uniform->constType = graphics::GCT_FLOAT4;
+                    uniform->size = sizeof(float) * 4;
+                    uniform->arraySize = arraySize;
+                    uniform->buffer = CE_MALLOC(uniform->size * arraySize);
+                   break;
+                case GL_FLOAT_MAT4:
+                    uniform->constType = graphics::GCT_MATRIX_4X4;
+                    uniform->size = sizeof(float) * 16;
+                    uniform->arraySize = arraySize;
+                    uniform->buffer = CE_MALLOC(uniform->size * arraySize);
                     break;
                 case GL_SAMPLER_2D:
                     uniform->constType = graphics::GCT_SAMPLER2D;
                     uniform->size = sizeof(int);
-                    uniform->buffer = CE_MALLOC(uniform->size);
+                    uniform->arraySize = arraySize;
+                    uniform->buffer = CE_MALLOC(uniform->size * arraySize);
                     memcpy(uniform->buffer, &samplerIndex, uniform->size);
                     ++samplerIndex;
                     break;
             }
 
-            CE_LOG("GLES2GpuProgram::ExtractConstantDefs: add '%i' '%s' '%u' '%i' '%i'\n", type, stringBuffer, uniform->size, uniform->location, arraySize);
+            CE_LOG("GLES2GpuProgram::ExtractConstantDefs(): add '%i' '%s' '%u' '%i' '%i'\n", type, stringBuffer, uniform->size, uniform->location, arraySize);
 
             HashTableInsert(&constantDefs->map, stringBuffer, uniform);
         }
