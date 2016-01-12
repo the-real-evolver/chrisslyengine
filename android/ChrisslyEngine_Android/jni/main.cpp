@@ -24,6 +24,7 @@ GpuProgramParameters* params;
 Matrix4 mat;
 
 const char* MorphAnimVertexShader =
+    "#version 100\n"
     "attribute vec2 texCoordIn;\n"
     "attribute vec3 normal;\n"
     "attribute vec4 position;\n"
@@ -42,12 +43,13 @@ const char* MorphAnimVertexShader =
     "    vec4 pos = (position + (positionMorphTarget - position) * morphWeight);\n"
     "    gl_Position = worldViewProjMatrix * pos;\n"
     "    texCoordOut = texCoordIn;\n"
-    "    fragmentNormal = (worldMatrix * vec4(normal, 1.0)).xyz;\n"
+    "    fragmentNormal = mat3(worldMatrix) * normal;\n"
     "    cameraVector = vec3(0.0, 0.0, 0.9) - (worldMatrix * pos).xyz;\n"
     "    lightVector = vec3(1.0, 0.0, 0.0) - (worldMatrix * pos).xyz;\n"
     "}\n";
 
 const char* FragmentShader =
+    "#version 100\n"
     "precision mediump float;\n"
     "const float MaxDist = 2.5;\n"
     "const float MaxDistSquared = MaxDist * MaxDist;\n"

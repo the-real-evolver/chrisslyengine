@@ -42,7 +42,7 @@ PSPRenderTexture::Create(int width, int height, graphics::PixelFormat format)
 */
 void
 PSPRenderTexture::Update()
-{  
+{
     // update all viewports
     unsigned int index;
     for (index = 0; index < this->numViewports; ++index)

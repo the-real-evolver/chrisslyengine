@@ -40,7 +40,7 @@ PSPRenderWindow::Create()
     void* drawBuffer = PSPHardwareBufferManager::GetStaticVramBuffer(bufferWidth, height, GU_PSM_8888);
     void* dispBuffer = PSPHardwareBufferManager::GetStaticVramBuffer(bufferWidth, height, GU_PSM_8888);
     void* depthBuffer = PSPHardwareBufferManager::GetStaticVramBuffer(bufferWidth, height, GU_PSM_4444);
-    
+
     sceGuStart(GU_DIRECT, PSPRenderSystem::Instance()->GetDisplayList());
     sceGuDrawBuffer(GU_PSM_8888, drawBuffer, bufferWidth);
     sceGuDispBuffer(width, height, dispBuffer, bufferWidth);

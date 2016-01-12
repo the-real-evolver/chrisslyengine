@@ -104,7 +104,7 @@ PSPMappings::Get(graphics::LayerBlendOperation lbo)
 
     return 0;
 }
-    
+
 //------------------------------------------------------------------------------
 /**
 */

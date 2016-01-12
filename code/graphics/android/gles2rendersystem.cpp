@@ -18,6 +18,7 @@ GLES2RenderSystem* GLES2RenderSystem::Singleton = NULL;
 
 //------------------------------------------------------------------------------
 static const char* DefaultVertexShader =
+    "#version 100\n"
     "attribute vec2 texCoordIn;\n"
     "attribute vec3 normal;\n"
     "attribute vec4 position;\n"
@@ -50,12 +51,13 @@ static const char* DefaultVertexShader =
     "    }\n"
     "    if (1 == lightingEnabled)\n"
     "    {\n"
-    "        worldNormal = normalize(worldMatrix * vec4(normal, 1.0)).xyz;\n"
+    "        worldNormal = normalize(mat3(worldMatrix) * normal);\n"
     "        worldPosition = (worldMatrix * vec4(position.xyz, 1.0)).xyz;\n"
     "    }\n"
     "}\n";
 
 static const char* DefaultFragmentShader =
+    "#version 100\n"
     "precision mediump float;\n"
     "const int MaxLights = 4;\n"
     "varying float fogFactor;\n"

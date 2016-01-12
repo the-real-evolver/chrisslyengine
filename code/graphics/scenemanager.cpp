@@ -194,7 +194,7 @@ SceneManager::GetRootSceneNode()
 
     return this->sceneRoot;
 }
-    
+
 //------------------------------------------------------------------------------
 /**
 */
@@ -307,7 +307,7 @@ SceneManager::SetShadowTechnique(ShadowTechnique technique)
 
             this->shadowProjection = this->shadowCamera->GetProjectionMatrixRS() * this->shadowCamera->GetViewMatrix();
             this->shadowProjection = this->shadowTextureProjScaleTrans * this->shadowProjection;
- 
+
             this->shadowTextureConfigDirty = false;
         }
     }
@@ -321,7 +321,7 @@ SceneManager::GetShadowTechnique() const
 {
     return this->shadowTechnique;
 }
-    
+
 //------------------------------------------------------------------------------
 /**
 */
@@ -336,7 +336,7 @@ SceneManager::IsShadowTechniqueInUse() const
 */
 void
 SceneManager::_RenderScene(Camera* camera, Viewport* vp)
-{ 
+{
     if (this->illuminationStage != IRS_RENDER_TO_TEXTURE)
     {
         // update transformation
@@ -374,7 +374,7 @@ SceneManager::_RenderScene(Camera* camera, Viewport* vp)
                 SubEntity* subEntity = entity->GetSubEntity(subEntityIndex);
                 
                 if (!subEntity->IsVisible()) continue;
-                
+
                 Material* material = subEntity->GetMaterial();
                 if (NULL == material) continue;
 
@@ -430,7 +430,7 @@ SceneManager::_RenderScene(Camera* camera, Viewport* vp)
         this->_RenderQueueGroupObjects(&this->renderQueueOpaque);
     }
     else
-    {    
+    {
         this->_RenderQueueGroupObjects(&this->renderQueueOpaque);
         this->_RenderQueueGroupObjects(&this->renderQueueTransparent);
 
