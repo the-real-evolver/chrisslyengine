@@ -91,6 +91,9 @@ private:
     core::Matrix4 projectionMatrix;
 
     GLES2GpuProgram* defaultGpuProgram;
+    GLES2GpuProgram* defaultGpuProgramFog;
+    GLES2GpuProgram* defaultGpuProgramLit;
+    GLES2GpuProgram* defaultGpuProgramLitFog;
     GLES2GpuProgram* currentGpuProgram;
 
     GLfloat glWorldMatrix[16];

@@ -4,6 +4,7 @@
 //------------------------------------------------------------------------------
 #include "gles2rendersystem.h"
 #include "gles2mappings.h"
+#include "gles2defaultshaders.h"
 #include "light.h"
 #include "textureunitstate.h"
 #include "common.h"
@@ -16,80 +17,6 @@ namespace chrissly
 
 GLES2RenderSystem* GLES2RenderSystem::Singleton = NULL;
 
-//------------------------------------------------------------------------------
-static const char* DefaultVertexShader =
-    "#version 100\n"
-    "attribute vec2 texCoordIn;\n"
-    "attribute vec3 normal;\n"
-    "attribute vec4 position;\n"
-    "attribute vec4 positionMorphTarget;\n"
-    "uniform mat4 worldMatrix;\n"
-    "uniform mat4 viewMatrix;\n"
-    "uniform mat4 projectionMatrix;\n"
-    "uniform mat4 worldViewProjMatrix;\n"
-    "uniform float morphWeight;\n"
-    "uniform int fogMode;\n"
-    "uniform float fogStart;\n"
-    "uniform float fogEnd;\n"
-    "uniform int lightingEnabled;"
-    "varying float fogFactor;\n"
-    "varying vec2 texCoordOut;\n"
-    "varying vec3 worldNormal;\n"
-    "varying vec3 worldPosition;\n"
-    "void main()\n"
-    "{\n"
-    "    gl_Position = worldViewProjMatrix * position;\n"
-    "    texCoordOut = texCoordIn;\n"
-    "    if (1 == fogMode)\n"
-    "    {\n"
-    "        // range based linear fog\n"
-    "        fogFactor = clamp((fogEnd - length(viewMatrix * worldMatrix * position)) / (fogEnd - fogStart), 0.0, 1.0);\n"
-    "    }\n"
-    "    else\n"
-    "    {\n"
-    "        fogFactor = 1.0;\n"
-    "    }\n"
-    "    if (1 == lightingEnabled)\n"
-    "    {\n"
-    "        worldNormal = normalize(mat3(worldMatrix) * normal);\n"
-    "        worldPosition = (worldMatrix * vec4(position.xyz, 1.0)).xyz;\n"
-    "    }\n"
-    "}\n";
-
-static const char* DefaultFragmentShader =
-    "#version 100\n"
-    "precision mediump float;\n"
-    "const int MaxLights = 4;\n"
-    "varying float fogFactor;\n"
-    "varying vec2 texCoordOut;\n"
-    "varying vec3 worldNormal;\n"
-    "varying vec3 worldPosition;\n"
-    "uniform sampler2D texture;\n"
-    "uniform float uMod;\n"
-    "uniform float vMod;\n"
-    "uniform float uScale;\n"
-    "uniform float vScale;\n"
-    "uniform vec3 fogColour;\n"
-    "uniform vec3 cameraPosition;\n"
-    "uniform highp int lightingEnabled;\n"
-    "uniform mat4 lightParams[MaxLights];\n"
-    "void main()\n"
-    "{\n"
-    "    vec4 colour = texture2D(texture, vec2(uScale * texCoordOut.x + uMod, vScale * texCoordOut.y + vMod));\n"
-    "    if (1 == lightingEnabled)\n"
-    "    {\n"
-    "        vec3 L;\n"
-    "        vec3 diffuse = vec3(0.0, 0.0, 0.0);\n"
-    "        for (int i = 0; i < MaxLights; ++i)\n"
-    "        {\n"
-    "            L = normalize(vec3(lightParams[i][0][0], lightParams[i][0][1], lightParams[i][0][2]) - worldPosition);\n"
-    "            diffuse += vec3(lightParams[i][1][0], lightParams[i][1][1], lightParams[i][1][2]) * max(0.0, dot(L, worldNormal));\n"
-    "        }\n"
-    "        colour.rgb = clamp(colour.rgb * diffuse, 0.0, 1.0);\n"
-    "    }\n"
-    "    gl_FragColor = mix(vec4(fogColour, 1.0), colour, fogFactor);\n"
-    "}\n";
-
 static const unsigned int MaxLights = 4;
 
 //------------------------------------------------------------------------------
@@ -101,6 +28,9 @@ GLES2RenderSystem::GLES2RenderSystem() :
     viewMatrix(core::Matrix4::ZERO),
     projectionMatrix(core::Matrix4::ZERO),
     defaultGpuProgram(NULL),
+    defaultGpuProgramFog(NULL),
+    defaultGpuProgramLit(NULL),
+    defaultGpuProgramLitFog(NULL),
     currentGpuProgram(NULL),
     numTextureUnits(0)
 {
@@ -153,6 +83,10 @@ GLES2RenderSystem::_Initialise(void* customParams)
     CheckGlError("glEnable");
 
     this->defaultGpuProgram = CE_NEW GLES2GpuProgram(DefaultVertexShader, DefaultFragmentShader);
+    this->defaultGpuProgramFog = CE_NEW GLES2GpuProgram(DefaultVertexShaderFog, DefaultFragmentShaderFog);
+    this->defaultGpuProgramLit = CE_NEW GLES2GpuProgram(DefaultVertexShaderLit, DefaultFragmentShaderLit);
+    this->defaultGpuProgramLitFog = CE_NEW GLES2GpuProgram(DefaultVertexShaderLitFog, DefaultFragmentShaderLitFog);
+
     this->currentGpuProgram = this->defaultGpuProgram;
 
     return renderWindow;
@@ -165,6 +99,9 @@ void
 GLES2RenderSystem::Shutdown()
 {
     CE_DELETE this->defaultGpuProgram;
+    CE_DELETE this->defaultGpuProgramFog;
+    CE_DELETE this->defaultGpuProgramLit;
+    CE_DELETE this->defaultGpuProgramLitFog;
 
     CE_LOG("GLES2RenderSystem::Shutdown\n");
 }
@@ -356,18 +293,6 @@ GLES2RenderSystem::_EndFrame()
 void
 GLES2RenderSystem::_SetPass(graphics::Pass* pass)
 {
-    // set gpu program to use
-    if (pass->IsProgrammable())
-    {
-        this->currentGpuProgram = pass->GetGpuProgram();
-    }
-    else
-    {
-        this->currentGpuProgram = this->defaultGpuProgram;
-    }
-    glUseProgram(this->currentGpuProgram->GetProgramHandle());
-    CheckGlError("glUseProgram");
-
     // scene blending parameters
     if (pass->GetSceneBlendingEnabled())
     {
@@ -433,9 +358,36 @@ GLES2RenderSystem::_SetPass(graphics::Pass* pass)
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GLES2Mappings::Get(tus->GetTextureAddressingMode().v));
     }
 
-    // set default shader parameters
-    if (!pass->IsProgrammable())
+    // set gpu program to use
+    if (pass->IsProgrammable())
     {
+        this->currentGpuProgram = pass->GetGpuProgram();
+        glUseProgram(this->currentGpuProgram->GetProgramHandle());
+        CheckGlError("glUseProgram");
+    }
+    else
+    {
+        bool lit = pass->GetLightingEnabled();
+        bool fog = (graphics::FOG_LINEAR == pass->GetFogMode());
+        if (!fog && !lit)
+        {
+            this->currentGpuProgram = this->defaultGpuProgram;
+        }
+        else if (fog && !lit)
+        {
+            this->currentGpuProgram = this->defaultGpuProgramFog;
+        }
+        else if (!fog && lit)
+        {
+            this->currentGpuProgram = this->defaultGpuProgramLit;
+        }
+        else if (fog && lit)
+        {
+            this->currentGpuProgram = this->defaultGpuProgramLitFog;
+        }
+        glUseProgram(this->currentGpuProgram->GetProgramHandle());
+        CheckGlError("glUseProgram");
+
         graphics::GpuProgramParameters* params = this->currentGpuProgram->GetDefaultParameters();
 
         if (pass->GetNumTextureUnitStates() > 0)
@@ -447,19 +399,18 @@ GLES2RenderSystem::_SetPass(graphics::Pass* pass)
             params->SetNamedConstant("vScale", tus->GetTextureVScale());
         }
 
-        params->SetNamedConstant("fogMode", (int)pass->GetFogMode());
-        if (graphics::FOG_LINEAR == pass->GetFogMode())
+        if (fog)
         {
-            params->SetNamedConstant("fogStart", pass->GetFogStart());
-            params->SetNamedConstant("fogEnd", pass->GetFogEnd());
             core::Vector3 fogColour;
             float alpha;
             GLES2Mappings::Get(pass->GetFogColour(), fogColour.x, fogColour.y, fogColour.z, alpha);
             params->SetNamedConstant("fogColour", fogColour);
+            params->SetNamedConstant("fogMode", (int)pass->GetFogMode());
+            params->SetNamedConstant("fogStart", pass->GetFogStart());
+            params->SetNamedConstant("fogEnd", pass->GetFogEnd());
         }
 
-        params->SetNamedConstant("lightingEnabled", (int)pass->GetLightingEnabled());
-        if (pass->GetLightingEnabled())
+        if (lit)
         {
             core::Matrix4 invViewMat = this->viewMatrix.Inverse();
             core::Vector3 cameraPosition(invViewMat[0][3], invViewMat[1][3], invViewMat[2][3]);
