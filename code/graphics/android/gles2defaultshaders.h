@@ -80,7 +80,6 @@ static const char* DefaultVertexShaderFog =
 static const char* DefaultFragmentShaderFog =
     "#version 100\n"
     "precision mediump float;\n"
-    "const int MaxLights = 4;\n"
     "varying float fogFactor;\n"
     "varying vec2 texCoordOut;\n"
     "varying vec3 worldNormal;\n"
@@ -111,7 +110,6 @@ static const char* DefaultVertexShaderLit =
     "uniform mat4 projectionMatrix;\n"
     "uniform mat4 worldViewProjMatrix;\n"
     "uniform float morphWeight;\n"
-    "uniform int lightingEnabled;"
     "varying vec2 texCoordOut;\n"
     "varying vec3 worldNormal;\n"
     "varying vec3 worldPosition;\n"
@@ -136,7 +134,6 @@ static const char* DefaultFragmentShaderLit =
     "uniform float uScale;\n"
     "uniform float vScale;\n"
     "uniform vec3 cameraPosition;\n"
-    "uniform highp int lightingEnabled;\n"
     "uniform mat4 lightParams[MaxLights];\n"
     "void main()\n"
     "{\n"

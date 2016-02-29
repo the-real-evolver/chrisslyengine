@@ -415,7 +415,7 @@ GLES2RenderSystem::_SetPass(graphics::Pass* pass)
             core::Matrix4 invViewMat = this->viewMatrix.Inverse();
             core::Vector3 cameraPosition(invViewMat[0][3], invViewMat[1][3], invViewMat[2][3]);
             params->SetNamedConstant("cameraPosition", cameraPosition);
-            params->SetNamedConstant("lightParams[0]", this->defaultLightShaderParams, 4);
+            params->SetNamedConstant("lightParams[0]", this->defaultLightShaderParams, MaxLights);
         }
     }
 
@@ -424,10 +424,10 @@ GLES2RenderSystem::_SetPass(graphics::Pass* pass)
     unsigned int i;
     for (i = 0; i < constantDefs->map.capacity; ++i)
     {
-        LinkedList* it = ((core::Chain*)DynamicArrayGet(&constantDefs->map.entries, i))->list;
+        LinkedList* it = ((Chain*)DynamicArrayGet(&constantDefs->map.entries, i))->list;
         while (it != NULL)
         {
-            graphics::GpuConstantDefinition* def = (graphics::GpuConstantDefinition*)((core::KeyValuePair*)it->data)->value;
+            graphics::GpuConstantDefinition* def = (graphics::GpuConstantDefinition*)((KeyValuePair*)it->data)->value;
             switch (def->constType)
             {
                 case graphics::GCT_INT1:
@@ -459,16 +459,16 @@ GLES2RenderSystem::_SetPass(graphics::Pass* pass)
 /**
 */
 void
-GLES2RenderSystem::_UseLights(core::HashTable* lights)
+GLES2RenderSystem::_UseLights(HashTable* lights)
 {
     unsigned int lightIndex = 0;
     unsigned int i;
     for (i = 0; i < lights->capacity && lightIndex < MaxLights; ++i)
     {
-        LinkedList* it = ((core::Chain*)DynamicArrayGet(&lights->entries, i))->list;
+        LinkedList* it = ((Chain*)DynamicArrayGet(&lights->entries, i))->list;
         while (it != NULL && lightIndex < MaxLights)
         {
-            graphics::Light* light = (graphics::Light*)((core::KeyValuePair*)it->data)->value;
+            graphics::Light* light = (graphics::Light*)((KeyValuePair*)it->data)->value;
             const core::Vector3 position = light->GetPosition();
             this->defaultLightShaderParams[lightIndex][0][0] = position.x;
             this->defaultLightShaderParams[lightIndex][0][1] = position.y;

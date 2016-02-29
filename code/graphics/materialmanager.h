@@ -46,7 +46,7 @@ private:
 
     static MaterialManager* Singleton;
 
-    core::HashTable resources;
+    HashTable resources;
     MaterialParser parser;
 };
 

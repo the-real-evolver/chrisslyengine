@@ -55,8 +55,6 @@ void linkedlistAdd(LinkedList **front, void* data)
 {
     LinkedList *node = (LinkedList*)CE_MALLOC(sizeof(LinkedList));
 
-    CE_ASSERT(node != NULL, "::linkedlistAdd(): failed to allocate '%i' bytes", sizeof(LinkedList));
-
     node->prev = NULL;
     node->data = data;
 

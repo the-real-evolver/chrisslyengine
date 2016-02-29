@@ -4,8 +4,6 @@
 /**
     @class chrissly::application::StateManager
 
-    11.06.2007 -> Creation
-
     (C) 2010 Christian Bleicher
 */
 #include "state.h"

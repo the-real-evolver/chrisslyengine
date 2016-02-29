@@ -40,7 +40,7 @@ public:
     /// returns whether or not this mesh has some kind of vertex animation
     bool HasVertexAnimation() const;
     /// initialise an animation set suitable for use with this mesh
-    void _InitAnimationState(core::HashTable* animSet);
+    void _InitAnimationState(HashTable* animSet);
 
 private:
     /// a list of submeshes which make up this mesh 
@@ -48,7 +48,7 @@ private:
     unsigned short numSubMeshes;
 
     /// storage of morph animations, lookup by name
-    core::HashTable animationsList;
+    HashTable animationsList;
 };
 
 } // namespace graphics

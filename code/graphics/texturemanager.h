@@ -39,7 +39,7 @@ private:
 
     static TextureManager* Singleton;
 
-    core::HashTable resources;
+    HashTable resources;
 };
 
 } // namespace graphics

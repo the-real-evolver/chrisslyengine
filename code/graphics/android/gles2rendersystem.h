@@ -64,7 +64,7 @@ public:
     /// method for setting up the renderstate for a rendering pass
     void _SetPass(graphics::Pass* pass);
     /// tells the rendersystem to use the attached set of lights (and no others)
-    void _UseLights(core::HashTable* lights);
+    void _UseLights(HashTable* lights);
     /// sets the colour & strength of the ambient (global directionless) light in the world
     void SetAmbientLight(unsigned int colour);
     /// notify the rendersystem that a morphkeyframe was build

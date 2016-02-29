@@ -4,8 +4,6 @@
 /**
     @class StateMaterialTest
 
-    08.05.2011 -> Creation
-
     (C) 2011 Christian Bleicher
 */
 #include "state.h"
@@ -27,7 +25,7 @@ public:
     /// default constructor
     StateMaterialTest();
     /// destructor
-    virtual	~StateMaterialTest();
+    virtual ~StateMaterialTest();
     /// called when entering the state
     void Enter();
     /// called when leaving the state

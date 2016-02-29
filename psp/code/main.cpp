@@ -51,7 +51,7 @@ main(int argc, char* argv[])
     SceneManager::Instance()->SetShadowTechnique(SHADOWTYPE_TEXTURE_ADDITIVE);
 
     // create animation teststate
-    StateAnimationTest* sat = new StateAnimationTest();  
+    StateAnimationTest* sat = new StateAnimationTest();
     // create material teststate
     StateMaterialTest* smt = new StateMaterialTest();
     // initialise statemanager

@@ -44,7 +44,7 @@ public:
 
 private:
     /// copy constructor
-    GraphicsSystem(const GraphicsSystem&cc) {}; 
+    GraphicsSystem(const GraphicsSystem&cc) {};
 
     static GraphicsSystem* Singleton;
 

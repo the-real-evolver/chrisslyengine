@@ -4,8 +4,6 @@
 /**
     @class StateAnimationTest
 
-    13.03.2011 -> Creation
-
     (C) 2011 Christian Bleicher
 */
 #include "state.h"
@@ -25,7 +23,7 @@ public:
     /// default constructor
     StateAnimationTest();
     /// destructor
-    virtual	~StateAnimationTest();
+    virtual ~StateAnimationTest();
     /// called when entering the state
     void Enter();
     /// called when leaving the state

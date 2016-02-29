@@ -30,7 +30,7 @@ GpuNamedConstants::~GpuNamedConstants()
         LinkedList* it = ((Chain*)DynamicArrayGet(&this->map.entries, i))->list;
         while (it != NULL)
         {
-            CE_LOG("GpuNamedConstants::~GpuNamedConstants(): remove '%s'\n", ((KeyValuePair*)it->data)->key.C_Str());
+            CE_LOG("GpuNamedConstants::~GpuNamedConstants(): remove '%s'\n", ((KeyValuePair*)it->data)->key);
             GpuConstantDefinition* def = (GpuConstantDefinition*)((KeyValuePair*)it->data)->value;
             CE_FREE(def->buffer);
             CE_DELETE def;

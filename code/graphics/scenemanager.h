@@ -151,8 +151,8 @@ private:
 
     static SceneManager* Singleton;
 
-    mutable core::HashTable cameras;
-    mutable core::HashTable lights;
+    mutable HashTable cameras;
+    mutable HashTable lights;
     LinkedList* entities;
     LinkedList* sceneNodes;
     SceneNode* sceneRoot;

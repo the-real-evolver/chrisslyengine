@@ -25,13 +25,8 @@
 */
 #include "linkedlist.h"
 #include "dynamicarray.h"
-#include "chrisslystring.h"
 
 //------------------------------------------------------------------------------
-namespace chrissly
-{
-namespace core
-{
 
 /// hashtable
 struct HashTable
@@ -51,12 +46,12 @@ struct Chain
 /// a key value pair
 struct KeyValuePair
 {
-    String key;
+    char* key;
     void* value;
 };
 
 /// forward declaration
-static inline void HashTableResize(HashTable* table, unsigned int newSize);
+static void HashTableResize(HashTable* table, unsigned int newSize);
 
 //------------------------------------------------------------------------------
 /**
@@ -109,7 +104,9 @@ HashTableClear(HashTable* table)
         while (it != NULL)
         {
             LinkedList* node = it;
-            CE_DELETE((KeyValuePair*)node->data);
+            KeyValuePair* kvp = (KeyValuePair*)node->data;
+            CE_FREE(kvp->key);
+            CE_FREE(kvp);
             it = it->next;
             linkedlistRemove(node);
         }
@@ -140,15 +137,18 @@ HashTableInsert(HashTable* table, const char* key, void* value)
     unsigned int hash = HashFunction(key);
     unsigned int index = hash % table->capacity;
 
-    KeyValuePair* keyValuePair = CE_NEW KeyValuePair();
-    keyValuePair->key = key;
+    KeyValuePair* keyValuePair = (KeyValuePair*)CE_MALLOC(sizeof(KeyValuePair));
+    size_t length = strlen(key);
+    keyValuePair->key = (char*)CE_MALLOC(length + 1);
+    strncpy(keyValuePair->key, key, length);
+    keyValuePair->key[length] = '\0';
     keyValuePair->value = value;
 
     Chain* chain = (Chain*)DynamicArrayGet(&table->entries, index);
     linkedlistAdd(&(chain->list), keyValuePair);
     ++chain->size;
 
-    table->currentSize++;
+    ++table->currentSize;
 }
 
 //------------------------------------------------------------------------------
@@ -168,7 +168,7 @@ HashTableFind(HashTable* table, const char* key)
     LinkedList* it = ((Chain*)DynamicArrayGet(&table->entries, index))->list;
     while (it != NULL)
     {
-        if (0 == strcmp(key, ((KeyValuePair*)it->data)->key.C_Str()))
+        if (0 == strcmp(key, ((KeyValuePair*)it->data)->key))
         {
             return ((KeyValuePair*)it->data)->value;
         }
@@ -181,7 +181,7 @@ HashTableFind(HashTable* table, const char* key)
 //------------------------------------------------------------------------------
 /**
 */
-static inline void
+static void
 HashTableResize(HashTable* table, unsigned int newSize)
 {
     HashTable newTable;
@@ -194,7 +194,7 @@ HashTableResize(HashTable* table, unsigned int newSize)
         while (it != NULL)
         {
             KeyValuePair* kvp = (KeyValuePair*)it->data;
-            HashTableInsert(&newTable, kvp->key.C_Str(), kvp->value);
+            HashTableInsert(&newTable, kvp->key, kvp->value);
             it = it->next;
         }
     }
@@ -206,7 +206,5 @@ HashTableResize(HashTable* table, unsigned int newSize)
     table->currentSize = newTable.currentSize;
 }
 
-} // namespace core
-} // namespace chrissly
 //------------------------------------------------------------------------------
 #endif

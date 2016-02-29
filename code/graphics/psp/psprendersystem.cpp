@@ -256,7 +256,7 @@ PSPRenderSystem::_SetPass(graphics::Pass* pass)
     if (pass->GetNumTextureUnitStates() > 0)
     {
         graphics::TextureUnitState* tus = pass->GetTextureUnitState(0);
-        graphics::Texture* texture = tus->GetTexture(); 
+        graphics::Texture* texture = tus->GetTexture();
 
         sceGuEnable(GU_TEXTURE_2D);
         sceGuTexScale(tus->GetTextureUScale(), tus->GetTextureVScale());
@@ -305,17 +305,17 @@ PSPRenderSystem::_SetPass(graphics::Pass* pass)
 /**
 */
 void
-PSPRenderSystem::_UseLights(core::HashTable* lights)
+PSPRenderSystem::_UseLights(HashTable* lights)
 {
     int lightIndex = 0;
 
     unsigned int i;
     for (i = 0; i < lights->capacity && lightIndex < MaxLights; ++i)
     {
-        LinkedList* it = ((core::Chain*)DynamicArrayGet(&lights->entries, i))->list;
+        LinkedList* it = ((Chain*)DynamicArrayGet(&lights->entries, i))->list;
         while (it != NULL && lightIndex < MaxLights)
         {
-            graphics::Light* light = (graphics::Light*)((core::KeyValuePair*)it->data)->value;
+            graphics::Light* light = (graphics::Light*)((KeyValuePair*)it->data)->value;
 
             if (graphics::Light::LT_DIRECTIONAL != light->GetType())
             {

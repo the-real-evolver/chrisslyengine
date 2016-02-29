@@ -75,7 +75,7 @@ private:
     /// does this object receive shadows?
     bool receivesShadows;
     /// state of animation for animable meshes
-    mutable core::HashTable animationState;
+    mutable HashTable animationState;
 };
 
 } // namespace graphics
