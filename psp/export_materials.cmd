@@ -1,7 +1,6 @@
 :: Name:        export_materials.cmd
 :: Autor:       evolver
 :: Description: export materials
-:: History:     30.10.2010 -> creation
 
 :: setup variables
 set ProjectFolder=%CD%\..

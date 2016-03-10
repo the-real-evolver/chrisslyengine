@@ -16,6 +16,8 @@ namespace chrissly
 
 PSPAudioRenderer* PSPAudioRenderer::Singleton = NULL;
 
+static const int NumOutputSamples = 1024;
+
 //------------------------------------------------------------------------------
 /**
 */
@@ -101,9 +103,8 @@ PSPAudioRenderer::StartChannel(audio::Channel* channel)
     }
     else
     {
-        samplecount = PSP_AUDIO_SAMPLE_MAX;
+        samplecount = NumOutputSamples;
     }
-    if (length < samplecount) samplecount = length;
 
     index = sceAudioChReserve(index, PSP_AUDIO_SAMPLE_ALIGN(samplecount), format);
     channel->_SetIndex(index);
@@ -119,30 +120,7 @@ PSPAudioRenderer::StartChannel(audio::Channel* channel)
 void
 PSPAudioRenderer::UpdateChannel(audio::Channel* channel)
 {
-    bool isPlaying;
-    channel->IsPlaying(&isPlaying);
 
-    if (isPlaying && channel->_PropertiesHasChanged() != audio::UNCHANGED)
-    {
-        int index;
-        channel->GetIndex(&index);
-        float volume;
-        channel->GetVolume(&volume);
-        float panning;
-        channel->GetPan(&panning);
-        int leftVolume, rightVolume;
-        audio::Mode mode;
-        channel->GetMode(&mode);
-        if (mode & audio::MODE_3D)
-        {
-            CalculateVolumesFromPanning(PAN_CONSTANTPOWER, volume *= channel->_GetAttenuationFactor(), panning, leftVolume, rightVolume);
-        }
-        else
-        {
-            CalculateVolumesFromPanning(PAN_CLAMPEDLINEAR, volume, panning, leftVolume, rightVolume);
-        }
-        sceAudioChangeChannelVolume(index, leftVolume, rightVolume);
-    }
 }
 
 //------------------------------------------------------------------------------
@@ -225,12 +203,12 @@ PSPAudioRenderer::ChannelThread(SceSize args, void* argp)
                 }
                 else
                 {
-                    samplecount = PSP_AUDIO_SAMPLE_MAX;
+                    samplecount = NumOutputSamples;
                 }
                 if ((unsigned int)samplesRemaining < samplecount)
                 {
                     samplecount = PSP_AUDIO_SAMPLE_ALIGN(samplesRemaining);
-                    sceAudioSetChannelDataLen(index, samplecount);
+                    sceAudioSetChannelDataLen(index, samplecount > PSP_AUDIO_SAMPLE_MIN ? samplecount - PSP_AUDIO_SAMPLE_MIN : 0);
                 }
                 channel->SetPosition(position + samplecount);
 
@@ -242,6 +220,10 @@ PSPAudioRenderer::ChannelThread(SceSize args, void* argp)
                 if (mode & audio::MODE_3D)
                 {
                     CalculateVolumesFromPanning(PAN_CONSTANTPOWER, volume *= channel->_GetAttenuationFactor(), panning, leftVolume, rightVolume);
+                }
+                else if (1 == numChannels)
+                {
+                    CalculateVolumesFromPanning(PAN_CONSTANTPOWER, volume, panning, leftVolume, rightVolume);
                 }
                 else
                 {
@@ -271,12 +253,10 @@ PSPAudioRenderer::ChannelThread(SceSize args, void* argp)
                     }
                     else
                     {
-                        samplecount = PSP_AUDIO_SAMPLE_MAX;
+                        samplecount = NumOutputSamples;
                     }
-                    if (length < samplecount) samplecount = length;
-
-                    channel->SetPosition(0);
                     sceAudioSetChannelDataLen(index, PSP_AUDIO_SAMPLE_ALIGN(samplecount));
+                    channel->SetPosition(0);
 
                     error = sceKernelSignalSema(channel->GetSemaphoreId(), 1);
                     CE_ASSERT(error >= 0, "PSPAudioRenderer::ChannelThread(): sceKernelSignalSema() state[restart loop] failed: %08x\n", error);
@@ -322,7 +302,7 @@ PSPAudioRenderer::CalculateVolumesFromPanning(PanningMode mode, float volume, fl
 
         case PAN_CONSTANTPOWER:
             {
-                float var = 3.141593f * (panning + 1.0f) / 4.0f;
+                float var = 0.785398f * (panning + 1.0f);
                 leftVolume = (int)((float)PSP_AUDIO_VOLUME_MAX * volume * core::Math::Cos(var));
                 rightVolume = (int)((float)PSP_AUDIO_VOLUME_MAX * volume * core::Math::Sin(var));
             }

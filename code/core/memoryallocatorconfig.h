@@ -6,8 +6,6 @@
 
     You can modify this file to alter the allocation routines used for the engine's main objects.
 
-    07.05.2011 -> Creation
-    
     (C) 2011 Christian Bleicher
 */
 #include <malloc.h>

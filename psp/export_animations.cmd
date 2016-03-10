@@ -1,7 +1,6 @@
 :: Name:        export_animations.cmd
 :: Autor:       evolver
 :: Description: export animations
-:: History:     30.10.2010 -> creation
 
 cd ..\tools
 

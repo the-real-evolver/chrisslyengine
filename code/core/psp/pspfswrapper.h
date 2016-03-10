@@ -5,9 +5,7 @@
     @class chrissly::PSPFSWrapper
 
     Wrapper for the sce filesystem.
-    
-    10.08.2011 -> Creation
-    
+
     (C) 2011 Christian Bleicher
 */
 #include "fileio.h"

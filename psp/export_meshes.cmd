@@ -1,7 +1,6 @@
 :: Name:        export_meshes.cmd
 :: Autor:       evolver
 :: Description: export meshes
-:: History:     30.10.2010 -> creation
 
 cd ..\tools
 

@@ -1,9 +1,9 @@
 #ifndef RENDERSYSTEM_H_
 #define RENDERSYSTEM_H_
 //------------------------------------------------------------------------------
-/**	
-    10.03.2012 -> Creation
-    
+/**
+    @class chrissly::graphics::RenderSystem
+
     (C) 2012 Christian Bleicher
 */
 

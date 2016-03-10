@@ -308,6 +308,8 @@ void
 PSPRenderSystem::_UseLights(HashTable* lights)
 {
     int lightIndex = 0;
+    int components;
+    unsigned int diffuse, specular;
 
     unsigned int i;
     for (i = 0; i < lights->capacity && lightIndex < MaxLights; ++i)
@@ -334,11 +336,22 @@ PSPRenderSystem::_UseLights(HashTable* lights)
                 sceGuLightSpot(lightIndex, &this->lightDir, light->GetSpotlightFalloff(), light->GetSpotlightOuterAngle());
             }
 
-            sceGuEnable(GU_LIGHT0 + lightIndex);
-            sceGuLight(lightIndex, PSPMappings::Get(light->GetType()), GU_DIFFUSE_AND_SPECULAR, &this->lightPos);
-            sceGuLightColor(lightIndex, GU_DIFFUSE, light->GetDiffuseColour());
-            sceGuLightColor(lightIndex, GU_SPECULAR, light->GetSpecularColour());
+            components = 0;
+            diffuse = light->GetDiffuseColour();
+            if (diffuse > 0x00000000)
+            {
+                components |= GU_DIFFUSE;
+                sceGuLightColor(lightIndex, GU_DIFFUSE, diffuse);
+            }
+            specular = light->GetSpecularColour();
+            if (specular > 0x00000000)
+            {
+                components |= GU_SPECULAR;
+                sceGuLightColor(lightIndex, GU_SPECULAR, specular);
+            }
+            sceGuLight(lightIndex, PSPMappings::Get(light->GetType()), components, &this->lightPos);
             sceGuLightAtt(lightIndex, light->GetAttenuationConstant(), light->GetAttenuationLinear(), light->GetAttenuationQuadric());
+            sceGuEnable(GU_LIGHT0 + lightIndex);
             ++lightIndex;
 
             it = it->next;

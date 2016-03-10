@@ -14,13 +14,13 @@ namespace audio
 
 using namespace chrissly::core;
 
-static const unsigned int RiffWavHeaderSize = 44;
 static const unsigned int MaxStreamBufferSamples = 2048;
 
 //------------------------------------------------------------------------------
 /**
 */
 WavCodec::WavCodec() :
+    riffWavHeaderSize(0),
     lengthInBytes(0),
     bytesPerSample(0),
     openedAsStream(false),
@@ -65,57 +65,75 @@ WavCodec::SetupSound(const char* filename, Mode mode, void** sampleBuffer, unsig
     FSWrapper::Read(fd, &chunkSize, 4);
     FSWrapper::Read(fd, chunkID, 4);
     CE_ASSERT(0 == strncmp(chunkID, "WAVE", 4), "WavCodec::SetupSound(): '%s' RIFF file but not a wave file", filename);
+    this->riffWavHeaderSize = 12;
 
-    // "fmt " sub-chunk
     short audioFormat, numChannels, blockAlign, bitsPerSample;
-    unsigned int sampleRate, byteRate, dataSize;
-    FSWrapper::Read(fd, chunkID, 4);        // Contains the letters "fmt "
-    FSWrapper::Read(fd, &chunkSize, 4);     // 16 for PCM. This is the size of the rest of the Subchunk which follows this number
-    FSWrapper::Read(fd, &audioFormat, 2);   // PCM = 1 (i.e. Linear quantization) Values other than 1 indicate some form of compression
-    FSWrapper::Read(fd, &numChannels, 2);   // Mono = 1, Stereo = 2, etc.
-    FSWrapper::Read(fd, &sampleRate, 4);    // 44100, 22050, etc.
-    FSWrapper::Read(fd, &byteRate, 4);      // sampleRate * numChannels * bitsPerSample / 8
-    FSWrapper::Read(fd, &blockAlign, 2);    // numChannels * bitsPerSample / 8
-    FSWrapper::Read(fd, &bitsPerSample, 2); // 8 bits = 8, 16 bits = 16, etc.
+    unsigned int sampleRate, byteRate;
 
-    // "data" sub-chunk
-    FSWrapper::Read(fd, chunkID, 4);        // Contains the letters "data"
-    FSWrapper::Read(fd, &chunkSize, 4);     // numSamples * numChannels * bitsPerSample / 8
+    bool headerRead = false;
+    while (FSWrapper::Read(fd, chunkID, 4) > 0)
+    {
+        FSWrapper::Read(fd, &chunkSize, 4);
+        this->riffWavHeaderSize += 8;
+        if (0 == strncmp(chunkID, "fmt ", 4))
+        {
+            // "fmt " sub-chunk
+            FSWrapper::Read(fd, &audioFormat, 2);   // WAVE_FORMAT_PCM = 0x0001, WAVE_FORMAT_IEEE_FLOAT = 0x0003, WAVE_FORMAT_ALAW = 0x0003, WAVE_FORMAT_MULAW = 0x0007, WAVE_FORMAT_EXTENSIBLE = 0xFFFF
+            FSWrapper::Read(fd, &numChannels, 2);   // Mono = 1, Stereo = 2, etc.
+            FSWrapper::Read(fd, &sampleRate, 4);    // 44100, 22050, etc.
+            FSWrapper::Read(fd, &byteRate, 4);      // sampleRate * numChannels * bitsPerSample / 8
+            FSWrapper::Read(fd, &blockAlign, 2);    // numChannels * bitsPerSample / 8
+            FSWrapper::Read(fd, &bitsPerSample, 2); // 8 bits = 8, 16 bits = 16, etc.
+            this->riffWavHeaderSize += 16;
+            headerRead = true;
+        }
+        else if (0 == strncmp(chunkID, "data", 4))
+        {
+            // "data" sub-chunk
+            unsigned int dataSize = chunkSize;
+            if (8 == bitsPerSample)
+            {
+                length = dataSize;
+                format = AUDIO_FORMAT_PCM8;
+                this->bytesPerSample = numChannels;
+            }
+            else if (16 == bitsPerSample)
+            {
+                length = dataSize >> 1;
+                format = AUDIO_FORMAT_PCM16;
+                this->bytesPerSample = 2 * numChannels;
+            }
+            length = length / numChannels;
+            type = SOUND_TYPE_WAV;
+            channels = numChannels;
+            bits = bitsPerSample;
 
-    dataSize = fileSize - RiffWavHeaderSize;
-    if (8 == bitsPerSample)
-    {
-        length = dataSize;
-        format = AUDIO_FORMAT_PCM8;
-        this->bytesPerSample = numChannels;
-    }
-    else if (16 == bitsPerSample)
-    {
-        length = dataSize >> 1;
-        format = AUDIO_FORMAT_PCM16;
-        this->bytesPerSample = 2 * numChannels;
-    }
-    length = length / numChannels;
-    type = SOUND_TYPE_WAV;
-    channels = numChannels;
-    bits = bitsPerSample;
+            if (mode & MODE_CREATESTREAM)
+            {
+                this->openedAsStream = true;
+                this->streamFileHandle = fd;
+                this->lengthInBytes = dataSize;
+                this->streamBuffers[0] = CE_MALLOC_ALIGN(16, MaxStreamBufferSamples * this->bytesPerSample);
+                this->streamBuffers[1] = CE_MALLOC_ALIGN(16, MaxStreamBufferSamples * this->bytesPerSample);
+                *sampleBuffer = NULL;
+            }
+            else
+            {
+                void* buffer = CE_MALLOC_ALIGN(16, dataSize);
+                CE_ASSERT(buffer != NULL, "WavCodec::SetupSound(): failed to allocate '%i' bytes for samplebuffer", dataSize);
+                FSWrapper::Read(fd, buffer, dataSize); // read the actual sound data
+                FSWrapper::Close(fd);
+                *sampleBuffer = buffer;
+            }
 
-    if (mode & MODE_CREATESTREAM)
-    {
-        this->openedAsStream = true;
-        this->streamFileHandle = fd;
-        this->lengthInBytes = dataSize;
-        this->streamBuffers[0] = CE_MALLOC_ALIGN(16, MaxStreamBufferSamples * this->bytesPerSample);
-        this->streamBuffers[1] = CE_MALLOC_ALIGN(16, MaxStreamBufferSamples * this->bytesPerSample);
-        *sampleBuffer = NULL;
-    }
-    else
-    {
-        void* buffer = CE_MALLOC_ALIGN(16, dataSize);
-        CE_ASSERT(buffer != NULL, "WavCodec::SetupSound(): failed to allocate '%i' bytes for samplebuffer", dataSize);
-        FSWrapper::Read(fd, buffer, dataSize); // read the actual sound data
-        FSWrapper::Close(fd);
-        *sampleBuffer = buffer;
+            break;
+        }
+        else
+        {
+            // skip meta chunks like "fact" etc.
+            FSWrapper::Seek(fd, chunkSize, Current);
+            if (!headerRead) this->riffWavHeaderSize += chunkSize;
+        }
     }
 }
 
@@ -129,7 +147,7 @@ WavCodec::InitialiseStream()
     this->currentStreamBufferIndex = 0;
     this->bytesToLoadToBackBuffer = this->lengthInBytes < MaxStreamBufferSamples * this->bytesPerSample ? this->lengthInBytes : MaxStreamBufferSamples * this->bytesPerSample;
     this->seekPosition = this->bytesToLoadToBackBuffer;
-    FSWrapper::Seek(this->streamFileHandle, RiffWavHeaderSize, Begin);
+    FSWrapper::Seek(this->streamFileHandle, this->riffWavHeaderSize, Begin);
     FSWrapper::Read(this->streamFileHandle, this->streamBuffers[0], this->bytesToLoadToBackBuffer);
     this->currentStreamBufferLength = this->bytesToLoadToBackBuffer;
     this->backBufferFilled = false;

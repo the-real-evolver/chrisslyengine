@@ -2,6 +2,10 @@
 #define RENDERQUEUESORTINGGROUPING_H_
 //------------------------------------------------------------------------------
 /**
+    @struct chrissly::graphics::RenderablePass
+
+    @class chrissly::graphics::QueuedRenderableCollection
+
     (C) 2011 Christian Bleicher
 */
 #include "subentity.h"

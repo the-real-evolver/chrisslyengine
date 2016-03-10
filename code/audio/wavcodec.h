@@ -38,6 +38,7 @@ public:
     bool EndOfStream() const;
 
 private:
+    unsigned int riffWavHeaderSize;
     unsigned int lengthInBytes;
     unsigned char bytesPerSample;
     bool openedAsStream;

@@ -6,8 +6,6 @@
 
     Wrapper for the android assetmanager filesystem.
 
-    17.05.2012 -> Creation
-
     (C) 2012 Christian Bleicher
 */
 #include "core/fileio.h"
