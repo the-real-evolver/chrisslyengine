@@ -78,7 +78,7 @@ GraphicsSystem::GetAutoCreatedWindow()
 void
 GraphicsSystem::RenderOneFrame()
 {
-    // update all rendertargets   
+    // update all rendertargets
     unsigned int index;
     for (index = 0; index < this->numRenderTargets; ++index)
     {

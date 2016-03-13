@@ -40,7 +40,7 @@ public:
     void SetNumMipmaps(int num);
 
     /// set the hardware pixel buffer to use
-    void SetBuffer(const void* buffer);
+    void SetBuffer(void* buffer);
     /// return hardware pixel buffer for a surface
     const void* GetBuffer() const;
 
@@ -57,7 +57,7 @@ protected:
     int height;
     int width;
     int numMipmaps;
-    const void* textureBuffer;
+    void* textureBuffer;
     bool swizzled;
 };
 

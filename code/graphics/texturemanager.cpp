@@ -93,9 +93,7 @@ TextureManager::RemoveAll()
         LinkedList* it = ((Chain*)DynamicArrayGet(&this->resources.entries, i))->list;
         while (it != NULL)
         {
-            Texture* texture = (Texture*)((KeyValuePair*)it->data)->value;
-            CE_FREE((void*)texture->GetBuffer());
-            CE_DELETE texture;
+            CE_DELETE (Texture*)((KeyValuePair*)it->data)->value;
             it = it->next;
         }
     }

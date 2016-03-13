@@ -70,7 +70,6 @@ WavCodec::SetupSound(const char* filename, Mode mode, void** sampleBuffer, unsig
     short audioFormat, numChannels, blockAlign, bitsPerSample;
     unsigned int sampleRate, byteRate;
 
-    bool headerRead = false;
     while (FSWrapper::Read(fd, chunkID, 4) > 0)
     {
         FSWrapper::Read(fd, &chunkSize, 4);
@@ -78,14 +77,14 @@ WavCodec::SetupSound(const char* filename, Mode mode, void** sampleBuffer, unsig
         if (0 == strncmp(chunkID, "fmt ", 4))
         {
             // "fmt " sub-chunk
-            FSWrapper::Read(fd, &audioFormat, 2);   // WAVE_FORMAT_PCM = 0x0001, WAVE_FORMAT_IEEE_FLOAT = 0x0003, WAVE_FORMAT_ALAW = 0x0003, WAVE_FORMAT_MULAW = 0x0007, WAVE_FORMAT_EXTENSIBLE = 0xFFFF
+            FSWrapper::Read(fd, &audioFormat, 2);   // WAVE_FORMAT_PCM = 0x0001, WAVE_FORMAT_IEEE_FLOAT = 0x0003, WAVE_FORMAT_ALAW = 0x0006, WAVE_FORMAT_MULAW = 0x0007, WAVE_FORMAT_EXTENSIBLE = 0xFFFF
             FSWrapper::Read(fd, &numChannels, 2);   // Mono = 1, Stereo = 2, etc.
             FSWrapper::Read(fd, &sampleRate, 4);    // 44100, 22050, etc.
             FSWrapper::Read(fd, &byteRate, 4);      // sampleRate * numChannels * bitsPerSample / 8
             FSWrapper::Read(fd, &blockAlign, 2);    // numChannels * bitsPerSample / 8
             FSWrapper::Read(fd, &bitsPerSample, 2); // 8 bits = 8, 16 bits = 16, etc.
-            this->riffWavHeaderSize += 16;
-            headerRead = true;
+            if (chunkSize > 16) FSWrapper::Seek(fd, chunkSize - 16, Current);
+            this->riffWavHeaderSize += chunkSize;
         }
         else if (0 == strncmp(chunkID, "data", 4))
         {
@@ -130,9 +129,9 @@ WavCodec::SetupSound(const char* filename, Mode mode, void** sampleBuffer, unsig
         }
         else
         {
-            // skip meta chunks like "fact" etc.
+            // skip information chunks like "fact" etc.
             FSWrapper::Seek(fd, chunkSize, Current);
-            if (!headerRead) this->riffWavHeaderSize += chunkSize;
+            this->riffWavHeaderSize += chunkSize;
         }
     }
 }

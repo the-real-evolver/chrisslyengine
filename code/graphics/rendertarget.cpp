@@ -59,7 +59,7 @@ RenderTarget::GetNumViewports() const
 Viewport*
 RenderTarget::GetViewport(unsigned short index) const
 {
-    return (Viewport*)DynamicArrayGet(&this->viewportList, index); 
+    return (Viewport*)DynamicArrayGet(&this->viewportList, index);
 }
 
 //------------------------------------------------------------------------------
@@ -71,7 +71,7 @@ RenderTarget::RemoveAllViewports()
     unsigned int i;
     for (i = 0; i < this->numViewports; ++i)
     {
-        CE_DELETE (Viewport*)DynamicArrayGet(&this->viewportList, i);	
+        CE_DELETE (Viewport*)DynamicArrayGet(&this->viewportList, i);
     }
 
     DynamicArrayDelete(&this->viewportList);

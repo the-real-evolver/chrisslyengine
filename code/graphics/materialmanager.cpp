@@ -90,8 +90,7 @@ MaterialManager::RemoveAll()
         LinkedList* it = ((Chain*)DynamicArrayGet(&this->resources.entries, i))->list;
         while (it != NULL)
         {
-            Material* material = (Material*)((KeyValuePair*)it->data)->value;
-            CE_DELETE material;
+            CE_DELETE (Material*)((KeyValuePair*)it->data)->value;
             it = it->next;
         }
     }

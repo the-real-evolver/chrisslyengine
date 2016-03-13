@@ -3,6 +3,8 @@
 //  (C) 2010 Christian Bleicher
 //------------------------------------------------------------------------------
 #include "texturebase.h"
+#include "memoryallocatorconfig.h"
+#include <stdio.h>
 
 namespace chrissly
 {
@@ -28,7 +30,10 @@ TextureBase::TextureBase() :
 */
 TextureBase::~TextureBase()
 {
-
+    if (this->textureBuffer != NULL)
+    {
+        CE_FREE(this->textureBuffer);
+    }
 }
 
 //------------------------------------------------------------------------------
@@ -107,7 +112,7 @@ TextureBase::SetNumMipmaps(int num)
 /**
 */
 void
-TextureBase::SetBuffer(const void* buffer)
+TextureBase::SetBuffer(void* buffer)
 {
     this->textureBuffer = buffer;
 }
