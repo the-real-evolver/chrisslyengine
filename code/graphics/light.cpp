@@ -30,7 +30,6 @@ Light::Light() :
     attenuationConst(1.0f),
     attenuationLinear(0.0f),
     attenuationQuad(0.0f),
-    position(Vector3()),
     direction(Vector3(0.0f, 0.0f, 1.0f)),
     spotOuter(0.78f),
     spotFalloff(1.0f)

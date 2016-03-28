@@ -84,12 +84,12 @@ public:
     /// get the texture filtering for the given type
     FilterOptions GetTextureFiltering(FilterType ftype) const;
 
-    /// Determines how the texture layer is combined with the the diffuse colour of the geometry below it. 
+    /// Determines how the texture layer is combined with the the diffuse colour of the geometry below it.
     /**
         @remarks
         LBT_COLOUR <br>
         LBT_ALPHA <br>
-        
+
         LBO_REPLACE <br>
         LBO_ADD <br>
         LBO_MODULATE <br>

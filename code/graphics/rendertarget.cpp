@@ -14,7 +14,7 @@ namespace graphics
 */
 RenderTarget::RenderTarget() :
     numViewports(0),
-    buffer(0),
+    buffer(NULL),
     width(0),
     height(0),
     format(PF_UNKNOWN)

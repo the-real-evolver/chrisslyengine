@@ -421,11 +421,11 @@ Pass::RemoveAllTextureUnitStates()
     unsigned int i;
     for (i = 0; i < this->numTextureUnitStates; ++i)
     {
-        CE_DELETE (TextureUnitState*)DynamicArrayGet(&this->textureUnitStates, i);	
+        CE_DELETE (TextureUnitState*)DynamicArrayGet(&this->textureUnitStates, i);
     }
 
     DynamicArrayDelete(&this->textureUnitStates);
-    
+
     this->numTextureUnitStates = 0;
 }
 

@@ -20,7 +20,7 @@ namespace graphics
 
 class Pass
 {
-public:    
+public:
     /// constructor
     Pass(unsigned short index);
     /// destructor
@@ -64,7 +64,7 @@ public:
     /// retrieves the destination blending factor for the material (as set using Material::SetSceneBlending)
     SceneBlendFactor GetDestBlendFactor() const;
     /// set fix colors used when GU_FIX operation is applied
-    void SetBlendingFixColors(unsigned int sourceFixColor, unsigned int destFixColor);   
+    void SetBlendingFixColors(unsigned int sourceFixColor, unsigned int destFixColor);
     /// retrieves the source fix colors
     unsigned int GetSourceBlendingFixColor() const;
     /// retrieves the destination fix colors
@@ -72,7 +72,7 @@ public:
 
     /// sets whether or not this pass renders with depth-buffer checking on or not
     void SetDepthCheckEnabled(bool enabled);
-    /// returns whether or not this pass renders with depth-buffer checking on or not 
+    /// returns whether or not this pass renders with depth-buffer checking on or not
     bool GetDepthCheckEnabled() const;
 
     /// sets whether or not this pass renders with depth-buffer writing on or not
@@ -94,11 +94,11 @@ public:
     void SetCullingMode(CullingMode mode);
     /// returns the culling mode for geometry rendered with this pass
     CullingMode GetCullingMode() const;
-    
+
     /// sets whether or not dynamic lighting is enabled
     void SetLightingEnabled(bool enabled);
     /// returns whether or not dynamic lighting is enabled
-    bool GetLightingEnabled() const;    
+    bool GetLightingEnabled() const;
     /// sets the shininess of the pass, affecting the size of specular highlights
     /**
         @note

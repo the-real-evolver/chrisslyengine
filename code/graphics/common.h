@@ -79,7 +79,7 @@ namespace graphics
         TVC_SPECULAR    = 0x4,
         TVC_EMISSIVE    = 0x8
     };
-    
+
     /// fog modes
     enum FogMode
     {

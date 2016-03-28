@@ -15,11 +15,11 @@ namespace graphics
 /**
 */
 TextureBase::TextureBase() :
-    format(PF_R5G6B5),
+    format(PF_UNKNOWN),
     height(0),
     width(0),
     numMipmaps(0),
-    textureBuffer(0),
+    textureBuffer(NULL),
     swizzled(true)
 {
 
@@ -134,7 +134,7 @@ TextureBase::SetSwizzleEnabled(bool enabled)
 {
     this->swizzled = enabled;
 }
-    
+
 //------------------------------------------------------------------------------
 /**
 */

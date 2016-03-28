@@ -17,6 +17,7 @@ using namespace chrissly::core;
 /**
 */
 Entity::Entity(const char* name, Mesh* mesh) :
+    parentNode(NULL),
     castShadows(false),
     receivesShadows(false)
 {

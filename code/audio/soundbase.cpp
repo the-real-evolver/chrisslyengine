@@ -17,6 +17,7 @@ namespace audio
 */
 SoundBase::SoundBase() :
     mode(MODE_DEFAULT),
+    type(SOUND_TYPE_UNKNOWN),
     format(AUDIO_FORMAT_NONE),
     length(0),
     numChannels(0),
@@ -76,6 +77,7 @@ Result
 SoundBase::Release()
 {
     this->mode = MODE_DEFAULT;
+    this->type = SOUND_TYPE_UNKNOWN;
     this->format = AUDIO_FORMAT_NONE;
     this->length = 0;
     this->numChannels = 0;

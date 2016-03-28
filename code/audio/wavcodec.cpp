@@ -31,7 +31,8 @@ WavCodec::WavCodec() :
     bytesToLoadToBackBuffer(0),
     backBufferFilled(false)
 {
-
+    this->streamBuffers[0] = NULL;
+    this->streamBuffers[1] = NULL;
 }
 
 //------------------------------------------------------------------------------

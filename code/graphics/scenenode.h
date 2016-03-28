@@ -37,7 +37,7 @@ public:
     SceneNode* CreateChildSceneNode();
     /// gets the parent of this scenenode
     SceneNode* GetParentSceneNode() const;
-    /// removes all child Nodes attached to this node        
+    /// removes all child Nodes attached to this node
     /** 
         Does not delete the nodes, just detaches them from
         this parent, potentially to be reattached elsewhere.

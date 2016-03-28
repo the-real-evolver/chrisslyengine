@@ -4,6 +4,7 @@
 //------------------------------------------------------------------------------
 #include "keyframe.h"
 #include "memoryallocatorconfig.h"
+#include <stdio.h>
 
 namespace chrissly
 {
@@ -13,7 +14,9 @@ namespace graphics
 //------------------------------------------------------------------------------
 /**
 */
-VertexMorphKeyFrame::VertexMorphKeyFrame(float time) : time(time)
+VertexMorphKeyFrame::VertexMorphKeyFrame(float time) :
+    vertexData(NULL),
+    time(time)
 {
 
 }

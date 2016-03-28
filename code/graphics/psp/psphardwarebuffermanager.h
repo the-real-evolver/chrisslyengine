@@ -8,7 +8,7 @@
 */
 
 //------------------------------------------------------------------------------
-namespace chrissly 
+namespace chrissly
 {
 class PSPHardwareBufferManager
 {
