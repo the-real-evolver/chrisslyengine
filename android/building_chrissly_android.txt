@@ -5,7 +5,10 @@ Building Chrissly for Android
 - run 'build.cmd'
 - run 'exportassets.cmd'
 
-Running the demo
+Running the sample with Eclipse and the Android Development Tool (ADT)
 ========================================================================
-- open 'android\ChrisslyEngine_Android\.project' with eclipse
-- run or debug the application to install it on your device
+# install eclipse and adt as described here: http://developer.android.com/ndk/guides/setup.html
+# open eclipse
+# 'File' -> 'Import' -> 'Existing Projects into Workspace'
+# select 'android\ChrisslyEngine_Android\' and click 'Finish'
+# right click the application in the project explorer 'Run As' -> '1 Android Application'

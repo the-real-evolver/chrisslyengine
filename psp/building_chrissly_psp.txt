@@ -5,19 +5,19 @@ Building Chrissly for PSP
   or open 'ChrisslyEngine_PSP.pnproj' and press 'ALT + 1'
 - run 'psp\exportassets.cmd'
 
-Running the demo on a real PSP
+Running the sample on a real PSP
 ========================================================================
 - create a new folder 'ms0:/PSP/GAME/ChrisslyEngine_PSP'
 - copy the 'export' folder and the 'EBOOT.PBP' to the new folder
 - use 'Half-Byte Loader' (see: http://wololo.net/hbl) to execute, since
   the PBP is not signed
 
-Running the demo on the JPCSP emulator
+Running the sample on the JPCSP emulator
 ========================================================================
 - copy the 'export' folder to 'jpcsp\ms0\PSP\GAME\ChrisslyEngine_PSP'
 - open JPCSP, then load the EBOOT.PBP with 'Load File' and press 'Run'
 
-Running the demo on the PPSSPP emulator
+Running the sample on the PPSSPP emulator
 ========================================================================
 - copy the 'export' folder to 'ppsspp_win\memstick\PSP\GAME\ChrisslyEngine_PSP'
 - open PPSSPP, then load the EBOOT.PBP with 'File -> Open'
