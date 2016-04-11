@@ -7,6 +7,7 @@
     (C) 2014 Christian Bleicher
 */
 #include "channelbase.h"
+#include "chrisslymutex.h"
 #include <SLES/OpenSLES.h>
 
 //------------------------------------------------------------------------------
@@ -34,6 +35,8 @@ public:
     SLVolumeItf GetVolumeInterface() const;
     /// gets the effect send interface
     SLEffectSendItf GetEffectSendInterface() const;
+    /// gets the sync lock mutex
+    const core::Mutex& GetSyncLock() const;
 
 private:
     SLAndroidSimpleBufferQueueItf bufferQueueInterface;
@@ -41,6 +44,7 @@ private:
     SLVolumeItf volumeInterface;
     SLObjectItf player;
     SLEffectSendItf effectSendInterface;
+    core::Mutex syncLock;
 };
 
 } // namespace chrissly

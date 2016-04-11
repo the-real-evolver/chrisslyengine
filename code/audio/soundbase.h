@@ -28,13 +28,19 @@ public:
     Result GetFormat(SoundType* type, AudioFormat* format, int* channels, int* bits);
     /// retrieves the mode bits set by the codec and the user when opening the sound
     Result GetMode(Mode* mode);
-    /// frees a sound object
+    /// requests release
     Result Release();
 
     /// initialize sound object
     void _Setup(const char* filename, Mode mode, Codec* codec);
+    /// internal method that frees a sound object
+    void _Release();
     /// returns if the sound is setup
     bool _IsRealized() const;
+    /// increments the usecount, called when a channel starts playing the sound
+    void _IncrementUseCount();
+    /// decrements the usecount, called when a channel using the sound was stopped
+    void _DecrementUseCount();
     /// get pointer to the sample at the given position
     void* _GetSampleBufferPointer(unsigned int position) const;
     /// get pointer to the attached codec
@@ -52,6 +58,8 @@ protected:
     void* sampleBuffer;
     Codec* codec;
     bool realized;
+    volatile bool requestRelease;
+    volatile unsigned int useCount;
 };
 
 } // namespace audio

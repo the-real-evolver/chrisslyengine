@@ -7,8 +7,8 @@ Building Chrissly for Android
 
 Running the sample with Eclipse and the Android Development Tool (ADT)
 ========================================================================
-# install eclipse and adt as described here: http://developer.android.com/ndk/guides/setup.html
-# open eclipse
-# 'File' -> 'Import' -> 'Existing Projects into Workspace'
-# select 'android\ChrisslyEngine_Android\' and click 'Finish'
-# right click the application in the project explorer 'Run As' -> '1 Android Application'
+- install eclipse and adt as described here: http://developer.android.com/ndk/guides/setup.html
+- open eclipse
+- 'File' -> 'Import' -> 'Existing Projects into Workspace'
+- select 'android\ChrisslyEngine_Android\' and click 'Finish'
+- right click the application in the project explorer 'Run As' -> '1 Android Application'

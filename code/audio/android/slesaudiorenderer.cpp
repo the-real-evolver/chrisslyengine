@@ -4,6 +4,7 @@
 //------------------------------------------------------------------------------
 #include "slesaudiorenderer.h"
 #include "codec.h"
+#include "chrisslymutex.h"
 #include <stdio.h>
 #include <math.h>
 
@@ -117,6 +118,7 @@ SLESAudioRenderer::StartChannel(audio::Channel* channel)
     channel->GetMode(&mode);
 
     SLAndroidSimpleBufferQueueItf bufferQueueInterface = channel->GetBufferQueueInterface();
+    sound->_IncrementUseCount();
     if (mode & audio::MODE_CREATESTREAM)
     {
         audio::Codec* codec = sound->_GetCodec();
@@ -133,7 +135,7 @@ SLESAudioRenderer::StartChannel(audio::Channel* channel)
     channel->_SetIsPlaying(true);
 
     SLEffectSendItf effectSend = channel->GetEffectSendInterface();
-    result = (*effectSend)->EnableEffectSend(effectSend, this->outputMixEnvironmentalReverb, SL_BOOLEAN_TRUE, 0);
+    result = (*effectSend)->EnableEffectSend(effectSend, this->outputMixEnvironmentalReverb, SL_BOOLEAN_FALSE, 0);
     CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::StartChannel(): failed to enable effect send\n");
 }
 
@@ -147,9 +149,12 @@ SLESAudioRenderer::UpdateChannel(audio::Channel* channel)
     channel->GetMode(&mode);
     if (mode & audio::MODE_CREATESTREAM)
     {
+        const core::Mutex& syncLock = channel->GetSyncLock();
+        syncLock.Lock();
         audio::Sound* sound;
         channel->GetCurrentSound(&sound);
         sound->_GetCodec()->FillStreamBackBuffer();
+        syncLock.Unlock();
     }
 
     audio::PropertyChange propertyChange = channel->_PropertiesHasChanged();
@@ -209,6 +214,9 @@ SLESAudioRenderer::ReleaseChannel(audio::Channel* channel)
     channel->Release();
     channel->_SetIsPlaying(false);
     channel->_SetIndex(audio::Channel::CHANNEL_FREE);
+    audio::Sound* sound;
+    channel->GetCurrentSound(&sound);
+    sound->_DecrementUseCount();
 }
 
 //------------------------------------------------------------------------------
@@ -225,6 +233,8 @@ SLESAudioRenderer::BufferQueueCallback(SLAndroidSimpleBufferQueueItf bufferQueue
     channel->GetMode(&mode);
     if (mode & audio::MODE_CREATESTREAM)
     {
+        const core::Mutex& syncLock = channel->GetSyncLock();
+        syncLock.Lock();
         audio::Codec* codec = sound->_GetCodec();
         if (codec->EndOfStream())
         {
@@ -239,6 +249,7 @@ SLESAudioRenderer::BufferQueueCallback(SLAndroidSimpleBufferQueueItf bufferQueue
                 channel->Release();
                 channel->_SetIsPlaying(false);
                 channel->_SetIndex(audio::Channel::CHANNEL_FREE);
+                sound->_DecrementUseCount();
             }
         }
         else
@@ -247,6 +258,7 @@ SLESAudioRenderer::BufferQueueCallback(SLAndroidSimpleBufferQueueItf bufferQueue
             result = (*bufferQueueInterface)->Enqueue(bufferQueueInterface, codec->GetStreamBufferPointer(), codec->GetStreamBufferLength());
             CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::BufferQueueCallback(): failed to enqueue buffer for streaming\n");
         }
+        syncLock.Unlock();
     }
     else
     {
@@ -265,6 +277,7 @@ SLESAudioRenderer::BufferQueueCallback(SLAndroidSimpleBufferQueueItf bufferQueue
             channel->Release();
             channel->_SetIsPlaying(false);
             channel->_SetIndex(audio::Channel::CHANNEL_FREE);
+            sound->_DecrementUseCount();
         }
     }
 }

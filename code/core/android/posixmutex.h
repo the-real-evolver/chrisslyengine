@@ -21,12 +21,12 @@ public:
     /// destructor
     ~PosixMutex();
     /// lock mutex
-    void Lock();
+    void Lock() const;
     /// unlock mutex
-    void Unlock();
+    void Unlock() const;
 
 private:
-    pthread_mutex_t mutex;
+    mutable pthread_mutex_t mutex;
 };
 
 //------------------------------------------------------------------------------
@@ -57,7 +57,7 @@ PosixMutex::~PosixMutex()
 /**
 */
 inline void
-PosixMutex::Lock()
+PosixMutex::Lock() const
 {
     pthread_mutex_lock(&this->mutex);
 }
@@ -66,7 +66,7 @@ PosixMutex::Lock()
 /**
 */
 inline void
-PosixMutex::Unlock()
+PosixMutex::Unlock() const
 {
     pthread_mutex_unlock(&this->mutex);
 }

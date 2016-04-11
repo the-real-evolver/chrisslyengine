@@ -23,12 +23,12 @@ public:
     /// destructor
     ~PSPMutex();
     /// lock mutex
-    void Lock();
+    void Lock() const;
     /// unlock mutex
-    void Unlock();
+    void Unlock() const;
 
 private:
-    SceUID semaphoreId;
+    mutable SceUID semaphoreId;
 };
 
 //------------------------------------------------------------------------------
@@ -57,7 +57,7 @@ PSPMutex::~PSPMutex()
 /**
 */
 inline void
-PSPMutex::Lock()
+PSPMutex::Lock() const
 {
     int error = sceKernelWaitSema(this->semaphoreId, 1, 0);
     CE_ASSERT(error >= 0, "PSPMutex::Lock(): sceKernelWaitSema() failed: %08x\n", error);
@@ -67,7 +67,7 @@ PSPMutex::Lock()
 /**
 */
 inline void
-PSPMutex::Unlock()
+PSPMutex::Unlock() const
 {
     int error = sceKernelSignalSema(this->semaphoreId, 1);
     CE_ASSERT(error >= 0, "PSPMutex::Unlock(): sceKernelSignalSema() failed: %08x\n", error);

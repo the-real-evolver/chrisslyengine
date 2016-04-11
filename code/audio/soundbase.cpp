@@ -24,7 +24,9 @@ SoundBase::SoundBase() :
     bitsPerSample(0),
     sampleBuffer(NULL),
     codec(NULL),
-    realized(false)
+    realized(false),
+    requestRelease(false),
+    useCount(0)
 {
 
 }
@@ -34,7 +36,7 @@ SoundBase::SoundBase() :
 */
 SoundBase::~SoundBase()
 {
-    this->Release();
+    this->_Release();
 }
 
 //------------------------------------------------------------------------------
@@ -76,25 +78,14 @@ SoundBase::GetMode(Mode* mode)
 Result
 SoundBase::Release()
 {
-    this->mode = MODE_DEFAULT;
-    this->type = SOUND_TYPE_UNKNOWN;
-    this->format = AUDIO_FORMAT_NONE;
-    this->length = 0;
-    this->numChannels = 0;
-    this->bitsPerSample = 0;
-
-    if (this->sampleBuffer != NULL)
+    if (0 == this->useCount)
     {
-        CE_FREE(this->sampleBuffer);
-        this->sampleBuffer = NULL;
+        this->_Release();
     }
-    if (this->codec != NULL)
+    else
     {
-        CE_DELETE this->codec;
-        this->codec = NULL;
+        this->requestRelease = true;
     }
-
-    this->realized = false;
 
     return OK;
 }
@@ -115,10 +106,62 @@ SoundBase::_Setup(const char* filename, Mode mode, Codec* codec)
 //------------------------------------------------------------------------------
 /**
 */
+void
+SoundBase::_Release()
+{
+    this->mode = MODE_DEFAULT;
+    this->type = SOUND_TYPE_UNKNOWN;
+    this->format = AUDIO_FORMAT_NONE;
+    this->length = 0;
+    this->numChannels = 0;
+    this->bitsPerSample = 0;
+
+    if (this->sampleBuffer != NULL)
+    {
+        CE_FREE(this->sampleBuffer);
+        this->sampleBuffer = NULL;
+    }
+    if (this->codec != NULL)
+    {
+        CE_DELETE this->codec;
+        this->codec = NULL;
+    }
+
+    this->realized = false;
+
+    this->requestRelease = false;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
 bool
 SoundBase::_IsRealized() const
 {
     return this->realized;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+SoundBase::_IncrementUseCount()
+{
+    this->useCount++;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+SoundBase::_DecrementUseCount()
+{
+    CE_ASSERT(this->useCount > 0, "SoundBase::_DecrementUseCout(): useCount already zero\n");
+    this->useCount--;
+    if (this->requestRelease && 0 == this->useCount)
+    {
+        this->_Release();
+    }
 }
 
 //------------------------------------------------------------------------------

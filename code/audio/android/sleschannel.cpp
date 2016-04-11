@@ -122,4 +122,13 @@ SLESChannel::GetEffectSendInterface() const
     return this->effectSendInterface;
 }
 
+//------------------------------------------------------------------------------
+/**
+*/
+const core::Mutex&
+SLESChannel::GetSyncLock() const
+{
+    return this->syncLock;
+}
+
 } // namespace chrissly

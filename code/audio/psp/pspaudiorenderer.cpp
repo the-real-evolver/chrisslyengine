@@ -108,7 +108,11 @@ PSPAudioRenderer::StartChannel(audio::Channel* channel)
 
     index = sceAudioChReserve(index, PSP_AUDIO_SAMPLE_ALIGN(samplecount), format);
     channel->_SetIndex(index);
-    if (index != audio::Channel::CHANNEL_FREE) channel->_SetIsPlaying(true);
+    if (index != audio::Channel::CHANNEL_FREE)
+    {
+        channel->_SetIsPlaying(true);
+        sound->_IncrementUseCount();
+    }
 
     error = sceKernelSignalSema(channel->GetSemaphoreId(), 1);
     CE_ASSERT(error >= 0, "PSPAudioRenderer::StartChannel(): sceKernelSignalSema() failed: %08x\n", error);
@@ -153,12 +157,15 @@ PSPAudioRenderer::ChannelThread(SceSize args, void* argp)
 
         int index;
         channel->GetIndex(&index);
+        audio::Sound* sound;
+        channel->GetCurrentSound(&sound);
 
         if (channel->GetReleaseRequest())
         {
             sceAudioChangeChannelVolume(index, 0, 0);
             sceAudioChRelease(index);
             channel->_SetIndex(audio::Channel::CHANNEL_FREE);
+            sound->_DecrementUseCount();
         }
 
         bool paused;
@@ -175,8 +182,6 @@ PSPAudioRenderer::ChannelThread(SceSize args, void* argp)
         channel->IsPlaying(&isPlaying);
         if (isPlaying)
         {
-            audio::Sound* sound;
-            channel->GetCurrentSound(&sound);
             unsigned int length;
             sound->GetLength(&length);
             unsigned int position;
@@ -266,6 +271,7 @@ PSPAudioRenderer::ChannelThread(SceSize args, void* argp)
                     sceAudioChRelease(index);
                     channel->_SetIndex(audio::Channel::CHANNEL_FREE);
                     channel->_SetIsPlaying(false);
+                    sound->_DecrementUseCount();
 
                     error = sceKernelSignalSema(channel->GetSemaphoreId(), 1);
                     CE_ASSERT(error >= 0, "PSPAudioRenderer::ChannelThread(): sceKernelSignalSema() state[stopping] failed: %08x\n", error);
