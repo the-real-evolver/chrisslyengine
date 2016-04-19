@@ -47,7 +47,7 @@ private:
     SubEntity(Entity* parent, SubMesh* subMeshBasis);
     /// pointer to parent
     Entity* parentEntity;
-    /// cached pointer to material 
+    /// cached pointer to material
     Material* pMaterial;
     /// submesh basis
     SubMesh* subMesh;

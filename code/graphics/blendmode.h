@@ -26,15 +26,15 @@ namespace graphics
     /// list of valid texture blending operations, for use with Pass::SetTextureBlendOperation
     /**
         Cv - Color value result
-        Ct - Texture color 
+        Ct - Texture color
         Cf - Fragment color
         Cc - Constant color
-        
-        LBO_MODULATE    - Cv=Ct*Cf               LBT_COLOUR: Av=Af         LBT_ALPHA: Av=At*Af  <br>
-        LBO_DECAL       -                        LBT_COLOUR: Cv=Ct,Av=Af   LBT_ALPHA: Cv=Cf*(1-At)+Ct*At Av=Af <br>
-        LBO_ALPHA_BLEND - Cv=(Cf*(1-Ct))+(Cc*Ct) LBT_COLOUR: Av=Af         LBT_ALPHA: Av=At*Af <br>
-        LBO_REPLACE     - Cv=Ct                  LBT_COLOUR: Av=Af         LBT_ALPHA: Av=At <br>
-        LBO_ADD         - Cv=Cf+Ct               LBT_COLOUR: Av=Af         LBT_ALPHA: Av=At*Af <br>
+
+        LBO_MODULATE    - Cv=Ct*Cf               LBT_COLOUR: Av=Af        LBT_ALPHA: Av=At*Af <br>
+        LBO_DECAL       -                        LBT_COLOUR: Cv=Ct, Av=Af LBT_ALPHA: Cv=Cf*(1-At)+Ct*At Av=Af <br>
+        LBO_ALPHA_BLEND - Cv=(Cf*(1-Ct))+(Cc*Ct) LBT_COLOUR: Av=Af        LBT_ALPHA: Av=At*Af <br>
+        LBO_REPLACE     - Cv=Ct                  LBT_COLOUR: Av=Af        LBT_ALPHA: Av=At <br>
+        LBO_ADD         - Cv=Cf+Ct               LBT_COLOUR: Av=Af        LBT_ALPHA: Av=At*Af <br>
     */
     enum LayerBlendOperation
     {
@@ -45,7 +45,7 @@ namespace graphics
         LBO_DECAL // only PSP
     };
 
-    /** 
+    /**
         Blending factors for manually blending objects with the scene. If there isn't a predefined
         SceneBlendType that you like, then you can specify the blending factors directly to affect the
         combination of object and the existing scene. See Material::setSceneBlending for more details.
@@ -64,7 +64,7 @@ namespace graphics
         SBF_ONE_MINUS_SOURCE_ALPHA,
         SBF_FIX // only PSP
     };
-   
+
     /**
         Blending operations controls how objects are blended into the scene. The default operation
         is add (+) but by changing this you can change how drawn objects are blended into the
@@ -79,7 +79,7 @@ namespace graphics
         SBO_MAX,
         SBO_ABS // only PSP
     };
-    
+
 } // namespace graphics
 } // namespace chrissly
 //------------------------------------------------------------------------------

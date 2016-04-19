@@ -36,7 +36,7 @@ public:
     VertexData* vertexData;
 
 private:
-    /// name of the material this SubMesh uses 
+    /// name of the material this SubMesh uses
     core::String materialName;
     /// type of vertex animation for dedicated vertex data (populated by Mesh)
     VertexAnimationType vertexAnimationType;

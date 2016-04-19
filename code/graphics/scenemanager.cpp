@@ -361,7 +361,7 @@ SceneManager::_RenderScene(Camera* camera, Viewport* vp)
         {
             // for all attached entities
             Entity* entity = sceneNode->GetAttachedObject(entityIndex);
-            
+
             if (this->IsShadowTechniqueInUse() && this->illuminationStage == IRS_RENDER_TO_TEXTURE && !entity->GetCastShadows()) continue;
 
             // update animation

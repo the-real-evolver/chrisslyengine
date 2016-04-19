@@ -13,7 +13,7 @@ namespace chrissly
 
 SLESAudioRenderer* SLESAudioRenderer::Singleton = NULL;
 
-SLEnvironmentalReverbSettings SLESAudioRenderer::ReverbSettings = SL_I3DL2_ENVIRONMENT_PRESET_DEFAULT;
+static const SLEnvironmentalReverbSettings ReverbSettings = SL_I3DL2_ENVIRONMENT_PRESET_DEFAULT;
 
 //------------------------------------------------------------------------------
 /**
@@ -149,7 +149,7 @@ SLESAudioRenderer::UpdateChannel(audio::Channel* channel)
     channel->GetMode(&mode);
     if (mode & audio::MODE_CREATESTREAM)
     {
-        const core::Mutex& syncLock = channel->GetSyncLock();
+        const core::Mutex& syncLock = channel->_GetSyncLock();
         syncLock.Lock();
         audio::Sound* sound;
         channel->GetCurrentSound(&sound);
@@ -233,7 +233,7 @@ SLESAudioRenderer::BufferQueueCallback(SLAndroidSimpleBufferQueueItf bufferQueue
     channel->GetMode(&mode);
     if (mode & audio::MODE_CREATESTREAM)
     {
-        const core::Mutex& syncLock = channel->GetSyncLock();
+        const core::Mutex& syncLock = channel->_GetSyncLock();
         syncLock.Lock();
         audio::Codec* codec = sound->_GetCodec();
         if (codec->EndOfStream())

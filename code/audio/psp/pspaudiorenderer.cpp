@@ -67,8 +67,8 @@ PSPAudioRenderer::GetNumHardwareChannels() const
 void
 PSPAudioRenderer::StartChannel(audio::Channel* channel)
 {
-    int error = sceKernelWaitSema(channel->GetSemaphoreId(), 1, 0);
-    CE_ASSERT(error >= 0, "PSPAudioRenderer::StartChannel(): sceKernelWaitSema() failed: %08x\n", error);
+    const core::Mutex& syncLock = channel->_GetSyncLock();
+    syncLock.Lock();
 
     int index;
     channel->GetIndex(&index);
@@ -114,8 +114,7 @@ PSPAudioRenderer::StartChannel(audio::Channel* channel)
         sound->_IncrementUseCount();
     }
 
-    error = sceKernelSignalSema(channel->GetSemaphoreId(), 1);
-    CE_ASSERT(error >= 0, "PSPAudioRenderer::StartChannel(): sceKernelSignalSema() failed: %08x\n", error);
+    syncLock.Unlock();
 }
 
 //------------------------------------------------------------------------------
@@ -133,14 +132,12 @@ PSPAudioRenderer::UpdateChannel(audio::Channel* channel)
 void
 PSPAudioRenderer::ReleaseChannel(audio::Channel* channel)
 {
-    int error = sceKernelWaitSema(channel->GetSemaphoreId(), 1, 0);
-    CE_ASSERT(error >= 0, "PSPAudioRenderer::ReleaseChannel(): sceKernelWaitSema() failed: %08x\n", error);
+    const core::Mutex& syncLock = channel->_GetSyncLock();
+    syncLock.Lock();
 
     channel->RequestRelease();
-    channel->_SetIsPlaying(false);
 
-    error = sceKernelSignalSema(channel->GetSemaphoreId(), 1);
-    CE_ASSERT(error >= 0, "PSPAudioRenderer::ReleaseChannel(): sceKernelSignalSema() failed: %08x\n", error);
+    syncLock.Unlock();
 }
 
 //------------------------------------------------------------------------------
@@ -152,8 +149,8 @@ PSPAudioRenderer::ChannelThread(SceSize args, void* argp)
     audio::Channel* channel = (audio::Channel*)(*(unsigned int*)argp);
     while (true)
     {
-        int error = sceKernelWaitSema(channel->GetSemaphoreId(), 1, 0);
-        CE_ASSERT(error >= 0, "PSPAudioRenderer::ChannelThread(): sceKernelWaitSema() failed: %08x\n", error);
+        const core::Mutex& syncLock = channel->_GetSyncLock();
+        syncLock.Lock();
 
         int index;
         channel->GetIndex(&index);
@@ -165,6 +162,7 @@ PSPAudioRenderer::ChannelThread(SceSize args, void* argp)
             sceAudioChangeChannelVolume(index, 0, 0);
             sceAudioChRelease(index);
             channel->_SetIndex(audio::Channel::CHANNEL_FREE);
+            channel->_SetIsPlaying(false);
             sound->_DecrementUseCount();
         }
 
@@ -172,8 +170,7 @@ PSPAudioRenderer::ChannelThread(SceSize args, void* argp)
         channel->GetPaused(&paused);
         if (paused)
         {
-            error = sceKernelSignalSema(channel->GetSemaphoreId(), 1);
-            CE_ASSERT(error >= 0, "PSPAudioRenderer::ChannelThread(): sceKernelSignalSema() state[paused] failed: %08x\n", error);
+            syncLock.Unlock();
             sceKernelDelayThread(10000);
             continue;
         }
@@ -235,8 +232,7 @@ PSPAudioRenderer::ChannelThread(SceSize args, void* argp)
                     CalculateVolumesFromPanning(PAN_CLAMPEDLINEAR, volume, panning, leftVolume, rightVolume);
                 }
 
-                error = sceKernelSignalSema(channel->GetSemaphoreId(), 1);
-                CE_ASSERT(error >= 0, "PSPAudioRenderer::ChannelThread(): sceKernelSignalSema() state[playing] failed: %08x\n", error);
+                syncLock.Unlock();
 
                 if (mode & audio::MODE_CREATESTREAM)
                 {
@@ -263,8 +259,7 @@ PSPAudioRenderer::ChannelThread(SceSize args, void* argp)
                     sceAudioSetChannelDataLen(index, PSP_AUDIO_SAMPLE_ALIGN(samplecount));
                     channel->SetPosition(0);
 
-                    error = sceKernelSignalSema(channel->GetSemaphoreId(), 1);
-                    CE_ASSERT(error >= 0, "PSPAudioRenderer::ChannelThread(): sceKernelSignalSema() state[restart loop] failed: %08x\n", error);
+                    syncLock.Unlock();
                 }
                 else
                 {
@@ -273,15 +268,13 @@ PSPAudioRenderer::ChannelThread(SceSize args, void* argp)
                     channel->_SetIsPlaying(false);
                     sound->_DecrementUseCount();
 
-                    error = sceKernelSignalSema(channel->GetSemaphoreId(), 1);
-                    CE_ASSERT(error >= 0, "PSPAudioRenderer::ChannelThread(): sceKernelSignalSema() state[stopping] failed: %08x\n", error);
+                    syncLock.Unlock();
                 }
             }
         }
         else
         {
-            error = sceKernelSignalSema(channel->GetSemaphoreId(), 1);
-            CE_ASSERT(error >= 0, "PSPAudioRenderer::ChannelThread(): sceKernelSignalSema() state[idling] failed: %08x\n", error);
+            syncLock.Unlock();
             sceKernelDelayThread(10000);
         }
     }

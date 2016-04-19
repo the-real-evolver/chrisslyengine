@@ -107,7 +107,7 @@ public:
     */
     void SetTextureAddressingMode(TextureAddressingMode u, TextureAddressingMode v);
     /// gets the texture addressing mode for a given coordinate i.e. what happens at uv values above 1.0.
-    /**    
+    /**
         @note
         The default is TAM_WRAP i.e. the texture repeats over values of 1.0.
     */

@@ -371,5 +371,14 @@ ChannelBase::_PropertiesHasChanged()
     return propertiesHasChanged;
 }
 
+//------------------------------------------------------------------------------
+/**
+*/
+const core::Mutex&
+ChannelBase::_GetSyncLock() const
+{
+    return this->syncLock;
+}
+
 } // namespace audio
 } // namespace chrissly

@@ -9,6 +9,7 @@
 #include "sound.h"
 #include "propertychangedflags.h"
 #include "vector3.h"
+#include "chrisslymutex.h"
 
 //------------------------------------------------------------------------------
 namespace chrissly
@@ -84,6 +85,8 @@ protected:
     float _GetAttenuationFactor() const;
     /// retrieve if properties (volume, panning ect.) has changed
     PropertyChange _PropertiesHasChanged();
+    /// gets the sync lock mutex
+    const core::Mutex& _GetSyncLock() const;
 
     bool isPlaying;
     bool paused;
@@ -98,6 +101,7 @@ protected:
     int index;
     float attenuationFactor;
     PropertyChange propertiesHasChanged;
+    core::Mutex syncLock;
 };
 
 } // namespace audio
