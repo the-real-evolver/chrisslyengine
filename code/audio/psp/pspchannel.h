@@ -28,7 +28,7 @@ public:
 
 private:
     SceUID threadId;
-    volatile bool requestRelease;
+    bool requestRelease;
 };
 
 } // namespace chrissly

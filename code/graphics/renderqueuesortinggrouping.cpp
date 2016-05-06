@@ -12,7 +12,8 @@ namespace graphics
 //------------------------------------------------------------------------------
 /**
 */
-QueuedRenderableCollection::QueuedRenderableCollection() : numRenderablePasses(0)
+QueuedRenderableCollection::QueuedRenderableCollection() :
+    numRenderablePasses(0)
 {
 
 }

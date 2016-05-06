@@ -70,6 +70,9 @@ public:
     /// notify the rendersystem that a morphkeyframe was build
     void _NotifyMorphKeyFrameBuild();
 
+    /// gets the default light shader parameters (useful if a custom shader wants to use the default lighting)
+    const core::Matrix4* GetDefaultLightShaderParams() const;
+
     /// print some aspect of the current GL connection
     static void PrintGLString(const char* name, GLenum s);
     /// print value of the error flag the recent function call returned

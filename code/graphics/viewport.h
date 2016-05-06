@@ -39,7 +39,7 @@ public:
     /// sets the initial background colour of the viewport (before rendering)
     void SetBackgroundColour(unsigned int colour);
     /// gets the background colour
-    const unsigned int GetBackgroundColour() const;
+    unsigned int GetBackgroundColour() const;
     /// determines whether to clear the viewport before rendering
     void SetClearEveryFrame(bool clear, unsigned int buffers = FBT_COLOUR | FBT_DEPTH);
     /// determines if the viewport is cleared before every frame

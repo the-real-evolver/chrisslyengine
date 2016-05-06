@@ -30,7 +30,7 @@ ChannelBase::ChannelBase() :
     currentSound(NULL),
     index(CHANNEL_FREE),
     attenuationFactor(0.0f),
-    propertiesHasChanged(UNCHANGED)
+    propertiesHaveChanged(UNCHANGED)
 {
 
 }
@@ -75,7 +75,7 @@ ChannelBase::SetPaused(bool paused)
 {
     this->paused = paused;
 
-    this->propertiesHasChanged |= PROPERTY_PAUSED;
+    this->propertiesHaveChanged |= PROPERTY_PAUSED;
 
     return OK;
 }
@@ -109,7 +109,7 @@ ChannelBase::SetVolume(float volume)
         this->volume = volume;
     }
 
-    this->propertiesHasChanged |= PROPERTY_VOLUME;
+    this->propertiesHaveChanged |= PROPERTY_VOLUME;
 
     return OK;
 }
@@ -143,7 +143,7 @@ ChannelBase::SetPressureLevel(float decibel)
         this->volume = Math::Pow(10, decibel / 20.0f);
     }
 
-    this->propertiesHasChanged |= PROPERTY_VOLUME;
+    this->propertiesHaveChanged |= PROPERTY_VOLUME;
 
     return OK;
 }
@@ -167,7 +167,7 @@ ChannelBase::SetPan(float pan)
         this->panning = pan;
     }
 
-    this->propertiesHasChanged |= PROPERTY_PAN;
+    this->propertiesHaveChanged |= PROPERTY_PAN;
 
     return OK;
 }
@@ -213,7 +213,7 @@ ChannelBase::SetMode(Mode mode)
         this->mode |= MODE_2D;
     }
 
-    this->propertiesHasChanged |= PROPERTY_MODE;
+    this->propertiesHaveChanged |= PROPERTY_MODE;
 
     return OK;
 }
@@ -348,7 +348,7 @@ ChannelBase::_SetAttenuationFactor(float attenuation)
 {
     this->attenuationFactor = attenuation;
 
-    this->propertiesHasChanged |= PROPERTY_ATTENUATION;
+    this->propertiesHaveChanged |= PROPERTY_ATTENUATION;
 }
 
 //------------------------------------------------------------------------------
@@ -364,11 +364,11 @@ ChannelBase::_GetAttenuationFactor() const
 /**
 */
 PropertyChange
-ChannelBase::_PropertiesHasChanged()
+ChannelBase::_PropertiesHaveChanged()
 {
-    PropertyChange propertiesHasChanged = this->propertiesHasChanged;
-    this->propertiesHasChanged = UNCHANGED;
-    return propertiesHasChanged;
+    PropertyChange propertiesHaveChanged = this->propertiesHaveChanged;
+    this->propertiesHaveChanged = UNCHANGED;
+    return propertiesHaveChanged;
 }
 
 //------------------------------------------------------------------------------

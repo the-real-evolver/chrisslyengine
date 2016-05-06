@@ -29,18 +29,18 @@
 */
 
 #include "memoryallocatorconfig.h"
-#include "debug.h"
 #include <stdio.h>
 
 #ifndef __LINKEDLIST_H__
 #define __LINKEDLIST_H__
 
 //! A node for the linked list.
-typedef struct LinkedList{
+typedef struct LinkedList
+{
     struct LinkedList *next;    //!< A pointer to the next node.
     struct LinkedList *prev;    //!< A pointer to the previous node.
     void *data;                 //!< A pointer to some data.
-}LinkedList;
+} LinkedList;
 
 /*!
     \brief Adds data to a linked list.
@@ -50,15 +50,15 @@ typedef struct LinkedList{
     \param front A pointer to a pointer to the front of the linked list (or a pointer to NULL if you don't have a linked list yet).
     \param data A pointer to the data you want to store.
 */
-static inline
-void linkedlistAdd(LinkedList **front, void* data)
+static inline void
+LinkedlistAdd(LinkedList** front, void* data)
 {
-    LinkedList *node = (LinkedList*)CE_MALLOC(sizeof(LinkedList));
+    LinkedList* node = (LinkedList*)CE_MALLOC(sizeof(LinkedList));
 
     node->prev = NULL;
     node->data = data;
 
-    if(*front == NULL)
+    if (NULL == *front)
     {
         node->next = NULL;
     }
@@ -78,20 +78,20 @@ void linkedlistAdd(LinkedList **front, void* data)
 
     \param node The node you want to remove.
 */
-static inline
-void linkedlistRemove(LinkedList *node)
+static inline void
+LinkedlistRemove(LinkedList* node)
 {
-    if(node == NULL)
+    if (NULL == node)
     {
         return;
     }
 
-    if(node->prev != NULL)
+    if (node->prev != NULL)
     {
         node->prev->next = node->next;
     }
 
-    if(node->next != NULL)
+    if (node->next != NULL)
     {
         node->next->prev = node->prev;
     }

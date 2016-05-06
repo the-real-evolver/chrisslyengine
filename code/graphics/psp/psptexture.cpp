@@ -4,7 +4,7 @@
 //------------------------------------------------------------------------------
 #include "psptexture.h"
 #include "psphardwarebuffermanager.h"
-#include "psp/pspmappings.h"
+#include "pspmappings.h"
 
 namespace chrissly
 {
@@ -12,7 +12,8 @@ namespace chrissly
 //------------------------------------------------------------------------------
 /**
 */
-PSPTexture::PSPTexture() : numMipmapInfos(0)
+PSPTexture::PSPTexture() :
+    numMipmapInfos(0)
 {
 
 }
@@ -38,24 +39,25 @@ void
 PSPTexture::CreateInternalResourcesImpl()
 {
     DynamicArrayInit(&this->mipmapInfos, this->numMipmaps);
+    this->numMipmapInfos = this->numMipmaps;
 
-    void* mipmapbuffer = (void*)((unsigned int)this->textureBuffer + PSPHardwareBufferManager::GetMemorySize(this->width, this->height, PSPMappings::Get(this->format)));
-    int mipmapWidth = this->width >> 1;
-    int mipmapHeight = this->height >> 1;
+    void* mipmapbuffer = this->textureBuffer;
+    int mipmapWidth = this->width;
+    int mipmapHeight = this->height;
 
     int i;
     for (i = 0; i < this->numMipmaps; ++i)
     {
+        mipmapbuffer = (void*)((unsigned int)mipmapbuffer + PSPHardwareBufferManager::GetMemorySize(mipmapWidth, mipmapHeight, PSPMappings::Get(this->format)));
+        mipmapWidth = mipmapWidth >> 1;
+        mipmapHeight = mipmapHeight >> 1;
+
         MipmapInfo* mipmapInfo = CE_NEW MipmapInfo;
         mipmapInfo->buffer = mipmapbuffer;
         mipmapInfo->width = mipmapWidth;
         mipmapInfo->height = mipmapHeight;
-        DynamicArraySet(&this->mipmapInfos, i, mipmapInfo);
-        ++this->numMipmapInfos;
 
-        mipmapbuffer = (void*)((unsigned int)mipmapbuffer + PSPHardwareBufferManager::GetMemorySize(mipmapWidth, mipmapHeight, PSPMappings::Get(this->format)));
-        mipmapWidth = mipmapWidth >> 1;
-        mipmapHeight = mipmapHeight >> 1;
+        DynamicArraySet(&this->mipmapInfos, i, mipmapInfo);
     }
 }
 

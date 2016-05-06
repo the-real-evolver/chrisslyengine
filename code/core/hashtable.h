@@ -31,13 +31,13 @@
 /// hashtable
 struct HashTable
 {
-    DynamicArray entries;
-    unsigned int capacity;
+    DynamicArray buckets;
+    unsigned int bucketCount;
     unsigned int currentSize;
 };
 
-/// entries of the hashtable
-struct Chain
+/// buckets of the hashtable
+struct Bucket
 {
     LinkedList* list;
     unsigned int size;
@@ -76,17 +76,17 @@ HashFunction(const char* key)
 static inline void
 HashTableInit(HashTable* table, unsigned int initialSize)
 {
-    DynamicArrayInit(&table->entries, initialSize);
+    DynamicArrayInit(&table->buckets, initialSize);
+    table->bucketCount = initialSize;
     table->currentSize = 0;
-    table->capacity = initialSize;
 
     unsigned int i;
     for (i = 0; i < initialSize; ++i)
     {
-        Chain* chain = (Chain*)CE_MALLOC(sizeof(Chain));
-        chain->size = 0;
-        chain->list = NULL;
-        DynamicArraySet(&table->entries, i, chain);
+        Bucket* bucket = (Bucket*)CE_MALLOC(sizeof(Bucket));
+        bucket->size = 0;
+        bucket->list = NULL;
+        DynamicArraySet(&table->buckets, i, bucket);
     }
 }
 
@@ -97,10 +97,10 @@ static inline void
 HashTableClear(HashTable* table)
 {
     unsigned int i;
-    for (i = 0; i < table->capacity; ++i)
+    for (i = 0; i < table->bucketCount; ++i)
     {
-        Chain* chain = (Chain*)DynamicArrayGet(&table->entries, i);
-        LinkedList* it = chain->list;
+        Bucket* bucket = (Bucket*)DynamicArrayGet(&table->buckets, i);
+        LinkedList* it = bucket->list;
         while (it != NULL)
         {
             LinkedList* node = it;
@@ -108,13 +108,13 @@ HashTableClear(HashTable* table)
             CE_FREE(kvp->key);
             CE_FREE(kvp);
             it = it->next;
-            linkedlistRemove(node);
+            LinkedlistRemove(node);
         }
-        CE_FREE(chain);
+        CE_FREE(bucket);
     }
 
-    DynamicArrayDelete(&table->entries);
-    table->capacity = 0;
+    DynamicArrayDelete(&table->buckets);
+    table->bucketCount = 0;
     table->currentSize = 0;
 }
 
@@ -124,18 +124,18 @@ HashTableClear(HashTable* table)
 static inline void
 HashTableInsert(HashTable* table, const char* key, void* value)
 {
-    if (0 == table->capacity)
+    if (0 == table->bucketCount)
     {
         HashTableInit(table, 1);
     }
 
-    if (table->currentSize == table->capacity)
+    if (table->currentSize == table->bucketCount)
     {
-        HashTableResize(table, table->capacity * 2);
+        HashTableResize(table, table->bucketCount * 2);
     }
 
     unsigned int hash = HashFunction(key);
-    unsigned int index = hash % table->capacity;
+    unsigned int index = hash % table->bucketCount;
 
     KeyValuePair* keyValuePair = (KeyValuePair*)CE_MALLOC(sizeof(KeyValuePair));
     size_t length = strlen(key);
@@ -144,9 +144,9 @@ HashTableInsert(HashTable* table, const char* key, void* value)
     keyValuePair->key[length] = '\0';
     keyValuePair->value = value;
 
-    Chain* chain = (Chain*)DynamicArrayGet(&table->entries, index);
-    linkedlistAdd(&(chain->list), keyValuePair);
-    ++chain->size;
+    Bucket* bucket = (Bucket*)DynamicArrayGet(&table->buckets, index);
+    LinkedlistAdd(&(bucket->list), keyValuePair);
+    ++bucket->size;
 
     ++table->currentSize;
 }
@@ -157,15 +157,15 @@ HashTableInsert(HashTable* table, const char* key, void* value)
 static inline void*
 HashTableFind(HashTable* table, const char* key)
 {
-    if (0 == table->capacity)
+    if (0 == table->bucketCount)
     {
         return NULL;
     }
 
     unsigned int hash = HashFunction(key);
-    unsigned int index = hash % table->capacity;
+    unsigned int index = hash % table->bucketCount;
 
-    LinkedList* it = ((Chain*)DynamicArrayGet(&table->entries, index))->list;
+    LinkedList* it = ((Bucket*)DynamicArrayGet(&table->buckets, index))->list;
     while (it != NULL)
     {
         if (0 == strcmp(key, ((KeyValuePair*)it->data)->key))
@@ -181,6 +181,15 @@ HashTableFind(HashTable* table, const char* key)
 //------------------------------------------------------------------------------
 /**
 */
+static inline LinkedList*
+HashTableBegin(HashTable* table, unsigned int index)
+{
+    return ((Bucket*)DynamicArrayGet(&table->buckets, index))->list;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
 static void
 HashTableResize(HashTable* table, unsigned int newSize)
 {
@@ -188,9 +197,9 @@ HashTableResize(HashTable* table, unsigned int newSize)
     HashTableInit(&newTable, newSize);
 
     unsigned int i;
-    for (i = 0; i < table->capacity; ++i)
+    for (i = 0; i < table->bucketCount; ++i)
     {
-        LinkedList* it = ((Chain*)DynamicArrayGet(&table->entries, i))->list;
+        LinkedList* it = ((Bucket*)DynamicArrayGet(&table->buckets, i))->list;
         while (it != NULL)
         {
             KeyValuePair* kvp = (KeyValuePair*)it->data;
@@ -201,8 +210,8 @@ HashTableResize(HashTable* table, unsigned int newSize)
 
     HashTableClear(table);
 
-    table->entries = newTable.entries;
-    table->capacity = newTable.capacity;
+    table->buckets = newTable.buckets;
+    table->bucketCount = newTable.bucketCount;
     table->currentSize = newTable.currentSize;
 }
 

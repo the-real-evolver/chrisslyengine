@@ -7,6 +7,7 @@
     (C) 2015 Christian Bleicher
 */
 #include "debug.h"
+#include <stdio.h>
 #include <string.h>
 #include <pspkerneltypes.h>
 #include <pspthreadman.h>

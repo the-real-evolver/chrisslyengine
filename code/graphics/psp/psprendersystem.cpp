@@ -24,7 +24,8 @@ int PSPRenderSystem::MaxLights = 4;
 //------------------------------------------------------------------------------
 /**
 */
-PSPRenderSystem::PSPRenderSystem() : ambientLight(0x00000000)
+PSPRenderSystem::PSPRenderSystem() :
+    ambientLight(0x00000000)
 {
     Singleton = this;
 }
@@ -154,19 +155,19 @@ PSPRenderSystem::_Render(graphics::SubEntity* renderable)
         sceGuMorphWeight(0, 1.0f - morphWeight);
         sceGuMorphWeight(1, morphWeight);
 
-        graphics::VertexData* vertexData = renderable->_GetHardwareVertexAnimVertexData();
+        graphics::HardwareVertexBuffer* vertexBuffer = renderable->_GetHardwareVertexAnimVertexData()->vertexBuffer;
         sceGumDrawArray(GU_TRIANGLES,
                         GU_TEXTURE_32BITF | GU_COLOR_8888 | GU_NORMAL_32BITF | GU_VERTEX_32BITF | GU_TRANSFORM_3D | GU_VERTICES(2) | GU_WEIGHTS(2),
-                        vertexData->vertexCount, 0,
-                        vertexData->vertexBuffer);
+                        vertexBuffer->GetNumVertices(), 0,
+                        vertexBuffer->Lock());
     }
     else
     {
-        graphics::VertexData* vertexData = renderable->GetSubMesh()->vertexData;
+        graphics::HardwareVertexBuffer* vertexBuffer = renderable->GetSubMesh()->vertexData->vertexBuffer;
         sceGumDrawArray(GU_TRIANGLES,
                         GU_TEXTURE_32BITF | GU_COLOR_8888 | GU_NORMAL_32BITF | GU_VERTEX_32BITF | GU_TRANSFORM_3D,
-                        vertexData->vertexCount, 0,
-                        vertexData->vertexBuffer);
+                        vertexBuffer->GetNumVertices(), 0,
+                        vertexBuffer->Lock());
     }
 }
 
@@ -312,9 +313,9 @@ PSPRenderSystem::_UseLights(HashTable* lights)
     unsigned int diffuse, specular;
 
     unsigned int i;
-    for (i = 0; i < lights->capacity && lightIndex < MaxLights; ++i)
+    for (i = 0; i < lights->bucketCount && lightIndex < MaxLights; ++i)
     {
-        LinkedList* it = ((Chain*)DynamicArrayGet(&lights->entries, i))->list;
+        LinkedList* it = HashTableBegin(lights, i);
         while (it != NULL && lightIndex < MaxLights)
         {
             graphics::Light* light = (graphics::Light*)((KeyValuePair*)it->data)->value;

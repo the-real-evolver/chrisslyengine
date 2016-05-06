@@ -105,11 +105,15 @@ VertexAnimationTrack::ApplyToVertexData(VertexData* data, int timeIndex)
     {
         if (timeIndex < this->numKeyFrames - 1)
         {
-            VertexMorphKeyFrame* kf1 = (VertexMorphKeyFrame*)DynamicArrayGet(&this->keyFrames, timeIndex);
-            VertexMorphKeyFrame* kf2 = (VertexMorphKeyFrame*)DynamicArrayGet(&this->keyFrames, timeIndex + 1);
-            Memory::FillInterleaved(kf1->vertexData->vertexBuffer, kf2->vertexData->vertexBuffer,
-                                    data->vertexBuffer, data->bytesPerVertex,
-                                    2 * data->bytesPerVertex * data->vertexCount);
+            HardwareVertexBuffer* kf1 = ((VertexMorphKeyFrame*)DynamicArrayGet(&this->keyFrames, timeIndex))->vertexData->vertexBuffer;
+            HardwareVertexBuffer* kf2 = ((VertexMorphKeyFrame*)DynamicArrayGet(&this->keyFrames, timeIndex + 1))->vertexData->vertexBuffer;
+            HardwareVertexBuffer* dst = data->vertexBuffer;
+            Memory::FillInterleaved(kf1->Lock(), kf2->Lock(),
+                                    dst->Lock(), kf1->GetBytesPerVertex(),
+                                    dst->GetBytesPerVertex() * dst->GetNumVertices());
+            kf1->Unlock();
+            kf2->Unlock();
+            dst->Unlock();
 
             GraphicsSystem::Instance()->GetRenderSystem()->_NotifyMorphKeyFrameBuild();
 

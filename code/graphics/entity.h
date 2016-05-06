@@ -59,8 +59,8 @@ public:
     void UpdateAnimation();
 
 private:
-    /// private constructor - specify name (the usual constructor used)
-    Entity(const char* name, Mesh* mesh);
+    /// private constructor - construct from mesh (the usual constructor used)
+    Entity(Mesh* mesh);
     /// builds a list of SubEntities based on the SubMeshes contained in the Mesh
     void BuildSubEntityList(Mesh* mesh, DynamicArray* sublist);
     /// node to which this object is attached

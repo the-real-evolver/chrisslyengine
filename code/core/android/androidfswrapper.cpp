@@ -4,11 +4,12 @@
 //------------------------------------------------------------------------------
 #include "androidfswrapper.h"
 #include "core/debug.h"
+#include <stdio.h>
 
 namespace chrissly
 {
 
-AAssetManager* AndroidFSWrapper::AssetManager = 0;
+AAssetManager* AndroidFSWrapper::AssetManager = NULL;
 
 //------------------------------------------------------------------------------
 /**

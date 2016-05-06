@@ -28,10 +28,6 @@ SubMesh::SubMesh() :
 */
 SubMesh::~SubMesh()
 {
-    if (this->vertexData->vertexBuffer != NULL)
-    {
-        CE_FREE(this->vertexData->vertexBuffer);
-    }
     CE_DELETE this->vertexData;
 }
 

@@ -9,7 +9,7 @@
     (C) 2012 Christian Bleicher
 */
 //------------------------------------------------------------------------------
-namespace chrissly 
+namespace chrissly
 {
 namespace core
 {

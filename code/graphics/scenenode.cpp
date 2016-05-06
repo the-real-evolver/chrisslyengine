@@ -84,7 +84,7 @@ SceneNode::CreateChildSceneNode()
     SceneNode* sceneNode = SceneManager::Instance()->CreateSceneNode();
     sceneNode->SetParent(this);
 
-    linkedlistAdd(&this->children, sceneNode);
+    LinkedlistAdd(&this->children, sceneNode);
 
     return sceneNode;
 }
@@ -110,7 +110,7 @@ SceneNode::RemoveAllChildren()
         ((SceneNode*)it->data)->SetParent(NULL);
         LinkedList* node = it;
         it = it->next;
-        linkedlistRemove(node);
+        LinkedlistRemove(node);
     }
     this->children = NULL;
 }
@@ -336,10 +336,9 @@ void
 SceneNode::AttachObject(Entity* obj)
 {
     DynamicArraySet(&this->objectMap, this->numAttachedObjects, obj);
+    ++this->numAttachedObjects;
 
     obj->_NotifyAttached(this);
-
-    ++this->numAttachedObjects;
 }
 
 //------------------------------------------------------------------------------

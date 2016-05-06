@@ -14,6 +14,11 @@ namespace chrissly
 {
 
 #define CE_GL_ENABLE_ERROR_CHECK (0)
+#if CE_GL_ENABLE_ERROR_CHECK
+#define CE_GL_ERROR_CHECK(context) CheckGlError(context);
+#else
+#define CE_GL_ERROR_CHECK
+#endif
 
 GLES2RenderSystem* GLES2RenderSystem::Singleton = NULL;
 
@@ -66,21 +71,21 @@ GLES2RenderSystem::_Initialise(void* customParams)
     PrintGLString("Extensions", GL_EXTENSIONS);
 
     glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &this->numTextureUnits);
-    CheckGlError("glGetIntegerv");
+    CE_GL_ERROR_CHECK("glGetIntegerv");
     CE_LOG("GL_MAX_TEXTURE_IMAGE_UNITS: %i\n", this->numTextureUnits);
 
     GLint maxTextureSize;
     glGetIntegerv(GL_MAX_TEXTURE_SIZE, &maxTextureSize);
-    CheckGlError("glGetIntegerv");
+    CE_GL_ERROR_CHECK("glGetIntegerv");
     CE_LOG("GL_MAX_TEXTURE_SIZE: %i\n", maxTextureSize);
 
     GLint maxVaryingVectors;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryingVectors);
-    CheckGlError("glGetIntegerv");
+    CE_GL_ERROR_CHECK("glGetIntegerv");
     CE_LOG("GL_MAX_VARYING_VECTORS: %i\n", maxVaryingVectors);
 
     glEnable(GL_SCISSOR_TEST);
-    CheckGlError("glEnable");
+    CE_GL_ERROR_CHECK("glEnable");
 
     this->defaultGpuProgram = CE_NEW GLES2GpuProgram(DefaultVertexShader, DefaultFragmentShader);
     this->defaultGpuProgramFog = CE_NEW GLES2GpuProgram(DefaultVertexShaderFog, DefaultFragmentShaderFog);
@@ -127,20 +132,20 @@ GLES2RenderSystem::_SetViewport(graphics::Viewport *vp)
     int top = vp->GetActualTop();
 
     glViewport(left, top, width, height);
-    CheckGlError("glViewport");
+    CE_GL_ERROR_CHECK("glViewport");
     glDepthRangef(0.0f, 1.0f);
-    CheckGlError("glDepthRangef");
+    CE_GL_ERROR_CHECK("glDepthRangef");
     glScissor(left, top, width, height);
-    CheckGlError("glScissor");
+    CE_GL_ERROR_CHECK("glScissor");
 
     if (vp->GetClearEveryFrame())
     {
         float red, green, blue, alpha;
         GLES2Mappings::Get(vp->GetBackgroundColour(), red, green, blue, alpha);
         glClearColor(red, green, blue, alpha);
-        CheckGlError("glClearColor");
+        CE_GL_ERROR_CHECK("glClearColor");
         glClear(GLES2Mappings::Get((graphics::FrameBufferType)vp->GetClearBuffers()));
-        CheckGlError("glClear");
+        CE_GL_ERROR_CHECK("glClear");
     }
 }
 
@@ -190,14 +195,14 @@ void
 GLES2RenderSystem::SetMatrices()
 {
     glUniformMatrix4fv(this->currentGpuProgram->GetUniformLocation(graphics::GpuProgramParameters::ACT_WORLD_MATRIX), 1, GL_FALSE, this->glWorldMatrix);
-    CheckGlError("glUniformMatrix4fv");
+    CE_GL_ERROR_CHECK("glUniformMatrix4fv");
     glUniformMatrix4fv(this->currentGpuProgram->GetUniformLocation(graphics::GpuProgramParameters::ACT_VIEW_MATRIX), 1, GL_FALSE, this->glViewMatrix);
-    CheckGlError("glUniformMatrix4fv");
+    CE_GL_ERROR_CHECK("glUniformMatrix4fv");
     glUniformMatrix4fv(this->currentGpuProgram->GetUniformLocation(graphics::GpuProgramParameters::ACT_PROJECTION_MATRIX), 1, GL_FALSE, this->glProjectionMatrix);
-    CheckGlError("glUniformMatrix4fv");
+    CE_GL_ERROR_CHECK("glUniformMatrix4fv");
     GLES2Mappings::MakeGLMatrix(this->glWorldViewProjectionMatrix, this->projectionMatrix * this->viewMatrix * this->worldMatrix);
     glUniformMatrix4fv(this->currentGpuProgram->GetUniformLocation(graphics::GpuProgramParameters::ACT_WORLDVIEWPROJ_MATRIX), 1, GL_FALSE, this->glWorldViewProjectionMatrix);
-    CheckGlError("glUniformMatrix4fv");
+    CE_GL_ERROR_CHECK("glUniformMatrix4fv");
 }
 
 //------------------------------------------------------------------------------
@@ -211,61 +216,63 @@ GLES2RenderSystem::_Render(graphics::SubEntity* renderable)
     if (graphics::VAT_MORPH == renderable->GetSubMesh()->GetVertexAnimationType())
     {
         glUniform1f(this->currentGpuProgram->GetUniformLocation(graphics::GpuProgramParameters::ACT_MORPH_WEIGHT), renderable->GetMorphWeight());
-        CheckGlError("glUniform1f");
+        CE_GL_ERROR_CHECK("glUniform1f");
 
-        graphics::VertexData* vertexData = renderable->_GetHardwareVertexAnimVertexData();
+        graphics::HardwareVertexBuffer* vertexBuffer = renderable->_GetHardwareVertexAnimVertexData()->vertexBuffer;
+        unsigned char* buffer = (unsigned char*)vertexBuffer->Lock();
 
         GLint vertexTexCoordHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_TEXTURE_COORDINATES);
-        glVertexAttribPointer(vertexTexCoordHandle, 2, GL_FLOAT, GL_FALSE, 72, vertexData->vertexBuffer);
-        CheckGlError("glVertexAttribPointer");
+        glVertexAttribPointer(vertexTexCoordHandle, 2, GL_FLOAT, GL_FALSE, 72, buffer);
+        CE_GL_ERROR_CHECK("glVertexAttribPointer");
         glEnableVertexAttribArray(vertexTexCoordHandle);
-        CheckGlError("glEnableVertexAttribArray");
+        CE_GL_ERROR_CHECK("glEnableVertexAttribArray");
 
         GLint vertexNormalHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_NORMAL);
-        glVertexAttribPointer(vertexNormalHandle, 3, GL_FLOAT, GL_FALSE, 72, (unsigned char*)vertexData->vertexBuffer + 12);
-        CheckGlError("glVertexAttribPointer");
+        glVertexAttribPointer(vertexNormalHandle, 3, GL_FLOAT, GL_FALSE, 72, buffer + 12);
+        CE_GL_ERROR_CHECK("glVertexAttribPointer");
         glEnableVertexAttribArray(vertexNormalHandle);
-        CheckGlError("glEnableVertexAttribArray");
+        CE_GL_ERROR_CHECK("glEnableVertexAttribArray");
 
         GLint vertexPositionHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_POSITION);
-        glVertexAttribPointer(vertexPositionHandle, 3, GL_FLOAT, GL_FALSE, 72, (unsigned char*)vertexData->vertexBuffer + 24);
-        CheckGlError("glVertexAttribPointer");
+        glVertexAttribPointer(vertexPositionHandle, 3, GL_FLOAT, GL_FALSE, 72, buffer + 24);
+        CE_GL_ERROR_CHECK("glVertexAttribPointer");
         glEnableVertexAttribArray(vertexPositionHandle);
-        CheckGlError("glEnableVertexAttribArray");
+        CE_GL_ERROR_CHECK("glEnableVertexAttribArray");
 
         GLint vertexPositionMorphTargetHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_POSITION_MORPH_TARGET);
-        glVertexAttribPointer(vertexPositionMorphTargetHandle, 3, GL_FLOAT, GL_FALSE, 72, (unsigned char*)vertexData->vertexBuffer + 60);
-        CheckGlError("glVertexAttribPointer");
+        glVertexAttribPointer(vertexPositionMorphTargetHandle, 3, GL_FLOAT, GL_FALSE, 72, buffer + 60);
+        CE_GL_ERROR_CHECK("glVertexAttribPointer");
         glEnableVertexAttribArray(vertexPositionMorphTargetHandle);
-        CheckGlError("glEnableVertexAttribArray");
+        CE_GL_ERROR_CHECK("glEnableVertexAttribArray");
 
-        glDrawArrays(GL_TRIANGLES, 0, vertexData->vertexCount);
-        CheckGlError("glDrawArrays");
+        glDrawArrays(GL_TRIANGLES, 0, vertexBuffer->GetNumVertices());
+        CE_GL_ERROR_CHECK("glDrawArrays");
     }
     else
     {
-        graphics::VertexData* vertexData = renderable->GetSubMesh()->vertexData;
+        graphics::HardwareVertexBuffer* vertexBuffer = renderable->GetSubMesh()->vertexData->vertexBuffer;
+        unsigned char* buffer = (unsigned char*)vertexBuffer->Lock();
 
         GLint vertexTexCoordHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_TEXTURE_COORDINATES);
-        glVertexAttribPointer(vertexTexCoordHandle, 2, GL_FLOAT, GL_FALSE, 36, vertexData->vertexBuffer);
-        CheckGlError("glVertexAttribPointer: texturecoords");
+        glVertexAttribPointer(vertexTexCoordHandle, 2, GL_FLOAT, GL_FALSE, 36, buffer);
+        CE_GL_ERROR_CHECK("glVertexAttribPointer: texturecoords");
         glEnableVertexAttribArray(vertexTexCoordHandle);
-        CheckGlError("glEnableVertexAttribArray: texturecoords");
+        CE_GL_ERROR_CHECK("glEnableVertexAttribArray: texturecoords");
 
         GLint vertexNormalHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_NORMAL);
-        glVertexAttribPointer(vertexNormalHandle, 3, GL_FLOAT, GL_FALSE, 36, (unsigned char*)vertexData->vertexBuffer + 12);
-        CheckGlError("glVertexAttribPointer: normal");
+        glVertexAttribPointer(vertexNormalHandle, 3, GL_FLOAT, GL_FALSE, 36, buffer + 12);
+        CE_GL_ERROR_CHECK("glVertexAttribPointer: normal");
         glEnableVertexAttribArray(vertexNormalHandle);
-        CheckGlError("glEnableVertexAttribArray: normal");
+        CE_GL_ERROR_CHECK("glEnableVertexAttribArray: normal");
 
         GLint vertexPositionHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_POSITION);
-        glVertexAttribPointer(vertexPositionHandle, 3, GL_FLOAT, GL_FALSE, 36, (unsigned char*)vertexData->vertexBuffer + 24);
-        CheckGlError("glVertexAttribPointer: position");
+        glVertexAttribPointer(vertexPositionHandle, 3, GL_FLOAT, GL_FALSE, 36, buffer + 24);
+        CE_GL_ERROR_CHECK("glVertexAttribPointer: position");
         glEnableVertexAttribArray(vertexPositionHandle);
-        CheckGlError("glEnableVertexAttribArray: position");
+        CE_GL_ERROR_CHECK("glEnableVertexAttribArray: position");
 
-        glDrawArrays(GL_TRIANGLES, 0, vertexData->vertexCount);
-        CheckGlError("glDrawArrays");
+        glDrawArrays(GL_TRIANGLES, 0, vertexBuffer->GetNumVertices());
+        CE_GL_ERROR_CHECK("glDrawArrays");
     }
 }
 
@@ -363,7 +370,7 @@ GLES2RenderSystem::_SetPass(graphics::Pass* pass)
     {
         this->currentGpuProgram = pass->GetGpuProgram();
         glUseProgram(this->currentGpuProgram->GetProgramHandle());
-        CheckGlError("glUseProgram");
+        CE_GL_ERROR_CHECK("glUseProgram");
     }
     else
     {
@@ -386,7 +393,7 @@ GLES2RenderSystem::_SetPass(graphics::Pass* pass)
             this->currentGpuProgram = this->defaultGpuProgramLitFog;
         }
         glUseProgram(this->currentGpuProgram->GetProgramHandle());
-        CheckGlError("glUseProgram");
+        CE_GL_ERROR_CHECK("glUseProgram");
 
         graphics::GpuProgramParameters* params = this->currentGpuProgram->GetDefaultParameters();
 
@@ -422,9 +429,9 @@ GLES2RenderSystem::_SetPass(graphics::Pass* pass)
     // apply shader parameters
     graphics::GpuNamedConstants* constantDefs = this->currentGpuProgram->GetConstantDefinitions();
     unsigned int i;
-    for (i = 0; i < constantDefs->map.capacity; ++i)
+    for (i = 0; i < constantDefs->map.bucketCount; ++i)
     {
-        LinkedList* it = ((Chain*)DynamicArrayGet(&constantDefs->map.entries, i))->list;
+        LinkedList* it = HashTableBegin(&constantDefs->map, i);
         while (it != NULL)
         {
             graphics::GpuConstantDefinition* def = (graphics::GpuConstantDefinition*)((KeyValuePair*)it->data)->value;
@@ -463,25 +470,29 @@ GLES2RenderSystem::_UseLights(HashTable* lights)
 {
     unsigned int lightIndex = 0;
     unsigned int i;
-    for (i = 0; i < lights->capacity && lightIndex < MaxLights; ++i)
+    for (i = 0; i < lights->bucketCount && lightIndex < MaxLights; ++i)
     {
-        LinkedList* it = ((Chain*)DynamicArrayGet(&lights->entries, i))->list;
+        LinkedList* it = HashTableBegin(lights, i);
         while (it != NULL && lightIndex < MaxLights)
         {
             graphics::Light* light = (graphics::Light*)((KeyValuePair*)it->data)->value;
+
             const core::Vector3 position = light->GetPosition();
             this->defaultLightShaderParams[lightIndex][0][0] = position.x;
             this->defaultLightShaderParams[lightIndex][0][1] = position.y;
             this->defaultLightShaderParams[lightIndex][0][2] = position.z;
+
             float red, green, blue, alpha;
             GLES2Mappings::Get(light->GetDiffuseColour(), red, green, blue, alpha);
             this->defaultLightShaderParams[lightIndex][1][0] = red;
             this->defaultLightShaderParams[lightIndex][1][1] = green;
             this->defaultLightShaderParams[lightIndex][1][2] = blue;
+
             GLES2Mappings::Get(light->GetSpecularColour(), red, green, blue, alpha);
             this->defaultLightShaderParams[lightIndex][2][0] = red;
             this->defaultLightShaderParams[lightIndex][2][1] = green;
             this->defaultLightShaderParams[lightIndex][2][2] = blue;
+
             ++lightIndex;
             it = it->next;
         }
@@ -514,6 +525,15 @@ GLES2RenderSystem::_NotifyMorphKeyFrameBuild()
 //------------------------------------------------------------------------------
 /**
 */
+const core::Matrix4*
+GLES2RenderSystem::GetDefaultLightShaderParams() const
+{
+    return this->defaultLightShaderParams;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
 void
 GLES2RenderSystem::PrintGLString(const char* name, GLenum s)
 {
@@ -527,13 +547,11 @@ GLES2RenderSystem::PrintGLString(const char* name, GLenum s)
 void
 GLES2RenderSystem::CheckGlError(const char* op)
 {
-#if CE_GL_ENABLE_ERROR_CHECK
     GLint error;
     for (error = glGetError(); error; error = glGetError())
     {
         CE_LOG("after %s() glError (0x%x)\n", op, error);
     }
-#endif
 }
 
 } // namespace chrissly

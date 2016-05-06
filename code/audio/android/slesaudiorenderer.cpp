@@ -157,7 +157,7 @@ SLESAudioRenderer::UpdateChannel(audio::Channel* channel)
         syncLock.Unlock();
     }
 
-    audio::PropertyChange propertyChange = channel->_PropertiesHasChanged();
+    audio::PropertyChange propertyChange = channel->_PropertiesHaveChanged();
     if (propertyChange != audio::UNCHANGED)
     {
         SLresult result;

@@ -25,9 +25,9 @@ GpuNamedConstants::GpuNamedConstants()
 GpuNamedConstants::~GpuNamedConstants()
 {
     unsigned int i;
-    for (i = 0; i < this->map.capacity; ++i)
+    for (i = 0; i < this->map.bucketCount; ++i)
     {
-        LinkedList* it = ((Chain*)DynamicArrayGet(&this->map.entries, i))->list;
+        LinkedList* it = HashTableBegin(&this->map, i);
         while (it != NULL)
         {
             CE_LOG("GpuNamedConstants::~GpuNamedConstants(): remove '%s'\n", ((KeyValuePair*)it->data)->key);

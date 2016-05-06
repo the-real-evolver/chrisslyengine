@@ -38,9 +38,9 @@
 //! A resizable array
 typedef struct DynamicArray
 {
-    void** data;            //!< pointer to array of void pointers
+    void** data;             //!< pointer to array of void pointers
     unsigned int cur_size;  //!< currently allocated size of the array
-}DynamicArray;
+} DynamicArray;
 
 
 
@@ -49,10 +49,10 @@ typedef struct DynamicArray
     \param initialSize the initial size to allocate
     \return a pointer to the data, or NULL on error.
 */
-static inline
-void* DynamicArrayInit(DynamicArray* v, unsigned int initialSize)
+static inline void*
+DynamicArrayInit(DynamicArray* v, unsigned int initialSize)
 {
-    if(v == NULL)
+    if (NULL == v)
     {
         return NULL;
     }
@@ -67,15 +67,15 @@ void* DynamicArrayInit(DynamicArray* v, unsigned int initialSize)
 /*! \brief Frees memory allocated by the dynamic array
     \param v The array to delete
 */
-static inline
-void DynamicArrayDelete(DynamicArray* v)
+static inline void
+DynamicArrayDelete(DynamicArray* v)
 {
-    if(v == NULL)
+    if (NULL == v)
     {
         return;
     }
 
-    if(v->data != NULL)
+    if (v->data != NULL)
     {
         CE_FREE(v->data);
     }
@@ -90,15 +90,15 @@ void DynamicArrayDelete(DynamicArray* v)
     \param index The index of the data to get.
     \return The data or NULL if v is NULL or the index is out of range.
 */
-static inline
-void* DynamicArrayGet(DynamicArray* v, unsigned int index)
+static inline void*
+DynamicArrayGet(DynamicArray* v, unsigned int index)
 {
-    if(v == NULL)
+    if (NULL == v)
     {
         return NULL;
     }
 
-    if(index >= v->cur_size)
+    if (index >= v->cur_size)
     {
         return NULL;
     }
@@ -113,22 +113,22 @@ void* DynamicArrayGet(DynamicArray* v, unsigned int index)
     \param item The data to set.
     \return false if v is NULL or there isn't enough memory, true otherwise
 */
-static inline
-bool DynamicArraySet(DynamicArray *v, unsigned int index, void* item)
+static inline bool
+DynamicArraySet(DynamicArray* v, unsigned int index, void* item)
 {
-    if(v == NULL)
+    if (NULL == v)
     {
         return false;
     }
 
-    if(index >= v->cur_size)
+    if (index >= v->cur_size)
     {
-        //resize the array, making sure it is bigger than index.
+        // resize the array, making sure it is bigger than index.
         unsigned int newSize = (v->cur_size * 2 > index ? v->cur_size * 2: index + 1);
 
         void** temp = (void**)CE_REALLOC(v->data, sizeof(void*) * newSize);
 
-        if(temp == NULL) return false;
+        if (NULL == temp) return false;
         v->data = temp;
         memset(v->data + v->cur_size, 0, sizeof(void*) * (newSize - v->cur_size));
         v->cur_size = newSize;

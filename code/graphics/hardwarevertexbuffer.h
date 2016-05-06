@@ -30,4 +30,32 @@ namespace graphics
 } // namespace graphics
 } // namespace chrissly
 //------------------------------------------------------------------------------
+#if __PSP__
+#include "hardwarevertexbufferbase.h"
+namespace chrissly
+{
+namespace graphics
+{
+
+typedef HardwareVertexBufferBase HardwareVertexBuffer;
+
+} // namespace graphics
+} // namespace chrissly
+//------------------------------------------------------------------------------
+#elif __ANDROID__
+#include "hardwarevertexbufferbase.h"
+namespace chrissly
+{
+namespace graphics
+{
+
+typedef HardwareVertexBufferBase HardwareVertexBuffer;
+
+} // namespace graphics
+} // namespace chrissly
+//------------------------------------------------------------------------------
+#else
+#error "HardwareVertexBuffer class not implemented on this platform!"
+#endif
+//------------------------------------------------------------------------------
 #endif

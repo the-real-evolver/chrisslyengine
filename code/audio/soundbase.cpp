@@ -78,6 +78,8 @@ SoundBase::GetMode(Mode* mode)
 Result
 SoundBase::Release()
 {
+    this->releaseSyncLock.Lock();
+
     if (0 == this->useCount)
     {
         this->_Release();
@@ -86,6 +88,8 @@ SoundBase::Release()
     {
         this->requestRelease = true;
     }
+
+    this->releaseSyncLock.Unlock();
 
     return OK;
 }
@@ -147,7 +151,11 @@ SoundBase::_IsRealized() const
 void
 SoundBase::_IncrementUseCount()
 {
+    this->releaseSyncLock.Lock();
+
     this->useCount++;
+
+    this->releaseSyncLock.Unlock();
 }
 
 //------------------------------------------------------------------------------
@@ -156,12 +164,17 @@ SoundBase::_IncrementUseCount()
 void
 SoundBase::_DecrementUseCount()
 {
+    this->releaseSyncLock.Lock();
+
     CE_ASSERT(this->useCount > 0, "SoundBase::_DecrementUseCout(): useCount already zero\n");
     this->useCount--;
     if (this->requestRelease && 0 == this->useCount)
     {
         this->_Release();
     }
+
+    this->releaseSyncLock.Unlock();
+
 }
 
 //------------------------------------------------------------------------------

@@ -4,7 +4,7 @@
 #------------------------------------------------------------------------------
 TARGET = ChrisslyEngine_PSP
 # for a custom root directroy use: -DROOT_DIR=\"ms0:/PSP/GAME/YourApplication/\"
-CFLAGS = -O2 -G0 -Wall -D__PSP__
+CFLAGS = -O2 -G0 -Wall -D__PSP__ -D__DEBUG__
 CXXFLAGS = $(CFLAGS) -fno-exceptions
 ASFLAGS = $(CFLAGS)
 PSPSDK = $(shell psp-config --pspsdk-path)
@@ -14,7 +14,7 @@ CE = ../
 # includes
 # PSPSDK = C:/dev/devkitpro/devkitPSP/psp/sdk
 #------------------------------------------------------------------------------ 
-INCDIR = $(PSPSDK) $(CE)/code/core $(CE)/code/graphics $(CE)/code/thirdparty/stb $(CE)/code/application code/tests
+INCDIR = $(PSPSDK) $(CE)/code/core $(CE)/code/graphics $(CE)/code/audio $(CE)/code/thirdparty/stb $(CE)/code/application code/tests
 
 #------------------------------------------------------------------------------
 # object files
@@ -25,6 +25,7 @@ OBJS = $(CE)/code/core/quaternion.o $(CE)/code/core/vector3.o $(CE)/code/core/ma
        $(CE)/code/graphics/graphicssystem.o \
        $(CE)/code/graphics/texturemanager.o $(CE)/code/graphics/texturebase.o $(CE)/code/graphics/psp/psptexture.o \
        $(CE)/code/graphics/materialmanager.o $(CE)/code/graphics/materialparser.o $(CE)/code/graphics/textureunitstate.o $(CE)/code/graphics/pass.o $(CE)/code/graphics/material.o \
+       $(CE)/code/graphics/hardwarevertexbufferbase.o \
        $(CE)/code/graphics/meshmanager.o $(CE)/code/graphics/mesh.o $(CE)/code/graphics/submesh.o \
        $(CE)/code/graphics/subentity.o $(CE)/code/graphics/entity.o \
        $(CE)/code/graphics/renderqueuesortinggrouping.o \
@@ -33,6 +34,8 @@ OBJS = $(CE)/code/core/quaternion.o $(CE)/code/core/vector3.o $(CE)/code/core/ma
        $(CE)/code/graphics/camera.o $(CE)/code/graphics/viewport.o \
        $(CE)/code/graphics/animation.o $(CE)/code/graphics/animationtrack.o $(CE)/code/graphics/keyframe.o $(CE)/code/graphics/animationstate.o \
        $(CE)/code/graphics/rendertarget.o $(CE)/code/graphics/psp/psprendertexture.o $(CE)/code/graphics/psp/psprenderwindow.o \
+       $(CE)/code/audio/wavcodec.o $(CE)/code/audio/vorbiscodec.o $(CE)/code/audio/soundbase.o $(CE)/code/audio/audiosystem.o $(CE)/code/audio/channelbase.o \
+       $(CE)/code/audio/psp/pspaudiorenderer.o $(CE)/code/audio/psp/pspchannel.o \
        $(CE)/code/application/statemanager.o \
        code/main.o \
        code/tests/stateanimationtest.o code/tests/statematerialtest.o
@@ -40,7 +43,7 @@ OBJS = $(CE)/code/core/quaternion.o $(CE)/code/core/vector3.o $(CE)/code/core/ma
 #------------------------------------------------------------------------------
 # libaries
 #------------------------------------------------------------------------------
-LIBS = -lpsplibc -lstdc++ -lpspgum -lpspgu -lm -lpspfpu
+LIBS = -lpsplibc -lstdc++ -lpspgum -lpspgu -lm -lpspfpu -lpspaudio
 
 EXTRA_TARGETS = EBOOT.PBP
 PSP_EBOOT_TITLE = ChrisslyEngine

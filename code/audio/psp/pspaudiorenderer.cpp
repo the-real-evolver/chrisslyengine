@@ -147,9 +147,9 @@ int
 PSPAudioRenderer::ChannelThread(SceSize args, void* argp)
 {
     audio::Channel* channel = (audio::Channel*)(*(unsigned int*)argp);
+    const core::Mutex& syncLock = channel->_GetSyncLock();
     while (true)
     {
-        const core::Mutex& syncLock = channel->_GetSyncLock();
         syncLock.Lock();
 
         int index;

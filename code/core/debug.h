@@ -7,6 +7,7 @@
     (C) 2011 Christian Bleicher
 */
 
+#if __DEBUG__
 //------------------------------------------------------------------------------
 #if __PSP__
 #include <stdio.h>
@@ -23,4 +24,8 @@
 //------------------------------------------------------------------------------
 #else
 #error "Debug macros not implemented on this platform!"
+#endif
+#else
+#define CE_ASSERT(exp, ...)
+#define CE_LOG(...)
 #endif

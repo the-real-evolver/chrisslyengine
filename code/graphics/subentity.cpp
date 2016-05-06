@@ -33,7 +33,6 @@ SubEntity::~SubEntity()
 {
     if (this->hardwareVertexAnimVertexData != NULL)
     {
-        CE_FREE(this->hardwareVertexAnimVertexData->vertexBuffer);
         CE_DELETE this->hardwareVertexAnimVertexData;
     }
 }

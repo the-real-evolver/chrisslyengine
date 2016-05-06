@@ -8,6 +8,7 @@
 */
 #include "codec.h"
 #include "errorcode.h"
+#include "chrisslymutex.h"
 
 //------------------------------------------------------------------------------
 namespace chrissly
@@ -58,8 +59,9 @@ protected:
     void* sampleBuffer;
     Codec* codec;
     bool realized;
-    volatile bool requestRelease;
-    volatile unsigned int useCount;
+    bool requestRelease;
+    unsigned int useCount;
+    core::Mutex releaseSyncLock;
 };
 
 } // namespace audio

@@ -83,8 +83,8 @@ protected:
     void _SetAttenuationFactor(float attenuation);
     /// get the internal factor the volume will be scaled with if the channel is playing in 3d mode
     float _GetAttenuationFactor() const;
-    /// retrieve if properties (volume, panning ect.) has changed
-    PropertyChange _PropertiesHasChanged();
+    /// retrieve if properties (volume, panning ect.) have changed
+    PropertyChange _PropertiesHaveChanged();
     /// gets the sync lock mutex
     const core::Mutex& _GetSyncLock() const;
 
@@ -100,7 +100,7 @@ protected:
     Sound* currentSound;
     int index;
     float attenuationFactor;
-    PropertyChange propertiesHasChanged;
+    PropertyChange propertiesHaveChanged;
     core::Mutex syncLock;
 };
 

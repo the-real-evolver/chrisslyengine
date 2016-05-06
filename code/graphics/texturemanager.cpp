@@ -88,9 +88,9 @@ void
 TextureManager::RemoveAll()
 {
     unsigned int i;
-    for (i = 0; i < this->resources.capacity; ++i)
+    for (i = 0; i < this->resources.bucketCount; ++i)
     {
-        LinkedList* it = ((Chain*)DynamicArrayGet(&this->resources.entries, i))->list;
+        LinkedList* it = HashTableBegin(&this->resources, i);
         while (it != NULL)
         {
             CE_DELETE (Texture*)((KeyValuePair*)it->data)->value;

@@ -46,7 +46,7 @@ private:
     unsigned int seekPosition;
     bool endOfStream;
     mutable void* streamBuffers[2];
-    volatile unsigned char currentStreamBufferIndex;
+    unsigned char currentStreamBufferIndex;
     unsigned int currentStreamBufferLength;
     unsigned int bytesToLoadToBackBuffer;
     bool backBufferFilled;

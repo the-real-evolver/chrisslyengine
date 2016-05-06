@@ -6,6 +6,9 @@
 
     (C) 2012 Christian Bleicher
 */
+#include "hardwarevertexbuffer.h"
+#include "memoryallocatorconfig.h"
+#include <stdio.h>
 
 //------------------------------------------------------------------------------
 namespace chrissly
@@ -15,15 +18,13 @@ namespace graphics
 
 struct VertexData
 {
-    /// number of vertices
-    unsigned int vertexCount;
-    /// pointer to the buffer with the vertexdata
-    void* vertexBuffer;
-    /// size of a vertex in bytes
-    unsigned int bytesPerVertex;
+    /// construct from vertex buffer
+    VertexData(HardwareVertexBuffer* vertexBuffer) : vertexBuffer(vertexBuffer) {}
+    /// destructor
+    ~VertexData() {if (this->vertexBuffer != NULL) CE_DELETE this->vertexBuffer;}
 
-    VertexData(unsigned int vertexCount, void* vertexBuffer, unsigned int bytesPerVertex) :
-        vertexCount(vertexCount), vertexBuffer(vertexBuffer), bytesPerVertex(bytesPerVertex) {}
+    /// pointer to the buffer with the vertexdata
+    HardwareVertexBuffer* vertexBuffer;
 };
 
 } // namespace graphics

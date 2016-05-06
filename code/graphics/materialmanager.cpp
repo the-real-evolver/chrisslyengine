@@ -85,9 +85,9 @@ void
 MaterialManager::RemoveAll()
 {
     unsigned int i;
-    for (i = 0; i < this->resources.capacity; ++i)
+    for (i = 0; i < this->resources.bucketCount; ++i)
     {
-        LinkedList* it = ((Chain*)DynamicArrayGet(&this->resources.entries, i))->list;
+        LinkedList* it = HashTableBegin(&this->resources, i);
         while (it != NULL)
         {
             CE_DELETE (Material*)((KeyValuePair*)it->data)->value;

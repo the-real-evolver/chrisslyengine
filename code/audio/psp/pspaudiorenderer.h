@@ -2,7 +2,7 @@
 #define PSPAUDIORENDERER_H_
 //------------------------------------------------------------------------------
 /**
-    @class chrissly::audio::PSPAudioRenderer
+    @class chrissly::PSPAudioRenderer
 
     (C) 2014 Christian Bleicher
 */

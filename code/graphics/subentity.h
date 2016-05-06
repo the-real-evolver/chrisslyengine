@@ -26,7 +26,7 @@ public:
     /// sets the name of the material to be used
     void SetMaterialName(const core::String& matName);
     /// sets a Material to be used
-    void SetMaterial(Material* material); 
+    void SetMaterial(Material* material);
     /// retrieves a pointer to the material this renderable object uses
     Material* GetMaterial() const;
     /// tells this SubEntity whether to be visible or not
@@ -53,7 +53,7 @@ private:
     SubMesh* subMesh;
     /// is this SubEntity visible?
     bool visible;
-    /// the vertex data for hardware morphing (pos2 binding)
+    /// the vertex data for hardware morphing
     VertexData* hardwareVertexAnimVertexData;
     /// vertex morph weight
     float morphWeight;

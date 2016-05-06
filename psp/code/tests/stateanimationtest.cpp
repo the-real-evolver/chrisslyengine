@@ -44,7 +44,6 @@ StateAnimationTest::Enter()
     entity->GetSubEntity(0)->SetMaterial(material);
 
     this->animState = entity->GetAnimationState("default");
-    CE_ASSERT(this->animState != NULL, "StateAnimationTest::Enter(): this->animState invalid");
     this->animState->SetEnabled(true);
 
     this->sceneNode = SceneManager::Instance()->GetRootSceneNode()->CreateChildSceneNode();
@@ -98,6 +97,7 @@ StateAnimationTest::Trigger()
     if (!this->pause) this->animState->AddTime(0.016f);
 
     this->sceneNode->Yaw(tx * 0.05f);
+
     GraphicsSystem::Instance()->RenderOneFrame();
 
     if (this->pad.Buttons & PSP_CTRL_CROSS) StateManager::Instance()->ChangeState(StateMaterialTest::Instance());

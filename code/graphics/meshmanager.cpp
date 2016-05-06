@@ -52,11 +52,10 @@ MeshManager::Load(const char* filename)
     mesh = CE_NEW Mesh();
     HashTableInsert(&this->resources, filename, mesh);
 
-    unsigned int bytesToRead = 0;
     unsigned int bytesPerVertex = 36;
     unsigned char currentChunk = 0;
     unsigned int vertexCount = 0;
-    void* vertexBuffer = NULL;
+    HardwareVertexBuffer* vertexBuffer = NULL;
     Animation* animation = NULL;
     VertexAnimationTrack* animationTrack = NULL;
     char stringBuffer[256] = {'\0'};
@@ -79,22 +78,20 @@ MeshManager::Load(const char* filename)
                     // read vertex count
                     FSWrapper::Read(fd, &vertexCount, 4);
 
+                    // create the vertexbuffer
+                    vertexBuffer = CE_NEW HardwareVertexBuffer(vertexCount, bytesPerVertex);
+
                     // read vertex buffer
                     if (vertexCount > 0)
                     {
-                        bytesToRead = vertexCount * bytesPerVertex;
-                        vertexBuffer = CE_MALLOC_ALIGN(16, bytesToRead);
-                        CE_ASSERT(vertexBuffer != NULL, "MeshManager::Load(): failed to allocate '%i' bytes for SubMesh", bytesToRead);
-                        FSWrapper::Read(fd, vertexBuffer, bytesToRead);
-                    }
-                    else
-                    {
-                        vertexBuffer = NULL;
+                        void* buffer = vertexBuffer->Lock();
+                        FSWrapper::Read(fd, buffer, vertexCount * bytesPerVertex);
+                        vertexBuffer->Unlock();
                     }
 
                     // add submesh
                     SubMesh* subMesh = mesh->CreateSubMesh();
-                    subMesh->vertexData = CE_NEW VertexData(vertexCount, vertexBuffer, bytesPerVertex);
+                    subMesh->vertexData = CE_NEW VertexData(vertexBuffer);
                     subMesh->SetMaterialName(materialName);
                 }
                 break;
@@ -109,7 +106,7 @@ MeshManager::Load(const char* filename)
             case M_ANIMATION_TRACK:
                 {
                     // read animation track
-                    CE_ASSERT(animation != NULL, "MeshManager::Load(): can't create VertexAnimationTrack without Animation");
+                    CE_ASSERT(animation != NULL, "MeshManager::Load(): can't create VertexAnimationTrack without Animation\n");
                     unsigned char handle = 0;
                     FSWrapper::Read(fd, &handle, 1);
                     animationTrack = animation->CreateVertexTrack(handle);
@@ -124,22 +121,24 @@ MeshManager::Load(const char* filename)
                     // read vertex count
                     FSWrapper::Read(fd, &vertexCount, 4);
 
+                    // create the vertexbuffer
+                    vertexBuffer = CE_NEW HardwareVertexBuffer(vertexCount, bytesPerVertex);
+
                     // read vertex buffer
-                    bytesToRead = vertexCount * bytesPerVertex;
-                    vertexBuffer = CE_MALLOC_ALIGN(16, bytesToRead);
-                    CE_ASSERT(vertexBuffer != NULL, "MeshManager::Load(): failed to allocate '%i' bytes for VertexMorphKeyFrame", bytesToRead);
-                    FSWrapper::Read(fd, vertexBuffer, bytesToRead);
+                    void* buffer = vertexBuffer->Lock();
+                    FSWrapper::Read(fd, buffer, vertexCount * bytesPerVertex);
+                    vertexBuffer->Unlock();
 
                     // add morphkeyframe
-                    CE_ASSERT(animationTrack != NULL, "MeshManager::Load(): can't create VertexMorphKeyFrame without VertexAnimationTrack");
+                    CE_ASSERT(animationTrack != NULL, "MeshManager::Load(): can't create VertexMorphKeyFrame without VertexAnimationTrack\n");
                     VertexMorphKeyFrame* vertexMorphKeyFrame = animationTrack->CreateVertexMorphKeyFrame(keyTime);
-                    vertexMorphKeyFrame->vertexData = CE_NEW VertexData(vertexCount, vertexBuffer, bytesPerVertex);
+                    vertexMorphKeyFrame->vertexData = CE_NEW VertexData(vertexBuffer);
 
                     // initialise submesh
                     SubMesh* subMesh = mesh->GetSubMesh(animationTrack->GetHandle());
-                    CE_ASSERT(subMesh != NULL, "MeshManager::Load(): no submesh to map to");
+                    CE_ASSERT(subMesh != NULL, "MeshManager::Load(): no submesh to map to\n");
                     subMesh->vertexAnimationType = VAT_MORPH;
-                    subMesh->vertexData->vertexCount = vertexCount;
+                    subMesh->vertexData->vertexBuffer->SetNumVertices(vertexCount);
                 }
                 break;
         }
@@ -157,9 +156,9 @@ void
 MeshManager::RemoveAll()
 {
     unsigned int i;
-    for (i = 0; i < this->resources.capacity; ++i)
+    for (i = 0; i < this->resources.bucketCount; ++i)
     {
-        LinkedList* it = ((Chain*)DynamicArrayGet(&this->resources.entries, i))->list;
+        LinkedList* it = HashTableBegin(&this->resources, i);
         while (it != NULL)
         {
             CE_DELETE (Mesh*)((KeyValuePair*)it->data)->value;

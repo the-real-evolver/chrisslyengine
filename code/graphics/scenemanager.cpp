@@ -99,9 +99,9 @@ void
 SceneManager::DestroyAllCameras()
 {
     unsigned int i;
-    for (i = 0; i < this->cameras.capacity; ++i)
+    for (i = 0; i < this->cameras.bucketCount; ++i)
     {
-        LinkedList* it = ((Chain*)DynamicArrayGet(&this->cameras.entries, i))->list;
+        LinkedList* it = HashTableBegin(&this->cameras, i);
         while (it != NULL)
         {
             CE_DELETE (Camera*)((KeyValuePair*)it->data)->value;
@@ -141,9 +141,9 @@ void
 SceneManager::DestroyAllLights()
 {
     unsigned int i;
-    for (i = 0; i < this->lights.capacity; ++i)
+    for (i = 0; i < this->lights.bucketCount; ++i)
     {
-        LinkedList* it = ((Chain*)DynamicArrayGet(&this->lights.entries, i))->list;
+        LinkedList* it = HashTableBegin(&this->lights, i);
         while (it != NULL)
         {
             CE_DELETE (Light*)((KeyValuePair*)it->data)->value;
@@ -160,9 +160,9 @@ SceneManager::DestroyAllLights()
 Entity*
 SceneManager::CreateEntity(const char* meshName)
 {
-    Entity* entity = CE_NEW Entity("", MeshManager::Instance()->Load(meshName));
+    Entity* entity = CE_NEW Entity(MeshManager::Instance()->Load(meshName));
 
-    linkedlistAdd(&this->entities, entity);
+    LinkedlistAdd(&this->entities, entity);
 
     return entity;
 }
@@ -176,7 +176,7 @@ SceneManager::CreateSceneNode()
     SceneNode* sceneNode = CE_NEW SceneNode();
     sceneNode->SetParent(NULL);
 
-    linkedlistAdd(&this->sceneNodes, sceneNode);
+    LinkedlistAdd(&this->sceneNodes, sceneNode);
 
     return sceneNode;
 }
@@ -207,7 +207,7 @@ SceneManager::ClearScene()
         LinkedList* node = it;
         CE_DELETE (Entity*)node->data;
         it = it->next;
-        linkedlistRemove(node);
+        LinkedlistRemove(node);
     }
     this->entities = NULL;
 
@@ -219,7 +219,7 @@ SceneManager::ClearScene()
         LinkedList* node = it;
         CE_DELETE (SceneNode*)node->data;
         it = it->next;
-        linkedlistRemove(node);
+        LinkedlistRemove(node);
     }
     this->sceneNodes = NULL;
 
@@ -372,7 +372,7 @@ SceneManager::_RenderScene(Camera* camera, Viewport* vp)
             {
                 // for all subentities
                 SubEntity* subEntity = entity->GetSubEntity(subEntityIndex);
-                
+
                 if (!subEntity->IsVisible()) continue;
 
                 Material* material = subEntity->GetMaterial();

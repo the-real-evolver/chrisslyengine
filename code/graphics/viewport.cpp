@@ -105,7 +105,7 @@ Viewport::SetBackgroundColour(unsigned int colour)
 //------------------------------------------------------------------------------
 /**
 */
-const unsigned int
+unsigned int
 Viewport::GetBackgroundColour() const
 {
     return this->backColour;
@@ -113,7 +113,7 @@ Viewport::GetBackgroundColour() const
 
 //------------------------------------------------------------------------------
 /**
-*/   
+*/
 void
 Viewport::SetClearEveryFrame(bool clear, unsigned int buffers)
 {

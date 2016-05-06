@@ -7,6 +7,7 @@
 #include "materialparser.h"
 #include "materialmanager.h"
 #include "memoryallocatorconfig.h"
+#include "debug.h"
 #include "fswrapper.h"
 
 namespace chrissly

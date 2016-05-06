@@ -14,7 +14,7 @@
 #include <limits.h>
 
 //------------------------------------------------------------------------------
-namespace chrissly 
+namespace chrissly
 {
 class PSPMath
 {
