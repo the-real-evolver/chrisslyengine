@@ -45,12 +45,7 @@ SubMesh*
 Mesh::CreateSubMesh()
 {
     SubMesh* subMesh = CE_NEW SubMesh();
-
-    if (!DynamicArraySet(&this->subMeshList, this->numSubMeshes, subMesh))
-    {
-        return NULL;
-    }
-
+    DynamicArraySet(&this->subMeshList, this->numSubMeshes, subMesh);
     ++this->numSubMeshes;
 
     return subMesh;

@@ -37,8 +37,6 @@ HardwareVertexBufferBase::HardwareVertexBufferBase(unsigned int numVertices, uns
 
     this->numVertices = numVertices;
     this->bytesPerVertex = bytesPerVertex;
-
-    // ToDo: create internal resources
 }
 
 //------------------------------------------------------------------------------

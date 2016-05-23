@@ -58,12 +58,7 @@ VertexAnimationTrack*
 Animation::CreateVertexTrack(unsigned char handle)
 {
     VertexAnimationTrack* vertexAnimationTrack = CE_NEW VertexAnimationTrack(handle);
-
-    if (!DynamicArraySet(&this->vertexTrackList, this->numVertexTracks, vertexAnimationTrack))
-    {
-        return NULL;
-    }
-
+    DynamicArraySet(&this->vertexTrackList, this->numVertexTracks, vertexAnimationTrack);
     ++this->numVertexTracks;
 
     return vertexAnimationTrack;

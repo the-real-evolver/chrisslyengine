@@ -26,7 +26,6 @@ VertexMorphKeyFrame::VertexMorphKeyFrame(float time) :
 */
 VertexMorphKeyFrame::~VertexMorphKeyFrame()
 {
-    CE_FREE(this->vertexData->vertexBuffer);
     CE_DELETE this->vertexData;
 }
 

@@ -49,12 +49,7 @@ VertexMorphKeyFrame*
 VertexAnimationTrack::CreateVertexMorphKeyFrame(float timePos)
 {
     VertexMorphKeyFrame* vertexMorphKeyFrame = CE_NEW VertexMorphKeyFrame(timePos);
-
-    if (!DynamicArraySet(&this->keyFrames, this->numKeyFrames, vertexMorphKeyFrame))
-    {
-        return NULL;
-    }
-
+    DynamicArraySet(&this->keyFrames, this->numKeyFrames, vertexMorphKeyFrame);
     ++this->numKeyFrames;
 
     return vertexMorphKeyFrame;

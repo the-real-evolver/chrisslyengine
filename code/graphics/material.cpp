@@ -35,12 +35,7 @@ Pass*
 Material::CreatePass()
 {
     Pass* pass = CE_NEW Pass(this->numPasses);
-
-    if (!DynamicArraySet(&this->passes, this->numPasses, pass))
-    {
-        return NULL;
-    }
-
+    DynamicArraySet(&this->passes, this->numPasses, pass);
     ++this->numPasses;
 
     return pass;

@@ -174,7 +174,6 @@ SoundBase::_DecrementUseCount()
     }
 
     this->releaseSyncLock.Unlock();
-
 }
 
 //------------------------------------------------------------------------------
