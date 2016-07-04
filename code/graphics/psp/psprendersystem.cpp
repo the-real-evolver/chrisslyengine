@@ -350,6 +350,7 @@ PSPRenderSystem::_UseLights(HashTable* lights)
                 components |= GU_SPECULAR;
                 sceGuLightColor(lightIndex, GU_SPECULAR, specular);
             }
+
             sceGuLight(lightIndex, PSPMappings::Get(light->GetType()), components, &this->lightPos);
             sceGuLightAtt(lightIndex, light->GetAttenuationConstant(), light->GetAttenuationLinear(), light->GetAttenuationQuadric());
             sceGuEnable(GU_LIGHT0 + lightIndex);

@@ -19,7 +19,7 @@ RenderTarget::RenderTarget() :
     height(0),
     format(PF_UNKNOWN)
 {
-    DynamicArrayInit(&this->viewportList, 0);
+    DynamicArrayInit(&this->viewportList, 1);
 }
 
 //------------------------------------------------------------------------------

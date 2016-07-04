@@ -23,11 +23,11 @@ HardwareVertexBufferBase::HardwareVertexBufferBase()
 //------------------------------------------------------------------------------
 /**
 */
-HardwareVertexBufferBase::HardwareVertexBufferBase(unsigned int numVertices, unsigned int bytesPerVertex)
+HardwareVertexBufferBase::HardwareVertexBufferBase(unsigned int numVertices, unsigned int bytesPerVertex, Usage usage)
 {
     if (numVertices > 0)
     {
-        this->vertexBuffer = CE_MALLOC_ALIGN(16, numVertices * bytesPerVertex);
+        this->vertexBuffer = CE_MALLOC_ALIGN(CE_CACHE_LINE_SIZE, numVertices * bytesPerVertex);
         CE_ASSERT(this->vertexBuffer != NULL, "HardwareVertexBufferBase::HardwareVertexBufferBase(): failed to allocate '%i' bytes\n", numVertices * bytesPerVertex);
     }
     else
@@ -37,6 +37,7 @@ HardwareVertexBufferBase::HardwareVertexBufferBase(unsigned int numVertices, uns
 
     this->numVertices = numVertices;
     this->bytesPerVertex = bytesPerVertex;
+    this->usage = usage;
 }
 
 //------------------------------------------------------------------------------

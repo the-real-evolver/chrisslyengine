@@ -3,6 +3,7 @@
 //  (C) 2013 Christian Bleicher
 //------------------------------------------------------------------------------
 #include "gpuprogramparams.h"
+#include "debug.h"
 
 namespace chrissly
 {

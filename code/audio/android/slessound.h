@@ -22,8 +22,8 @@ public:
     /// destructor
     ~SLESSound();
 
-    /// implementation of creating internal sound resources
-    void _CreateInternalResourcesImpl();
+    /// create internal sound resources
+    void _CreateInternalResources();
     /// gets the sl audio source
     SLDataSource GetAudioSource() const;
 

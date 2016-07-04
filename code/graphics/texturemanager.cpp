@@ -63,7 +63,7 @@ TextureManager::Load(const char* name)
     FSWrapper::Read(fd, &numMipmaps, 1);
     FSWrapper::Read(fd, &swizzled, 1);
 
-    void* textureBuffer = CE_MALLOC_ALIGN(16, fileSize - headerSizeBytes);
+    void* textureBuffer = CE_MALLOC_ALIGN(CE_CACHE_LINE_SIZE, fileSize - headerSizeBytes);
     FSWrapper::Read(fd, textureBuffer, fileSize - headerSizeBytes);
     FSWrapper::Close(fd);
 
@@ -74,7 +74,7 @@ TextureManager::Load(const char* name)
     texture->SetNumMipmaps(numMipmaps);
     texture->SetSwizzleEnabled(1 == swizzled ? true : false);
     texture->SetBuffer(textureBuffer);
-    texture->CreateInternalResourcesImpl();
+    texture->CreateInternalResources();
 
     HashTableInsert(&this->resources, name, texture);
 

@@ -27,8 +27,8 @@ public:
     PSPTexture();
     /// destructor
     ~PSPTexture();
-    /// create mipmap infos 
-    void CreateInternalResourcesImpl();
+    /// create mipmap infos
+    void CreateInternalResources();
     /// get mipmap info of the given level
     MipmapInfo* GetMipmapInfo(int level);
 

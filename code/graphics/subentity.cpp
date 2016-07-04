@@ -15,7 +15,7 @@ using namespace chrissly::core;
 //------------------------------------------------------------------------------
 /**
 */
-SubEntity::SubEntity(Entity *parent, SubMesh* subMeshBasis) :
+SubEntity::SubEntity(Entity* parent, SubMesh* subMeshBasis) :
     parentEntity(parent),
     pMaterial(NULL),
     subMesh(subMeshBasis),
@@ -92,7 +92,7 @@ SubEntity::IsVisible() const
 /**
 */
 SubMesh*
-SubEntity::GetSubMesh()
+SubEntity::GetSubMesh() const
 {
     return this->subMesh;
 }

@@ -12,8 +12,10 @@ namespace chrissly
 {
 namespace graphics
 {
-    /** hardware culling modes based on vertex winding.
-        This setting applies to how the hardware API culls triangles it is sent */
+    /**
+        hardware culling modes based on vertex winding. This setting applies to
+        how the hardware API culls triangles it is sent
+    */
     enum CullingMode
     {
         /// Hardware never culls triangles and renders everything it receives.
@@ -24,6 +26,7 @@ namespace graphics
         CULL_ANTICLOCKWISE = 3
     };
 
+    /// filter type
     enum FilterType
     {
         /// The filter used when shrinking a texture
@@ -50,7 +53,8 @@ namespace graphics
     {
         /// No shadows
         SHADOWTYPE_NONE = 0x00,
-        /** Texture-based shadow technique which involves a render-to-texture
+        /**
+            Texture-based shadow technique which involves a render-to-texture
             of the shadow caster and a projection of that texture onto the
             shadow receivers, built up per light as additive passes. This
             technique can be very fillrate intensive because it requires

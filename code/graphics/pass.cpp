@@ -37,7 +37,7 @@ Pass::Pass(unsigned short index) :
     numTextureUnitStates(0),
     gpuProgram(NULL)
 {
-    DynamicArrayInit(&this->textureUnitStates, 0);
+    DynamicArrayInit(&this->textureUnitStates, 1);
 }
 
 //------------------------------------------------------------------------------

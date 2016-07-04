@@ -49,8 +49,8 @@ public:
     /// returns if the pixelbuffer is swizzled
     bool GetSwizzleEnabled() const;
 
-    /// implementation of creating internal texture resources
-    virtual void CreateInternalResourcesImpl() = 0;
+    /// create internal texture resources
+    virtual void CreateInternalResources() = 0;
 
 protected:
     PixelFormat format;

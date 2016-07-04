@@ -34,7 +34,7 @@ public:
     /// returns whether or not this SubEntity is supposed to be visible 
     bool IsVisible() const;
     /// accessor method to read mesh data 
-    SubMesh* GetSubMesh();
+    SubMesh* GetSubMesh() const;
     /// advanced method to get the hardware morph vertex information
     VertexData* _GetHardwareVertexAnimVertexData() const;
     /// set vertex morph weight value

@@ -76,6 +76,11 @@ HashFunction(const char* key)
 static inline void
 HashTableInit(HashTable* table, unsigned int initialSize)
 {
+    if (NULL == table)
+    {
+        return;
+    }
+
     DynamicArrayInit(&table->buckets, initialSize);
     table->bucketCount = initialSize;
     table->currentSize = 0;
@@ -96,6 +101,11 @@ HashTableInit(HashTable* table, unsigned int initialSize)
 static inline void
 HashTableClear(HashTable* table)
 {
+    if (NULL == table)
+    {
+        return;
+    }
+
     unsigned int i;
     for (i = 0; i < table->bucketCount; ++i)
     {
@@ -124,6 +134,11 @@ HashTableClear(HashTable* table)
 static inline void
 HashTableInsert(HashTable* table, const char* key, void* value)
 {
+    if (NULL == table)
+    {
+        return;
+    }
+
     if (0 == table->bucketCount)
     {
         HashTableInit(table, 1);
@@ -134,9 +149,6 @@ HashTableInsert(HashTable* table, const char* key, void* value)
         HashTableResize(table, table->bucketCount * 2);
     }
 
-    unsigned int hash = HashFunction(key);
-    unsigned int index = hash % table->bucketCount;
-
     KeyValuePair* keyValuePair = (KeyValuePair*)CE_MALLOC(sizeof(KeyValuePair));
     size_t length = strlen(key);
     keyValuePair->key = (char*)CE_MALLOC(length + 1);
@@ -144,7 +156,7 @@ HashTableInsert(HashTable* table, const char* key, void* value)
     keyValuePair->key[length] = '\0';
     keyValuePair->value = value;
 
-    Bucket* bucket = (Bucket*)DynamicArrayGet(&table->buckets, index);
+    Bucket* bucket = (Bucket*)DynamicArrayGet(&table->buckets, HashFunction(key) % table->bucketCount);
     LinkedlistAdd(&(bucket->list), keyValuePair);
     ++bucket->size;
 
@@ -157,15 +169,17 @@ HashTableInsert(HashTable* table, const char* key, void* value)
 static inline void*
 HashTableFind(HashTable* table, const char* key)
 {
+    if (NULL == table)
+    {
+        return NULL;
+    }
+
     if (0 == table->bucketCount)
     {
         return NULL;
     }
 
-    unsigned int hash = HashFunction(key);
-    unsigned int index = hash % table->bucketCount;
-
-    LinkedList* it = ((Bucket*)DynamicArrayGet(&table->buckets, index))->list;
+    LinkedList* it = ((Bucket*)DynamicArrayGet(&table->buckets, HashFunction(key) % table->bucketCount))->list;
     while (it != NULL)
     {
         if (0 == strcmp(key, ((KeyValuePair*)it->data)->key))
@@ -184,6 +198,11 @@ HashTableFind(HashTable* table, const char* key)
 static inline LinkedList*
 HashTableBegin(HashTable* table, unsigned int index)
 {
+    if (NULL == table)
+    {
+        return NULL;
+    }
+
     return ((Bucket*)DynamicArrayGet(&table->buckets, index))->list;
 }
 

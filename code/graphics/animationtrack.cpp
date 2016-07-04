@@ -22,7 +22,7 @@ VertexAnimationTrack::VertexAnimationTrack(unsigned char handle) :
     numKeyFrames(0),
     currentTimeIndex(-1)
 {
-    DynamicArrayInit(&this->keyFrames, 0);
+    DynamicArrayInit(&this->keyFrames, 1);
 }
 
 //------------------------------------------------------------------------------

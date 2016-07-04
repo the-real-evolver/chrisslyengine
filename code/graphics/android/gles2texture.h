@@ -20,8 +20,8 @@ public:
     GLES2Texture();
     /// destructor
     ~GLES2Texture();
-    /// create gl texture name 
-    void CreateInternalResourcesImpl();
+    /// create gl texture name
+    void CreateInternalResources();
     /// return gl texture name
     GLuint GetName() const;
 

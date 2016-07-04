@@ -25,7 +25,7 @@ GraphicsSystem::GraphicsSystem() :
     this->textureManager = CE_NEW TextureManager();
     this->sceneManager = CE_NEW SceneManager();
     this->materialManager = CE_NEW MaterialManager();
-    DynamicArrayInit(&this->renderTargets, 0);
+    DynamicArrayInit(&this->renderTargets, 1);
 }
 
 //------------------------------------------------------------------------------

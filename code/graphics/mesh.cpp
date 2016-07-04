@@ -16,9 +16,10 @@ using namespace chrissly::core;
 //------------------------------------------------------------------------------
 /**
 */
-Mesh::Mesh() : numSubMeshes(0)
+Mesh::Mesh() :
+    numSubMeshes(0)
 {
-    DynamicArrayInit(&this->subMeshList, 0);
+    DynamicArrayInit(&this->subMeshList, 1);
     HashTableInit(&this->animationsList, 1);
 }
 

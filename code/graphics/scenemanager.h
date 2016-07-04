@@ -154,7 +154,8 @@ private:
     mutable HashTable cameras;
     mutable HashTable lights;
     LinkedList* entities;
-    LinkedList* sceneNodes;
+    DynamicArray sceneNodes;
+    unsigned int numSceneNodes;
     SceneNode* sceneRoot;
     unsigned int ambientLight;
     RenderSystem* destRenderSystem;

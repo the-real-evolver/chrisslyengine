@@ -15,10 +15,10 @@ namespace chrissly
 void
 GLES2Mappings::MakeGLMatrix(GLfloat gl_matrix[16], const core::Matrix4& m)
 {
-    gl_matrix[0]  = m[0][0]; gl_matrix[1]  = m[1][0]; gl_matrix[2]  = m[2][0];  gl_matrix[3]  = m[3][0];
-    gl_matrix[4]  = m[0][1]; gl_matrix[5]  = m[1][1]; gl_matrix[6]  = m[2][1];  gl_matrix[7]  = m[3][1];
-    gl_matrix[8]  = m[0][2]; gl_matrix[9]  = m[1][2]; gl_matrix[10] = m[2][2];  gl_matrix[11] = m[3][2];
-    gl_matrix[12] = m[0][3]; gl_matrix[13] = m[1][3]; gl_matrix[14] = m[2][3];  gl_matrix[15] = m[3][3];
+    gl_matrix[0]  = m[0][0]; gl_matrix[1]  = m[1][0]; gl_matrix[2]  = m[2][0]; gl_matrix[3]  = m[3][0];
+    gl_matrix[4]  = m[0][1]; gl_matrix[5]  = m[1][1]; gl_matrix[6]  = m[2][1]; gl_matrix[7]  = m[3][1];
+    gl_matrix[8]  = m[0][2]; gl_matrix[9]  = m[1][2]; gl_matrix[10] = m[2][2]; gl_matrix[11] = m[3][2];
+    gl_matrix[12] = m[0][3]; gl_matrix[13] = m[1][3]; gl_matrix[14] = m[2][3]; gl_matrix[15] = m[3][3];
 }
 
 //------------------------------------------------------------------------------
@@ -153,7 +153,7 @@ GLES2Mappings::Get(graphics::PixelFormat pf)
         case graphics::PF_A1R5G5B5:      return GL_UNSIGNED_SHORT_5_5_5_1;
         case graphics::PF_A4R4G4B4:      return GL_UNSIGNED_SHORT_4_4_4_4;
         case graphics::PF_R8G8B8A8:      return GL_UNSIGNED_BYTE;
-        case graphics::PF_ETC1_RGB8:     return GL_ETC1_RGB8_OES; 
+        case graphics::PF_ETC1_RGB8:     return GL_ETC1_RGB8_OES;
         case graphics::PF_COLOR_INDEX4:
         case graphics::PF_COLOR_INDEX8:
         case graphics::PF_COLOR_INDEX16:

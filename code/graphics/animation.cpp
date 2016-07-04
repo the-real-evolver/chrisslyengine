@@ -22,7 +22,7 @@ Animation::Animation(const char* name, float length) :
     numVertexTracks(0)
 {
     this->name = name;
-    DynamicArrayInit(&this->vertexTrackList, 0);
+    DynamicArrayInit(&this->vertexTrackList, 1);
 }
 
 //------------------------------------------------------------------------------

@@ -112,13 +112,13 @@ WavCodec::SetupSound(const char* filename, Mode mode, void** sampleBuffer, unsig
                 this->openedAsStream = true;
                 this->streamFileHandle = fd;
                 this->lengthInBytes = dataSize;
-                this->streamBuffers[0] = CE_MALLOC_ALIGN(16, MaxStreamBufferSamples * this->bytesPerSample);
-                this->streamBuffers[1] = CE_MALLOC_ALIGN(16, MaxStreamBufferSamples * this->bytesPerSample);
+                this->streamBuffers[0] = CE_MALLOC_ALIGN(CE_CACHE_LINE_SIZE, MaxStreamBufferSamples * this->bytesPerSample);
+                this->streamBuffers[1] = CE_MALLOC_ALIGN(CE_CACHE_LINE_SIZE, MaxStreamBufferSamples * this->bytesPerSample);
                 *sampleBuffer = NULL;
             }
             else
             {
-                void* buffer = CE_MALLOC_ALIGN(16, dataSize);
+                void* buffer = CE_MALLOC_ALIGN(CE_CACHE_LINE_SIZE, dataSize);
                 CE_ASSERT(buffer != NULL, "WavCodec::SetupSound(): failed to allocate '%i' bytes for samplebuffer", dataSize);
                 FSWrapper::Read(fd, buffer, dataSize); // read the actual sound data
                 FSWrapper::Close(fd);

@@ -46,8 +46,8 @@ public:
     void* _GetSampleBufferPointer(unsigned int position) const;
     /// get pointer to the attached codec
     Codec* _GetCodec() const;
-    /// implementation of creating internal sound resources
-    virtual void _CreateInternalResourcesImpl();
+    /// create internal sound resources
+    virtual void _CreateInternalResources();
 
 protected:
     Mode mode;

@@ -1,5 +1,5 @@
-#ifndef PSPRenderSystem_H_
-#define PSPRenderSystem_H_
+#ifndef PSPRENDERSYSTEM_H_
+#define PSPRENDERSYSTEM_H_
 //------------------------------------------------------------------------------
 /**
     @class chrissly::PSPRenderSystem

@@ -22,7 +22,7 @@ SceneManager* SceneManager::Singleton = NULL;
 */
 SceneManager::SceneManager() :
     entities(NULL),
-    sceneNodes(NULL),
+    numSceneNodes(0),
     sceneRoot(NULL),
     ambientLight(0x00000000),
     suppressRenderStateChanges(false),
@@ -39,6 +39,7 @@ SceneManager::SceneManager() :
 
     HashTableInit(&this->cameras, 2);
     HashTableInit(&this->lights, 4);
+    DynamicArrayInit(&this->sceneNodes, 256);
 
     this->renderQueueOpaque.Initialise(128);
     this->renderQueueTransparent.Initialise(64);
@@ -176,7 +177,8 @@ SceneManager::CreateSceneNode()
     SceneNode* sceneNode = CE_NEW SceneNode();
     sceneNode->SetParent(NULL);
 
-    LinkedlistAdd(&this->sceneNodes, sceneNode);
+    DynamicArraySet(&this->sceneNodes, this->numSceneNodes, sceneNode);
+    ++this->numSceneNodes;
 
     return sceneNode;
 }
@@ -201,6 +203,18 @@ SceneManager::GetRootSceneNode()
 void
 SceneManager::ClearScene()
 {
+    this->DestroyAllLights();
+
+    this->GetRootSceneNode()->RemoveAllChildren();
+
+    unsigned int i;
+    for (i = 0; i < this->numSceneNodes; ++i)
+    {
+        CE_DELETE (SceneNode*)DynamicArrayGet(&this->sceneNodes, i);
+    }
+    DynamicArrayDelete(&this->sceneNodes);
+    this->numSceneNodes = 0;
+
     LinkedList* it = this->entities;
     while (it != NULL)
     {
@@ -210,20 +224,6 @@ SceneManager::ClearScene()
         LinkedlistRemove(node);
     }
     this->entities = NULL;
-
-    this->GetRootSceneNode()->RemoveAllChildren();
-
-    it = this->sceneNodes;
-    while (it != NULL)
-    {
-        LinkedList* node = it;
-        CE_DELETE (SceneNode*)node->data;
-        it = it->next;
-        LinkedlistRemove(node);
-    }
-    this->sceneNodes = NULL;
-
-    this->DestroyAllLights();
 }
 
 //------------------------------------------------------------------------------
@@ -350,11 +350,11 @@ SceneManager::_RenderScene(Camera* camera, Viewport* vp)
     }
 
     // fill renderqueues
-    LinkedList* sceneNodeIt = this->sceneNodes;
-    while (sceneNodeIt != NULL)
+    unsigned int sceneNodeIndex;
+    for (sceneNodeIndex = 0; sceneNodeIndex < this->numSceneNodes; ++sceneNodeIndex)
     {
         // for all scenenodes
-        SceneNode* sceneNode = (SceneNode*)sceneNodeIt->data;
+        SceneNode* sceneNode = (SceneNode*)DynamicArrayGet(&this->sceneNodes, sceneNodeIndex);
 
         unsigned int entityIndex;
         for (entityIndex = 0; entityIndex < sceneNode->NumAttachedObjects(); ++entityIndex)
@@ -410,8 +410,6 @@ SceneManager::_RenderScene(Camera* camera, Viewport* vp)
                 }
             }
         }
-
-        sceneNodeIt = sceneNodeIt->next;
     }
 
     // render queues

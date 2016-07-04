@@ -24,7 +24,7 @@ SceneNode::SceneNode() :
     cachedTransformOutOfDate(true),
     numAttachedObjects(0)
 {
-    DynamicArrayInit(&this->objectMap, 0);
+    DynamicArrayInit(&this->objectMap, 1);
 }
 
 //------------------------------------------------------------------------------

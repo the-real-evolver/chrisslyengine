@@ -79,7 +79,7 @@ MeshManager::Load(const char* filename)
                     FSWrapper::Read(fd, &vertexCount, 4);
 
                     // create the vertexbuffer
-                    vertexBuffer = CE_NEW HardwareVertexBuffer(vertexCount, bytesPerVertex);
+                    vertexBuffer = CE_NEW HardwareVertexBuffer(vertexCount, bytesPerVertex, HBU_STATIC);
 
                     // read vertex buffer
                     if (vertexCount > 0)
@@ -122,7 +122,7 @@ MeshManager::Load(const char* filename)
                     FSWrapper::Read(fd, &vertexCount, 4);
 
                     // create the vertexbuffer
-                    vertexBuffer = CE_NEW HardwareVertexBuffer(vertexCount, bytesPerVertex);
+                    vertexBuffer = CE_NEW HardwareVertexBuffer(vertexCount, bytesPerVertex, HBU_DYNAMIC);
 
                     // read vertex buffer
                     void* buffer = vertexBuffer->Lock();

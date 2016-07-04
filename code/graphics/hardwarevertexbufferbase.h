@@ -13,11 +13,27 @@ namespace chrissly
 namespace graphics
 {
 
+/// enum describing buffer usage
+enum Usage
+{
+    /**
+        Static buffer which the application rarely modifies once created.
+        Modifying the contents of this buffer will involve a performance hit.
+    */
+    HBU_STATIC = 1,
+    /**
+        Indicates the application would like to modify this buffer with the
+        CPU fairly often. Buffers created with this flag will typically end
+        up in main memory rather than video memory.
+    */
+    HBU_DYNAMIC = 2
+};
+
 class HardwareVertexBufferBase
 {
 public:
     /// construct from vertex count and vertex size
-    HardwareVertexBufferBase(unsigned int numVertices, unsigned int bytesPerVertex);
+    HardwareVertexBufferBase(unsigned int numVertices, unsigned int bytesPerVertex, Usage usage);
     /// destructor
     virtual ~HardwareVertexBufferBase();
     /// lock the entire buffer
@@ -38,6 +54,7 @@ private:
     unsigned int numVertices;
     unsigned int bytesPerVertex;
     void* vertexBuffer;
+    Usage usage;
 };
 
 } // namespace graphics

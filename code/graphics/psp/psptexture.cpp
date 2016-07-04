@@ -36,7 +36,7 @@ PSPTexture::~PSPTexture()
 /**
 */
 void
-PSPTexture::CreateInternalResourcesImpl()
+PSPTexture::CreateInternalResources()
 {
     DynamicArrayInit(&this->mipmapInfos, this->numMipmaps);
     this->numMipmapInfos = this->numMipmaps;

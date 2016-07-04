@@ -21,7 +21,7 @@ struct VertexData
     /// construct from vertex buffer
     VertexData(HardwareVertexBuffer* vertexBuffer) : vertexBuffer(vertexBuffer) {}
     /// destructor
-    ~VertexData() {if (this->vertexBuffer != NULL) CE_DELETE this->vertexBuffer;}
+    ~VertexData() {CE_DELETE this->vertexBuffer;}
 
     /// pointer to the buffer with the vertexdata
     HardwareVertexBuffer* vertexBuffer;

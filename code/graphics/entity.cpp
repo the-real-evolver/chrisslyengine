@@ -18,13 +18,11 @@ using namespace chrissly::core;
 */
 Entity::Entity(Mesh* mesh) :
     parentNode(NULL),
+    mesh(mesh),
+    numSubEntities(0),
     castShadows(false),
     receivesShadows(false)
 {
-    this->mesh = mesh;
-
-    this->numSubEntities = 0;
-    DynamicArrayInit(&this->subEntityList, 0);
     this->BuildSubEntityList(this->mesh, &this->subEntityList);
 
     HashTableInit(&this->animationState, 1);
@@ -50,7 +48,7 @@ Entity::Entity(Mesh* mesh) :
                     CE_ASSERT(subEntity != NULL, "Entity::Entity(): subEntity not valid\n");
                     VertexData* subMeshVertexData = subEntity->GetSubMesh()->vertexData;
                     HardwareVertexBuffer* vertexBuffer = CE_NEW HardwareVertexBuffer(subMeshVertexData->vertexBuffer->GetNumVertices(),
-                                                                                    2 * subMeshVertexData->vertexBuffer->GetBytesPerVertex());
+                                                                                    2 * subMeshVertexData->vertexBuffer->GetBytesPerVertex(), HBU_DYNAMIC);
                     subEntity->hardwareVertexAnimVertexData = CE_NEW VertexData(vertexBuffer);
                 }
 
@@ -197,15 +195,16 @@ Entity::UpdateAnimation()
 void
 Entity::BuildSubEntityList(Mesh* mesh, DynamicArray* sublist)
 {
+    this->numSubEntities = mesh->GetNumSubMeshes();
+    DynamicArrayInit(&this->subEntityList, this->numSubEntities);
+
     unsigned int i;
-    for (i = 0; i < mesh->GetNumSubMeshes(); ++i)
+    for (i = 0; i < this->numSubEntities; ++i)
     {
         SubMesh* subMesh = mesh->GetSubMesh(i);
         SubEntity* subEntity = CE_NEW SubEntity(this, subMesh);
         subEntity->SetMaterialName(subMesh->GetMaterialName());
-
         DynamicArraySet(sublist, i, subEntity);
-        ++this->numSubEntities;
     }
 }
 

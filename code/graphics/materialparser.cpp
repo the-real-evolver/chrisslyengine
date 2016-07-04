@@ -28,7 +28,7 @@ MaterialParser::MaterialParser() :
     currentPass(NULL),
     currentTextureUnitState(NULL)
 {
-    this->textBuffer = (char*)CE_MALLOC(LexerTextBufferSize);
+    this->textBuffer = (char*)CE_MALLOC_ALIGN(CE_CACHE_LINE_SIZE, LexerTextBufferSize);
 }
 
 //------------------------------------------------------------------------------
@@ -47,7 +47,7 @@ MaterialParser::ParseScript(const char* name)
 {
     FileHandle fd = FSWrapper::Open(name, ReadAccess, Buffer, 0777);
     unsigned int fileSize = FSWrapper::GetFileSize(fd);
-    void* fileBuffer = CE_MALLOC_ALIGN(16, fileSize);
+    void* fileBuffer = CE_MALLOC_ALIGN(CE_CACHE_LINE_SIZE, fileSize);
     FSWrapper::Read(fd, fileBuffer, fileSize);
     FSWrapper::Close(fd);
 

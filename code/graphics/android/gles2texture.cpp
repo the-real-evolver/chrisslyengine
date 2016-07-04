@@ -33,7 +33,7 @@ GLES2Texture::~GLES2Texture()
 /**
 */
 void
-GLES2Texture::CreateInternalResourcesImpl()
+GLES2Texture::CreateInternalResources()
 {
     glGenTextures(1, &this->textureName);
     glBindTexture(GL_TEXTURE_2D, this->textureName);
@@ -63,7 +63,7 @@ GLES2Texture::CreateInternalResourcesImpl()
         }
     }
 
-    CE_LOG("GLES2Texture::CreateInternalResourcesImpl(): numMipmaps: %i\n", this->numMipmaps);
+    CE_LOG("GLES2Texture::CreateInternalResources(): numMipmaps: %i\n", this->numMipmaps);
 }
 
 //------------------------------------------------------------------------------

@@ -17,7 +17,7 @@ Material::Material() :
     numPasses(0),
     loaded(false)
 {
-    DynamicArrayInit(&this->passes, 0);
+    DynamicArrayInit(&this->passes, 1);
 }
 
 //------------------------------------------------------------------------------

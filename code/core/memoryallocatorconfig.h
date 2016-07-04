@@ -17,4 +17,6 @@
 #define CE_FREE(ptr) free(ptr)
 #define CE_REALLOC(ptr, size) realloc(ptr, size)
 
+#define CE_CACHE_LINE_SIZE 64
+
 #endif
