@@ -237,7 +237,6 @@ private:
     float fogEnd;
 
     mutable DynamicArray textureUnitStates;
-    unsigned short numTextureUnitStates;
 
     GpuProgram* gpuProgram;
 };

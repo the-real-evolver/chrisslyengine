@@ -13,7 +13,6 @@ namespace graphics
 /**
 */
 RenderTarget::RenderTarget() :
-    numViewports(0),
     buffer(NULL),
     width(0),
     height(0),
@@ -37,9 +36,7 @@ Viewport*
 RenderTarget::AddViewport(Camera *cam, int left, int top, int width, int height)
 {
     Viewport* viewport = CE_NEW Viewport(cam, this, left, top, width, height);
-
-    DynamicArraySet(&this->viewportList, this->numViewports, viewport);
-    ++this->numViewports;
+    DynamicArrayPushBack(&this->viewportList, viewport);
 
     return viewport;
 }
@@ -50,7 +47,7 @@ RenderTarget::AddViewport(Camera *cam, int left, int top, int width, int height)
 unsigned short
 RenderTarget::GetNumViewports() const
 {
-    return this->numViewports;
+    return this->viewportList.size;
 }
 
 //------------------------------------------------------------------------------
@@ -69,14 +66,12 @@ void
 RenderTarget::RemoveAllViewports()
 {
     unsigned int i;
-    for (i = 0; i < this->numViewports; ++i)
+    for (i = 0; i < this->viewportList.size; ++i)
     {
         CE_DELETE (Viewport*)DynamicArrayGet(&this->viewportList, i);
     }
 
     DynamicArrayDelete(&this->viewportList);
-
-    this->numViewports = 0;
 }
 
 //------------------------------------------------------------------------------

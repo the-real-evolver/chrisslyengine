@@ -205,7 +205,7 @@ GLES2GpuProgram::ExtractConstantDefs(graphics::GpuNamedConstants* constantDefs)
                     uniform->constType = graphics::GCT_MATRIX_4X4;
                     uniform->size = sizeof(float) * 16;
                     uniform->arraySize = arraySize;
-                    uniform->buffer = CE_MALLOC(uniform->size * arraySize);
+                    uniform->buffer = CE_MALLOC_ALIGN(CE_CACHE_LINE_SIZE, uniform->size * arraySize);
                     break;
                 case GL_SAMPLER_2D:
                     uniform->constType = graphics::GCT_SAMPLER2D;

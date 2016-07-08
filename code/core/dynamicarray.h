@@ -39,7 +39,8 @@
 typedef struct DynamicArray
 {
     void** data;             //!< pointer to array of void pointers
-    unsigned int cur_size;  //!< currently allocated size of the array
+    unsigned int capacity;  //!< storage space currently allocated for the array
+    unsigned int size;      //!< number of actual objects held in the array, not necessarily equal to its storage capacity
 } DynamicArray;
 
 
@@ -57,15 +58,16 @@ DynamicArrayInit(DynamicArray* v, unsigned int initialSize)
         return NULL;
     }
 
-    v->cur_size = initialSize;
     v->data = (void**)CE_MALLOC(sizeof(void*) * initialSize);
+    v->capacity = initialSize;
+    v->size = 0;
 
     return v->data;
 }
 
 
 /*! \brief Frees memory allocated by the dynamic array
-    \param v The array to delete
+    \param v The array to delete.
 */
 static inline void
 DynamicArrayDelete(DynamicArray* v)
@@ -81,7 +83,8 @@ DynamicArrayDelete(DynamicArray* v)
     }
 
     v->data = NULL;
-    v->cur_size = 0;
+    v->capacity = 0;
+    v->size = 0;
 }
 
 
@@ -98,7 +101,7 @@ DynamicArrayGet(DynamicArray* v, unsigned int index)
         return NULL;
     }
 
-    if (index >= v->cur_size)
+    if (index >= v->capacity)
     {
         return NULL;
     }
@@ -108,7 +111,7 @@ DynamicArrayGet(DynamicArray* v, unsigned int index)
 
 
 /*! \brief Sets the entry to the supplied value
-    \param v The array to set
+    \param v The array to set.
     \param index The index of the data to set (array will be resized to fit the index).
     \param item The data to set.
     \return false if v is NULL or there isn't enough memory, true otherwise
@@ -121,22 +124,38 @@ DynamicArraySet(DynamicArray* v, unsigned int index, void* item)
         return false;
     }
 
-    if (index >= v->cur_size)
+    if (index >= v->capacity)
     {
         // resize the array, making sure it is bigger than index.
-        unsigned int newSize = (v->cur_size * 2 > index ? v->cur_size * 2: index + 1);
+        unsigned int newSize = (v->capacity * 2 > index ? v->capacity * 2: index + 1);
 
         void** temp = (void**)CE_REALLOC(v->data, sizeof(void*) * newSize);
 
         if (NULL == temp) return false;
         v->data = temp;
-        memset(v->data + v->cur_size, 0, sizeof(void*) * (newSize - v->cur_size));
-        v->cur_size = newSize;
+        memset(v->data + v->capacity, 0, sizeof(void*) * (newSize - v->capacity));
+        v->capacity = newSize;
     }
 
     v->data[index] = item;
     return true;
 }
 
+/*! \brief Adds a new element at the end of the array, after its current last element
+    \param v The array to set.
+    \param item The data to set.
+*/
+static inline void
+DynamicArrayPushBack(DynamicArray* v, void* item)
+{
+    if (NULL == v)
+    {
+        return;
+    }
+
+    DynamicArraySet(v, v->size, item);
+
+    ++v->size;
+}
 
 #endif

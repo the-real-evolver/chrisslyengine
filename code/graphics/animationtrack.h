@@ -63,7 +63,6 @@ public:
 private:
     unsigned char handle;
     mutable DynamicArray keyFrames;
-    unsigned short numKeyFrames;
     int currentTimeIndex;
 };
 

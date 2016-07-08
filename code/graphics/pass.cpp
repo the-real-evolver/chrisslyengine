@@ -34,7 +34,6 @@ Pass::Pass(unsigned short index) :
     fogColour(0xffffffff),
     fogStart(0.0f),
     fogEnd(1.0f),
-    numTextureUnitStates(0),
     gpuProgram(NULL)
 {
     DynamicArrayInit(&this->textureUnitStates, 1);
@@ -383,8 +382,7 @@ TextureUnitState*
 Pass::CreateTextureUnitState()
 {
     TextureUnitState* textureUnitState = CE_NEW TextureUnitState();
-    DynamicArraySet(&this->textureUnitStates, this->numTextureUnitStates, textureUnitState);
-    ++this->numTextureUnitStates;
+    DynamicArrayPushBack(&this->textureUnitStates, textureUnitState);
 
     return textureUnitState;
 }
@@ -404,7 +402,7 @@ Pass::GetTextureUnitState(unsigned short index) const
 unsigned short
 Pass::GetNumTextureUnitStates() const
 {
-    return this->numTextureUnitStates;
+    return this->textureUnitStates.size;
 }
 
 //------------------------------------------------------------------------------
@@ -414,14 +412,12 @@ void
 Pass::RemoveAllTextureUnitStates()
 {
     unsigned int i;
-    for (i = 0; i < this->numTextureUnitStates; ++i)
+    for (i = 0; i < this->textureUnitStates.size; ++i)
     {
         CE_DELETE (TextureUnitState*)DynamicArrayGet(&this->textureUnitStates, i);
     }
 
     DynamicArrayDelete(&this->textureUnitStates);
-
-    this->numTextureUnitStates = 0;
 }
 
 //------------------------------------------------------------------------------
@@ -458,7 +454,7 @@ void
 Pass::_Load()
 {
     unsigned int i;
-    for (i = 0; i < this->numTextureUnitStates; ++i)
+    for (i = 0; i < this->textureUnitStates.size; ++i)
     {
         ((TextureUnitState*)DynamicArrayGet(&this->textureUnitStates, i))->_Load();
     }

@@ -38,7 +38,6 @@ public:
 private:
     /// list of primary passes
     mutable DynamicArray passes;
-    unsigned short numPasses;
 
     bool loaded;
 };

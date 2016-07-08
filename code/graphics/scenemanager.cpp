@@ -22,7 +22,6 @@ SceneManager* SceneManager::Singleton = NULL;
 */
 SceneManager::SceneManager() :
     entities(NULL),
-    numSceneNodes(0),
     sceneRoot(NULL),
     ambientLight(0x00000000),
     suppressRenderStateChanges(false),
@@ -177,8 +176,7 @@ SceneManager::CreateSceneNode()
     SceneNode* sceneNode = CE_NEW SceneNode();
     sceneNode->SetParent(NULL);
 
-    DynamicArraySet(&this->sceneNodes, this->numSceneNodes, sceneNode);
-    ++this->numSceneNodes;
+    DynamicArrayPushBack(&this->sceneNodes, sceneNode);
 
     return sceneNode;
 }
@@ -208,12 +206,11 @@ SceneManager::ClearScene()
     this->GetRootSceneNode()->RemoveAllChildren();
 
     unsigned int i;
-    for (i = 0; i < this->numSceneNodes; ++i)
+    for (i = 0; i < this->sceneNodes.size; ++i)
     {
         CE_DELETE (SceneNode*)DynamicArrayGet(&this->sceneNodes, i);
     }
     DynamicArrayDelete(&this->sceneNodes);
-    this->numSceneNodes = 0;
 
     LinkedList* it = this->entities;
     while (it != NULL)
@@ -351,7 +348,7 @@ SceneManager::_RenderScene(Camera* camera, Viewport* vp)
 
     // fill renderqueues
     unsigned int sceneNodeIndex;
-    for (sceneNodeIndex = 0; sceneNodeIndex < this->numSceneNodes; ++sceneNodeIndex)
+    for (sceneNodeIndex = 0; sceneNodeIndex < this->sceneNodes.size; ++sceneNodeIndex)
     {
         // for all scenenodes
         SceneNode* sceneNode = (SceneNode*)DynamicArrayGet(&this->sceneNodes, sceneNodeIndex);

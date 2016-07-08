@@ -19,7 +19,6 @@ using namespace chrissly::core;
 Entity::Entity(Mesh* mesh) :
     parentNode(NULL),
     mesh(mesh),
-    numSubEntities(0),
     castShadows(false),
     receivesShadows(false)
 {
@@ -64,7 +63,7 @@ Entity::Entity(Mesh* mesh) :
 Entity::~Entity()
 {
     unsigned int i;
-    for (i = 0; i < this->numSubEntities; ++i)
+    for (i = 0; i < this->subEntityList.capacity; ++i)
     {
         CE_DELETE (SubEntity*)DynamicArrayGet(&this->subEntityList, i);
     }
@@ -99,7 +98,7 @@ Entity::GetSubEntity(unsigned int index) const
 unsigned int
 Entity::GetNumSubEntities() const
 {
-    return this->numSubEntities;
+    return this->subEntityList.capacity;
 }
 
 //------------------------------------------------------------------------------
@@ -195,11 +194,10 @@ Entity::UpdateAnimation()
 void
 Entity::BuildSubEntityList(Mesh* mesh, DynamicArray* sublist)
 {
-    this->numSubEntities = mesh->GetNumSubMeshes();
-    DynamicArrayInit(&this->subEntityList, this->numSubEntities);
+    DynamicArrayInit(&this->subEntityList, mesh->GetNumSubMeshes());
 
     unsigned int i;
-    for (i = 0; i < this->numSubEntities; ++i)
+    for (i = 0; i < this->subEntityList.capacity; ++i)
     {
         SubMesh* subMesh = mesh->GetSubMesh(i);
         SubEntity* subEntity = CE_NEW SubEntity(this, subMesh);

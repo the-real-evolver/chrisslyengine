@@ -16,8 +16,7 @@ using namespace chrissly::core;
 //------------------------------------------------------------------------------
 /**
 */
-Mesh::Mesh() :
-    numSubMeshes(0)
+Mesh::Mesh()
 {
     DynamicArrayInit(&this->subMeshList, 1);
     HashTableInit(&this->animationsList, 1);
@@ -31,7 +30,7 @@ Mesh::~Mesh()
     this->RemoveAllAnimations();
 
     unsigned int i;
-    for (i = 0; i < this->numSubMeshes; ++i)
+    for (i = 0; i < this->subMeshList.size; ++i)
     {
         CE_DELETE (SubMesh*)DynamicArrayGet(&this->subMeshList, i);
     }
@@ -46,8 +45,7 @@ SubMesh*
 Mesh::CreateSubMesh()
 {
     SubMesh* subMesh = CE_NEW SubMesh();
-    DynamicArraySet(&this->subMeshList, this->numSubMeshes, subMesh);
-    ++this->numSubMeshes;
+    DynamicArrayPushBack(&this->subMeshList, subMesh);
 
     return subMesh;
 }
@@ -58,7 +56,7 @@ Mesh::CreateSubMesh()
 unsigned short
 Mesh::GetNumSubMeshes() const
 {
-    return this->numSubMeshes;
+    return this->subMeshList.size;
 }
 
 //------------------------------------------------------------------------------

@@ -55,7 +55,6 @@ private:
     MaterialManager* materialManager;
     RenderWindow* autoWindow;
     DynamicArray renderTargets;
-    unsigned short numRenderTargets;
 };
 
 } // namespace graphics

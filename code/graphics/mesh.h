@@ -45,7 +45,6 @@ public:
 private:
     /// a list of submeshes which make up this mesh 
     mutable DynamicArray subMeshList;
-    unsigned short numSubMeshes;
 
     /// storage of morph animations, lookup by name
     HashTable animationsList;

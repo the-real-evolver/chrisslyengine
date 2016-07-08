@@ -12,8 +12,7 @@ namespace chrissly
 //------------------------------------------------------------------------------
 /**
 */
-PSPTexture::PSPTexture() :
-    numMipmapInfos(0)
+PSPTexture::PSPTexture()
 {
 
 }
@@ -23,8 +22,8 @@ PSPTexture::PSPTexture() :
 */
 PSPTexture::~PSPTexture()
 {
-    int i;
-    for (i = 0; i < this->numMipmapInfos; ++i)
+    unsigned int i;
+    for (i = 0; i < this->mipmapInfos.capacity; ++i)
     {
         CE_DELETE (MipmapInfo*)DynamicArrayGet(&this->mipmapInfos, i);
     }
@@ -39,14 +38,13 @@ void
 PSPTexture::CreateInternalResources()
 {
     DynamicArrayInit(&this->mipmapInfos, this->numMipmaps);
-    this->numMipmapInfos = this->numMipmaps;
 
     void* mipmapbuffer = this->textureBuffer;
     int mipmapWidth = this->width;
     int mipmapHeight = this->height;
 
-    int i;
-    for (i = 0; i < this->numMipmaps; ++i)
+    unsigned int i;
+    for (i = 0; i < this->mipmapInfos.capacity; ++i)
     {
         mipmapbuffer = (void*)((unsigned int)mipmapbuffer + PSPHardwareBufferManager::GetMemorySize(mipmapWidth, mipmapHeight, PSPMappings::Get(this->format)));
         mipmapWidth = mipmapWidth >> 1;

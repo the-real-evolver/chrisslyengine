@@ -49,7 +49,6 @@ private:
     core::String name;
     float length;
     mutable DynamicArray vertexTrackList;
-    unsigned short numVertexTracks;
 };
 
 } // namespace graphics

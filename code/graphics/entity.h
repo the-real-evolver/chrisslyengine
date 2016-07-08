@@ -69,7 +69,6 @@ private:
     Mesh* mesh;
     /// list of SubEntities (point to SubMeshes)
     mutable DynamicArray subEntityList;
-    unsigned short numSubEntities;
     /// does this object cast shadows?
     bool castShadows;
     /// does this object receive shadows?

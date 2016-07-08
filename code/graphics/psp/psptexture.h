@@ -34,7 +34,6 @@ public:
 
 private:
     mutable DynamicArray mipmapInfos;
-    int numMipmapInfos;
 };
 
 } // namespace chrissly

@@ -19,7 +19,6 @@ using namespace chrissly::core;
 */
 VertexAnimationTrack::VertexAnimationTrack(unsigned char handle) :
     handle(handle),
-    numKeyFrames(0),
     currentTimeIndex(-1)
 {
     DynamicArrayInit(&this->keyFrames, 1);
@@ -49,8 +48,7 @@ VertexMorphKeyFrame*
 VertexAnimationTrack::CreateVertexMorphKeyFrame(float timePos)
 {
     VertexMorphKeyFrame* vertexMorphKeyFrame = CE_NEW VertexMorphKeyFrame(timePos);
-    DynamicArraySet(&this->keyFrames, this->numKeyFrames, vertexMorphKeyFrame);
-    ++this->numKeyFrames;
+    DynamicArrayPushBack(&this->keyFrames, vertexMorphKeyFrame);
 
     return vertexMorphKeyFrame;
 }
@@ -61,7 +59,7 @@ VertexAnimationTrack::CreateVertexMorphKeyFrame(float timePos)
 unsigned short
 VertexAnimationTrack::GetNumKeyFrames() const
 {
-    return this->numKeyFrames;
+    return this->keyFrames.size;
 }
 
 //------------------------------------------------------------------------------
@@ -80,14 +78,12 @@ void
 VertexAnimationTrack::RemoveAllKeyFrames()
 {
     unsigned int i;
-    for (i = 0; i < this->numKeyFrames; ++i)
+    for (i = 0; i < this->keyFrames.size; ++i)
     {
         CE_DELETE (VertexMorphKeyFrame*)DynamicArrayGet(&this->keyFrames, i);
     }
 
     DynamicArrayDelete(&this->keyFrames);
-
-    this->numKeyFrames = 0;
 }
 
 //------------------------------------------------------------------------------
@@ -98,7 +94,7 @@ VertexAnimationTrack::ApplyToVertexData(VertexData* data, int timeIndex)
 {
     if (this->currentTimeIndex != timeIndex)
     {
-        if (timeIndex < this->numKeyFrames - 1)
+        if ((unsigned int)timeIndex < this->keyFrames.size - 1)
         {
             HardwareVertexBuffer* kf1 = ((VertexMorphKeyFrame*)DynamicArrayGet(&this->keyFrames, timeIndex))->vertexData->vertexBuffer;
             HardwareVertexBuffer* kf2 = ((VertexMorphKeyFrame*)DynamicArrayGet(&this->keyFrames, timeIndex + 1))->vertexData->vertexBuffer;

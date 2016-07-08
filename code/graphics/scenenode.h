@@ -183,7 +183,6 @@ private:
     mutable bool cachedTransformOutOfDate;
 
     mutable DynamicArray objectMap;
-    unsigned short numAttachedObjects;
 };
 
 } // namespace graphics

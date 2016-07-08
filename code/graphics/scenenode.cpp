@@ -21,8 +21,7 @@ SceneNode::SceneNode() :
     scale(Vector3(1.0f, 1.0f, 1.0f)),
     derivedScale(Vector3(1.0f, 1.0f, 1.0f)),
     cachedTransform(Matrix4::IDENTITY),
-    cachedTransformOutOfDate(true),
-    numAttachedObjects(0)
+    cachedTransformOutOfDate(true)
 {
     DynamicArrayInit(&this->objectMap, 1);
 }
@@ -335,8 +334,7 @@ SceneNode::_GetFullTransform() const
 void
 SceneNode::AttachObject(Entity* obj)
 {
-    DynamicArraySet(&this->objectMap, this->numAttachedObjects, obj);
-    ++this->numAttachedObjects;
+    DynamicArrayPushBack(&this->objectMap, obj);
 
     obj->_NotifyAttached(this);
 }
@@ -347,7 +345,7 @@ SceneNode::AttachObject(Entity* obj)
 unsigned short
 SceneNode::NumAttachedObjects() const
 {
-    return this->numAttachedObjects;
+    return this->objectMap.size;
 }
 
 //------------------------------------------------------------------------------
@@ -366,7 +364,6 @@ void
 SceneNode::DetachAllObjects()
 {
     DynamicArrayDelete(&this->objectMap);
-    this->numAttachedObjects = 0;
 }
 
 //------------------------------------------------------------------------------

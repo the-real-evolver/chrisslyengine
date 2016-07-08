@@ -18,8 +18,7 @@ using namespace chrissly::core;
 /**
 */
 Animation::Animation(const char* name, float length) :
-    length(length),
-    numVertexTracks(0)
+    length(length)
 {
     this->name = name;
     DynamicArrayInit(&this->vertexTrackList, 1);
@@ -58,8 +57,7 @@ VertexAnimationTrack*
 Animation::CreateVertexTrack(unsigned char handle)
 {
     VertexAnimationTrack* vertexAnimationTrack = CE_NEW VertexAnimationTrack(handle);
-    DynamicArraySet(&this->vertexTrackList, this->numVertexTracks, vertexAnimationTrack);
-    ++this->numVertexTracks;
+    DynamicArrayPushBack(&this->vertexTrackList, vertexAnimationTrack);
 
     return vertexAnimationTrack;
 }
@@ -70,7 +68,7 @@ Animation::CreateVertexTrack(unsigned char handle)
 unsigned short
 Animation::GetNumVertexTracks() const
 {
-    return this->numVertexTracks;
+    return this->vertexTrackList.size;
 }
 
 //------------------------------------------------------------------------------
@@ -89,14 +87,12 @@ void
 Animation::DestroyAllVertexTracks()
 {
     unsigned int i;
-    for (i = 0; i < this->numVertexTracks; ++i)
+    for (i = 0; i < this->vertexTrackList.size; ++i)
     {
         CE_DELETE (VertexAnimationTrack*)DynamicArrayGet(&this->vertexTrackList, i);
     }
 
     DynamicArrayDelete(&this->vertexTrackList);
-
-    this->numVertexTracks = 0;
 }
 
 //------------------------------------------------------------------------------
@@ -111,7 +107,7 @@ Animation::Apply(Entity* entity, float timePos)
     }
 
     unsigned int i;
-    for (i = 0; i < this->numVertexTracks; ++i)
+    for (i = 0; i < this->vertexTrackList.size; ++i)
     {
         VertexAnimationTrack* vertexAnimTrack = (VertexAnimationTrack*)DynamicArrayGet(&this->vertexTrackList, i);
         unsigned short numKeys = vertexAnimTrack->GetNumKeyFrames() - 1;

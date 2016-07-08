@@ -42,7 +42,7 @@ GLES2RenderTexture::Update()
 {
     // update all viewports
     unsigned int index;
-    for (index = 0; index < this->numViewports; ++index)
+    for (index = 0; index < this->viewportList.size; ++index)
     {
         ((graphics::Viewport*)DynamicArrayGet(&this->viewportList, index))->Update();
     }

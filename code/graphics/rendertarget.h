@@ -48,7 +48,6 @@ public:
 
 protected:
     mutable DynamicArray viewportList;
-    unsigned short numViewports;
 
     void* buffer;
     int width;

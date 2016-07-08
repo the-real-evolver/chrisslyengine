@@ -16,8 +16,7 @@ GraphicsSystem* GraphicsSystem::Singleton = NULL;
 /**
 */
 GraphicsSystem::GraphicsSystem() :
-    autoWindow(NULL),
-    numRenderTargets(0)
+    autoWindow(NULL)
 {
     Singleton = this;
     this->activeRenderer = CE_NEW RenderSystem();
@@ -42,7 +41,7 @@ GraphicsSystem::~GraphicsSystem()
     CE_DELETE this->materialManager;
 
     unsigned int i;
-    for (i = 0; i < this->numRenderTargets; ++i)
+    for (i = 0; i < this->renderTargets.size; ++i)
     {
         CE_DELETE (RenderTarget*)DynamicArrayGet(&this->renderTargets, i);
     }
@@ -57,8 +56,7 @@ GraphicsSystem::Initialise(void* customParams)
 {
     this->autoWindow = this->activeRenderer->_Initialise(customParams);
 
-    DynamicArraySet(&this->renderTargets, this->numRenderTargets, this->autoWindow);
-    ++this->numRenderTargets;
+    DynamicArrayPushBack(&this->renderTargets, this->autoWindow);
 
     return this->autoWindow;
 }
@@ -80,7 +78,7 @@ GraphicsSystem::RenderOneFrame()
 {
     // update all rendertargets
     unsigned int index;
-    for (index = 0; index < this->numRenderTargets; ++index)
+    for (index = 0; index < this->renderTargets.size; ++index)
     {
         RenderTarget* rt = (RenderTarget*)DynamicArrayGet(&this->renderTargets, index);
         rt->Update();
