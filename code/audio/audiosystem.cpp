@@ -47,19 +47,19 @@ AudioSystem::Initialise(void* customParams)
 {
     this->activeRenderer->_Initialise(customParams);
 
-    DynamicArrayInit(&this->soundPool, 8);
+    ce_dynamic_array_init(&this->soundPool, 8);
     unsigned int i;
     for (i = 0; i < this->soundPool.capacity; ++i)
     {
         Sound* sound = CE_NEW Sound();
-        DynamicArraySet(&this->soundPool, i, sound);
+        ce_dynamic_array_set(&this->soundPool, i, sound);
     }
 
-    DynamicArrayInit(&this->channelPool, this->activeRenderer->GetNumHardwareChannels());
+    ce_dynamic_array_init(&this->channelPool, this->activeRenderer->GetNumHardwareChannels());
     for (i = 0; i < this->channelPool.capacity; ++i)
     {
         Channel* channel = CE_NEW Channel();
-        DynamicArraySet(&this->channelPool, i, channel);
+        ce_dynamic_array_set(&this->channelPool, i, channel);
     }
 
     return OK;
@@ -74,7 +74,7 @@ AudioSystem::Release()
     unsigned int i;
     for (i = 0; i < this->channelPool.capacity; ++i)
     {
-        Channel* channel = (Channel*)DynamicArrayGet(&this->channelPool, i);
+        Channel* channel = (Channel*)ce_dynamic_array_get(&this->channelPool, i);
         int index;
         channel->GetIndex(&index);
         if (index != Channel::CHANNEL_FREE)
@@ -83,13 +83,13 @@ AudioSystem::Release()
         }
         CE_DELETE channel;
     }
-    DynamicArrayDelete(&this->channelPool);
+    ce_dynamic_array_delete(&this->channelPool);
 
     for (i = 0; i < this->soundPool.capacity; ++i)
     {
-        CE_DELETE (Sound*)DynamicArrayGet(&this->soundPool, i);
+        CE_DELETE (Sound*)ce_dynamic_array_get(&this->soundPool, i);
     }
-    DynamicArrayDelete(&this->soundPool);
+    ce_dynamic_array_delete(&this->soundPool);
 
     this->activeRenderer->Shutdown();
 
@@ -106,7 +106,7 @@ AudioSystem::CreateSound(const char* name, Mode mode, Sound** sound)
     unsigned int i;
     for (i = 0; i < this->soundPool.capacity; ++i)
     {
-        snd = (Sound*)DynamicArrayGet(&this->soundPool, i);
+        snd = (Sound*)ce_dynamic_array_get(&this->soundPool, i);
         if (!snd->_IsRealized()) break;
     }
     if (i == this->soundPool.capacity) return ERR_MEMORY;
@@ -145,7 +145,7 @@ AudioSystem::PlaySound(int channelid, Sound* sound, bool paused, Channel** chann
     unsigned int i;
     for (i = 0; i < this->channelPool.capacity; ++i)
     {
-        chn = (Channel*)DynamicArrayGet(&this->channelPool, i);
+        chn = (Channel*)ce_dynamic_array_get(&this->channelPool, i);
         int index;
         chn->GetIndex(&index);
         if (Channel::CHANNEL_FREE == index) break;
@@ -184,7 +184,7 @@ AudioSystem::Update()
     unsigned int i;
     for (i = 0; i < this->channelPool.capacity; ++i)
     {
-        Channel* channel = (Channel*)DynamicArrayGet(&this->channelPool, i);
+        Channel* channel = (Channel*)ce_dynamic_array_get(&this->channelPool, i);
         int index;
         channel->GetIndex(&index);
         if (index != Channel::CHANNEL_FREE)

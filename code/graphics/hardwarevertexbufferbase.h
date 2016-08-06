@@ -47,7 +47,7 @@ public:
     /// set the number of vertices in this buffer
     void SetNumVertices(unsigned int numVertices);
 
-private:
+protected:
     /// default constructor
     HardwareVertexBufferBase();
 

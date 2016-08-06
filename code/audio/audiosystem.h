@@ -55,9 +55,9 @@ private:
 
     AudioRenderer* activeRenderer;
 
-    DynamicArray soundPool;
+    ce_dynamic_array soundPool;
 
-    DynamicArray channelPool;
+    ce_dynamic_array channelPool;
 
     core::Vector3 listenerPos;
     core::Vector3 listenerForward;

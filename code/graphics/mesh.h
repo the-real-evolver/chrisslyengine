@@ -40,14 +40,14 @@ public:
     /// returns whether or not this mesh has some kind of vertex animation
     bool HasVertexAnimation() const;
     /// initialise an animation set suitable for use with this mesh
-    void _InitAnimationState(HashTable* animSet);
+    void _InitAnimationState(ce_hash_table* animSet);
 
 private:
-    /// a list of submeshes which make up this mesh 
-    mutable DynamicArray subMeshList;
+    /// a list of submeshes which make up this mesh
+    mutable ce_dynamic_array subMeshes;
 
     /// storage of morph animations, lookup by name
-    HashTable animationsList;
+    ce_hash_table animations;
 };
 
 } // namespace graphics

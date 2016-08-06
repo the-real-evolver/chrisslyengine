@@ -329,6 +329,7 @@ static int stb__clex_iswhite(int x)
     return x == ' ' || x == '\t' || x == '\r' || x == '\n' || x == '\f';
 }
 
+#ifdef STB__clex_parse_suffixes
 static const char *stb__strchr(const char *str, int ch)
 {
     for (; *str; ++str)
@@ -336,6 +337,7 @@ static const char *stb__strchr(const char *str, int ch)
         return str;
     return 0;
 }
+#endif
 
 // parse suffixes at the end of a number
 static int stb__clex_parse_suffixes(stb_lexer *lexer, long tokenid, char *start, char *cur, const char *suffixes)

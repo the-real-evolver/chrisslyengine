@@ -14,6 +14,7 @@
 #define CE_DELETE delete
 #define CE_MALLOC(bytes) malloc(bytes)
 #define CE_MALLOC_ALIGN(align, bytes) memalign(align, bytes)
+#define CE_CALLOC(num, size) calloc(num, size)
 #define CE_FREE(ptr) free(ptr)
 #define CE_REALLOC(ptr, size) realloc(ptr, size)
 

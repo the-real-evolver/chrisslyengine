@@ -25,10 +25,10 @@ PSPTexture::~PSPTexture()
     unsigned int i;
     for (i = 0; i < this->mipmapInfos.capacity; ++i)
     {
-        CE_DELETE (MipmapInfo*)DynamicArrayGet(&this->mipmapInfos, i);
+        CE_DELETE (MipmapInfo*)ce_dynamic_array_get(&this->mipmapInfos, i);
     }
 
-    DynamicArrayDelete(&this->mipmapInfos);
+    ce_dynamic_array_delete(&this->mipmapInfos);
 }
 
 //------------------------------------------------------------------------------
@@ -37,7 +37,7 @@ PSPTexture::~PSPTexture()
 void
 PSPTexture::CreateInternalResources()
 {
-    DynamicArrayInit(&this->mipmapInfos, this->numMipmaps);
+    ce_dynamic_array_init(&this->mipmapInfos, this->numMipmaps);
 
     void* mipmapbuffer = this->textureBuffer;
     int mipmapWidth = this->width;
@@ -55,7 +55,7 @@ PSPTexture::CreateInternalResources()
         mipmapInfo->width = mipmapWidth;
         mipmapInfo->height = mipmapHeight;
 
-        DynamicArraySet(&this->mipmapInfos, i, mipmapInfo);
+        ce_dynamic_array_set(&this->mipmapInfos, i, mipmapInfo);
     }
 }
 
@@ -65,7 +65,7 @@ PSPTexture::CreateInternalResources()
 PSPTexture::MipmapInfo*
 PSPTexture::GetMipmapInfo(int level)
 {
-    return (MipmapInfo*)DynamicArrayGet(&this->mipmapInfos, level - 1);
+    return (MipmapInfo*)ce_dynamic_array_get(&this->mipmapInfos, level - 1);
 }
 
 } // namespace chrissly

@@ -17,7 +17,7 @@ using namespace chrissly::core;
 */
 GpuNamedConstants::GpuNamedConstants()
 {
-    HashTableInit(&this->map, 4);
+    ce_hash_table_init(&this->map, 4);
 }
 
 //------------------------------------------------------------------------------
@@ -26,20 +26,20 @@ GpuNamedConstants::GpuNamedConstants()
 GpuNamedConstants::~GpuNamedConstants()
 {
     unsigned int i;
-    for (i = 0; i < this->map.bucketCount; ++i)
+    for (i = 0; i < this->map.bucket_count; ++i)
     {
-        LinkedList* it = HashTableBegin(&this->map, i);
+        ce_linked_list* it = ce_hash_table_begin(&this->map, i);
         while (it != NULL)
         {
-            CE_LOG("GpuNamedConstants::~GpuNamedConstants(): remove '%s'\n", ((KeyValuePair*)it->data)->key);
-            GpuConstantDefinition* def = (GpuConstantDefinition*)((KeyValuePair*)it->data)->value;
+            CE_LOG("GpuNamedConstants::~GpuNamedConstants(): remove '%s'\n", ((ce_key_value_pair*)it->data)->key);
+            GpuConstantDefinition* def = (GpuConstantDefinition*)((ce_key_value_pair*)it->data)->value;
             CE_FREE(def->buffer);
             CE_DELETE def;
             it = it->next;
         }
     }
 
-    HashTableClear(&this->map);
+    ce_hash_table_clear(&this->map);
 }
 
 //------------------------------------------------------------------------------
@@ -64,7 +64,7 @@ GpuProgramParameters::~GpuProgramParameters()
 void
 GpuProgramParameters::SetNamedConstant(const char* name, float val)
 {
-    GpuConstantDefinition* def = (GpuConstantDefinition*)HashTableFind(&this->constantDefs->map, name);
+    GpuConstantDefinition* def = (GpuConstantDefinition*)ce_hash_table_find(&this->constantDefs->map, name);
     if (def != NULL)
     {
         memcpy(def->buffer, &val, def->size);
@@ -77,7 +77,7 @@ GpuProgramParameters::SetNamedConstant(const char* name, float val)
 void
 GpuProgramParameters::SetNamedConstant(const char* name, int val)
 {
-    GpuConstantDefinition* def = (GpuConstantDefinition*)HashTableFind(&this->constantDefs->map, name);
+    GpuConstantDefinition* def = (GpuConstantDefinition*)ce_hash_table_find(&this->constantDefs->map, name);
     if (def != NULL)
     {
         memcpy(def->buffer, &val, def->size);
@@ -90,7 +90,7 @@ GpuProgramParameters::SetNamedConstant(const char* name, int val)
 void
 GpuProgramParameters::SetNamedConstant(const char* name, const Vector3& vec)
 {
-    GpuConstantDefinition* def = (GpuConstantDefinition*)HashTableFind(&this->constantDefs->map, name);
+    GpuConstantDefinition* def = (GpuConstantDefinition*)ce_hash_table_find(&this->constantDefs->map, name);
     if (def != NULL)
     {
         memcpy(def->buffer, &vec.x, def->size);
@@ -103,7 +103,7 @@ GpuProgramParameters::SetNamedConstant(const char* name, const Vector3& vec)
 void
 GpuProgramParameters::SetNamedConstant(const char* name, const Vector3* vec, unsigned int numEntries)
 {
-    GpuConstantDefinition* def = (GpuConstantDefinition*)HashTableFind(&this->constantDefs->map, name);
+    GpuConstantDefinition* def = (GpuConstantDefinition*)ce_hash_table_find(&this->constantDefs->map, name);
     if (def != NULL)
     {
         CE_ASSERT(numEntries <= def->arraySize, "GpuProgramParameters::SetNamedConstant(): Vector3 numEntries: '%u' > arraySize: '%u'\n", numEntries, def->arraySize);
@@ -117,7 +117,7 @@ GpuProgramParameters::SetNamedConstant(const char* name, const Vector3* vec, uns
 void
 GpuProgramParameters::SetNamedConstant(const char* name, const Quaternion& q)
 {
-    GpuConstantDefinition* def = (GpuConstantDefinition*)HashTableFind(&this->constantDefs->map, name);
+    GpuConstantDefinition* def = (GpuConstantDefinition*)ce_hash_table_find(&this->constantDefs->map, name);
     if (def != NULL)
     {
         memcpy(def->buffer, &q.w, def->size);
@@ -130,7 +130,7 @@ GpuProgramParameters::SetNamedConstant(const char* name, const Quaternion& q)
 void
 GpuProgramParameters::SetNamedConstant(const char* name, const Matrix4& m)
 {
-    GpuConstantDefinition* def = (GpuConstantDefinition*)HashTableFind(&this->constantDefs->map, name);
+    GpuConstantDefinition* def = (GpuConstantDefinition*)ce_hash_table_find(&this->constantDefs->map, name);
     if (def != NULL)
     {
         memcpy(def->buffer, m[0], def->size);
@@ -143,7 +143,7 @@ GpuProgramParameters::SetNamedConstant(const char* name, const Matrix4& m)
 void
 GpuProgramParameters::SetNamedConstant(const char* name, const Matrix4* m, unsigned int numEntries)
 {
-    GpuConstantDefinition* def = (GpuConstantDefinition*)HashTableFind(&this->constantDefs->map, name);
+    GpuConstantDefinition* def = (GpuConstantDefinition*)ce_hash_table_find(&this->constantDefs->map, name);
     if (def != NULL)
     {
         CE_ASSERT(numEntries <= def->arraySize, "GpuProgramParameters::SetNamedConstant(): Matrix4 numEntries: '%u' > arraySize: '%u'\n", numEntries, def->arraySize);

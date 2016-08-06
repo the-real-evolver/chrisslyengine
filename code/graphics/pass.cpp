@@ -36,7 +36,7 @@ Pass::Pass(unsigned short index) :
     fogEnd(1.0f),
     gpuProgram(NULL)
 {
-    DynamicArrayInit(&this->textureUnitStates, 1);
+    ce_dynamic_array_init(&this->textureUnitStates, 1);
 }
 
 //------------------------------------------------------------------------------
@@ -382,7 +382,7 @@ TextureUnitState*
 Pass::CreateTextureUnitState()
 {
     TextureUnitState* textureUnitState = CE_NEW TextureUnitState();
-    DynamicArrayPushBack(&this->textureUnitStates, textureUnitState);
+    ce_dynamic_array_push_back(&this->textureUnitStates, textureUnitState);
 
     return textureUnitState;
 }
@@ -393,7 +393,7 @@ Pass::CreateTextureUnitState()
 TextureUnitState*
 Pass::GetTextureUnitState(unsigned short index) const
 {
-    return (TextureUnitState*)DynamicArrayGet(&this->textureUnitStates, index);
+    return (TextureUnitState*)ce_dynamic_array_get(&this->textureUnitStates, index);
 }
 
 //------------------------------------------------------------------------------
@@ -414,10 +414,10 @@ Pass::RemoveAllTextureUnitStates()
     unsigned int i;
     for (i = 0; i < this->textureUnitStates.size; ++i)
     {
-        CE_DELETE (TextureUnitState*)DynamicArrayGet(&this->textureUnitStates, i);
+        CE_DELETE (TextureUnitState*)ce_dynamic_array_get(&this->textureUnitStates, i);
     }
 
-    DynamicArrayDelete(&this->textureUnitStates);
+    ce_dynamic_array_delete(&this->textureUnitStates);
 }
 
 //------------------------------------------------------------------------------
@@ -456,7 +456,7 @@ Pass::_Load()
     unsigned int i;
     for (i = 0; i < this->textureUnitStates.size; ++i)
     {
-        ((TextureUnitState*)DynamicArrayGet(&this->textureUnitStates, i))->_Load();
+        ((TextureUnitState*)ce_dynamic_array_get(&this->textureUnitStates, i))->_Load();
     }
 }
 

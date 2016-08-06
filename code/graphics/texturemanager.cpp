@@ -23,7 +23,7 @@ TextureManager* TextureManager::Singleton = NULL;
 TextureManager::TextureManager()
 {
     Singleton = this;
-    HashTableInit(&this->resources, 4);
+    ce_hash_table_init(&this->resources, 4);
 }
 
 //------------------------------------------------------------------------------
@@ -41,7 +41,7 @@ TextureManager::~TextureManager()
 Texture*
 TextureManager::Load(const char* name)
 {
-    Texture* texture = (Texture*)HashTableFind(&this->resources, name);
+    Texture* texture = (Texture*)ce_hash_table_find(&this->resources, name);
     if (texture != NULL)
     {
         return texture;
@@ -76,7 +76,7 @@ TextureManager::Load(const char* name)
     texture->SetBuffer(textureBuffer);
     texture->CreateInternalResources();
 
-    HashTableInsert(&this->resources, name, texture);
+    ce_hash_table_insert(&this->resources, name, texture);
 
     return texture;
 }
@@ -88,17 +88,17 @@ void
 TextureManager::RemoveAll()
 {
     unsigned int i;
-    for (i = 0; i < this->resources.bucketCount; ++i)
+    for (i = 0; i < this->resources.bucket_count; ++i)
     {
-        LinkedList* it = HashTableBegin(&this->resources, i);
+        ce_linked_list* it = ce_hash_table_begin(&this->resources, i);
         while (it != NULL)
         {
-            CE_DELETE (Texture*)((KeyValuePair*)it->data)->value;
+            CE_DELETE (Texture*)((ce_key_value_pair*)it->data)->value;
             it = it->next;
         }
     }
 
-    HashTableClear(&this->resources);
+    ce_hash_table_clear(&this->resources);
 }
 
 } // namespace graphics

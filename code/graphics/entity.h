@@ -62,19 +62,19 @@ private:
     /// private constructor - construct from mesh (the usual constructor used)
     Entity(Mesh* mesh);
     /// builds a list of SubEntities based on the SubMeshes contained in the Mesh
-    void BuildSubEntityList(Mesh* mesh, DynamicArray* sublist);
+    void BuildSubEntities(Mesh* mesh, ce_dynamic_array* entities);
     /// node to which this object is attached
     SceneNode* parentNode;
     /// the Mesh that this Entity is based on
     Mesh* mesh;
     /// list of SubEntities (point to SubMeshes)
-    mutable DynamicArray subEntityList;
+    mutable ce_dynamic_array subEntities;
     /// does this object cast shadows?
     bool castShadows;
     /// does this object receive shadows?
     bool receivesShadows;
     /// state of animation for animable meshes
-    mutable HashTable animationState;
+    mutable ce_hash_table animationState;
 };
 
 } // namespace graphics

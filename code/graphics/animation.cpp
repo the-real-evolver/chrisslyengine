@@ -21,7 +21,7 @@ Animation::Animation(const char* name, float length) :
     length(length)
 {
     this->name = name;
-    DynamicArrayInit(&this->vertexTrackList, 1);
+    ce_dynamic_array_init(&this->vertexTracks, 1);
 }
 
 //------------------------------------------------------------------------------
@@ -57,7 +57,7 @@ VertexAnimationTrack*
 Animation::CreateVertexTrack(unsigned char handle)
 {
     VertexAnimationTrack* vertexAnimationTrack = CE_NEW VertexAnimationTrack(handle);
-    DynamicArrayPushBack(&this->vertexTrackList, vertexAnimationTrack);
+    ce_dynamic_array_push_back(&this->vertexTracks, vertexAnimationTrack);
 
     return vertexAnimationTrack;
 }
@@ -68,7 +68,7 @@ Animation::CreateVertexTrack(unsigned char handle)
 unsigned short
 Animation::GetNumVertexTracks() const
 {
-    return this->vertexTrackList.size;
+    return this->vertexTracks.size;
 }
 
 //------------------------------------------------------------------------------
@@ -77,7 +77,7 @@ Animation::GetNumVertexTracks() const
 VertexAnimationTrack*
 Animation::GetVertexTrack(unsigned short index) const
 {
-    return (VertexAnimationTrack*)DynamicArrayGet(&this->vertexTrackList, index);
+    return (VertexAnimationTrack*)ce_dynamic_array_get(&this->vertexTracks, index);
 }
 
 //------------------------------------------------------------------------------
@@ -87,12 +87,12 @@ void
 Animation::DestroyAllVertexTracks()
 {
     unsigned int i;
-    for (i = 0; i < this->vertexTrackList.size; ++i)
+    for (i = 0; i < this->vertexTracks.size; ++i)
     {
-        CE_DELETE (VertexAnimationTrack*)DynamicArrayGet(&this->vertexTrackList, i);
+        CE_DELETE (VertexAnimationTrack*)ce_dynamic_array_get(&this->vertexTracks, i);
     }
 
-    DynamicArrayDelete(&this->vertexTrackList);
+    ce_dynamic_array_delete(&this->vertexTracks);
 }
 
 //------------------------------------------------------------------------------
@@ -107,9 +107,9 @@ Animation::Apply(Entity* entity, float timePos)
     }
 
     unsigned int i;
-    for (i = 0; i < this->vertexTrackList.size; ++i)
+    for (i = 0; i < this->vertexTracks.size; ++i)
     {
-        VertexAnimationTrack* vertexAnimTrack = (VertexAnimationTrack*)DynamicArrayGet(&this->vertexTrackList, i);
+        VertexAnimationTrack* vertexAnimTrack = (VertexAnimationTrack*)ce_dynamic_array_get(&this->vertexTracks, i);
         unsigned short numKeys = vertexAnimTrack->GetNumKeyFrames() - 1;
         unsigned short keyIndex;
         for (keyIndex = 0; keyIndex < numKeys; ++keyIndex)

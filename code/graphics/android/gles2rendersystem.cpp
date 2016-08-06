@@ -5,6 +5,7 @@
 #include "gles2rendersystem.h"
 #include "gles2mappings.h"
 #include "gles2defaultshaders.h"
+#include "gles2debug.h"
 #include "light.h"
 #include "textureunitstate.h"
 #include "common.h"
@@ -12,13 +13,6 @@
 
 namespace chrissly
 {
-
-#define CE_GL_ENABLE_ERROR_CHECK (0)
-#if CE_GL_ENABLE_ERROR_CHECK
-#define CE_GL_ERROR_CHECK(context) CheckGlError(context);
-#else
-#define CE_GL_ERROR_CHECK
-#endif
 
 GLES2RenderSystem* GLES2RenderSystem::Singleton = NULL;
 
@@ -65,10 +59,10 @@ GLES2RenderSystem::_Initialise(void* customParams)
     graphics::RenderWindow* renderWindow = CE_NEW graphics::RenderWindow(customParams);
     renderWindow->Create();
 
-    PrintGLString("Version", GL_VERSION);
-    PrintGLString("Vendor", GL_VENDOR);
-    PrintGLString("Renderer", GL_RENDERER);
-    PrintGLString("Extensions", GL_EXTENSIONS);
+    CE_PRINT_GL_STRING("Version", GL_VERSION);
+    CE_PRINT_GL_STRING("Vendor", GL_VENDOR);
+    CE_PRINT_GL_STRING("Renderer", GL_RENDERER);
+    CE_PRINT_GL_STRING("Extensions", GL_EXTENSIONS);
 
     glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &this->numTextureUnits);
     CE_GL_ERROR_CHECK("glGetIntegerv");
@@ -251,28 +245,33 @@ GLES2RenderSystem::_Render(graphics::SubEntity* renderable)
     else
     {
         graphics::HardwareVertexBuffer* vertexBuffer = renderable->GetSubMesh()->vertexData->vertexBuffer;
-        unsigned char* buffer = (unsigned char*)vertexBuffer->Lock();
+
+        glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer->GetName());
+        CE_GL_ERROR_CHECK("glBindBuffer");
 
         GLint vertexTexCoordHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_TEXTURE_COORDINATES);
-        glVertexAttribPointer(vertexTexCoordHandle, 2, GL_FLOAT, GL_FALSE, 36, buffer);
+        glVertexAttribPointer(vertexTexCoordHandle, 2, GL_FLOAT, GL_FALSE, 36, (void*)0);
         CE_GL_ERROR_CHECK("glVertexAttribPointer: texturecoords");
         glEnableVertexAttribArray(vertexTexCoordHandle);
         CE_GL_ERROR_CHECK("glEnableVertexAttribArray: texturecoords");
 
         GLint vertexNormalHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_NORMAL);
-        glVertexAttribPointer(vertexNormalHandle, 3, GL_FLOAT, GL_FALSE, 36, buffer + 12);
+        glVertexAttribPointer(vertexNormalHandle, 3, GL_FLOAT, GL_FALSE, 36, (void*)12);
         CE_GL_ERROR_CHECK("glVertexAttribPointer: normal");
         glEnableVertexAttribArray(vertexNormalHandle);
         CE_GL_ERROR_CHECK("glEnableVertexAttribArray: normal");
 
         GLint vertexPositionHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_POSITION);
-        glVertexAttribPointer(vertexPositionHandle, 3, GL_FLOAT, GL_FALSE, 36, buffer + 24);
+        glVertexAttribPointer(vertexPositionHandle, 3, GL_FLOAT, GL_FALSE, 36, (void*)24);
         CE_GL_ERROR_CHECK("glVertexAttribPointer: position");
         glEnableVertexAttribArray(vertexPositionHandle);
         CE_GL_ERROR_CHECK("glEnableVertexAttribArray: position");
 
         glDrawArrays(GL_TRIANGLES, 0, vertexBuffer->GetNumVertices());
         CE_GL_ERROR_CHECK("glDrawArrays");
+
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        CE_GL_ERROR_CHECK("glBindBuffer");
     }
 }
 
@@ -429,12 +428,12 @@ GLES2RenderSystem::_SetPass(graphics::Pass* pass)
     // apply shader parameters
     graphics::GpuNamedConstants* constantDefs = this->currentGpuProgram->GetConstantDefinitions();
     unsigned int i;
-    for (i = 0; i < constantDefs->map.bucketCount; ++i)
+    for (i = 0; i < constantDefs->map.bucket_count; ++i)
     {
-        LinkedList* it = HashTableBegin(&constantDefs->map, i);
+        ce_linked_list* it = ce_hash_table_begin(&constantDefs->map, i);
         while (it != NULL)
         {
-            graphics::GpuConstantDefinition* def = (graphics::GpuConstantDefinition*)((KeyValuePair*)it->data)->value;
+            graphics::GpuConstantDefinition* def = (graphics::GpuConstantDefinition*)((ce_key_value_pair*)it->data)->value;
             switch (def->constType)
             {
                 case graphics::GCT_INT1:
@@ -466,16 +465,16 @@ GLES2RenderSystem::_SetPass(graphics::Pass* pass)
 /**
 */
 void
-GLES2RenderSystem::_UseLights(HashTable* lights)
+GLES2RenderSystem::_UseLights(ce_hash_table* lights)
 {
     unsigned int lightIndex = 0;
     unsigned int i;
-    for (i = 0; i < lights->bucketCount && lightIndex < MaxLights; ++i)
+    for (i = 0; i < lights->bucket_count && lightIndex < MaxLights; ++i)
     {
-        LinkedList* it = HashTableBegin(lights, i);
+        ce_linked_list* it = ce_hash_table_begin(lights, i);
         while (it != NULL && lightIndex < MaxLights)
         {
-            graphics::Light* light = (graphics::Light*)((KeyValuePair*)it->data)->value;
+            graphics::Light* light = (graphics::Light*)((ce_key_value_pair*)it->data)->value;
 
             const core::Vector3 position = light->GetPosition();
             this->defaultLightShaderParams[lightIndex][0][0] = position.x;
@@ -529,29 +528,6 @@ const core::Matrix4*
 GLES2RenderSystem::GetDefaultLightShaderParams() const
 {
     return this->defaultLightShaderParams;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-void
-GLES2RenderSystem::PrintGLString(const char* name, GLenum s)
-{
-    const char* v = (const char*)glGetString(s);
-    CE_LOG("GL %s = %s\n", name, v);
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-void
-GLES2RenderSystem::CheckGlError(const char* op)
-{
-    GLint error;
-    for (error = glGetError(); error; error = glGetError())
-    {
-        CE_LOG("after %s() glError (0x%x)\n", op, error);
-    }
 }
 
 } // namespace chrissly

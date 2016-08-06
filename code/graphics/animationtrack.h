@@ -62,7 +62,7 @@ public:
 
 private:
     unsigned char handle;
-    mutable DynamicArray keyFrames;
+    mutable ce_dynamic_array keyFrames;
     int currentTimeIndex;
 };
 

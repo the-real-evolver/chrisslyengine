@@ -18,8 +18,8 @@ using namespace chrissly::core;
 */
 Mesh::Mesh()
 {
-    DynamicArrayInit(&this->subMeshList, 1);
-    HashTableInit(&this->animationsList, 1);
+    ce_dynamic_array_init(&this->subMeshes, 1);
+    ce_hash_table_init(&this->animations, 1);
 }
 
 //------------------------------------------------------------------------------
@@ -30,12 +30,12 @@ Mesh::~Mesh()
     this->RemoveAllAnimations();
 
     unsigned int i;
-    for (i = 0; i < this->subMeshList.size; ++i)
+    for (i = 0; i < this->subMeshes.size; ++i)
     {
-        CE_DELETE (SubMesh*)DynamicArrayGet(&this->subMeshList, i);
+        CE_DELETE (SubMesh*)ce_dynamic_array_get(&this->subMeshes, i);
     }
 
-    DynamicArrayDelete(&this->subMeshList);
+    ce_dynamic_array_delete(&this->subMeshes);
 }
 
 //------------------------------------------------------------------------------
@@ -45,7 +45,7 @@ SubMesh*
 Mesh::CreateSubMesh()
 {
     SubMesh* subMesh = CE_NEW SubMesh();
-    DynamicArrayPushBack(&this->subMeshList, subMesh);
+    ce_dynamic_array_push_back(&this->subMeshes, subMesh);
 
     return subMesh;
 }
@@ -56,7 +56,7 @@ Mesh::CreateSubMesh()
 unsigned short
 Mesh::GetNumSubMeshes() const
 {
-    return this->subMeshList.size;
+    return this->subMeshes.size;
 }
 
 //------------------------------------------------------------------------------
@@ -65,7 +65,7 @@ Mesh::GetNumSubMeshes() const
 SubMesh*
 Mesh::GetSubMesh(unsigned short index) const
 {
-    return (SubMesh*)DynamicArrayGet(&this->subMeshList, index);
+    return (SubMesh*)ce_dynamic_array_get(&this->subMeshes, index);
 }
 
 //------------------------------------------------------------------------------
@@ -76,7 +76,7 @@ Mesh::CreateAnimation(const char* name, float length)
 {
     Animation* animation = CE_NEW Animation(name, length);
 
-    HashTableInsert(&this->animationsList, name, animation);
+    ce_hash_table_insert(&this->animations, name, animation);
 
     return animation;
 }
@@ -87,7 +87,7 @@ Mesh::CreateAnimation(const char* name, float length)
 Animation*
 Mesh::GetAnimation(const char* name)
 {
-    return (Animation*)HashTableFind(&this->animationsList, name);
+    return (Animation*)ce_hash_table_find(&this->animations, name);
 }
 
 //------------------------------------------------------------------------------
@@ -97,17 +97,17 @@ void
 Mesh::RemoveAllAnimations()
 {
     unsigned int i;
-    for (i = 0; i < this->animationsList.bucketCount; ++i)
+    for (i = 0; i < this->animations.bucket_count; ++i)
     {
-        LinkedList* it = HashTableBegin(&this->animationsList, i);
+        ce_linked_list* it = ce_hash_table_begin(&this->animations, i);
         while (it != NULL)
         {
-            CE_DELETE (Animation*)((KeyValuePair*)it->data)->value;
+            CE_DELETE (Animation*)((ce_key_value_pair*)it->data)->value;
             it = it->next;
         }
     }
 
-    HashTableClear(&this->animationsList);
+    ce_hash_table_clear(&this->animations);
 }
 
 //------------------------------------------------------------------------------
@@ -116,24 +116,24 @@ Mesh::RemoveAllAnimations()
 bool
 Mesh::HasVertexAnimation() const
 {
-    return (this->animationsList.currentSize > 0);
+    return (this->animations.size > 0);
 }
 
 //------------------------------------------------------------------------------
 /**
 */
 void
-Mesh::_InitAnimationState(HashTable* animSet)
+Mesh::_InitAnimationState(ce_hash_table* animSet)
 {
     unsigned int i;
-    for (i = 0; i < this->animationsList.bucketCount; ++i)
+    for (i = 0; i < this->animations.bucket_count; ++i)
     {
-        LinkedList* it = HashTableBegin(&this->animationsList, i);
+        ce_linked_list* it = ce_hash_table_begin(&this->animations, i);
         while (it != NULL)
         {
-            Animation* animation = (Animation*)((KeyValuePair*)it->data)->value;
+            Animation* animation = (Animation*)((ce_key_value_pair*)it->data)->value;
             AnimationState* animationState = CE_NEW AnimationState(animation->GetName(), animation->GetLength());
-            HashTableInsert(animSet, animation->GetName(), animationState);
+            ce_hash_table_insert(animSet, animation->GetName(), animationState);
             it = it->next;
         }
     }

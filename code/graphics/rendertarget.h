@@ -47,7 +47,7 @@ public:
     void* GetBuffer() const;
 
 protected:
-    mutable DynamicArray viewportList;
+    mutable ce_dynamic_array viewports;
 
     void* buffer;
     int width;

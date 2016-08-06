@@ -64,7 +64,7 @@ public:
     /// method for setting up the renderstate for a rendering pass
     void _SetPass(graphics::Pass* pass);
     /// tells the rendersystem to use the attached set of lights (and no others)
-    void _UseLights(HashTable* lights);
+    void _UseLights(ce_hash_table* lights);
     /// sets the colour & strength of the ambient (global directionless) light in the world
     void SetAmbientLight(unsigned int colour);
     /// notify the rendersystem that a morphkeyframe was build
@@ -72,11 +72,6 @@ public:
 
     /// gets the default light shader parameters (useful if a custom shader wants to use the default lighting)
     const core::Matrix4* GetDefaultLightShaderParams() const;
-
-    /// print some aspect of the current GL connection
-    static void PrintGLString(const char* name, GLenum s);
-    /// print value of the error flag the recent function call returned
-    static void CheckGlError(const char* op);
 
 private:
     /// copy constructor

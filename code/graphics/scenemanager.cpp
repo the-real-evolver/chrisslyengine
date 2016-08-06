@@ -36,9 +36,9 @@ SceneManager::SceneManager() :
 {
     Singleton = this;
 
-    HashTableInit(&this->cameras, 2);
-    HashTableInit(&this->lights, 4);
-    DynamicArrayInit(&this->sceneNodes, 256);
+    ce_hash_table_init(&this->cameras, 2);
+    ce_hash_table_init(&this->lights, 4);
+    ce_dynamic_array_init(&this->sceneNodes, 256);
 
     this->renderQueueOpaque.Initialise(128);
     this->renderQueueTransparent.Initialise(64);
@@ -78,7 +78,7 @@ SceneManager::CreateCamera(const char* name)
 {
     Camera* camera = CE_NEW Camera();
 
-    HashTableInsert(&this->cameras, name, camera);
+    ce_hash_table_insert(&this->cameras, name, camera);
 
     return camera;
 }
@@ -89,7 +89,7 @@ SceneManager::CreateCamera(const char* name)
 Camera*
 SceneManager::GetCamera(const char* name) const
 {
-    return (Camera*)HashTableFind(&this->cameras, name);
+    return (Camera*)ce_hash_table_find(&this->cameras, name);
 }
 
 //------------------------------------------------------------------------------
@@ -99,17 +99,17 @@ void
 SceneManager::DestroyAllCameras()
 {
     unsigned int i;
-    for (i = 0; i < this->cameras.bucketCount; ++i)
+    for (i = 0; i < this->cameras.bucket_count; ++i)
     {
-        LinkedList* it = HashTableBegin(&this->cameras, i);
+        ce_linked_list* it = ce_hash_table_begin(&this->cameras, i);
         while (it != NULL)
         {
-            CE_DELETE (Camera*)((KeyValuePair*)it->data)->value;
+            CE_DELETE (Camera*)((ce_key_value_pair*)it->data)->value;
             it = it->next;
         }
     }
 
-    HashTableClear(&this->cameras);
+    ce_hash_table_clear(&this->cameras);
 }
 
 //------------------------------------------------------------------------------
@@ -120,7 +120,7 @@ SceneManager::CreateLight(const char* name)
 {
     Light* light = CE_NEW Light();
 
-    HashTableInsert(&this->lights, name, light);
+    ce_hash_table_insert(&this->lights, name, light);
 
     return light;
 }
@@ -131,7 +131,7 @@ SceneManager::CreateLight(const char* name)
 Light*
 SceneManager::GetLight(const char* name) const
 {
-    return (Light*)HashTableFind(&this->lights, name);
+    return (Light*)ce_hash_table_find(&this->lights, name);
 }
 
 //------------------------------------------------------------------------------
@@ -141,17 +141,17 @@ void
 SceneManager::DestroyAllLights()
 {
     unsigned int i;
-    for (i = 0; i < this->lights.bucketCount; ++i)
+    for (i = 0; i < this->lights.bucket_count; ++i)
     {
-        LinkedList* it = HashTableBegin(&this->lights, i);
+        ce_linked_list* it = ce_hash_table_begin(&this->lights, i);
         while (it != NULL)
         {
-            CE_DELETE (Light*)((KeyValuePair*)it->data)->value;
+            CE_DELETE (Light*)((ce_key_value_pair*)it->data)->value;
             it = it->next;
         }
     }
 
-    HashTableClear(&this->lights);
+    ce_hash_table_clear(&this->lights);
 }
 
 //------------------------------------------------------------------------------
@@ -162,7 +162,7 @@ SceneManager::CreateEntity(const char* meshName)
 {
     Entity* entity = CE_NEW Entity(MeshManager::Instance()->Load(meshName));
 
-    LinkedlistAdd(&this->entities, entity);
+    ce_linked_list_add(&this->entities, entity);
 
     return entity;
 }
@@ -176,7 +176,7 @@ SceneManager::CreateSceneNode()
     SceneNode* sceneNode = CE_NEW SceneNode();
     sceneNode->SetParent(NULL);
 
-    DynamicArrayPushBack(&this->sceneNodes, sceneNode);
+    ce_dynamic_array_push_back(&this->sceneNodes, sceneNode);
 
     return sceneNode;
 }
@@ -208,17 +208,17 @@ SceneManager::ClearScene()
     unsigned int i;
     for (i = 0; i < this->sceneNodes.size; ++i)
     {
-        CE_DELETE (SceneNode*)DynamicArrayGet(&this->sceneNodes, i);
+        CE_DELETE (SceneNode*)ce_dynamic_array_get(&this->sceneNodes, i);
     }
-    DynamicArrayDelete(&this->sceneNodes);
+    ce_dynamic_array_delete(&this->sceneNodes);
 
-    LinkedList* it = this->entities;
+    ce_linked_list* it = this->entities;
     while (it != NULL)
     {
-        LinkedList* node = it;
+        ce_linked_list* node = it;
         CE_DELETE (Entity*)node->data;
         it = it->next;
-        LinkedlistRemove(node);
+        ce_linked_list_remove(node);
     }
     this->entities = NULL;
 }
@@ -351,7 +351,7 @@ SceneManager::_RenderScene(Camera* camera, Viewport* vp)
     for (sceneNodeIndex = 0; sceneNodeIndex < this->sceneNodes.size; ++sceneNodeIndex)
     {
         // for all scenenodes
-        SceneNode* sceneNode = (SceneNode*)DynamicArrayGet(&this->sceneNodes, sceneNodeIndex);
+        SceneNode* sceneNode = (SceneNode*)ce_dynamic_array_get(&this->sceneNodes, sceneNodeIndex);
 
         unsigned int entityIndex;
         for (entityIndex = 0; entityIndex < sceneNode->NumAttachedObjects(); ++entityIndex)

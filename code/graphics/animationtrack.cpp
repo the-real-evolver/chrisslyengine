@@ -21,7 +21,7 @@ VertexAnimationTrack::VertexAnimationTrack(unsigned char handle) :
     handle(handle),
     currentTimeIndex(-1)
 {
-    DynamicArrayInit(&this->keyFrames, 1);
+    ce_dynamic_array_init(&this->keyFrames, 1);
 }
 
 //------------------------------------------------------------------------------
@@ -48,7 +48,7 @@ VertexMorphKeyFrame*
 VertexAnimationTrack::CreateVertexMorphKeyFrame(float timePos)
 {
     VertexMorphKeyFrame* vertexMorphKeyFrame = CE_NEW VertexMorphKeyFrame(timePos);
-    DynamicArrayPushBack(&this->keyFrames, vertexMorphKeyFrame);
+    ce_dynamic_array_push_back(&this->keyFrames, vertexMorphKeyFrame);
 
     return vertexMorphKeyFrame;
 }
@@ -68,7 +68,7 @@ VertexAnimationTrack::GetNumKeyFrames() const
 VertexMorphKeyFrame*
 VertexAnimationTrack::GetVertexMorphKeyFrame(unsigned short index) const
 {
-    return (VertexMorphKeyFrame*)DynamicArrayGet(&this->keyFrames, index);
+    return (VertexMorphKeyFrame*)ce_dynamic_array_get(&this->keyFrames, index);
 }
 
 //------------------------------------------------------------------------------
@@ -80,10 +80,10 @@ VertexAnimationTrack::RemoveAllKeyFrames()
     unsigned int i;
     for (i = 0; i < this->keyFrames.size; ++i)
     {
-        CE_DELETE (VertexMorphKeyFrame*)DynamicArrayGet(&this->keyFrames, i);
+        CE_DELETE (VertexMorphKeyFrame*)ce_dynamic_array_get(&this->keyFrames, i);
     }
 
-    DynamicArrayDelete(&this->keyFrames);
+    ce_dynamic_array_delete(&this->keyFrames);
 }
 
 //------------------------------------------------------------------------------
@@ -96,8 +96,8 @@ VertexAnimationTrack::ApplyToVertexData(VertexData* data, int timeIndex)
     {
         if ((unsigned int)timeIndex < this->keyFrames.size - 1)
         {
-            HardwareVertexBuffer* kf1 = ((VertexMorphKeyFrame*)DynamicArrayGet(&this->keyFrames, timeIndex))->vertexData->vertexBuffer;
-            HardwareVertexBuffer* kf2 = ((VertexMorphKeyFrame*)DynamicArrayGet(&this->keyFrames, timeIndex + 1))->vertexData->vertexBuffer;
+            HardwareVertexBuffer* kf1 = ((VertexMorphKeyFrame*)ce_dynamic_array_get(&this->keyFrames, timeIndex))->vertexData->vertexBuffer;
+            HardwareVertexBuffer* kf2 = ((VertexMorphKeyFrame*)ce_dynamic_array_get(&this->keyFrames, timeIndex + 1))->vertexData->vertexBuffer;
             HardwareVertexBuffer* dst = data->vertexBuffer;
             Memory::FillInterleaved(kf1->Lock(), kf2->Lock(),
                                     dst->Lock(), kf1->GetBytesPerVertex(),

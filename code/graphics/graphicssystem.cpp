@@ -24,7 +24,7 @@ GraphicsSystem::GraphicsSystem() :
     this->textureManager = CE_NEW TextureManager();
     this->sceneManager = CE_NEW SceneManager();
     this->materialManager = CE_NEW MaterialManager();
-    DynamicArrayInit(&this->renderTargets, 1);
+    ce_dynamic_array_init(&this->renderTargets, 1);
 }
 
 //------------------------------------------------------------------------------
@@ -43,9 +43,9 @@ GraphicsSystem::~GraphicsSystem()
     unsigned int i;
     for (i = 0; i < this->renderTargets.size; ++i)
     {
-        CE_DELETE (RenderTarget*)DynamicArrayGet(&this->renderTargets, i);
+        CE_DELETE (RenderTarget*)ce_dynamic_array_get(&this->renderTargets, i);
     }
-    DynamicArrayDelete(&this->renderTargets);
+    ce_dynamic_array_delete(&this->renderTargets);
 }
 
 //------------------------------------------------------------------------------
@@ -56,7 +56,7 @@ GraphicsSystem::Initialise(void* customParams)
 {
     this->autoWindow = this->activeRenderer->_Initialise(customParams);
 
-    DynamicArrayPushBack(&this->renderTargets, this->autoWindow);
+    ce_dynamic_array_push_back(&this->renderTargets, this->autoWindow);
 
     return this->autoWindow;
 }
@@ -80,7 +80,7 @@ GraphicsSystem::RenderOneFrame()
     unsigned int index;
     for (index = 0; index < this->renderTargets.size; ++index)
     {
-        RenderTarget* rt = (RenderTarget*)DynamicArrayGet(&this->renderTargets, index);
+        RenderTarget* rt = (RenderTarget*)ce_dynamic_array_get(&this->renderTargets, index);
         rt->Update();
         rt->SwapBuffers();
     }

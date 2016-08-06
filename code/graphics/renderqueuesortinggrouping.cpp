@@ -32,13 +32,13 @@ QueuedRenderableCollection::~QueuedRenderableCollection()
 void
 QueuedRenderableCollection::Initialise(unsigned short capacity)
 {
-    DynamicArrayInit(&this->renderablePasses, capacity);
+    ce_dynamic_array_init(&this->renderablePasses, capacity);
 
     unsigned int i;
     for (i = 0; i < this->renderablePasses.capacity; ++i)
     {
         RenderablePass* renderablePass = CE_NEW RenderablePass(NULL, NULL);
-        DynamicArraySet(&this->renderablePasses, i, renderablePass);
+        ce_dynamic_array_set(&this->renderablePasses, i, renderablePass);
     }
 
     this->numRenderablePasses = 0;
@@ -53,10 +53,10 @@ QueuedRenderableCollection::Destroy()
     unsigned int i;
     for (i = 0; i < this->renderablePasses.capacity; ++i)
     {
-        CE_DELETE (RenderablePass*)DynamicArrayGet(&this->renderablePasses, i);
+        CE_DELETE (RenderablePass*)ce_dynamic_array_get(&this->renderablePasses, i);
     }
 
-    DynamicArrayDelete(&this->renderablePasses);
+    ce_dynamic_array_delete(&this->renderablePasses);
 
     this->numRenderablePasses = 0;
 }
@@ -76,7 +76,7 @@ QueuedRenderableCollection::Clear()
 void
 QueuedRenderableCollection::AddRenderable(SubEntity* rend, Pass* pass)
 {
-    RenderablePass* renderablePass = (RenderablePass*)DynamicArrayGet(&this->renderablePasses, this->numRenderablePasses);
+    RenderablePass* renderablePass = (RenderablePass*)ce_dynamic_array_get(&this->renderablePasses, this->numRenderablePasses);
     renderablePass->renderable = rend;
     renderablePass->pass = pass;
 
@@ -98,7 +98,7 @@ QueuedRenderableCollection::GetNumRenderablePasses() const
 RenderablePass*
 QueuedRenderableCollection::GetRenderablePass(unsigned short index) const
 {
-    return (RenderablePass*)DynamicArrayGet(&this->renderablePasses, index);
+    return (RenderablePass*)ce_dynamic_array_get(&this->renderablePasses, index);
 }
 
 } // namespace graphics

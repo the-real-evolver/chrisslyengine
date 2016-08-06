@@ -22,20 +22,20 @@ Entity::Entity(Mesh* mesh) :
     castShadows(false),
     receivesShadows(false)
 {
-    this->BuildSubEntityList(this->mesh, &this->subEntityList);
+    this->BuildSubEntities(this->mesh, &this->subEntities);
 
-    HashTableInit(&this->animationState, 1);
+    ce_hash_table_init(&this->animationState, 1);
     if (this->HasVertexAnimation())
     {
         this->mesh->_InitAnimationState(&this->animationState);
 
         unsigned int i;
-        for (i = 0; i < this->animationState.bucketCount; ++i)
+        for (i = 0; i < this->animationState.bucket_count; ++i)
         {
-            LinkedList* it = HashTableBegin(&this->animationState, i);
+            ce_linked_list* it = ce_hash_table_begin(&this->animationState, i);
             while (it != NULL)
             {
-                AnimationState* state = (AnimationState*)((KeyValuePair*)it->data)->value;
+                AnimationState* state = (AnimationState*)((ce_key_value_pair*)it->data)->value;
                 Animation* anim = this->mesh->GetAnimation(state->GetAnimationName());
 
                 unsigned short numVertexTracks = anim->GetNumVertexTracks();
@@ -63,24 +63,24 @@ Entity::Entity(Mesh* mesh) :
 Entity::~Entity()
 {
     unsigned int i;
-    for (i = 0; i < this->subEntityList.capacity; ++i)
+    for (i = 0; i < this->subEntities.capacity; ++i)
     {
-        CE_DELETE (SubEntity*)DynamicArrayGet(&this->subEntityList, i);
+        CE_DELETE (SubEntity*)ce_dynamic_array_get(&this->subEntities, i);
     }
 
-    DynamicArrayDelete(&this->subEntityList);
+    ce_dynamic_array_delete(&this->subEntities);
 
-    for (i = 0; i < this->animationState.bucketCount; ++i)
+    for (i = 0; i < this->animationState.bucket_count; ++i)
     {
-        LinkedList* it = HashTableBegin(&this->animationState, i);
+        ce_linked_list* it = ce_hash_table_begin(&this->animationState, i);
         while (it != NULL)
         {
-            CE_DELETE (AnimationState*)((KeyValuePair*)it->data)->value;
+            CE_DELETE (AnimationState*)((ce_key_value_pair*)it->data)->value;
             it = it->next;
         }
     }
 
-    HashTableClear(&this->animationState);
+    ce_hash_table_clear(&this->animationState);
 }
 
 //------------------------------------------------------------------------------
@@ -89,7 +89,7 @@ Entity::~Entity()
 SubEntity*
 Entity::GetSubEntity(unsigned int index) const
 {
-    return (SubEntity*)DynamicArrayGet(&this->subEntityList, index);
+    return (SubEntity*)ce_dynamic_array_get(&this->subEntities, index);
 }
 
 //------------------------------------------------------------------------------
@@ -98,7 +98,7 @@ Entity::GetSubEntity(unsigned int index) const
 unsigned int
 Entity::GetNumSubEntities() const
 {
-    return this->subEntityList.capacity;
+    return this->subEntities.capacity;
 }
 
 //------------------------------------------------------------------------------
@@ -161,7 +161,7 @@ Entity::HasVertexAnimation() const
 AnimationState*
 Entity::GetAnimationState(const char* name) const
 {
-    return (AnimationState*)HashTableFind(&this->animationState, name);
+    return (AnimationState*)ce_hash_table_find(&this->animationState, name);
 }
 
 //------------------------------------------------------------------------------
@@ -172,12 +172,12 @@ Entity::UpdateAnimation()
 {
     // loop trough all animstates, update enabled ones
     unsigned int i;
-    for (i = 0; i < this->animationState.bucketCount; ++i)
+    for (i = 0; i < this->animationState.bucket_count; ++i)
     {
-        LinkedList* it = HashTableBegin(&this->animationState, i);
+        ce_linked_list* it = ce_hash_table_begin(&this->animationState, i);
         while (it != NULL)
         {
-            AnimationState* state = (AnimationState*)((KeyValuePair*)it->data)->value;
+            AnimationState* state = (AnimationState*)((ce_key_value_pair*)it->data)->value;
             if (state->GetEnabled())
             {
                 Animation* anim = this->mesh->GetAnimation(state->GetAnimationName());
@@ -192,17 +192,17 @@ Entity::UpdateAnimation()
 /**
 */
 void
-Entity::BuildSubEntityList(Mesh* mesh, DynamicArray* sublist)
+Entity::BuildSubEntities(Mesh* mesh, ce_dynamic_array* entities)
 {
-    DynamicArrayInit(&this->subEntityList, mesh->GetNumSubMeshes());
+    ce_dynamic_array_init(&this->subEntities, mesh->GetNumSubMeshes());
 
     unsigned int i;
-    for (i = 0; i < this->subEntityList.capacity; ++i)
+    for (i = 0; i < this->subEntities.capacity; ++i)
     {
         SubMesh* subMesh = mesh->GetSubMesh(i);
         SubEntity* subEntity = CE_NEW SubEntity(this, subMesh);
         subEntity->SetMaterialName(subMesh->GetMaterialName());
-        DynamicArraySet(sublist, i, subEntity);
+        ce_dynamic_array_set(entities, i, subEntity);
     }
 }
 

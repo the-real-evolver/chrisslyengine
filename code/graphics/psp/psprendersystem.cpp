@@ -306,19 +306,19 @@ PSPRenderSystem::_SetPass(graphics::Pass* pass)
 /**
 */
 void
-PSPRenderSystem::_UseLights(HashTable* lights)
+PSPRenderSystem::_UseLights(ce_hash_table* lights)
 {
     int lightIndex = 0;
     int components;
     unsigned int diffuse, specular;
 
     unsigned int i;
-    for (i = 0; i < lights->bucketCount && lightIndex < MaxLights; ++i)
+    for (i = 0; i < lights->bucket_count && lightIndex < MaxLights; ++i)
     {
-        LinkedList* it = HashTableBegin(lights, i);
+        ce_linked_list* it = ce_hash_table_begin(lights, i);
         while (it != NULL && lightIndex < MaxLights)
         {
-            graphics::Light* light = (graphics::Light*)((KeyValuePair*)it->data)->value;
+            graphics::Light* light = (graphics::Light*)((ce_key_value_pair*)it->data)->value;
 
             if (graphics::Light::LT_DIRECTIONAL != light->GetType())
             {

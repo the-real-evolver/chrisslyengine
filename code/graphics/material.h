@@ -37,7 +37,7 @@ public:
 
 private:
     /// list of primary passes
-    mutable DynamicArray passes;
+    mutable ce_dynamic_array passes;
 
     bool loaded;
 };

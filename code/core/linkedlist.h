@@ -1,48 +1,28 @@
-/*---------------------------------------------------------------------------------
+#ifndef LINKEDLIST_H_
+#define LINKEDLIST_H_
+//------------------------------------------------------------------------------
+/**
+    @file core/linkedlist.h
 
-    A simple linked list data structure
+    A simple doubly linked, unsorted list implementation.
 
-  Copyright (C) 2008
-            Jason Rogers (dovoto)
-
-  This software is provided 'as-is', without any express or implied
-  warranty.  In no event will the authors be held liable for any
-  damages arising from the use of this software.
-
-  Permission is granted to anyone to use this software for any
-  purpose, including commercial applications, and to alter it and
-  redistribute it freely, subject to the following restrictions:
-
-  1. The origin of this software must not be misrepresented; you
-     must not claim that you wrote the original software. If you use
-     this software in a product, an acknowledgment in the product
-     documentation would be appreciated but is not required.
-  2. Altered source versions must be plainly marked as such, and
-     must not be misrepresented as being the original software.
-  3. This notice may not be removed or altered from any source
-     distribution.
-
-
----------------------------------------------------------------------------------*/
-/*! \file linkedlist.h
-\brief A simple doubly linked, unsorted list implementation
+    (C) 2012 Christian Bleicher (evolver)
 */
-
 #include "memoryallocatorconfig.h"
 #include <stdio.h>
 
-#ifndef __LINKEDLIST_H__
-#define __LINKEDLIST_H__
+//------------------------------------------------------------------------------
 
-//! A node for the linked list.
-typedef struct LinkedList
+/// A node for the linked list.
+typedef struct ce_linked_list
 {
-    struct LinkedList *next;    //!< A pointer to the next node.
-    struct LinkedList *prev;    //!< A pointer to the previous node.
-    void *data;                 //!< A pointer to some data.
-} LinkedList;
+    struct ce_linked_list* next;    //!< A pointer to the next node.
+    struct ce_linked_list* prev;    //!< A pointer to the previous node.
+    void *data;                     //!< A pointer to some data.
+} ce_linked_list;
 
-/*!
+//------------------------------------------------------------------------------
+/**
     \brief Adds data to a linked list.
 
     This will only store the pointer to the data, so you have to make sure that the pointer stays valid.
@@ -51,9 +31,9 @@ typedef struct LinkedList
     \param data A pointer to the data you want to store.
 */
 static inline void
-LinkedlistAdd(LinkedList** front, void* data)
+ce_linked_list_add(ce_linked_list** front, void* data)
 {
-    LinkedList* node = (LinkedList*)CE_MALLOC(sizeof(LinkedList));
+    ce_linked_list* node = (ce_linked_list*)CE_MALLOC(sizeof(ce_linked_list));
 
     node->prev = NULL;
     node->data = data;
@@ -71,7 +51,8 @@ LinkedlistAdd(LinkedList** front, void* data)
     *front = node;
 }
 
-/*!
+//------------------------------------------------------------------------------
+/**
     \brief Removes a node from a linked list.
 
     The data pointer of the node will be lost after this, so make sure you don't need it anymore.
@@ -79,7 +60,7 @@ LinkedlistAdd(LinkedList** front, void* data)
     \param node The node you want to remove.
 */
 static inline void
-LinkedlistRemove(LinkedList* node)
+ce_linked_list_remove(ce_linked_list* node)
 {
     if (NULL == node)
     {
@@ -98,4 +79,6 @@ LinkedlistRemove(LinkedList* node)
 
     CE_FREE(node);
 }
+
+//------------------------------------------------------------------------------
 #endif

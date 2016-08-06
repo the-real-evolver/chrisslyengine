@@ -18,7 +18,7 @@ RenderTarget::RenderTarget() :
     height(0),
     format(PF_UNKNOWN)
 {
-    DynamicArrayInit(&this->viewportList, 1);
+    ce_dynamic_array_init(&this->viewports, 1);
 }
 
 //------------------------------------------------------------------------------
@@ -36,7 +36,7 @@ Viewport*
 RenderTarget::AddViewport(Camera *cam, int left, int top, int width, int height)
 {
     Viewport* viewport = CE_NEW Viewport(cam, this, left, top, width, height);
-    DynamicArrayPushBack(&this->viewportList, viewport);
+    ce_dynamic_array_push_back(&this->viewports, viewport);
 
     return viewport;
 }
@@ -47,7 +47,7 @@ RenderTarget::AddViewport(Camera *cam, int left, int top, int width, int height)
 unsigned short
 RenderTarget::GetNumViewports() const
 {
-    return this->viewportList.size;
+    return this->viewports.size;
 }
 
 //------------------------------------------------------------------------------
@@ -56,7 +56,7 @@ RenderTarget::GetNumViewports() const
 Viewport*
 RenderTarget::GetViewport(unsigned short index) const
 {
-    return (Viewport*)DynamicArrayGet(&this->viewportList, index);
+    return (Viewport*)ce_dynamic_array_get(&this->viewports, index);
 }
 
 //------------------------------------------------------------------------------
@@ -66,12 +66,12 @@ void
 RenderTarget::RemoveAllViewports()
 {
     unsigned int i;
-    for (i = 0; i < this->viewportList.size; ++i)
+    for (i = 0; i < this->viewports.size; ++i)
     {
-        CE_DELETE (Viewport*)DynamicArrayGet(&this->viewportList, i);
+        CE_DELETE (Viewport*)ce_dynamic_array_get(&this->viewports, i);
     }
 
-    DynamicArrayDelete(&this->viewportList);
+    ce_dynamic_array_delete(&this->viewports);
 }
 
 //------------------------------------------------------------------------------

@@ -70,7 +70,7 @@ namespace graphics
         /// destructor
         ~GpuNamedConstants();
         /// map of parameter names to GpuConstantDefinition
-        HashTable map;
+        ce_hash_table map;
     };
 
     /// collects together the program parameters used for a GpuProgram

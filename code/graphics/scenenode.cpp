@@ -23,7 +23,7 @@ SceneNode::SceneNode() :
     cachedTransform(Matrix4::IDENTITY),
     cachedTransformOutOfDate(true)
 {
-    DynamicArrayInit(&this->objectMap, 1);
+    ce_dynamic_array_init(&this->objects, 1);
 }
 
 //------------------------------------------------------------------------------
@@ -66,7 +66,7 @@ SceneNode::_Update()
         this->derivedScale = this->scale;
     }
 
-    LinkedList* it = this->children;
+    ce_linked_list* it = this->children;
     while (it != NULL)
     {
         ((SceneNode*)it->data)->_Update();
@@ -83,7 +83,7 @@ SceneNode::CreateChildSceneNode()
     SceneNode* sceneNode = SceneManager::Instance()->CreateSceneNode();
     sceneNode->SetParent(this);
 
-    LinkedlistAdd(&this->children, sceneNode);
+    ce_linked_list_add(&this->children, sceneNode);
 
     return sceneNode;
 }
@@ -103,13 +103,13 @@ SceneNode::GetParentSceneNode() const
 void
 SceneNode::RemoveAllChildren()
 {
-    LinkedList* it = this->children;
+    ce_linked_list* it = this->children;
     while (it != NULL)
     {
         ((SceneNode*)it->data)->SetParent(NULL);
-        LinkedList* node = it;
+        ce_linked_list* node = it;
         it = it->next;
-        LinkedlistRemove(node);
+        ce_linked_list_remove(node);
     }
     this->children = NULL;
 }
@@ -334,7 +334,7 @@ SceneNode::_GetFullTransform() const
 void
 SceneNode::AttachObject(Entity* obj)
 {
-    DynamicArrayPushBack(&this->objectMap, obj);
+    ce_dynamic_array_push_back(&this->objects, obj);
 
     obj->_NotifyAttached(this);
 }
@@ -345,7 +345,7 @@ SceneNode::AttachObject(Entity* obj)
 unsigned short
 SceneNode::NumAttachedObjects() const
 {
-    return this->objectMap.size;
+    return this->objects.size;
 }
 
 //------------------------------------------------------------------------------
@@ -354,7 +354,7 @@ SceneNode::NumAttachedObjects() const
 Entity*
 SceneNode::GetAttachedObject(unsigned short index) const
 {
-    return (Entity*)DynamicArrayGet(&this->objectMap, index);
+    return (Entity*)ce_dynamic_array_get(&this->objects, index);
 }
 
 //------------------------------------------------------------------------------
@@ -363,7 +363,7 @@ SceneNode::GetAttachedObject(unsigned short index) const
 void
 SceneNode::DetachAllObjects()
 {
-    DynamicArrayDelete(&this->objectMap);
+    ce_dynamic_array_delete(&this->objects);
 }
 
 //------------------------------------------------------------------------------

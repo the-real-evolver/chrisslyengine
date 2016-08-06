@@ -56,7 +56,7 @@ public:
     RenderablePass* GetRenderablePass(unsigned short index) const;
 
 private:
-    mutable DynamicArray renderablePasses;
+    mutable ce_dynamic_array renderablePasses;
     unsigned short numRenderablePasses;
 };
 

@@ -2,26 +2,11 @@
 #define HASHTABLE_H_
 //------------------------------------------------------------------------------
 /**
+    @file core/hashtable.h
+
     A simple hash table using separate chaining and strings as keys.
 
     (C) 2012 Christian Bleicher (evolver)
-
-    This software is provided 'as-is', without any express or implied
-    warranty.  In no event will the authors be held liable for any
-    damages arising from the use of this software.
-
-    Permission is granted to anyone to use this software for any
-    purpose, including commercial applications, and to alter it and
-    redistribute it freely, subject to the following restrictions:
-
-    1. The origin of this software must not be misrepresented; you
-        must not claim that you wrote the original software. If you use
-        this software in a product, an acknowledgment in the product
-        documentation would be appreciated but is not required.
-    2. Altered source versions must be plainly marked as such, and
-        must not be misrepresented as being the original software.
-    3. This notice may not be removed or altered from any source
-        distribution.
 */
 #include "linkedlist.h"
 #include "dynamicarray.h"
@@ -29,35 +14,35 @@
 //------------------------------------------------------------------------------
 
 /// hashtable
-struct HashTable
+struct ce_hash_table
 {
-    DynamicArray buckets;
-    unsigned int bucketCount;
-    unsigned int currentSize;
+    ce_dynamic_array buckets;
+    unsigned int bucket_count;
+    unsigned int size;
 };
 
 /// buckets of the hashtable
-struct Bucket
+struct ce_bucket
 {
-    LinkedList* list;
+    ce_linked_list* list;
     unsigned int size;
 };
 
 /// a key value pair
-struct KeyValuePair
+struct ce_key_value_pair
 {
     char* key;
     void* value;
 };
 
 /// forward declaration
-static void HashTableResize(HashTable* table, unsigned int newSize);
+static void ce_hash_table_resize(ce_hash_table* table, unsigned int new_size);
 
 //------------------------------------------------------------------------------
 /**
 */
 static unsigned int
-HashFunction(const char* key)
+ce_hash_function(const char* key)
 {
     // hashfunction: djb2
     unsigned int hash = 5381;
@@ -74,24 +59,24 @@ HashFunction(const char* key)
 /**
 */
 static inline void
-HashTableInit(HashTable* table, unsigned int initialSize)
+ce_hash_table_init(ce_hash_table* table, unsigned int initial_size)
 {
     if (NULL == table)
     {
         return;
     }
 
-    DynamicArrayInit(&table->buckets, initialSize);
-    table->bucketCount = initialSize;
-    table->currentSize = 0;
+    ce_dynamic_array_init(&table->buckets, initial_size);
+    table->bucket_count = initial_size;
+    table->size = 0;
 
     unsigned int i;
-    for (i = 0; i < initialSize; ++i)
+    for (i = 0; i < initial_size; ++i)
     {
-        Bucket* bucket = (Bucket*)CE_MALLOC(sizeof(Bucket));
+        ce_bucket* bucket = (ce_bucket*)CE_MALLOC(sizeof(ce_bucket));
         bucket->size = 0;
         bucket->list = NULL;
-        DynamicArraySet(&table->buckets, i, bucket);
+        ce_dynamic_array_set(&table->buckets, i, bucket);
     }
 }
 
@@ -99,7 +84,7 @@ HashTableInit(HashTable* table, unsigned int initialSize)
 /**
 */
 static inline void
-HashTableClear(HashTable* table)
+ce_hash_table_clear(ce_hash_table* table)
 {
     if (NULL == table)
     {
@@ -107,84 +92,84 @@ HashTableClear(HashTable* table)
     }
 
     unsigned int i;
-    for (i = 0; i < table->bucketCount; ++i)
+    for (i = 0; i < table->bucket_count; ++i)
     {
-        Bucket* bucket = (Bucket*)DynamicArrayGet(&table->buckets, i);
-        LinkedList* it = bucket->list;
+        ce_bucket* bucket = (ce_bucket*)ce_dynamic_array_get(&table->buckets, i);
+        ce_linked_list* it = bucket->list;
         while (it != NULL)
         {
-            LinkedList* node = it;
-            KeyValuePair* kvp = (KeyValuePair*)node->data;
+            ce_linked_list* node = it;
+            ce_key_value_pair* kvp = (ce_key_value_pair*)node->data;
             CE_FREE(kvp->key);
             CE_FREE(kvp);
             it = it->next;
-            LinkedlistRemove(node);
+            ce_linked_list_remove(node);
         }
         CE_FREE(bucket);
     }
 
-    DynamicArrayDelete(&table->buckets);
-    table->bucketCount = 0;
-    table->currentSize = 0;
+    ce_dynamic_array_delete(&table->buckets);
+    table->bucket_count = 0;
+    table->size = 0;
 }
 
 //------------------------------------------------------------------------------
 /**
 */
 static inline void
-HashTableInsert(HashTable* table, const char* key, void* value)
+ce_hash_table_insert(ce_hash_table* table, const char* key, void* value)
 {
     if (NULL == table)
     {
         return;
     }
 
-    if (0 == table->bucketCount)
+    if (0 == table->bucket_count)
     {
-        HashTableInit(table, 1);
+        ce_hash_table_init(table, 1);
     }
 
-    if (table->currentSize == table->bucketCount)
+    if (table->size == table->bucket_count)
     {
-        HashTableResize(table, table->bucketCount * 2);
+        ce_hash_table_resize(table, table->bucket_count * 2);
     }
 
-    KeyValuePair* keyValuePair = (KeyValuePair*)CE_MALLOC(sizeof(KeyValuePair));
+    ce_key_value_pair* kvp = (ce_key_value_pair*)CE_MALLOC(sizeof(ce_key_value_pair));
     size_t length = strlen(key);
-    keyValuePair->key = (char*)CE_MALLOC(length + 1);
-    strncpy(keyValuePair->key, key, length);
-    keyValuePair->key[length] = '\0';
-    keyValuePair->value = value;
+    kvp->key = (char*)CE_MALLOC(length + 1);
+    strncpy(kvp->key, key, length);
+    kvp->key[length] = '\0';
+    kvp->value = value;
 
-    Bucket* bucket = (Bucket*)DynamicArrayGet(&table->buckets, HashFunction(key) % table->bucketCount);
-    LinkedlistAdd(&(bucket->list), keyValuePair);
+    ce_bucket* bucket = (ce_bucket*)ce_dynamic_array_get(&table->buckets, ce_hash_function(key) % table->bucket_count);
+    ce_linked_list_add(&(bucket->list), kvp);
     ++bucket->size;
 
-    ++table->currentSize;
+    ++table->size;
 }
 
 //------------------------------------------------------------------------------
 /**
 */
 static inline void*
-HashTableFind(HashTable* table, const char* key)
+ce_hash_table_find(ce_hash_table* table, const char* key)
 {
     if (NULL == table)
     {
         return NULL;
     }
 
-    if (0 == table->bucketCount)
+    if (0 == table->bucket_count)
     {
         return NULL;
     }
 
-    LinkedList* it = ((Bucket*)DynamicArrayGet(&table->buckets, HashFunction(key) % table->bucketCount))->list;
+    ce_linked_list* it = ((ce_bucket*)ce_dynamic_array_get(&table->buckets, ce_hash_function(key) % table->bucket_count))->list;
     while (it != NULL)
     {
-        if (0 == strcmp(key, ((KeyValuePair*)it->data)->key))
+        if (0 == strcmp(key, ((ce_key_value_pair*)it->data)->key))
         {
-            return ((KeyValuePair*)it->data)->value;
+            return ((ce_key_value_pair*)it->data)->value;
         }
         it = it->next;
     }
@@ -195,43 +180,43 @@ HashTableFind(HashTable* table, const char* key)
 //------------------------------------------------------------------------------
 /**
 */
-static inline LinkedList*
-HashTableBegin(HashTable* table, unsigned int index)
+static inline ce_linked_list*
+ce_hash_table_begin(ce_hash_table* table, unsigned int index)
 {
     if (NULL == table)
     {
         return NULL;
     }
 
-    return ((Bucket*)DynamicArrayGet(&table->buckets, index))->list;
+    return ((ce_bucket*)ce_dynamic_array_get(&table->buckets, index))->list;
 }
 
 //------------------------------------------------------------------------------
 /**
 */
 static void
-HashTableResize(HashTable* table, unsigned int newSize)
+ce_hash_table_resize(ce_hash_table* table, unsigned int new_size)
 {
-    HashTable newTable;
-    HashTableInit(&newTable, newSize);
+    ce_hash_table new_table;
+    ce_hash_table_init(&new_table, new_size);
 
     unsigned int i;
-    for (i = 0; i < table->bucketCount; ++i)
+    for (i = 0; i < table->bucket_count; ++i)
     {
-        LinkedList* it = ((Bucket*)DynamicArrayGet(&table->buckets, i))->list;
+        ce_linked_list* it = ((ce_bucket*)ce_dynamic_array_get(&table->buckets, i))->list;
         while (it != NULL)
         {
-            KeyValuePair* kvp = (KeyValuePair*)it->data;
-            HashTableInsert(&newTable, kvp->key, kvp->value);
+            ce_key_value_pair* kvp = (ce_key_value_pair*)it->data;
+            ce_hash_table_insert(&new_table, kvp->key, kvp->value);
             it = it->next;
         }
     }
 
-    HashTableClear(table);
+    ce_hash_table_clear(table);
 
-    table->buckets = newTable.buckets;
-    table->bucketCount = newTable.bucketCount;
-    table->currentSize = newTable.currentSize;
+    table->buckets = new_table.buckets;
+    table->bucket_count = new_table.bucket_count;
+    table->size = new_table.size;
 }
 
 //------------------------------------------------------------------------------

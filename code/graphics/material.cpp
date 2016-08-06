@@ -16,7 +16,7 @@ namespace graphics
 Material::Material() :
     loaded(false)
 {
-    DynamicArrayInit(&this->passes, 1);
+    ce_dynamic_array_init(&this->passes, 1);
 }
 
 //------------------------------------------------------------------------------
@@ -34,7 +34,7 @@ Pass*
 Material::CreatePass()
 {
     Pass* pass = CE_NEW Pass(this->passes.size);
-    DynamicArrayPushBack(&this->passes, pass);
+    ce_dynamic_array_push_back(&this->passes, pass);
 
     return pass;
 }
@@ -45,7 +45,7 @@ Material::CreatePass()
 Pass*
 Material::GetPass(unsigned short index) const
 {
-    return (Pass*)DynamicArrayGet(&this->passes, index);
+    return (Pass*)ce_dynamic_array_get(&this->passes, index);
 }
 
 //------------------------------------------------------------------------------
@@ -66,10 +66,10 @@ Material::RemoveAllPasses()
     unsigned int i;
     for (i = 0; i < this->passes.size; ++i)
     {
-        CE_DELETE (Pass*)DynamicArrayGet(&this->passes, i);
+        CE_DELETE (Pass*)ce_dynamic_array_get(&this->passes, i);
     }
 
-    DynamicArrayDelete(&this->passes);
+    ce_dynamic_array_delete(&this->passes);
 }
 
 //------------------------------------------------------------------------------
@@ -83,7 +83,7 @@ Material::Load()
         unsigned int i;
         for (i = 0; i < this->passes.size; ++i)
         {
-            ((Pass*)DynamicArrayGet(&this->passes, i))->_Load();
+            ((Pass*)ce_dynamic_array_get(&this->passes, i))->_Load();
         }
         this->loaded = true;
     }

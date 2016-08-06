@@ -3,7 +3,7 @@
 //  (C) 2012 Christian Bleicher
 //------------------------------------------------------------------------------
 #include "gles2gpuprogram.h"
-#include "gles2rendersystem.h"
+#include "gles2debug.h"
 #include "chrisslystring.h"
 #include "debug.h"
 
@@ -31,25 +31,25 @@ GLES2GpuProgram::GLES2GpuProgram(const char* vertexShaderSource, const char* fra
     CE_ASSERT(0 != this->gpuProgram, "Could not create program.");
 
     this->uniformLocations[graphics::GpuProgramParameters::ACT_WORLD_MATRIX] = glGetUniformLocation(this->gpuProgram, "worldMatrix");
-    GLES2RenderSystem::CheckGlError("glGetUniformLocation");
+    CE_GL_ERROR_CHECK("glGetUniformLocation");
     this->uniformLocations[graphics::GpuProgramParameters::ACT_VIEW_MATRIX] = glGetUniformLocation(this->gpuProgram, "viewMatrix");
-    GLES2RenderSystem::CheckGlError("glGetUniformLocation");
+    CE_GL_ERROR_CHECK("glGetUniformLocation");
     this->uniformLocations[graphics::GpuProgramParameters::ACT_PROJECTION_MATRIX] = glGetUniformLocation(this->gpuProgram, "projectionMatrix");
-    GLES2RenderSystem::CheckGlError("glGetUniformLocation");
+    CE_GL_ERROR_CHECK("glGetUniformLocation");
     this->uniformLocations[graphics::GpuProgramParameters::ACT_WORLDVIEWPROJ_MATRIX] = glGetUniformLocation(this->gpuProgram, "worldViewProjMatrix");
-    GLES2RenderSystem::CheckGlError("glGetUniformLocation");
+    CE_GL_ERROR_CHECK("glGetUniformLocation");
     this->uniformLocations[graphics::GpuProgramParameters::ACT_MORPH_WEIGHT] = glGetUniformLocation(this->gpuProgram, "morphWeight");
-    GLES2RenderSystem::CheckGlError("glGetUniformLocation");
+    CE_GL_ERROR_CHECK("glGetUniformLocation");
     this->uniformLocations[graphics::GpuProgramParameters::ACT_TEXTURE_MATRIX] = -1;
 
     this->attributeLocations[graphics::VES_POSITION] = glGetAttribLocation(this->gpuProgram, "position");
-    GLES2RenderSystem::CheckGlError("glGetAttribLocation");
+    CE_GL_ERROR_CHECK("glGetAttribLocation");
     this->attributeLocations[graphics::VES_NORMAL] = glGetAttribLocation(this->gpuProgram, "normal");
-    GLES2RenderSystem::CheckGlError("glGetAttribLocation");
+    CE_GL_ERROR_CHECK("glGetAttribLocation");
     this->attributeLocations[graphics::VES_TEXTURE_COORDINATES] = glGetAttribLocation(this->gpuProgram, "texCoordIn");
-    GLES2RenderSystem::CheckGlError("glGetAttribLocation");
+    CE_GL_ERROR_CHECK("glGetAttribLocation");
     this->attributeLocations[graphics::VES_POSITION_MORPH_TARGET] = glGetAttribLocation(this->gpuProgram, "positionMorphTarget");
-    GLES2RenderSystem::CheckGlError("glGetAttribLocation");
+    CE_GL_ERROR_CHECK("glGetAttribLocation");
 
     this->constantDefs = CE_NEW graphics::GpuNamedConstants;
     this->ExtractConstantDefs(this->constantDefs);
@@ -219,7 +219,7 @@ GLES2GpuProgram::ExtractConstantDefs(graphics::GpuNamedConstants* constantDefs)
 
             CE_LOG("GLES2GpuProgram::ExtractConstantDefs(): add '%i' '%s' '%u' '%i' '%i'\n", type, stringBuffer, uniform->size, uniform->location, arraySize);
 
-            HashTableInsert(&constantDefs->map, stringBuffer, uniform);
+            ce_hash_table_insert(&constantDefs->map, stringBuffer, uniform);
         }
     }
 
@@ -276,9 +276,9 @@ GLES2GpuProgram::CreateProgram(GLuint vertexShader, GLuint fragmentShader)
     if (program != 0)
     {
         glAttachShader(program, vertexShader);
-        GLES2RenderSystem::CheckGlError("glAttachShader");
+        CE_GL_ERROR_CHECK("glAttachShader");
         glAttachShader(program, fragmentShader);
-        GLES2RenderSystem::CheckGlError("glAttachShader");
+        CE_GL_ERROR_CHECK("glAttachShader");
         glLinkProgram(program);
         GLint linkStatus = GL_FALSE;
         glGetProgramiv(program, GL_LINK_STATUS, &linkStatus);

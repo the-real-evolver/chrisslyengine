@@ -151,10 +151,10 @@ private:
 
     static SceneManager* Singleton;
 
-    mutable HashTable cameras;
-    mutable HashTable lights;
-    LinkedList* entities;
-    DynamicArray sceneNodes;
+    mutable ce_hash_table cameras;
+    mutable ce_hash_table lights;
+    ce_linked_list* entities;
+    ce_dynamic_array sceneNodes;
     SceneNode* sceneRoot;
     unsigned int ambientLight;
     RenderSystem* destRenderSystem;

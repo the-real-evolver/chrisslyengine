@@ -25,7 +25,7 @@ MeshManager* MeshManager::Singleton = NULL;
 MeshManager::MeshManager()
 {
     Singleton = this;
-    HashTableInit(&this->resources, 4);
+    ce_hash_table_init(&this->resources, 4);
 }
 
 //------------------------------------------------------------------------------
@@ -43,14 +43,14 @@ MeshManager::~MeshManager()
 Mesh*
 MeshManager::Load(const char* filename)
 {
-    Mesh* mesh = (Mesh*)HashTableFind(&this->resources, filename);
+    Mesh* mesh = (Mesh*)ce_hash_table_find(&this->resources, filename);
     if (mesh != NULL)
     {
         return mesh;
     }
 
     mesh = CE_NEW Mesh();
-    HashTableInsert(&this->resources, filename, mesh);
+    ce_hash_table_insert(&this->resources, filename, mesh);
 
     unsigned int bytesPerVertex = 36;
     unsigned char currentChunk = 0;
@@ -156,17 +156,17 @@ void
 MeshManager::RemoveAll()
 {
     unsigned int i;
-    for (i = 0; i < this->resources.bucketCount; ++i)
+    for (i = 0; i < this->resources.bucket_count; ++i)
     {
-        LinkedList* it = HashTableBegin(&this->resources, i);
+        ce_linked_list* it = ce_hash_table_begin(&this->resources, i);
         while (it != NULL)
         {
-            CE_DELETE (Mesh*)((KeyValuePair*)it->data)->value;
+            CE_DELETE (Mesh*)((ce_key_value_pair*)it->data)->value;
             it = it->next;
         }
     }
 
-    HashTableClear(&this->resources);
+    ce_hash_table_clear(&this->resources);
 }
 
 } // namespace graphics

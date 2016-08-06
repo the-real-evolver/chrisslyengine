@@ -33,7 +33,7 @@ public:
     MipmapInfo* GetMipmapInfo(int level);
 
 private:
-    mutable DynamicArray mipmapInfos;
+    mutable ce_dynamic_array mipmapInfos;
 };
 
 } // namespace chrissly

@@ -39,7 +39,7 @@ private:
 
     static TextureManager* Singleton;
 
-    HashTable resources;
+    ce_hash_table resources;
 };
 
 } // namespace graphics

@@ -41,7 +41,7 @@ Viewport::~Viewport()
 void
 Viewport::Update()
 {
-    if (this->camera)
+    if (this->camera != NULL)
     {
         // tell camera to render into me
         this->camera->_RenderScene(this);

@@ -45,9 +45,9 @@ PSPRenderTexture::Update()
 {
     // update all viewports
     unsigned int index;
-    for (index = 0; index < this->viewportList.size; ++index)
+    for (index = 0; index < this->viewports.size; ++index)
     {
-        ((graphics::Viewport*)DynamicArrayGet(&this->viewportList, index))->Update();
+        ((graphics::Viewport*)ce_dynamic_array_get(&this->viewports, index))->Update();
     }
 }
 

@@ -39,7 +39,7 @@ private:
 
     static MeshManager* Singleton;
 
-    HashTable resources;
+    ce_hash_table resources;
 
     enum MeshChunkID
     {

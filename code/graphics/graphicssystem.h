@@ -54,7 +54,7 @@ private:
     SceneManager* sceneManager;
     MaterialManager* materialManager;
     RenderWindow* autoWindow;
-    DynamicArray renderTargets;
+    ce_dynamic_array renderTargets;
 };
 
 } // namespace graphics

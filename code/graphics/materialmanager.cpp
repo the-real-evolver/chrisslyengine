@@ -20,7 +20,7 @@ MaterialManager* MaterialManager::Singleton = NULL;
 MaterialManager::MaterialManager()
 {
     Singleton = this;
-    HashTableInit(&this->resources, 4);
+    ce_hash_table_init(&this->resources, 4);
 }
 
 //------------------------------------------------------------------------------
@@ -56,7 +56,7 @@ MaterialManager::ParseScript(const char* name)
 Material*
 MaterialManager::CreateOrRetrieve(const char* name)
 {
-    Material* material = (Material*)HashTableFind(&this->resources, name);
+    Material* material = (Material*)ce_hash_table_find(&this->resources, name);
     if (material != NULL)
     {
         return material;
@@ -64,7 +64,7 @@ MaterialManager::CreateOrRetrieve(const char* name)
 
     material = CE_NEW Material();
 
-    HashTableInsert(&this->resources, name, material);
+    ce_hash_table_insert(&this->resources, name, material);
 
     return material;
 }
@@ -75,7 +75,7 @@ MaterialManager::CreateOrRetrieve(const char* name)
 Material*
 MaterialManager::GetByName(const char* name)
 {
-    return (Material*)HashTableFind(&this->resources, name);
+    return (Material*)ce_hash_table_find(&this->resources, name);
 }
 
 //------------------------------------------------------------------------------
@@ -85,17 +85,17 @@ void
 MaterialManager::RemoveAll()
 {
     unsigned int i;
-    for (i = 0; i < this->resources.bucketCount; ++i)
+    for (i = 0; i < this->resources.bucket_count; ++i)
     {
-        LinkedList* it = HashTableBegin(&this->resources, i);
+        ce_linked_list* it = ce_hash_table_begin(&this->resources, i);
         while (it != NULL)
         {
-            CE_DELETE (Material*)((KeyValuePair*)it->data)->value;
+            CE_DELETE (Material*)((ce_key_value_pair*)it->data)->value;
             it = it->next;
         }
     }
 
-    HashTableClear(&this->resources);
+    ce_hash_table_clear(&this->resources);
 }
 
 } // namespace graphics

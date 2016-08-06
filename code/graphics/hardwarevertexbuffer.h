@@ -43,13 +43,13 @@ typedef HardwareVertexBufferBase HardwareVertexBuffer;
 } // namespace chrissly
 //------------------------------------------------------------------------------
 #elif __ANDROID__
-#include "hardwarevertexbufferbase.h"
+#include "android/gles2hardwarevertexbuffer.h"
 namespace chrissly
 {
 namespace graphics
 {
 
-typedef HardwareVertexBufferBase HardwareVertexBuffer;
+typedef GLES2HardwareVertexBuffer HardwareVertexBuffer;
 
 } // namespace graphics
 } // namespace chrissly
