@@ -95,6 +95,14 @@ MeshManager::Load(const char* filename)
                     subMesh->SetMaterialName(materialName);
                 }
                 break;
+            case M_MESH_BOUNDS:
+                {
+                    // read bounding radius
+                    float boundingRadius;
+                    FSWrapper::Read(fd, &boundingRadius, 4);
+                    mesh->boundingRadius = boundingRadius;
+                }
+                break;
             case M_ANIMATION:
                 {
                     // read animation length

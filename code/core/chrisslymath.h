@@ -21,7 +21,7 @@ typedef chrissly::PSPMath Math;
 } // namespace chrissly
 //------------------------------------------------------------------------------
 #elif __ANDROID__
-#include "android/standardmath.h"
+#include "standard/standardmath.h"
 namespace chrissly
 {
 namespace core

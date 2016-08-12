@@ -44,9 +44,10 @@ private:
     enum MeshChunkID
     {
         M_SUBMESH = 0x01,
-        M_ANIMATION = 0x02,
-        M_ANIMATION_TRACK = 0x03,
-        M_ANIMATION_MORPH_KEYFRAME = 0x04
+        M_MESH_BOUNDS = 0x02,
+        M_ANIMATION = 0x03,
+        M_ANIMATION_TRACK = 0x04,
+        M_ANIMATION_MORPH_KEYFRAME = 0x05
     };
 };
 

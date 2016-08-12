@@ -4,7 +4,6 @@
 //------------------------------------------------------------------------------
 #include "gles2gpuprogram.h"
 #include "gles2debug.h"
-#include "chrisslystring.h"
 #include "debug.h"
 
 namespace chrissly

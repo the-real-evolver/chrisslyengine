@@ -10,7 +10,7 @@
 void ce_psp_assert(bool exp, char* msg)
 {
     if (!exp)
-    { 
+    {
         pspDebugScreenInit();
         pspDebugScreenClear();
         pspDebugScreenSetTextColor(0x000077ff);

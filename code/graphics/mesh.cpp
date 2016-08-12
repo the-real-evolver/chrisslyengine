@@ -16,7 +16,8 @@ using namespace chrissly::core;
 //------------------------------------------------------------------------------
 /**
 */
-Mesh::Mesh()
+Mesh::Mesh() :
+    boundingRadius(0.0f)
 {
     ce_dynamic_array_init(&this->subMeshes, 1);
     ce_hash_table_init(&this->animations, 1);
@@ -137,6 +138,15 @@ Mesh::_InitAnimationState(ce_hash_table* animSet)
             it = it->next;
         }
     }
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+float
+Mesh::GetBoundingSphereRadius() const
+{
+    return this->boundingRadius;
 }
 
 } // namespace graphics
