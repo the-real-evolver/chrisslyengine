@@ -20,7 +20,7 @@ typedef chrissly::PSPMath Math;
 } // namespace core
 } // namespace chrissly
 //------------------------------------------------------------------------------
-#elif __ANDROID__
+#elif __ANDROID__ || __WINDOWS__
 #include "standard/standardmath.h"
 namespace chrissly
 {

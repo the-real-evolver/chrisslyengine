@@ -44,6 +44,24 @@ struct FileHandle
 } // namespace core
 } // namespace chrissly
 //------------------------------------------------------------------------------
+#elif __WINDOWS__
+#include "windows.h"
+namespace chrissly
+{
+namespace core
+{
+
+struct FileHandle
+{
+    /// default constructor
+    FileHandle() : handle(INVALID_HANDLE_VALUE) {};
+
+    HANDLE handle;
+};
+
+} // namespace core
+} // namespace chrissly
+//------------------------------------------------------------------------------
 #else
 #error "FileHandle struct not implemented on this platform!"
 #endif

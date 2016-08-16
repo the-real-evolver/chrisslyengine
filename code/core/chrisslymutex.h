@@ -32,6 +32,18 @@ typedef chrissly::PosixMutex Mutex;
 } // namespace core
 } // namespace chrissly
 //------------------------------------------------------------------------------
+#elif __WINDOWS__
+#include "windows/winapimutex.h"
+namespace chrissly
+{
+namespace core
+{
+
+typedef chrissly::WinAPIMutex Mutex;
+
+} // namespace core
+} // namespace chrissly
+//------------------------------------------------------------------------------
 #else
 #error "Mutex class not implemented on this platform!"
 #endif

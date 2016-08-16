@@ -9,6 +9,7 @@
     (C) 2012 Christian Bleicher
 */
 #include <math.h>
+#include <limits.h>
 
 //------------------------------------------------------------------------------
 namespace chrissly
@@ -42,7 +43,7 @@ public:
 inline float
 StandardMath::Pow(float base, float exponent)
 {
-    return pow(base, exponent);
+    return powf(base, exponent);
 }
 
 //------------------------------------------------------------------------------
@@ -51,7 +52,7 @@ StandardMath::Pow(float base, float exponent)
 inline float
 StandardMath::Sqrt(float fValue)
 {
-    return sqrt(fValue);
+    return sqrtf(fValue);
 }
 
 //------------------------------------------------------------------------------
@@ -60,7 +61,7 @@ StandardMath::Sqrt(float fValue)
 inline float
 StandardMath::Sin(float fValue)
 {
-    return sin(fValue);
+    return sinf(fValue);
 }
 
  //------------------------------------------------------------------------------
@@ -69,7 +70,7 @@ StandardMath::Sin(float fValue)
 inline float
 StandardMath::Cos(float fValue)
 {
-    return cos(fValue);
+    return cosf(fValue);
 }
 
 //------------------------------------------------------------------------------
@@ -78,7 +79,7 @@ StandardMath::Cos(float fValue)
 inline float
 StandardMath::ATan(float fValue)
 {
-    return atan(fValue);
+    return atanf(fValue);
 }
 
 //------------------------------------------------------------------------------
@@ -87,7 +88,7 @@ StandardMath::ATan(float fValue)
 inline float
 StandardMath::ATan2(float y, float x)
 {
-    return atan2(y, x);
+    return atan2f(y, x);
 }
 
 //------------------------------------------------------------------------------
@@ -96,7 +97,7 @@ StandardMath::ATan2(float y, float x)
 inline float
 StandardMath::Fmod(float fNumerator, float fDenominator)
 {
-    return fmod(fNumerator, fDenominator);
+    return fmodf(fNumerator, fDenominator);
 }
 
 //------------------------------------------------------------------------------
@@ -105,7 +106,7 @@ StandardMath::Fmod(float fNumerator, float fDenominator)
 inline float
 StandardMath::Floor(float fValue)
 {
-    return floor(fValue);
+    return floorf(fValue);
 }
 
 //------------------------------------------------------------------------------

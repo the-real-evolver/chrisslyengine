@@ -5,4 +5,5 @@
     (C) 2012 Christian Bleicher
 */
 
-void ce_psp_assert(bool exp, char* msg);
+/// display assertion message in the debugger and assert if cond is false
+void ce_psp_assert(bool cond, const char* exp, const char* file, int line, const char* msg, ...);

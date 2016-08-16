@@ -29,7 +29,7 @@ typedef struct ce_dynamic_array
     \param initialSize the initial size to allocate
     \return a pointer to the data, or NULL on error.
 */
-static inline void*
+inline void*
 ce_dynamic_array_init(ce_dynamic_array* v, unsigned int initial_size)
 {
     if (NULL == v)
@@ -49,7 +49,7 @@ ce_dynamic_array_init(ce_dynamic_array* v, unsigned int initial_size)
     \brief Frees memory allocated by the dynamic array
     \param v The array to delete.
 */
-static inline void
+inline void
 ce_dynamic_array_delete(ce_dynamic_array* v)
 {
     if (NULL == v)
@@ -74,7 +74,7 @@ ce_dynamic_array_delete(ce_dynamic_array* v)
     \param index The index of the data to get.
     \return The data or NULL if v is NULL or the index is out of range.
 */
-static inline void*
+inline void*
 ce_dynamic_array_get(ce_dynamic_array* v, unsigned int index)
 {
     if (NULL == v)
@@ -98,7 +98,7 @@ ce_dynamic_array_get(ce_dynamic_array* v, unsigned int index)
     \param item The data to set.
     \return false if v is NULL or there isn't enough memory, true otherwise
 */
-static inline bool
+inline bool
 ce_dynamic_array_set(ce_dynamic_array* v, unsigned int index, void* item)
 {
     if (NULL == v)
@@ -130,7 +130,7 @@ ce_dynamic_array_set(ce_dynamic_array* v, unsigned int index, void* item)
     \param v The array to set.
     \param item The data to set.
 */
-static inline void
+inline void
 ce_dynamic_array_push_back(ce_dynamic_array* v, void* item)
 {
     if (NULL == v)

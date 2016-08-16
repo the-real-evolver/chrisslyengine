@@ -32,6 +32,18 @@ typedef chrissly::AndroidFSWrapper FSWrapper;
 } // namespace core
 } // namespace chrissly
 //------------------------------------------------------------------------------
+#elif __WINDOWS__
+#include "windows/winapifswrapper.h"
+namespace chrissly
+{
+namespace core
+{
+
+typedef chrissly::WinAPIFSWrapper FSWrapper;
+
+} // namespace core
+} // namespace chrissly
+//------------------------------------------------------------------------------
 #else
 #error "FSWrapper class not implemented on this platform!"
 #endif

@@ -58,7 +58,7 @@ ce_hash_function(const char* key)
 //------------------------------------------------------------------------------
 /**
 */
-static inline void
+inline void
 ce_hash_table_init(ce_hash_table* table, unsigned int initial_size)
 {
     if (NULL == table)
@@ -83,7 +83,7 @@ ce_hash_table_init(ce_hash_table* table, unsigned int initial_size)
 //------------------------------------------------------------------------------
 /**
 */
-static inline void
+inline void
 ce_hash_table_clear(ce_hash_table* table)
 {
     if (NULL == table)
@@ -116,7 +116,7 @@ ce_hash_table_clear(ce_hash_table* table)
 //------------------------------------------------------------------------------
 /**
 */
-static inline void
+inline void
 ce_hash_table_insert(ce_hash_table* table, const char* key, void* value)
 {
     if (NULL == table)
@@ -151,7 +151,7 @@ ce_hash_table_insert(ce_hash_table* table, const char* key, void* value)
 //------------------------------------------------------------------------------
 /**
 */
-static inline void*
+inline void*
 ce_hash_table_find(ce_hash_table* table, const char* key)
 {
     if (NULL == table)
@@ -180,7 +180,7 @@ ce_hash_table_find(ce_hash_table* table, const char* key)
 //------------------------------------------------------------------------------
 /**
 */
-static inline ce_linked_list*
+inline ce_linked_list*
 ce_hash_table_begin(ce_hash_table* table, unsigned int index)
 {
     if (NULL == table)
