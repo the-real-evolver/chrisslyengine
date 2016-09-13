@@ -357,7 +357,7 @@ SceneManager::_RenderScene(Camera* camera, Viewport* vp)
         for (entityIndex = 0; entityIndex < sceneNode->NumAttachedObjects(); ++entityIndex)
         {
             // for all attached entities
-            Entity* entity = sceneNode->GetAttachedObject(entityIndex);
+            Entity* entity = sceneNode->GetAttachedObject((unsigned short)entityIndex);
 
             if (this->IsShadowTechniqueInUse() && this->illuminationStage == IRS_RENDER_TO_TEXTURE && !entity->GetCastShadows()) continue;
 
@@ -386,7 +386,7 @@ SceneManager::_RenderScene(Camera* camera, Viewport* vp)
                 for (passIndex = 0; passIndex < material->GetNumPasses(); ++passIndex)
                 {
                     // for all passes
-                    Pass* pass = material->GetPass(passIndex);
+                    Pass* pass = material->GetPass((unsigned short)passIndex);
 
                     if (pass->GetSceneBlendingEnabled())
                     {

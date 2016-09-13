@@ -36,27 +36,27 @@ AnimationState::~AnimationState()
 /**
 */
 void
-AnimationState::SetEnabled(bool enabled)
+AnimationState::SetEnabled(bool enable)
 {
-    this->enabled = enabled;
+    this->enabled = enable;
 }
 
 //------------------------------------------------------------------------------
 /**
 */
 void
-AnimationState::SetLoop(bool loop)
+AnimationState::SetLoop(bool looped)
 {
-    this->loop = loop;
+    this->loop = looped;
 }
 
 //------------------------------------------------------------------------------
 /**
 */
 void
-AnimationState::SetTimePosition(float timePos)
+AnimationState::SetTimePosition(float timePosition)
 {
-    this->timePos = timePos;
+    this->timePos = timePosition;
 
     if (this->loop)
     {

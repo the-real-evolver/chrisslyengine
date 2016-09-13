@@ -34,8 +34,6 @@ private:
     static int Get(core::AccessMode mode);
     /// return a PSP equivalent for a SeekOrigin value
     static int Get(core::SeekOrigin origin);
-
-    static const char* RootDirectory;
 };
 
 } // namespace chrissly

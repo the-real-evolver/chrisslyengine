@@ -79,7 +79,7 @@ public:
         @param
             quadratic The quadratic factor in the attenuation formula: adds a curvature to the attenuation formula
     */
-    void SetAttenuation(float range, float constant, float linear, float quadratic);
+    void SetAttenuation(float r, float constant, float linear, float quadratic);
     /// returns the absolute upper range of the light
     float GetAttenuationRange() const;
     /// returns the constant factor in the attenuation formula

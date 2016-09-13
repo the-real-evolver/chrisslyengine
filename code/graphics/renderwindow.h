@@ -32,6 +32,18 @@ typedef chrissly::EGLRenderWindow RenderWindow;
 } // namespace graphics
 } // namespace chrissly
 //------------------------------------------------------------------------------
+#elif __WINDOWS__
+#include "windows/dxgirenderwindow.h"
+namespace chrissly
+{
+namespace graphics
+{
+
+typedef chrissly::DXGIRenderWindow RenderWindow;
+
+} // namespace graphics
+} // namespace chrissly
+  //------------------------------------------------------------------------------
 #else
 #error "RenderWindow class not implemented on this platform!"
 #endif

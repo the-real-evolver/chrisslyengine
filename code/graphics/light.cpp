@@ -95,9 +95,9 @@ Light::GetSpecularColour() const
 /**
 */
 void
-Light::SetAttenuation(float range, float constant, float linear, float quadratic)
+Light::SetAttenuation(float r, float constant, float linear, float quadratic)
 {
-    this->range = range;
+    this->range = r;
     this->attenuationConst = constant;
     this->attenuationLinear = linear;
     this->attenuationQuad = quadratic;

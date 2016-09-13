@@ -62,7 +62,7 @@ public:
     ~TextureUnitState();
 
     /// sets the scaling factor applied to texture coordinates
-    void SetTextureScale(float uScale, float vScale);
+    void SetTextureScale(float u, float v);
     /// get texture uscale value
     float GetTextureUScale() const;
     /// get texture vscale value
@@ -80,7 +80,7 @@ public:
         FO_POINT<br>
         FO_LINEAR<br>
     */
-    void SetTextureFiltering(FilterOptions minFilter, FilterOptions magFilter, FilterOptions mipFilter); 
+    void SetTextureFiltering(FilterOptions min, FilterOptions mag, FilterOptions mip);
     /// get the texture filtering for the given type
     FilterOptions GetTextureFiltering(FilterType ftype) const;
 
@@ -96,9 +96,9 @@ public:
         LBO_ALPHA_BLEND <br>
         LBO_DECAL <br>
     */
-    void SetTextureBlendOperation(LayerBlendType lbt, LayerBlendOperation lbo);
+    void SetTextureBlendOperation(LayerBlendType type, LayerBlendOperation op);
     /// get the texture operation
-    void GetTextureBlendOperation(LayerBlendType& lbt, LayerBlendOperation& lbo) const;
+    void GetTextureBlendOperation(LayerBlendType& type, LayerBlendOperation& op) const;
 
     /// sets the texture addressing mode, i.e. what happens at uv values above 1.0.
     /**
@@ -142,7 +142,7 @@ public:
     const core::String& GetTextureName() const;
 
     /// set texture to use
-    void SetTexture(Texture* texture);
+    void SetTexture(Texture* tex);
     /// get the used texture
     Texture* GetTexture() const;
 

@@ -162,15 +162,15 @@ MaterialParser::ParsePass()
         if (0 == strcmp(this->lexer.string, "true"))
         {
             if (0 == stb_c_lexer_get_token(&this->lexer)) return;
-            float red = this->lexer.real_number;
+            float red = (float)this->lexer.real_number;
             if (0 == stb_c_lexer_get_token(&this->lexer)) return;
-            float green = this->lexer.real_number;
+            float green = (float)this->lexer.real_number;
             if (0 == stb_c_lexer_get_token(&this->lexer)) return;
-            float blue = this->lexer.real_number;
+            float blue = (float)this->lexer.real_number;
             if (0 == stb_c_lexer_get_token(&this->lexer)) return;
-            float start = this->lexer.real_number;
+            float start = (float)this->lexer.real_number;
             if (0 == stb_c_lexer_get_token(&this->lexer)) return;
-            float end = this->lexer.real_number;
+            float end = (float)this->lexer.real_number;
             this->currentPass->SetFog(FOG_LINEAR, this->GetRGBAValue(red, green, blue, 1.0f), start, end);
         }
         else if (0 == strcmp(this->lexer.string, "false"))
@@ -187,13 +187,13 @@ MaterialParser::ParsePass()
         }
         else
         {
-            float red = this->lexer.real_number;
+            float red = (float)this->lexer.real_number;
             if (0 == stb_c_lexer_get_token(&this->lexer)) return;
-            float green = this->lexer.real_number;
+            float green = (float)this->lexer.real_number;
             if (0 == stb_c_lexer_get_token(&this->lexer)) return;
-            float blue = this->lexer.real_number;
+            float blue = (float)this->lexer.real_number;
             if (0 == stb_c_lexer_get_token(&this->lexer)) return;
-            float alpha = this->lexer.real_number;
+            float alpha = (float)this->lexer.real_number;
             this->currentPass->SetSelfIllumination(this->GetRGBAValue(red, green, blue, alpha));
         }
     }
@@ -206,13 +206,13 @@ MaterialParser::ParsePass()
         }
         else
         {
-            float red = this->lexer.real_number;
+            float red = (float)this->lexer.real_number;
             if (0 == stb_c_lexer_get_token(&this->lexer)) return;
-            float green = this->lexer.real_number;
+            float green = (float)this->lexer.real_number;
             if (0 == stb_c_lexer_get_token(&this->lexer)) return;
-            float blue = this->lexer.real_number;
+            float blue = (float)this->lexer.real_number;
             if (0 == stb_c_lexer_get_token(&this->lexer)) return;
-            float alpha = this->lexer.real_number;
+            float alpha = (float)this->lexer.real_number;
             this->currentPass->SetAmbient(this->GetRGBAValue(red, green, blue, alpha));
         }
     }
@@ -225,13 +225,13 @@ MaterialParser::ParsePass()
         }
         else
         {
-            float red = this->lexer.real_number;
+            float red = (float)this->lexer.real_number;
             if (0 == stb_c_lexer_get_token(&this->lexer)) return;
-            float green = this->lexer.real_number;
+            float green = (float)this->lexer.real_number;
             if (0 == stb_c_lexer_get_token(&this->lexer)) return;
-            float blue = this->lexer.real_number;
+            float blue = (float)this->lexer.real_number;
             if (0 == stb_c_lexer_get_token(&this->lexer)) return;
-            float alpha = this->lexer.real_number;
+            float alpha = (float)this->lexer.real_number;
             this->currentPass->SetDiffuse(this->GetRGBAValue(red, green, blue, alpha));
         }
     }
@@ -244,17 +244,17 @@ MaterialParser::ParsePass()
         }
         else
         {
-            float red = this->lexer.real_number;
+            float red = (float)this->lexer.real_number;
             if (0 == stb_c_lexer_get_token(&this->lexer)) return;
-            float green = this->lexer.real_number;
+            float green = (float)this->lexer.real_number;
             if (0 == stb_c_lexer_get_token(&this->lexer)) return;
-            float blue = this->lexer.real_number;
+            float blue = (float)this->lexer.real_number;
             if (0 == stb_c_lexer_get_token(&this->lexer)) return;
-            float alpha = this->lexer.real_number;
+            float alpha = (float)this->lexer.real_number;
             this->currentPass->SetSpecular(this->GetRGBAValue(red, green, blue, alpha));
         }
         if (0 == stb_c_lexer_get_token(&this->lexer)) return;
-        this->currentPass->SetShininess(this->lexer.real_number);
+        this->currentPass->SetShininess((float)this->lexer.real_number);
     }
     else if (0 == strcmp(this->lexer.string, "scene_blend"))
     {
@@ -267,21 +267,21 @@ MaterialParser::ParsePass()
         if (SBF_FIX == source)
         {
             if (0 == stb_c_lexer_get_token(&this->lexer)) return;
-            float red = this->lexer.real_number;
+            float red = (float)this->lexer.real_number;
             if (0 == stb_c_lexer_get_token(&this->lexer)) return;
-            float green = this->lexer.real_number;
+            float green = (float)this->lexer.real_number;
             if (0 == stb_c_lexer_get_token(&this->lexer)) return;
-            float blue = this->lexer.real_number;
+            float blue = (float)this->lexer.real_number;
             this->currentPass->SetBlendingFixColors(this->GetRGBAValue(red, green, blue, 1.0f), this->currentPass->GetDestinationBlendingFixColor());
         }
         if (SBF_FIX == dest)
         {
             if (0 == stb_c_lexer_get_token(&this->lexer)) return;
-            float red = this->lexer.real_number;
+            float red = (float)this->lexer.real_number;
             if (0 == stb_c_lexer_get_token(&this->lexer)) return;
-            float green = this->lexer.real_number;
+            float green = (float)this->lexer.real_number;
             if (0 == stb_c_lexer_get_token(&this->lexer)) return;
-            float blue = this->lexer.real_number;
+            float blue = (float)this->lexer.real_number;
             this->currentPass->SetBlendingFixColors(this->currentPass->GetSourceBlendingFixColor(), this->GetRGBAValue(red, green, blue, 1.0f));
         }
     }
@@ -372,17 +372,17 @@ MaterialParser::ParseTextureUnitState()
     else if (0 == strcmp(this->lexer.string, "scroll"))
     {
         if (0 == stb_c_lexer_get_token(&this->lexer)) return;
-        float uMod = this->lexer.real_number;
+        float uMod = (float)this->lexer.real_number;
         if (0 == stb_c_lexer_get_token(&this->lexer)) return;
-        float vMod = this->lexer.real_number;
+        float vMod = (float)this->lexer.real_number;
         this->currentTextureUnitState->SetTextureScroll(uMod, vMod);
     }
     else if (0 == strcmp(this->lexer.string, "scale"))
     {
         if (0 == stb_c_lexer_get_token(&this->lexer)) return;
-        float uScale = this->lexer.real_number;
+        float uScale = (float)this->lexer.real_number;
         if (0 == stb_c_lexer_get_token(&this->lexer)) return;
-        float vScale = this->lexer.real_number;
+        float vScale = (float)this->lexer.real_number;
         this->currentTextureUnitState->SetTextureScale(uScale, vScale);
     }
 }

@@ -22,8 +22,8 @@ GraphicsSystem::GraphicsSystem() :
     this->activeRenderer = CE_NEW RenderSystem();
     this->meshManager = CE_NEW MeshManager();
     this->textureManager = CE_NEW TextureManager();
-    this->sceneManager = CE_NEW SceneManager();
     this->materialManager = CE_NEW MaterialManager();
+    this->sceneManager = CE_NEW SceneManager();
     ce_dynamic_array_init(&this->renderTargets, 1);
 }
 
@@ -33,12 +33,6 @@ GraphicsSystem::GraphicsSystem() :
 GraphicsSystem::~GraphicsSystem()
 {
     Singleton = NULL;
-    this->activeRenderer->Shutdown();
-    CE_DELETE this->activeRenderer;
-    CE_DELETE this->meshManager;
-    CE_DELETE this->textureManager;
-    CE_DELETE this->sceneManager;
-    CE_DELETE this->materialManager;
 
     unsigned int i;
     for (i = 0; i < this->renderTargets.size; ++i)
@@ -46,6 +40,14 @@ GraphicsSystem::~GraphicsSystem()
         CE_DELETE (RenderTarget*)ce_dynamic_array_get(&this->renderTargets, i);
     }
     ce_dynamic_array_delete(&this->renderTargets);
+
+    CE_DELETE this->sceneManager;
+    CE_DELETE this->materialManager;
+    CE_DELETE this->textureManager;
+    CE_DELETE this->meshManager;
+
+    this->activeRenderer->Shutdown();
+    CE_DELETE this->activeRenderer;
 }
 
 //------------------------------------------------------------------------------

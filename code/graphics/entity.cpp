@@ -22,7 +22,7 @@ Entity::Entity(Mesh* mesh) :
     castShadows(false),
     receivesShadows(false)
 {
-    this->BuildSubEntities(this->mesh, &this->subEntities);
+    this->BuildSubEntities();
 
     ce_hash_table_init(&this->animationState, 1);
     if (this->HasVertexAnimation())
@@ -192,17 +192,17 @@ Entity::UpdateAnimation()
 /**
 */
 void
-Entity::BuildSubEntities(Mesh* mesh, ce_dynamic_array* entities)
+Entity::BuildSubEntities()
 {
-    ce_dynamic_array_init(&this->subEntities, mesh->GetNumSubMeshes());
+    ce_dynamic_array_init(&this->subEntities, this->mesh->GetNumSubMeshes());
 
     unsigned int i;
     for (i = 0; i < this->subEntities.capacity; ++i)
     {
-        SubMesh* subMesh = mesh->GetSubMesh(i);
+        SubMesh* subMesh = this->mesh->GetSubMesh((unsigned short)i);
         SubEntity* subEntity = CE_NEW SubEntity(this, subMesh);
         subEntity->SetMaterialName(subMesh->GetMaterialName());
-        ce_dynamic_array_set(entities, i, subEntity);
+        ce_dynamic_array_set(&this->subEntities, i, subEntity);
     }
 }
 

@@ -175,7 +175,7 @@ SLESAudioRenderer::UpdateChannel(audio::Channel* channel)
             }
             else
             {
-                float l = M_LN2 / log(1.0f / (1.0f - volume));
+                float l = (float)M_LN2 / logf(1.0f / (1.0f - volume));
                 if (l > 32.768f) l = 32.768f;
                 slVolume = l * -1000.0f;
             }

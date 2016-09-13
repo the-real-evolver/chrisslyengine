@@ -81,7 +81,7 @@ public:
     @par
         Note that like rotations, scalings are oriented around the node's origin.
     */
-    void SetScale(const core::Vector3& scale);
+    void SetScale(const core::Vector3& s);
     /// sets the scaling factor applied to this node
     void SetScale(float x, float y, float z);
     /// gets the scaling factor of this node
@@ -137,7 +137,7 @@ private:
     /// constructor, only to be called by the creator SceneManager
     SceneNode();
     /// only available internally - notification of parent.
-    void SetParent(SceneNode* parent);
+    void SetParent(SceneNode* p);
 
     /// pointer to parent node
     SceneNode* parent;

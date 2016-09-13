@@ -44,15 +44,15 @@ public:
 
 private:
     /// copy constructor
-    GraphicsSystem(const GraphicsSystem&cc) {};
+    GraphicsSystem(const GraphicsSystem&) {};
 
     static GraphicsSystem* Singleton;
 
     RenderSystem* activeRenderer;
     MeshManager* meshManager;
     TextureManager* textureManager;
-    SceneManager* sceneManager;
     MaterialManager* materialManager;
+    SceneManager* sceneManager;
     RenderWindow* autoWindow;
     ce_dynamic_array renderTargets;
 };

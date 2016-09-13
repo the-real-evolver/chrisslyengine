@@ -31,6 +31,18 @@ typedef chrissly::GLES2GpuProgram GpuProgram;
 } // namespace graphics
 } // namespace chrissly
 //------------------------------------------------------------------------------
+#elif __WINDOWS__
+#include "windows/d3d11gpuprogram.h"
+namespace chrissly
+{
+namespace graphics
+{
+
+typedef chrissly::D3D11GpuProgram GpuProgram;
+
+} // namespace graphics
+} // namespace chrissly
+  //------------------------------------------------------------------------------
 #else
 #error "GpuProgram class not implemented on this platform!"
 #endif

@@ -74,9 +74,9 @@ SubEntity::GetMaterial() const
 /**
 */
 void
-SubEntity::SetVisible(bool visible)
+SubEntity::SetVisible(bool vis)
 {
-    this->visible = visible;
+    this->visible = vis;
 }
 
 //------------------------------------------------------------------------------

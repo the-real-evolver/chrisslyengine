@@ -34,13 +34,13 @@ public:
     /// shutdown the renderer and cleanup resources
     void Shutdown();
     /// set current render target to target, enabling its device context if needed
-    void _SetRenderTarget(graphics::RenderTarget *target);
+    void _SetRenderTarget(graphics::RenderTarget* target);
     /**
         Sets the provided viewport as the active one for future
         rendering operations. This viewport is aware of it's own
         camera and render target.
     */
-    void _SetViewport(graphics::Viewport *vp);
+    void _SetViewport(graphics::Viewport* vp);
     /// sets the world transform matrix
     void _SetWorldMatrix(const core::Matrix4& m);
     /// Sets the view transform matrix

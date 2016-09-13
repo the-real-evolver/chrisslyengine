@@ -32,6 +32,18 @@ typedef chrissly::GLES2RenderSystem RenderSystem;
 } // namespace graphics
 } // namespace chrissly
 //------------------------------------------------------------------------------
+#elif __WINDOWS__
+#include "windows/d3d11rendersystem.h"
+namespace chrissly
+{
+namespace graphics
+{
+
+typedef chrissly::D3D11RenderSystem RenderSystem;
+
+} // namespace graphics
+} // namespace chrissly
+  //------------------------------------------------------------------------------
 #else
 #error "RenderSystem class not implemented on this platform!"
 #endif

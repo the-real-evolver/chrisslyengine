@@ -34,7 +34,7 @@ Camera::Camera() :
 */
 Camera::~Camera()
 {
-  
+
 }
 
 //------------------------------------------------------------------------------
@@ -71,22 +71,21 @@ Camera::GetPosition() const
 //------------------------------------------------------------------------------
 /**
 */
-const Quaternion&
-Camera::GetOrientation() const
-{
-    return this->orientation;
-}
-
-
-//------------------------------------------------------------------------------
-/**
-*/
 void
 Camera::SetOrientation(const Quaternion& q)
 {
     this->orientation = q;
     this->orientation.Normalise();
     this->recalcView = true;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+const Quaternion&
+Camera::GetOrientation() const
+{
+    return this->orientation;
 }
 
 //------------------------------------------------------------------------------
@@ -181,9 +180,76 @@ Camera::Rotate(const Quaternion& q)
 /**
 */
 void
-Camera::_RenderScene(Viewport* vp)
+Camera::SetFOVy(const float fovy)
 {
-    SceneManager::Instance()->_RenderScene(this, vp);
+    this->FOVy = fovy;
+    this->recalcFrustum = true;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+float
+Camera::GetFOVy() const
+{
+    return this->FOVy;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+Camera::SetNearClipDistance(float dist)
+{
+    this->nearDist = dist;
+    this->recalcFrustum = true;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+float
+Camera::GetNearClipDistance() const
+{
+    return this->nearDist;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+Camera::SetFarClipDistance(float dist)
+{
+    this->farDist = dist;
+    this->recalcFrustum = true;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+float
+Camera::GetFarClipDistance() const
+{
+    return this->farDist;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+Camera::SetAspectRatio(float ratio)
+{
+    this->aspect = ratio;
+    this->recalcFrustum = true;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+float
+Camera::GetAspectRatio() const
+{
+    return this->aspect;
 }
 
 //------------------------------------------------------------------------------
@@ -192,7 +258,7 @@ Camera::_RenderScene(Viewport* vp)
 const Matrix4&
 Camera::GetViewMatrix() const
 {
-    if (this->recalcView) this->UpdateViewImpl();
+    if (this->recalcView) this->UpdateView();
 
     return this->viewMatrix;
 }
@@ -200,8 +266,28 @@ Camera::GetViewMatrix() const
 //------------------------------------------------------------------------------
 /**
 */
+const Matrix4&
+Camera::GetProjectionMatrixRS() const
+{
+    if (this->recalcFrustum) this->UpdateFrustum();
+
+    return this->projMatrixRS;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
 void
-Camera::UpdateViewImpl() const
+Camera::_RenderScene(Viewport* vp)
+{
+    SceneManager::Instance()->_RenderScene(this, vp);
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+Camera::UpdateView() const
 {
     // view matrix is:
     //
@@ -243,94 +329,7 @@ Camera::UpdateViewImpl() const
 /**
 */
 void
-Camera::SetFOVy(const float fovy)
-{
-    this->FOVy = fovy;
-    this->recalcFrustum = true;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-float
-Camera::GetFOVy() const
-{
-    return this->FOVy;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-void
-Camera::SetNearClipDistance(float nearDist)
-{
-    this->nearDist = nearDist;
-    this->recalcFrustum = true;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-float
-Camera::GetNearClipDistance() const
-{
-    return this->nearDist;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-void
-Camera::SetFarClipDistance(float farDist)
-{
-    this->farDist = farDist;
-    this->recalcFrustum = true;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-float
-Camera::GetFarClipDistance() const
-{
-    return this->farDist;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-void
-Camera::SetAspectRatio(float ratio)
-{
-    this->aspect = ratio;
-    this->recalcFrustum = true;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-float
-Camera::GetAspectRatio() const
-{
-    return this->aspect;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-const Matrix4&
-Camera::GetProjectionMatrixRS() const
-{
-    if (this->recalcFrustum) this->UpdateFrustumImpl();
-
-    return this->projMatrixRS;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-void
-Camera::UpdateFrustumImpl() const
+Camera::UpdateFrustum() const
 {
     // 0.5f * 3.141593f / 180.0f = 0.0087266f
     float f = 1.0f / Math::ATan(this->FOVy * 0.0087266f);

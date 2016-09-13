@@ -68,7 +68,7 @@ Animation::CreateVertexTrack(unsigned char handle)
 unsigned short
 Animation::GetNumVertexTracks() const
 {
-    return this->vertexTracks.size;
+    return (unsigned short)this->vertexTracks.size;
 }
 
 //------------------------------------------------------------------------------

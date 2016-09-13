@@ -23,14 +23,14 @@ public:
     ~AnimationState();
 
     /// sets whether this animation is enabled
-    void SetEnabled(bool enabled);
+    void SetEnabled(bool enable);
     /**
         sets whether or not an animation loops at the start and end of
         the animation if the time continues to be altereds
     */
-    void SetLoop(bool loop);
+    void SetLoop(bool looped);
     /// sets the time position for this animation
-    void SetTimePosition(float timePos);
+    void SetTimePosition(float timePosition);
     /// Modifies the time position, adjusting for animation length
     /**
         @param

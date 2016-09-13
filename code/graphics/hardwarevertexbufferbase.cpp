@@ -91,9 +91,9 @@ HardwareVertexBufferBase::GetNumVertices() const
 /**
 */
 void
-HardwareVertexBufferBase::SetNumVertices(unsigned int numVertices)
+HardwareVertexBufferBase::SetNumVertices(unsigned int num)
 {
-    this->numVertices = numVertices;
+    this->numVertices = num;
 }
 
 } // namespace graphics

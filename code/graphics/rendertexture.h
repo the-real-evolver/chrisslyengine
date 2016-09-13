@@ -32,6 +32,18 @@ typedef chrissly::GLES2RenderTexture RenderTexture;
 } // namespace graphics
 } // namespace chrissly
 //------------------------------------------------------------------------------
+#elif __WINDOWS__
+#include "windows/d3d11rendertexture.h"
+namespace chrissly
+{
+namespace graphics
+{
+
+typedef chrissly::D3D11RenderTexture RenderTexture;
+
+} // namespace graphics
+} // namespace chrissly
+//------------------------------------------------------------------------------
 #else
 #error "RenderTexture class not implemented on this platform!"
 #endif

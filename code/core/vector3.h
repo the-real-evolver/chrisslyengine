@@ -83,7 +83,7 @@ public:
     float Length() const;
 
     float x;
-    float y; 
+    float y;
     float z;
 };
 

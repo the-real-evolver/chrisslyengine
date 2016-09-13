@@ -109,7 +109,7 @@ GLES2RenderSystem::Shutdown()
 /**
 */
 void
-GLES2RenderSystem::_SetRenderTarget(graphics::RenderTarget *target)
+GLES2RenderSystem::_SetRenderTarget(graphics::RenderTarget* target)
 {
 
 }
@@ -118,7 +118,7 @@ GLES2RenderSystem::_SetRenderTarget(graphics::RenderTarget *target)
 /**
 */
 void
-GLES2RenderSystem::_SetViewport(graphics::Viewport *vp)
+GLES2RenderSystem::_SetViewport(graphics::Viewport* vp)
 {
     int width = vp->GetActualWidth();
     int height = vp->GetActualHeight();

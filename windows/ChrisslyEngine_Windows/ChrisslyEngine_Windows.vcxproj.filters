@@ -1,0 +1,358 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="..\..\code\core\chrisslymemory.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\core\chrisslystring.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\core\matrix3.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\core\matrix4.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\core\quaternion.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\core\timer.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\core\vector3.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\core\windows\winapidebug.cpp">
+      <Filter>core\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\core\windows\winapifswrapper.cpp">
+      <Filter>core\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\graphics\animation.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\graphics\animationstate.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\graphics\animationtrack.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\graphics\camera.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\graphics\entity.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\graphics\gpuprogramparams.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\graphics\graphicssystem.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\graphics\hardwarevertexbufferbase.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\graphics\keyframe.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\graphics\light.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\graphics\material.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\graphics\materialmanager.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\graphics\materialparser.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\graphics\mesh.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\graphics\meshmanager.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\graphics\pass.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\graphics\renderqueuesortinggrouping.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\graphics\rendertarget.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\graphics\scenemanager.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\graphics\scenenode.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\graphics\subentity.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\graphics\submesh.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\graphics\texturebase.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\graphics\texturemanager.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\graphics\textureunitstate.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\graphics\viewport.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\graphics\windows\d3d11gpuprogram.cpp">
+      <Filter>graphics\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\graphics\windows\d3d11hardwarevertexbuffer.cpp">
+      <Filter>graphics\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\graphics\windows\d3d11mappings.cpp">
+      <Filter>graphics\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\graphics\windows\d3d11rendersystem.cpp">
+      <Filter>graphics\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\graphics\windows\d3d11rendertexture.cpp">
+      <Filter>graphics\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\graphics\windows\d3d11texture.cpp">
+      <Filter>graphics\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\graphics\windows\dxgirenderwindow.cpp">
+      <Filter>graphics\windows</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="core">
+      <UniqueIdentifier>{7cc1ea6d-4502-40a0-90da-5b274a19d2e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\windows">
+      <UniqueIdentifier>{f63ed16f-f183-4362-9858-6aa131530f07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\standard">
+      <UniqueIdentifier>{356bdf02-e19d-4ecd-aa60-00637ff8120a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics">
+      <UniqueIdentifier>{70e0e4f1-e3ea-49e3-9574-5478a671d438}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics\windows">
+      <UniqueIdentifier>{0ac22231-a789-4ce7-8ed0-f347e5a28efc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="thirdparty">
+      <UniqueIdentifier>{ea202187-7cc3-47d5-bdd1-a294826f5e02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="thirdparty\stb">
+      <UniqueIdentifier>{37df9488-36c2-4b0c-860d-86df1742d06f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\code\core\chrisslymath.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\core\chrisslymemory.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\core\chrisslymutex.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\core\chrisslystring.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\core\debug.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\core\dynamicarray.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\core\filehandle.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\core\fileio.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\core\fswrapper.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\core\hashtable.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\core\linkedlist.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\core\matrix3.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\core\matrix4.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\core\memoryallocatorconfig.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\core\quaternion.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\core\staticcoroutine.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\core\timer.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\core\vector3.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\core\standard\standardmath.h">
+      <Filter>core\standard</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\core\windows\winapidebug.h">
+      <Filter>core\windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\core\windows\winapifswrapper.h">
+      <Filter>core\windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\core\windows\winapimutex.h">
+      <Filter>core\windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\graphics\animation.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\graphics\animationstate.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\graphics\animationtrack.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\graphics\blendmode.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\graphics\camera.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\graphics\common.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\graphics\entity.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\graphics\gpuprogram.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\graphics\gpuprogramparams.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\graphics\graphicssystem.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\graphics\hardwarevertexbuffer.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\graphics\hardwarevertexbufferbase.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\graphics\keyframe.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\graphics\light.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\graphics\material.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\graphics\materialmanager.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\graphics\materialparser.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\graphics\mesh.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\graphics\meshmanager.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\graphics\pass.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\graphics\pixelformat.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\graphics\renderqueuesortinggrouping.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\graphics\rendersystem.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\graphics\rendertarget.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\graphics\rendertexture.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\graphics\renderwindow.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\graphics\scenemanager.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\graphics\scenenode.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\graphics\subentity.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\graphics\submesh.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\graphics\texture.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\graphics\texturebase.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\graphics\texturemanager.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\graphics\textureunitstate.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\graphics\vertexdata.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\graphics\viewport.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\graphics\windows\d3d11defaultshaders.h">
+      <Filter>graphics\windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\graphics\windows\d3d11gpuprogram.h">
+      <Filter>graphics\windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\graphics\windows\d3d11hardwarevertexbuffer.h">
+      <Filter>graphics\windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\graphics\windows\d3d11mappings.h">
+      <Filter>graphics\windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\graphics\windows\d3d11rendersystem.h">
+      <Filter>graphics\windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\graphics\windows\d3d11rendertexture.h">
+      <Filter>graphics\windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\graphics\windows\d3d11texture.h">
+      <Filter>graphics\windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\graphics\windows\dxgirenderwindow.h">
+      <Filter>graphics\windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\thirdparty\stb\stb_c_lexer.h">
+      <Filter>thirdparty\stb</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

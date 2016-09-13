@@ -31,10 +31,10 @@ public:
     void SetPosition(const core::Vector3& vec);
     /// Retrieves the camera's position.
     const core::Vector3& GetPosition() const;
+     /// sets the camera's orientation
+    void SetOrientation(const core::Quaternion& q);
     /// returns the camera's current orientation
     const core::Quaternion& GetOrientation() const;
-    /// sets the camera's orientation
-    void SetOrientation(const core::Quaternion& q);
     /// gets the camera's direction
     core::Vector3 GetDirection() const;
     /// gets the camera's up vector
@@ -51,34 +51,34 @@ public:
     void Rotate(const core::Vector3& axis, float angle);
     /// rotate the camera around an arbitrary axis using a Quaternion
     void Rotate(const core::Quaternion& q);
-    /// tells the Camera to contact the SceneManager to render from it's viewpoint
-    void _RenderScene(Viewport* vp);
-    /// gets the view matrix for this frustum. Mainly for use by engine internally
-    const core::Matrix4& GetViewMatrix() const;
     /// sets the Y-dimension Field Of View (FOV) of the frustum
     void SetFOVy(const float fovy);
     /// retrieves the frustums Y-dimension Field Of View (FOV)
     float GetFOVy() const;
     /// sets the position of the near clipping plane
-    void SetNearClipDistance(float nearDist);
+    void SetNearClipDistance(float dist);
     /// gets the position of the near clipping plane
     float GetNearClipDistance() const;
     /// sets the distance to the far clipping plane
-    void SetFarClipDistance(float farDist);
+    void SetFarClipDistance(float dist);
     /// retrieves the distance from the frustum to the far clipping plane
     float GetFarClipDistance() const;
     /// sets the aspect ratio for the frustum viewport
     void SetAspectRatio(float ratio);
     /// retreives the current aspect ratio.
     float GetAspectRatio() const;
+    /// gets the view matrix for this frustum. Mainly for use by engine internally
+    const core::Matrix4& GetViewMatrix() const;
     /// gets the projection matrix for this frustum adjusted for the rendersystem
     const core::Matrix4& GetProjectionMatrixRS() const;
+    /// tells the Camera to contact the SceneManager to render from it's viewpoint
+    void _RenderScene(Viewport* vp);
 
 private:
     /// implementation of updateView (called if out of date)
-    void UpdateViewImpl() const;
+    void UpdateView() const;
     /// implementation of updateFrustum (called if out of date) 
-    void UpdateFrustumImpl() const;
+    void UpdateFrustum() const;
     /// camera orientation, quaternion style
     core::Quaternion orientation;
     /// camera position - default (0,0,0)

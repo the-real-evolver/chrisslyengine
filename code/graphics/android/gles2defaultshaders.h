@@ -10,7 +10,7 @@
 //------------------------------------------------------------------------------
 /**
 */
-static const char* DefaultVertexShader =
+const char* DefaultVertexShader =
     "#version 100\n"
     "attribute vec2 texCoordIn;\n"
     "attribute vec3 normal;\n"
@@ -28,7 +28,7 @@ static const char* DefaultVertexShader =
     "    texCoordOut = texCoordIn;\n"
     "}\n";
 
-static const char* DefaultFragmentShader =
+const char* DefaultFragmentShader =
     "#version 100\n"
     "precision mediump float;\n"
     "varying vec2 texCoordOut;\n"
@@ -46,7 +46,7 @@ static const char* DefaultFragmentShader =
 /**
     Fog
 */
-static const char* DefaultVertexShaderFog =
+const char* DefaultVertexShaderFog =
     "#version 100\n"
     "attribute vec2 texCoordIn;\n"
     "attribute vec3 normal;\n"
@@ -77,7 +77,7 @@ static const char* DefaultVertexShaderFog =
     "    }\n"
     "}\n";
 
-static const char* DefaultFragmentShaderFog =
+const char* DefaultFragmentShaderFog =
     "#version 100\n"
     "precision mediump float;\n"
     "varying float fogFactor;\n"
@@ -99,7 +99,7 @@ static const char* DefaultFragmentShaderFog =
 /**
     Lit
 */
-static const char* DefaultVertexShaderLit =
+const char* DefaultVertexShaderLit =
     "#version 100\n"
     "attribute vec2 texCoordIn;\n"
     "attribute vec3 normal;\n"
@@ -121,7 +121,7 @@ static const char* DefaultVertexShaderLit =
     "    worldPosition = (worldMatrix * vec4(position.xyz, 1.0)).xyz;\n"
     "}\n";
 
-static const char* DefaultFragmentShaderLit =
+const char* DefaultFragmentShaderLit =
     "#version 100\n"
     "precision mediump float;\n"
     "const int MaxLights = 4;\n"
@@ -153,7 +153,7 @@ static const char* DefaultFragmentShaderLit =
 /**
     Lit, fog
 */
-static const char* DefaultVertexShaderLitFog =
+const char* DefaultVertexShaderLitFog =
     "#version 100\n"
     "attribute vec2 texCoordIn;\n"
     "attribute vec3 normal;\n"
@@ -188,7 +188,7 @@ static const char* DefaultVertexShaderLitFog =
     "    worldPosition = (worldMatrix * vec4(position.xyz, 1.0)).xyz;\n"
     "}\n";
 
-static const char* DefaultFragmentShaderLitFog =
+const char* DefaultFragmentShaderLitFog =
     "#version 100\n"
     "precision mediump float;\n"
     "const int MaxLights = 4;\n"

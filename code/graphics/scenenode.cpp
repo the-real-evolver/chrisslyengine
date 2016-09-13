@@ -181,9 +181,9 @@ SceneNode::GetPosition() const
 /**
 */
 void
-SceneNode::SetScale(const Vector3& scale)
+SceneNode::SetScale(const Vector3& s)
 {
-    this->scale = scale;
+    this->scale = s;
     this->cachedTransformOutOfDate = true;
 }
 
@@ -345,7 +345,7 @@ SceneNode::AttachObject(Entity* obj)
 unsigned short
 SceneNode::NumAttachedObjects() const
 {
-    return this->objects.size;
+    return (unsigned short)this->objects.size;
 }
 
 //------------------------------------------------------------------------------
@@ -370,9 +370,9 @@ SceneNode::DetachAllObjects()
 /**
 */
 void
-SceneNode::SetParent(SceneNode* parent)
+SceneNode::SetParent(SceneNode* p)
 {
-    this->parent = parent;
+    this->parent = p;
     this->cachedTransformOutOfDate = true;
 }
 

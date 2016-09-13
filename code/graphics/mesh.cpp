@@ -57,7 +57,7 @@ Mesh::CreateSubMesh()
 unsigned short
 Mesh::GetNumSubMeshes() const
 {
-    return this->subMeshes.size;
+    return (unsigned short)this->subMeshes.size;
 }
 
 //------------------------------------------------------------------------------

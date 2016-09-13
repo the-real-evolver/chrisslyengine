@@ -35,7 +35,7 @@ public:
 
 private:
     /// copy constructor
-    MeshManager(const MeshManager&cc) {};
+    MeshManager(const MeshManager&) {};
 
     static MeshManager* Singleton;
 

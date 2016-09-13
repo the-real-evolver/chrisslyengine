@@ -32,6 +32,18 @@ typedef chrissly::GLES2Texture Texture;
 } // namespace graphics
 } // namespace chrissly
 //------------------------------------------------------------------------------
+#elif __WINDOWS__
+#include "windows/d3d11texture.h"
+namespace chrissly
+{
+namespace graphics
+{
+
+typedef chrissly::D3D11Texture Texture;
+
+} // namespace graphics
+} // namespace chrissly
+  //------------------------------------------------------------------------------
 #else
 #error "Texture class not implemented on this platform!"
 #endif

@@ -44,10 +44,10 @@ TextureUnitState::~TextureUnitState()
 /**
 */
 void
-TextureUnitState::SetTextureScale(float uScale, float vScale)
+TextureUnitState::SetTextureScale(float u, float v)
 {
-    this->uScale = uScale;
-    this->vScale = vScale;
+    this->uScale = u;
+    this->vScale = v;
 }
 
 //------------------------------------------------------------------------------
@@ -100,11 +100,11 @@ TextureUnitState::GetTextureVScroll() const
 /**
 */
 void
-TextureUnitState::SetTextureFiltering(FilterOptions minFilter, FilterOptions magFilter, FilterOptions mipFilter)
+TextureUnitState::SetTextureFiltering(FilterOptions min, FilterOptions mag, FilterOptions mip)
 {
-    this->minFilter = minFilter;
-    this->magFilter = magFilter;
-    this->mipFilter = mipFilter;
+    this->minFilter = min;
+    this->magFilter = mag;
+    this->mipFilter = mip;
 }
 
 //------------------------------------------------------------------------------
@@ -133,20 +133,20 @@ TextureUnitState::GetTextureFiltering(FilterType ftype) const
 /**
 */
 void
-TextureUnitState::SetTextureBlendOperation(LayerBlendType lbt, LayerBlendOperation lbo)
+TextureUnitState::SetTextureBlendOperation(LayerBlendType type, LayerBlendOperation op)
 {
-    this->lbo = lbo;
-    this->lbt = lbt;
+    this->lbt = type;
+    this->lbo = op;
 }
 
 //------------------------------------------------------------------------------
 /**
 */
 void
-TextureUnitState::GetTextureBlendOperation(LayerBlendType& lbt, LayerBlendOperation& lbo) const
+TextureUnitState::GetTextureBlendOperation(LayerBlendType& type, LayerBlendOperation& op) const
 {
-    lbo = this->lbo;
-    lbt = this->lbt;
+    type = this->lbt;
+    op = this->lbo;
 }
 
 //------------------------------------------------------------------------------
@@ -226,9 +226,9 @@ TextureUnitState::GetTextureName() const
 /**
 */
 void
-TextureUnitState::SetTexture(Texture* texture)
+TextureUnitState::SetTexture(Texture* tex)
 {
-    this->texture = texture;
+    this->texture = tex;
 }
 
 //------------------------------------------------------------------------------

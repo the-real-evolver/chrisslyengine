@@ -1,0 +1,61 @@
+//------------------------------------------------------------------------------
+//  main.cpp
+//  (C) 2016 Christian Bleicher
+//------------------------------------------------------------------------------
+#include "debug.h"
+#include "graphicssystem.h"
+#include <windows.h>
+
+using namespace chrissly::core;
+using namespace chrissly::graphics;
+
+//------------------------------------------------------------------------------
+/**
+*/
+int WINAPI
+WinMain(HINSTANCE instance, HINSTANCE, char* cmdLine, int showCmd)
+{
+    UNREFERENCED_PARAMETER(cmdLine);
+    UNREFERENCED_PARAMETER(showCmd);
+
+    GraphicsSystem* graphicsSystem = new GraphicsSystem();
+    RenderWindow* window = graphicsSystem->Initialise((void*)instance);
+    Camera* camera = SceneManager::Instance()->CreateCamera("MainCamera");
+    window->AddViewport(camera, 0, 0, 960, 544);
+
+    MaterialManager::Instance()->Initialise();
+    Entity* entity = SceneManager::Instance()->CreateEntity("gothic_woman.mesh");
+    SceneNode* sceneNode = SceneManager::Instance()->GetRootSceneNode()->CreateChildSceneNode();
+    sceneNode->AttachObject(entity);
+    sceneNode->SetPosition(-0.5f, 0.0f, 0.0f);
+    sceneNode->SetScale(1.0f, 1.0f, 1.0f);
+    camera->SetPosition(-0.5f, -0.25f, 1.0f);
+    camera->SetOrientation(Quaternion());
+
+    MSG msg;
+    while (true)
+    {
+        if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+        {
+            if (WM_KEYDOWN == msg.message)
+            {
+                CE_LOG("-> Key Pressed: '%c'\n", (char)msg.wParam);
+            }
+            if (WM_QUIT == msg.message)
+            {
+                break;
+            }
+            TranslateMessage(&msg);
+            DispatchMessage(&msg);
+        }
+        else
+        {
+            sceneNode->Yaw(0.01f);
+            GraphicsSystem::Instance()->RenderOneFrame();
+        }
+    }
+
+    delete graphicsSystem;
+
+    return (int)msg.wParam;
+}

@@ -115,10 +115,10 @@ Pass::GetDestBlendFactor() const
 /**
 */
 void
-Pass::SetBlendingFixColors(unsigned int sourceFixColor, unsigned int destFixColor)
+Pass::SetBlendingFixColors(unsigned int srcFixColor, unsigned int dstFixColor)
 {
-    this->sourceFixColor = sourceFixColor;
-    this->destFixColor = destFixColor;
+    this->sourceFixColor = srcFixColor;
+    this->destFixColor = dstFixColor;
 }
 
 //------------------------------------------------------------------------------
@@ -232,9 +232,9 @@ Pass::GetShininess() const
 /**
 */
 void
-Pass::SetAmbient(unsigned int ambient)
+Pass::SetAmbient(unsigned int amb)
 {
-    this->ambient = ambient;
+    this->ambient = amb;
 }
 
 //------------------------------------------------------------------------------
@@ -250,9 +250,9 @@ Pass::GetAmbient() const
 /**
 */
 void
-Pass::SetDiffuse(unsigned int diffuse)
+Pass::SetDiffuse(unsigned int diff)
 {
-    this->diffuse = diffuse;
+    this->diffuse = diff;
 }
 
 //------------------------------------------------------------------------------
@@ -268,9 +268,9 @@ Pass::GetDiffuse() const
 /**
 */
 void
-Pass::SetSpecular(unsigned int specular)
+Pass::SetSpecular(unsigned int spec)
 {
-    this->specular = specular;
+    this->specular = spec;
 }
 
 //------------------------------------------------------------------------------
@@ -313,9 +313,9 @@ Pass::GetVertexColourTracking() const
 /**
 */
 void
-Pass::SetVertexColourTracking(unsigned int tracking)
+Pass::SetVertexColourTracking(unsigned int track)
 {
-    this->tracking = tracking;
+    this->tracking = track;
 }
 
 //------------------------------------------------------------------------------
@@ -391,9 +391,9 @@ Pass::CreateTextureUnitState()
 /**
 */
 TextureUnitState*
-Pass::GetTextureUnitState(unsigned short index) const
+Pass::GetTextureUnitState(unsigned short i) const
 {
-    return (TextureUnitState*)ce_dynamic_array_get(&this->textureUnitStates, index);
+    return (TextureUnitState*)ce_dynamic_array_get(&this->textureUnitStates, i);
 }
 
 //------------------------------------------------------------------------------
@@ -402,7 +402,7 @@ Pass::GetTextureUnitState(unsigned short index) const
 unsigned short
 Pass::GetNumTextureUnitStates() const
 {
-    return this->textureUnitStates.size;
+    return (unsigned short)this->textureUnitStates.size;
 }
 
 //------------------------------------------------------------------------------

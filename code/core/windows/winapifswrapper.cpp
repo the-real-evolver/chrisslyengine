@@ -15,6 +15,9 @@ namespace chrissly
 core::FileHandle
 WinAPIFSWrapper::Open(const char* fileName, core::AccessMode flags, core::AccessPattern pattern, int mode)
 {
+    UNREFERENCED_PARAMETER(pattern);
+    UNREFERENCED_PARAMETER(mode);
+
     core::FileHandle fileHandle;
     fileHandle.handle = CreateFile(
         fileName,                       /* _In_     LPCTSTR lpFileName                          */

@@ -64,7 +64,7 @@ public:
     /// retrieves the destination blending factor for the material (as set using Material::SetSceneBlending)
     SceneBlendFactor GetDestBlendFactor() const;
     /// set fix colors used when GU_FIX operation is applied
-    void SetBlendingFixColors(unsigned int sourceFixColor, unsigned int destFixColor);
+    void SetBlendingFixColors(unsigned int srcFixColor, unsigned int dstFixColor);
     /// retrieves the source fix colors
     unsigned int GetSourceBlendingFixColor() const;
     /// retrieves the destination fix colors
@@ -118,7 +118,7 @@ public:
         @note
         This setting has no effect if dynamic lighting is disabled (see Pass::SetLightingEnabled).
     */
-    void SetAmbient(unsigned int ambient);
+    void SetAmbient(unsigned int amb);
     /// gets the ambient colour reflectance of the pass
     unsigned int GetAmbient() const;
     /// sets the diffuse colour reflectance properties of this pass
@@ -131,7 +131,7 @@ public:
         @note
         This setting has no effect if dynamic lighting is disabled (see Pass::SetLightingEnabled).
     */
-    void SetDiffuse(unsigned int diffuse);
+    void SetDiffuse(unsigned int diff);
     /// gets the diffuse colour reflectance of the pass
     unsigned int GetDiffuse() const;
     /// sets the specular colour reflectance properties of this pass
@@ -146,7 +146,7 @@ public:
         @note
         This setting has no effect if dynamic lighting is disabled (see Pass::SetLightingEnabled).
     */
-    void SetSpecular(unsigned int specular);
+    void SetSpecular(unsigned int spec);
     /// gets the specular colour reflectance of the pass
     unsigned int GetSpecular() const;
     /// sets the amount of self-illumination an object has
@@ -164,7 +164,7 @@ public:
     /// gets which material properties follow the vertex colour
     unsigned int GetVertexColourTracking() const;
     /// sets which material properties follow the vertex colour
-    void SetVertexColourTracking(unsigned int tracking);
+    void SetVertexColourTracking(unsigned int track);
 
     /// gets the index of this Pass in the parent Material
     unsigned short GetIndex () const;
@@ -197,7 +197,7 @@ public:
     /// inserts a new TextureUnitState object into the Pass
     TextureUnitState* CreateTextureUnitState();
     /// retrieves a pointer to a texture unit state so it may be modified
-    TextureUnitState* GetTextureUnitState(unsigned short index) const;
+    TextureUnitState* GetTextureUnitState(unsigned short i) const;
     /// returns the number of texture unit settings
     unsigned short GetNumTextureUnitStates() const;
     /// Removes all texture unit settings

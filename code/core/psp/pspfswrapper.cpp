@@ -12,9 +12,9 @@ namespace chrissly
 {
 
 #ifdef ROOT_DIR
-const char* PSPFSWrapper::RootDirectory = ROOT_DIR;
+static const char* RootDirectory = ROOT_DIR;
 #else
-const char* PSPFSWrapper::RootDirectory = "ms0:/PSP/GAME/ChrisslyEngine_PSP/export/";
+static const char* RootDirectory = "ms0:/PSP/GAME/ChrisslyEngine_PSP/export/";
 #endif
 
 //------------------------------------------------------------------------------

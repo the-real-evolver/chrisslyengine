@@ -30,7 +30,7 @@ public:
     /// retrieves a pointer to the material this renderable object uses
     Material* GetMaterial() const;
     /// tells this SubEntity whether to be visible or not
-    void SetVisible(bool visible);
+    void SetVisible(bool vis);
     /// returns whether or not this SubEntity is supposed to be visible 
     bool IsVisible() const;
     /// accessor method to read mesh data 

@@ -61,10 +61,10 @@ WavCodec::SetupSound(const char* filename, Mode mode, void** sampleBuffer, unsig
 
     // "RIFF" chunk descriptor
     FSWrapper::Read(fd, chunkID, 4);
-    CE_ASSERT(0 == strncmp(chunkID, "RIFF", 4), "WavCodec::SetupSound(): '%s' not a RIFF file", filename);
+    CE_ASSERT(0 == strncmp(chunkID, "RIFF", 4), "WavCodec::SetupSound(): '%s' not a RIFF file\n", filename);
     FSWrapper::Read(fd, &chunkSize, 4);
     FSWrapper::Read(fd, chunkID, 4);
-    CE_ASSERT(0 == strncmp(chunkID, "WAVE", 4), "WavCodec::SetupSound(): '%s' RIFF file but not a wave file", filename);
+    CE_ASSERT(0 == strncmp(chunkID, "WAVE", 4), "WavCodec::SetupSound(): '%s' RIFF file but not a wave file\n", filename);
     this->riffWavHeaderSize = 12;
 
     short audioFormat, numChannels, blockAlign, bitsPerSample;
@@ -119,7 +119,7 @@ WavCodec::SetupSound(const char* filename, Mode mode, void** sampleBuffer, unsig
             else
             {
                 void* buffer = CE_MALLOC_ALIGN(CE_CACHE_LINE_SIZE, dataSize);
-                CE_ASSERT(buffer != NULL, "WavCodec::SetupSound(): failed to allocate '%i' bytes for samplebuffer", dataSize);
+                CE_ASSERT(buffer != NULL, "WavCodec::SetupSound(): failed to allocate '%i' bytes for samplebuffer\n", dataSize);
                 FSWrapper::Read(fd, buffer, dataSize); // read the actual sound data
                 FSWrapper::Close(fd);
                 *sampleBuffer = buffer;

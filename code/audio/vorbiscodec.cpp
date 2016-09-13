@@ -42,13 +42,13 @@ VorbisCodec::SetupSound(const char* filename, Mode mode, void** sampleBuffer, un
     if (mode & MODE_CREATESTREAM || mode & MODE_CREATECOMPRESSEDSAMPLE)
     {
         FSWrapper::Close(fd);
-        CE_ASSERT(false, "VorbisCodec::SetupSound(): vorbis codec does not support streaming");
+        CE_ASSERT(false, "VorbisCodec::SetupSound(): vorbis codec does not support streaming\n");
     }
     else
     {
         unsigned int fileSize = FSWrapper::GetFileSize(fd);
         void* fileBuffer = CE_MALLOC_ALIGN(CE_CACHE_LINE_SIZE, fileSize);
-        CE_ASSERT(fileBuffer != NULL, "VorbisCodec::SetupSound(): failed to allocate '%i' bytes for samplebuffer", fileSize);
+        CE_ASSERT(fileBuffer != NULL, "VorbisCodec::SetupSound(): failed to allocate '%i' bytes for samplebuffer\n", fileSize);
         FSWrapper::Read(fd, fileBuffer, fileSize);
         FSWrapper::Close(fd);
         length = stb_vorbis_decode_memory((unsigned char*)fileBuffer, fileSize, &channels, NULL, (short int**)sampleBuffer);

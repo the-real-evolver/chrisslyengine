@@ -42,7 +42,7 @@ public:
 
 private:
     /// copy constructor
-    MaterialManager(const MaterialManager&cc) {};
+    MaterialManager(const MaterialManager&) {};
 
     static MaterialManager* Singleton;
 

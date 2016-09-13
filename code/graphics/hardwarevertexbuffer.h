@@ -54,6 +54,18 @@ typedef GLES2HardwareVertexBuffer HardwareVertexBuffer;
 } // namespace graphics
 } // namespace chrissly
 //------------------------------------------------------------------------------
+#elif __WINDOWS__
+#include "windows/d3d11hardwarevertexbuffer.h"
+namespace chrissly
+{
+namespace graphics
+{
+
+typedef D3D11HardwareVertexBuffer HardwareVertexBuffer;
+
+} // namespace graphics
+} // namespace chrissly
+  //------------------------------------------------------------------------------
 #else
 #error "HardwareVertexBuffer class not implemented on this platform!"
 #endif

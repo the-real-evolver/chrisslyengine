@@ -23,7 +23,7 @@ GpuProgram* gpuProgram;
 GpuProgramParameters* params;
 Matrix4 mat;
 
-const char* MorphAnimVertexShader =
+static const char* MorphAnimVertexShader =
     "#version 100\n"
     "attribute vec2 texCoordIn;\n"
     "attribute vec3 normal;\n"
@@ -48,7 +48,7 @@ const char* MorphAnimVertexShader =
     "    lightVector = vec3(1.0, 0.0, 0.0) - (worldMatrix * pos).xyz;\n"
     "}\n";
 
-const char* FragmentShader =
+static const char* FragmentShader =
     "#version 100\n"
     "precision mediump float;\n"
     "const float MaxDist = 2.5;\n"
@@ -79,7 +79,7 @@ Channel* channel;
 //------------------------------------------------------------------------------
 /**
 */
-void
+static void
 Enter(struct android_app* state)
 {
     graphicsSystem = new GraphicsSystem();
@@ -120,7 +120,7 @@ Enter(struct android_app* state)
 //------------------------------------------------------------------------------
 /**
 */
-void
+static void
 Exit()
 {
     initialized = false;
@@ -135,7 +135,7 @@ Exit()
 //------------------------------------------------------------------------------
 /**
 */
-void
+static void
 Trigger()
 {
     if (initialized)
