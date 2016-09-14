@@ -45,6 +45,8 @@ public:
     PixelFormat GetFormat() const;
     /// get pointer to buffer
     void* GetBuffer() const;
+    /// gets a pointer to the attribute with the given name
+    virtual void GetPlatformSpecificAttribute(const char* name, void* data);
 
 protected:
     mutable ce_dynamic_array viewports;

@@ -21,7 +21,7 @@ public:
     D3D11Texture();
     /// destructor
     ~D3D11Texture();
-    /// create d3d11 tetxure
+    /// create d3d11 tetxure and shader resource view
     void CreateInternalResources();
 
     /// gets a pointer to the shader resource view

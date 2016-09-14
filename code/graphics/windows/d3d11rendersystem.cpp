@@ -165,9 +165,12 @@ D3D11RenderSystem::Shutdown()
 void
 D3D11RenderSystem::_SetRenderTarget(graphics::RenderTarget* target)
 {
-    DXGIRenderWindow* renderWindow = (DXGIRenderWindow*)target;
-    ID3D11RenderTargetView* renderTargetView = renderWindow->GetRenderTargetView();
-    this->context->OMSetRenderTargets(1, &renderTargetView, renderWindow->GetDepthStencilView());
+    ID3D11RenderTargetView* renderTargetView = NULL;
+    target->GetPlatformSpecificAttribute("RenderTargetView", &renderTargetView);
+    ID3D11DepthStencilView* depthStencilView = NULL;
+    target->GetPlatformSpecificAttribute("DepthStencilView", &depthStencilView);
+
+    this->context->OMSetRenderTargets(1, &renderTargetView, depthStencilView);
 }
 
 //------------------------------------------------------------------------------
@@ -186,10 +189,14 @@ D3D11RenderSystem::_SetViewport(graphics::Viewport* vp)
 
     FLOAT clearColour[4] = {0.0f, 0.0f, 0.0f, 0.0f};
     D3D11Mappings::Get(vp->GetBackgroundColour(), clearColour[0], clearColour[1], clearColour[2], clearColour[3]);
-    DXGIRenderWindow* renderWindow = (DXGIRenderWindow*)vp->GetTarget();
-    ID3D11RenderTargetView* renderTargetView = renderWindow->GetRenderTargetView();
+    graphics::RenderTarget* target = vp->GetTarget();
+    ID3D11RenderTargetView* renderTargetView = NULL;
+    target->GetPlatformSpecificAttribute("RenderTargetView", &renderTargetView);
+    ID3D11DepthStencilView* depthStencilView = NULL;
+    target->GetPlatformSpecificAttribute("DepthStencilView", &depthStencilView);
+
     this->context->ClearRenderTargetView(renderTargetView, clearColour);
-    this->context->ClearDepthStencilView(renderWindow->GetDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+    this->context->ClearDepthStencilView(depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 }
 
 //------------------------------------------------------------------------------

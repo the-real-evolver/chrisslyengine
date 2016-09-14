@@ -30,8 +30,8 @@ D3D11Mappings::Get(graphics::PixelFormat pf)
     {
         case graphics::PF_R8G8B8A8:      return DXGI_FORMAT_R8G8B8A8_UNORM;
         case graphics::PF_DXT1:          return DXGI_FORMAT_BC1_UNORM;
-        case graphics::PF_DXT3:          return DXGI_FORMAT_BC3_UNORM;
-        case graphics::PF_DXT5:          return DXGI_FORMAT_BC5_UNORM;
+        case graphics::PF_DXT3:          return DXGI_FORMAT_BC2_UNORM;
+        case graphics::PF_DXT5:          return DXGI_FORMAT_BC3_UNORM;
         case graphics::PF_R5G6B5:
         case graphics::PF_A1R5G5B5:
         case graphics::PF_A4R4G4B4:
@@ -53,10 +53,10 @@ D3D11Mappings::GetSysMemPitch(unsigned int width, graphics::PixelFormat pf)
 {
     switch (pf)
     {
-        case graphics::PF_R8G8B8A8:      return width * 4;
-        case graphics::PF_DXT1:          return (width + 1) / 2;
-        case graphics::PF_DXT3:          return width;
-        case graphics::PF_DXT5:          return width;
+        case graphics::PF_R8G8B8A8:      return width << 2;
+        case graphics::PF_DXT1:          return (width >> 2) << 3;
+        case graphics::PF_DXT3:          return (width >> 2) << 4;
+        case graphics::PF_DXT5:          return (width >> 2) << 4;
         case graphics::PF_R5G6B5:
         case graphics::PF_A1R5G5B5:
         case graphics::PF_A4R4G4B4:

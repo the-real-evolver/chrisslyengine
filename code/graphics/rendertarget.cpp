@@ -3,6 +3,7 @@
 //  (C) 2011 Christian Bleicher
 //------------------------------------------------------------------------------
 #include "rendertarget.h"
+#include "debug.h"
 
 namespace chrissly
 {
@@ -108,6 +109,15 @@ void*
 RenderTarget::GetBuffer() const
 {
     return this->buffer;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+RenderTarget::GetPlatformSpecificAttribute(const char* name, void* data)
+{
+    CE_ASSERT(false, "RenderTarget::GetPlatformSpecificAttribute(): illegal call to virtual method of the baseclass\n");
 }
 
 } // namespace graphics

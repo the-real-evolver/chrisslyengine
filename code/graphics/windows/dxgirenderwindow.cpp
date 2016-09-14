@@ -213,19 +213,19 @@ DXGIRenderWindow::SwapBuffers()
 //------------------------------------------------------------------------------
 /**
 */
-ID3D11RenderTargetView*
-DXGIRenderWindow::GetRenderTargetView() const
+void
+DXGIRenderWindow::GetPlatformSpecificAttribute(const char* name, void* data)
 {
-    return this->renderTargetView;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-ID3D11DepthStencilView*
-DXGIRenderWindow::GetDepthStencilView() const
-{
-    return this->depthStencilView;
+    if (0 == strcmp(name, "RenderTargetView"))
+    {
+        ID3D11RenderTargetView** rtv = (ID3D11RenderTargetView**)data;
+        *rtv = this->renderTargetView;
+    }
+    else if (0 == strcmp(name, "DepthStencilView"))
+    {
+        ID3D11DepthStencilView** dsv = (ID3D11DepthStencilView**)data;
+        *dsv = this->depthStencilView;
+    }
 }
 
 //------------------------------------------------------------------------------
