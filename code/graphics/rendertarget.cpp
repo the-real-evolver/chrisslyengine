@@ -114,10 +114,10 @@ RenderTarget::GetBuffer() const
 //------------------------------------------------------------------------------
 /**
 */
-void
-RenderTarget::GetPlatformSpecificAttribute(const char* name, void* data)
+RenderTarget::RenderTargetType
+RenderTarget::GetType() const
 {
-    CE_ASSERT(false, "RenderTarget::GetPlatformSpecificAttribute(): illegal call to virtual method of the baseclass\n");
+    return RT_NONE;
 }
 
 } // namespace graphics

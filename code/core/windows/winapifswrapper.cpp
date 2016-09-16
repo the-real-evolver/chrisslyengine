@@ -3,7 +3,7 @@
 //  (C) 2016 Christian Bleicher
 //------------------------------------------------------------------------------
 #include "winapifswrapper.h"
-#include "core/debug.h"
+#include "debug.h"
 #include <stdio.h>
 
 namespace chrissly
@@ -15,8 +15,8 @@ namespace chrissly
 core::FileHandle
 WinAPIFSWrapper::Open(const char* fileName, core::AccessMode flags, core::AccessPattern pattern, int mode)
 {
-    UNREFERENCED_PARAMETER(pattern);
-    UNREFERENCED_PARAMETER(mode);
+    CE_UNREFERENCED_PARAMETER(pattern);
+    CE_UNREFERENCED_PARAMETER(mode);
 
     core::FileHandle fileHandle;
     fileHandle.handle = CreateFile(

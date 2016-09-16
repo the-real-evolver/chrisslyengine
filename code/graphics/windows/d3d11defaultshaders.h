@@ -12,12 +12,7 @@
 */
 const char* DefaultGpuProgram =
     "Texture2D texture0 : register(t0);\n"
-    "SamplerState samplerLinear\n"
-    "{\n"
-    "    Filter = MIN_MAG_MIP_LINEAR;\n"
-    "    AddressU = Wrap;\n"
-    "    AddressV = Wrap;\n"
-    "};\n"
+    "SamplerState samplerLinear : register(s0);\n"
     "cbuffer AutoConstantBuffer : register(b0)\n"
     "{\n"
     "    matrix worldViewProjection : packoffset(c0);\n"

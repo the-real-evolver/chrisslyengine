@@ -27,8 +27,12 @@ public:
     void Update();
     /// swaps the frame buffers to display the next frame
     void SwapBuffers();
-    /// gets a pointer to the attribute with the given name
-    void GetPlatformSpecificAttribute(const char* name, void* data);
+    /// get the type of the rendertarget
+    RenderTargetType GetType() const;
+    /// gets a pointer to the rendertarget view of the swapchain's buffer
+    ID3D11RenderTargetView* GetRenderTargetView() const;
+    /// gets a pointer to the depth stencil view
+    ID3D11DepthStencilView* GetDepthStencilView() const;
 
     /// callback function that processes messages sent to the window
     static LRESULT WINAPI WindowCallback(HWND wnd, UINT msg, WPARAM wParam, LPARAM lParam);

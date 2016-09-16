@@ -13,10 +13,11 @@ using namespace chrissly::graphics;
 /**
 */
 int WINAPI
-WinMain(HINSTANCE instance, HINSTANCE, char* cmdLine, int showCmd)
+WinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prevInstance, _In_ LPSTR cmdLine, _In_ int showCmd)
 {
-    UNREFERENCED_PARAMETER(cmdLine);
-    UNREFERENCED_PARAMETER(showCmd);
+    CE_UNREFERENCED_PARAMETER(cmdLine);
+    CE_UNREFERENCED_PARAMETER(showCmd);
+    CE_UNREFERENCED_PARAMETER(prevInstance);
 
     GraphicsSystem* graphicsSystem = new GraphicsSystem();
     RenderWindow* window = graphicsSystem->Initialise((void*)instance);

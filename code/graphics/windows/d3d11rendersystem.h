@@ -91,6 +91,8 @@ private:
     D3D11_VIEWPORT viewPort;
     ID3D11RasterizerState* rasterState;
     ID3D11DepthStencilState* depthStencilState;
+    ID3D11BlendState* blendState;
+    ID3D11SamplerState* samplerState;
     ID3D11InputLayout* inputLayout;
 };
 

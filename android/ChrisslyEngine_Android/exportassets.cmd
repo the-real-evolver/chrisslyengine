@@ -2,16 +2,22 @@
 :: Autor:       evolver
 :: Description: export assets for Android platform
 
-cd ..\..\tools
+:: setup variables
+set ProjectFolder=%CD%\..\..
+set SrcFolder=%ProjectFolder%\assets
+set DstFolder=%ProjectFolder%\android\ChrisslyEngine_Android\assets
+set ToolChainFolder=%ProjectFolder%\tools
 
-texturetool.exe -data ..\assets\textures\cerberus_etc1.pkm -out ..\android\ChrisslyEngine_Android\assets\cerberus_etc1.tex -pkm
+cd %ToolChainFolder%
 
-meshtool.exe -morphanim -src ..\assets\animations\cerberus\cerberus_walk -dst ..\android\ChrisslyEngine_Android\assets\cerberus_walk.mesh -length 3.0 -numKeys 31
+texturetool.exe -pkm -data %SrcFolder%\textures\cerberus_etc1.pkm -out %DstFolder%\cerberus_etc1.tex
 
-XCOPY /i /y ..\assets\materials\materials.material ..\android\ChrisslyEngine_Android\assets\materials.material*
+meshtool.exe -morphanim -length 3.0 -numKeys 31 -src %SrcFolder%\animations\cerberus\cerberus_walk -dst %DstFolder%\cerberus_walk.mesh
 
-XCOPY /i /y ..\assets\audio\intro.ogg ..\android\ChrisslyEngine_Android\assets\intro.ogg*
+XCOPY /i /y %SrcFolder%\materials\materials.material %DstFolder%\materials.material*
 
-cd ..\android\ChrisslyEngine_Android
+XCOPY /i /y %SrcFolder%\audio\intro.ogg %DstFolder%\intro.ogg*
+
+cd cd %ProjectFolder%\android\ChrisslyEngine_Android
 
 

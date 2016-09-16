@@ -78,8 +78,10 @@ DXGIRenderWindow::Create()
     wndClass.hInstance = this->instance;
     wndClass.lpfnWndProc = &DXGIRenderWindow::WindowCallback;
     wndClass.lpszClassName = ClassName;
-
-    ATOM id = RegisterClassEx(&wndClass);
+#if __DEBUG__
+    ATOM id =
+#endif
+    RegisterClassEx(&wndClass);
     CE_ASSERT(id != 0, "DXGIRenderWindow::Create(): failed to register class\n");
 
     DWORD style = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_VISIBLE;
@@ -176,10 +178,6 @@ DXGIRenderWindow::Create()
     this->width = WindowWidth;
     this->height = WindowHeight;
     this->format = graphics::PF_R8G8B8A8;
-
-#if !__DEBUG__
-    UNREFERENCED_PARAMETER(id);
-#endif
 }
 
 //------------------------------------------------------------------------------
@@ -202,30 +200,38 @@ DXGIRenderWindow::Update()
 void
 DXGIRenderWindow::SwapBuffers()
 {
-    HRESULT result = this->swapChain->Present(1, 0);
-    CE_ASSERT(SUCCEEDED(result), "DXGIRenderWindow::SwapBuffers(): failed to present swapchain\n");
-
-#if !__DEBUG__
-    UNREFERENCED_PARAMETER(result);
+#if __DEBUG__
+    HRESULT result =
 #endif
+    this->swapChain->Present(1, 0);
+    CE_ASSERT(SUCCEEDED(result), "DXGIRenderWindow::SwapBuffers(): failed to present swapchain\n");
 }
 
 //------------------------------------------------------------------------------
 /**
 */
-void
-DXGIRenderWindow::GetPlatformSpecificAttribute(const char* name, void* data)
+graphics::RenderTarget::RenderTargetType
+DXGIRenderWindow::GetType() const
 {
-    if (0 == strcmp(name, "RenderTargetView"))
-    {
-        ID3D11RenderTargetView** rtv = (ID3D11RenderTargetView**)data;
-        *rtv = this->renderTargetView;
-    }
-    else if (0 == strcmp(name, "DepthStencilView"))
-    {
-        ID3D11DepthStencilView** dsv = (ID3D11DepthStencilView**)data;
-        *dsv = this->depthStencilView;
-    }
+    return RT_WINDOW;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+ID3D11RenderTargetView*
+DXGIRenderWindow::GetRenderTargetView() const
+{
+    return this->renderTargetView;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+ID3D11DepthStencilView*
+DXGIRenderWindow::GetDepthStencilView() const
+{
+    return this->depthStencilView;
 }
 
 //------------------------------------------------------------------------------

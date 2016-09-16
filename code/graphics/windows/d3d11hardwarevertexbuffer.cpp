@@ -56,12 +56,11 @@ D3D11HardwareVertexBuffer::Unlock()
     ZeroMemory(&data, sizeof(data));
     data.pSysMem = this->vertexBuffer;
 
-    HRESULT result = D3D11RenderSystem::Instance()->GetDevice()->CreateBuffer(&desc, &data, &this->d3d11Buffer);
-    CE_ASSERT(SUCCEEDED(result), "D3D11HardwareVertexBuffer::Unlock(): failed to create d3d11 buffer\n");
-
-#if !__DEBUG__
-    UNREFERENCED_PARAMETER(result);
+#if __DEBUG__
+    HRESULT result =
 #endif
+    D3D11RenderSystem::Instance()->GetDevice()->CreateBuffer(&desc, &data, &this->d3d11Buffer);
+    CE_ASSERT(SUCCEEDED(result), "D3D11HardwareVertexBuffer::Unlock(): failed to create d3d11 buffer\n");
 }
 
 //------------------------------------------------------------------------------

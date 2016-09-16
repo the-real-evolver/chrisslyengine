@@ -32,3 +32,5 @@
 #define CE_ASSERT(exp, ...)
 #define CE_LOG(...)
 #endif
+
+#define CE_UNREFERENCED_PARAMETER(P) (P)

@@ -27,6 +27,8 @@ D3D11RenderSystem::D3D11RenderSystem() :
     context(NULL),
     rasterState(NULL),
     depthStencilState(NULL),
+    blendState(NULL),
+    samplerState(NULL),
     inputLayout(NULL)
 {
     Singleton = this;
@@ -65,7 +67,18 @@ D3D11RenderSystem::_Initialise(void* customParams)
     CE_ASSERT(SUCCEEDED(result), "D3D11RenderSystem::_Initialise(): failed to create d3d11 device\n");
 
     /* create a rasterizer state object that tells the rasterizer stage how to behave */
-    D3D11_RASTERIZER_DESC rasterDesc = {D3D11_FILL_SOLID, D3D11_CULL_NONE, TRUE, 0, 0.0f, 0.0f, TRUE, FALSE, FALSE, FALSE};
+    D3D11_RASTERIZER_DESC rasterDesc;
+    ZeroMemory(&rasterDesc, sizeof(rasterDesc));
+    rasterDesc.FillMode = D3D11_FILL_SOLID;
+    rasterDesc.CullMode = D3D11_CULL_NONE;
+    rasterDesc.FrontCounterClockwise = TRUE;
+    rasterDesc.DepthBias = 0;
+    rasterDesc.DepthBiasClamp = 0.0f;
+    rasterDesc.SlopeScaledDepthBias = 0.0f;
+    rasterDesc.DepthClipEnable = TRUE;
+    rasterDesc.ScissorEnable = FALSE;
+    rasterDesc.MultisampleEnable = FALSE;
+    rasterDesc.AntialiasedLineEnable = FALSE;
     result = this->device->CreateRasterizerState(&rasterDesc, &this->rasterState);
     CE_ASSERT(SUCCEEDED(result), "D3D11RenderSystem::_Initialise(): failed to create rasterizer state\n");
     this->context->RSSetState(this->rasterState);
@@ -90,6 +103,43 @@ D3D11RenderSystem::_Initialise(void* customParams)
     result = this->device->CreateDepthStencilState(&depthStencilDesc, &this->depthStencilState);
     CE_ASSERT(SUCCEEDED(result), "D3D11RenderSystem::_Initialise(): failed to create depth stencil state\n");
     this->context->OMSetDepthStencilState(this->depthStencilState, 1);
+
+    /* create blend state */
+    D3D11_BLEND_DESC blendStateDesc;
+    ZeroMemory(&blendStateDesc, sizeof(blendStateDesc));
+    blendStateDesc.AlphaToCoverageEnable = FALSE;
+    blendStateDesc.IndependentBlendEnable = FALSE;
+    blendStateDesc.RenderTarget[0].BlendEnable = TRUE;
+    blendStateDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+    blendStateDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+    blendStateDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+    blendStateDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+    blendStateDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+    blendStateDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+    blendStateDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+    result = this->device->CreateBlendState(&blendStateDesc, &this->blendState);
+    CE_ASSERT(SUCCEEDED(result), "D3D11RenderSystem::_Initialise(): failed to create blend state\n");
+    float blendFactor[4] = {0.0f,0.0f,0.0f,0.0f};
+    this->context->OMSetBlendState(this->blendState, blendFactor, 0xffffffff);
+
+    /* create sampler state */
+    D3D11_SAMPLER_DESC samplerDesc;
+    ZeroMemory(&samplerDesc, sizeof(samplerDesc));
+    samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+    samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+    samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+    samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+    samplerDesc.MipLODBias = 0.0f;
+    samplerDesc.MaxAnisotropy = 1;
+    samplerDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+    samplerDesc.BorderColor[0] = 1.0f;
+    samplerDesc.BorderColor[1] = 1.0f;
+    samplerDesc.BorderColor[2] = 1.0f;
+    samplerDesc.BorderColor[3] = 1.0f;
+    samplerDesc.MinLOD = -FLT_MAX;
+    samplerDesc.MaxLOD = FLT_MAX;
+    result = this->device->CreateSamplerState(&samplerDesc, &this->samplerState);
+    CE_ASSERT(SUCCEEDED(result), "D3D11RenderSystem::_Initialise(): failed to create sampler state\n");
 
     /* create default gpu program */
     this->defaultGpuProgram = CE_NEW D3D11GpuProgram(DefaultGpuProgram, "defaultshader.fx", "DefaultVertexShader", "DefaultFragmentShader");
@@ -136,6 +186,16 @@ D3D11RenderSystem::Shutdown()
         this->inputLayout->Release();
         this->inputLayout = NULL;
     }
+    if (this->samplerState != NULL)
+    {
+        this->samplerState->Release();
+        this->samplerState = NULL;
+    }
+    if (this->blendState != NULL)
+    {
+        this->blendState->Release();
+        this->blendState = NULL;
+    }
     if (this->depthStencilState != NULL)
     {
         this->depthStencilState->Release();
@@ -166,9 +226,13 @@ void
 D3D11RenderSystem::_SetRenderTarget(graphics::RenderTarget* target)
 {
     ID3D11RenderTargetView* renderTargetView = NULL;
-    target->GetPlatformSpecificAttribute("RenderTargetView", &renderTargetView);
     ID3D11DepthStencilView* depthStencilView = NULL;
-    target->GetPlatformSpecificAttribute("DepthStencilView", &depthStencilView);
+    if (graphics::RenderTarget::RT_WINDOW == target->GetType())
+    {
+        DXGIRenderWindow* renderWindow = (DXGIRenderWindow*)target;
+        renderTargetView = renderWindow->GetRenderTargetView();
+        depthStencilView = renderWindow->GetDepthStencilView();
+    }
 
     this->context->OMSetRenderTargets(1, &renderTargetView, depthStencilView);
 }
@@ -189,11 +253,15 @@ D3D11RenderSystem::_SetViewport(graphics::Viewport* vp)
 
     FLOAT clearColour[4] = {0.0f, 0.0f, 0.0f, 0.0f};
     D3D11Mappings::Get(vp->GetBackgroundColour(), clearColour[0], clearColour[1], clearColour[2], clearColour[3]);
-    graphics::RenderTarget* target = vp->GetTarget();
     ID3D11RenderTargetView* renderTargetView = NULL;
-    target->GetPlatformSpecificAttribute("RenderTargetView", &renderTargetView);
     ID3D11DepthStencilView* depthStencilView = NULL;
-    target->GetPlatformSpecificAttribute("DepthStencilView", &depthStencilView);
+    graphics::RenderTarget* target = vp->GetTarget();
+    if (graphics::RenderTarget::RT_WINDOW == target->GetType())
+    {
+        DXGIRenderWindow* renderWindow = (DXGIRenderWindow*)target;
+        renderTargetView = renderWindow->GetRenderTargetView();
+        depthStencilView = renderWindow->GetDepthStencilView();
+    }
 
     this->context->ClearRenderTargetView(renderTargetView, clearColour);
     this->context->ClearDepthStencilView(depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
@@ -250,7 +318,7 @@ D3D11RenderSystem::_SetProjectionMatrix(const core::Matrix4& m)
 void
 D3D11RenderSystem::_SetTextureMatrix(const core::Matrix4& xform)
 {
-    UNREFERENCED_PARAMETER(xform);
+    CE_UNREFERENCED_PARAMETER(xform);
 }
 
 //------------------------------------------------------------------------------
@@ -346,6 +414,7 @@ D3D11RenderSystem::_SetPass(graphics::Pass* pass)
     {
         ID3D11ShaderResourceView* shaderResourceView = pass->GetTextureUnitState(textureUnitState)->GetTexture()->GetShaderResourceView();
         this->context->PSSetShaderResources(0, 1, &shaderResourceView);
+        this->context->PSSetSamplers(0, 1, &this->samplerState);
     }
 }
 
@@ -363,7 +432,7 @@ D3D11RenderSystem::_UseLights(ce_hash_table* lights)
         while (it != NULL)
         {
             graphics::Light* light = (graphics::Light*)((ce_key_value_pair*)it->data)->value;
-            UNREFERENCED_PARAMETER(light);
+            CE_UNREFERENCED_PARAMETER(light);
             ++lightIndex;
             it = it->next;
         }

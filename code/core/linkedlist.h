@@ -18,7 +18,7 @@ typedef struct ce_linked_list
 {
     struct ce_linked_list* next;    //!< A pointer to the next node.
     struct ce_linked_list* prev;    //!< A pointer to the previous node.
-    void *data;                     //!< A pointer to some data.
+    void* data;                     //!< A pointer to some data.
 } ce_linked_list;
 
 //------------------------------------------------------------------------------

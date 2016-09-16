@@ -45,8 +45,16 @@ public:
     PixelFormat GetFormat() const;
     /// get pointer to buffer
     void* GetBuffer() const;
-    /// gets a pointer to the attribute with the given name
-    virtual void GetPlatformSpecificAttribute(const char* name, void* data);
+
+    /// render target type - default is RT_NONE
+    enum RenderTargetType
+    {
+        RT_NONE,
+        RT_WINDOW,
+        RT_TETXTURE
+    };
+    /// get the type of the rendertarget
+    virtual RenderTargetType GetType() const;
 
 protected:
     mutable ce_dynamic_array viewports;

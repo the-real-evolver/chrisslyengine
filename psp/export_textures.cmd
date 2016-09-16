@@ -2,14 +2,21 @@
 :: Autor:       evolver
 :: Description: add header to raw texture data from intermediate folder
 
-cd ..\tools
+:: setup variables
+set ProjectFolder=%CD%\..
+set SrcFolder=%ProjectFolder%\assets\textures
+set DstFolder=%ProjectFolder%\psp\export
+set ToolChainFolder=%ProjectFolder%\tools
 
-texturetool.exe -format PF_R5G6B5 -width 256 -height 256 -data ..\assets\textures\floor.raw -out ..\psp\export\floor.tex -swizzled
-texturetool.exe -format PF_R5G6B5 -width 256 -height 256 -data ..\assets\textures\water.raw -out ..\psp\export\water.tex -swizzled
+cd %ToolChainFolder%
 
-texturetool.exe -format PF_R5G6B5 -width 512 -height 512 -data ..\assets\textures\gothic_solid.raw -out ..\psp\export\gothic_solid.tex -swizzled
-texturetool.exe -format PF_A4R4G4B4 -width 512 -height 512 -data ..\assets\textures\gothic_alpha.raw -out ..\psp\export\gothic_alpha.tex -swizzled
+:: add header to raw texture data from intermediate folder
+texturetool.exe -format PF_R5G6B5 -width 256 -height 256 -swizzled -data %SrcFolder%\floor.raw -out %DstFolder%\floor.tex
+texturetool.exe -format PF_R5G6B5 -width 256 -height 256 -swizzled -data %SrcFolder%\water.raw -out %DstFolder%\water.tex
 
-texturetool.exe -format PF_R5G6B5 -width 512 -height 512 -data ..\assets\textures\cerberus.raw -out ..\psp\export\cerberus.tex -swizzled
+texturetool.exe -format PF_R5G6B5 -width 512 -height 512 -swizzled -data %SrcFolder%\gothic_solid.raw -out %DstFolder%\gothic_solid.tex
+texturetool.exe -format PF_A4R4G4B4 -width 512 -height 512 -swizzled -data %SrcFolder%\gothic_alpha.raw -out %DstFolder%\gothic_alpha.tex
 
-cd ..\psp
+texturetool.exe -format PF_R5G6B5 -width 512 -height 512 -swizzled -data %SrcFolder%\cerberus.raw -out %DstFolder%\cerberus.tex
+
+cd %ProjectFolder%\psp
