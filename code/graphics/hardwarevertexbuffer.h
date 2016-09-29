@@ -31,13 +31,13 @@ namespace graphics
 } // namespace chrissly
 //------------------------------------------------------------------------------
 #if __PSP__
-#include "hardwarevertexbufferbase.h"
+#include "psp/psphardwarevertexbuffer.h"
 namespace chrissly
 {
 namespace graphics
 {
 
-typedef HardwareVertexBufferBase HardwareVertexBuffer;
+typedef PSPHardwareVertexBuffer HardwareVertexBuffer;
 
 } // namespace graphics
 } // namespace chrissly

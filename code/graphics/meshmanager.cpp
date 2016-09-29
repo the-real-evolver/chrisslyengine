@@ -84,9 +84,9 @@ MeshManager::Load(const char* filename)
                     // read vertex buffer
                     if (vertexCount > 0)
                     {
-                        void* buffer = vertexBuffer->Lock();
+                        void* buffer = vertexBuffer->Map();
                         FSWrapper::Read(fd, buffer, vertexCount * bytesPerVertex);
-                        vertexBuffer->Unlock();
+                        vertexBuffer->Unmap();
                     }
 
                     // add submesh
@@ -133,9 +133,9 @@ MeshManager::Load(const char* filename)
                     vertexBuffer = CE_NEW HardwareVertexBuffer(vertexCount, bytesPerVertex, HBU_DYNAMIC);
 
                     // read vertex buffer
-                    void* buffer = vertexBuffer->Lock();
+                    void* buffer = vertexBuffer->Map();
                     FSWrapper::Read(fd, buffer, vertexCount * bytesPerVertex);
-                    vertexBuffer->Unlock();
+                    vertexBuffer->Unmap();
 
                     // add morphkeyframe
                     CE_ASSERT(animationTrack != NULL, "MeshManager::Load(): can't create VertexMorphKeyFrame without VertexAnimationTrack\n");

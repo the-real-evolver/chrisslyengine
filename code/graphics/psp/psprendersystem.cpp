@@ -159,7 +159,7 @@ PSPRenderSystem::_Render(graphics::SubEntity* renderable)
         sceGumDrawArray(GU_TRIANGLES,
                         GU_TEXTURE_32BITF | GU_COLOR_8888 | GU_NORMAL_32BITF | GU_VERTEX_32BITF | GU_TRANSFORM_3D | GU_VERTICES(2) | GU_WEIGHTS(2),
                         vertexBuffer->GetNumVertices(), 0,
-                        vertexBuffer->Lock());
+                        vertexBuffer->Map());
     }
     else
     {
@@ -167,7 +167,7 @@ PSPRenderSystem::_Render(graphics::SubEntity* renderable)
         sceGumDrawArray(GU_TRIANGLES,
                         GU_TEXTURE_32BITF | GU_COLOR_8888 | GU_NORMAL_32BITF | GU_VERTEX_32BITF | GU_TRANSFORM_3D,
                         vertexBuffer->GetNumVertices(), 0,
-                        vertexBuffer->Lock());
+                        vertexBuffer->Map());
     }
 }
 
@@ -373,15 +373,6 @@ void
 PSPRenderSystem::SetAmbientLight(unsigned int colour)
 {
     this->ambientLight = colour;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-void
-PSPRenderSystem::_NotifyMorphKeyFrameBuild()
-{
-    sceKernelDcacheWritebackAll();
 }
 
 //------------------------------------------------------------------------------

@@ -198,9 +198,6 @@
     <ClInclude Include="..\..\code\core\quaternion.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\code\core\staticcoroutine.h">
-      <Filter>core</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\code\core\timer.h">
       <Filter>core</Filter>
     </ClInclude>

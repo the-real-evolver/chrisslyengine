@@ -4,35 +4,27 @@
 //------------------------------------------------------------------------------
 #include "chrisslymemory.h"
 
-namespace chrissly
-{
-namespace core
-{
-
 //------------------------------------------------------------------------------
 /**
 */
 void
-Memory::FillInterleaved(void const* src0, void const* src1, void* dst, unsigned short stride, unsigned int dstLen)
+ce_memory_fill_interleaved(void const* src0, void const* src1, void* dst, unsigned short stride, unsigned int dst_len)
 {
-    char* pDst = (char*)dst;
-    char const* pSrc0 = (char const*)src0;
-    char const* pSrc1 = (char const*)src1;
-    unsigned int doubleStride = stride << 1;
+    char* ptr_dst = (char*)dst;
+    char const* ptr_src0 = (char const*)src0;
+    char const* ptr_src1 = (char const*)src1;
+    unsigned int double_stride = stride << 1;
 
     unsigned int i;
-    while (dstLen)
+    while (dst_len)
     {
         for (i = 0; i < stride; ++i)
         {
-            *pDst = *pSrc0++;
-            *(pDst + stride) = *pSrc1++;
-            ++pDst;
+            *ptr_dst = *ptr_src0++;
+            *(ptr_dst + stride) = *ptr_src1++;
+            ++ptr_dst;
         }
-        pDst += stride;
-        dstLen -= doubleStride;
+        ptr_dst += stride;
+        dst_len -= double_stride;
     }
 }
-
-} // namespace core
-} // namespace chrissly

@@ -51,24 +51,6 @@ HardwareVertexBufferBase::~HardwareVertexBufferBase()
     }
 }
 
- //------------------------------------------------------------------------------
-/**
-*/
-void*
-HardwareVertexBufferBase::Lock()
-{
-    return this->vertexBuffer;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-void
-HardwareVertexBufferBase::Unlock()
-{
-
-}
-
 //------------------------------------------------------------------------------
 /**
 */

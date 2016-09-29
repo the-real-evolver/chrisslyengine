@@ -180,7 +180,6 @@
     <ClInclude Include="..\..\code\core\memoryallocatorconfig.h" />
     <ClInclude Include="..\..\code\core\quaternion.h" />
     <ClInclude Include="..\..\code\core\standard\standardmath.h" />
-    <ClInclude Include="..\..\code\core\staticcoroutine.h" />
     <ClInclude Include="..\..\code\core\timer.h" />
     <ClInclude Include="..\..\code\core\vector3.h" />
     <ClInclude Include="..\..\code\core\windows\winapidebug.h" />

@@ -14,6 +14,7 @@
 
 #define CE_NEW new
 #define CE_DELETE delete
+
 #if __WINDOWS__
 #define CE_MALLOC(bytes) _aligned_malloc(bytes, 2)
 #define CE_MALLOC_ALIGN(align, bytes) _aligned_malloc(bytes, align)

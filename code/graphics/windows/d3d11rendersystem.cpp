@@ -451,20 +451,21 @@ D3D11RenderSystem::SetAmbientLight(unsigned int colour)
 //------------------------------------------------------------------------------
 /**
 */
-void
-D3D11RenderSystem::_NotifyMorphKeyFrameBuild()
-{
-
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
 ID3D11Device*
 D3D11RenderSystem::GetDevice() const
 {
     CE_ASSERT(this->device != NULL, "D3D11RenderSystem::GetDevice(): d3d11 device not valid\n");
     return this->device;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+ID3D11DeviceContext*
+D3D11RenderSystem::GetContext() const
+{
+    CE_ASSERT(this->context != NULL, "D3D11RenderSystem::GetContext(): d3d11 device context not valid\n");
+    return this->context;
 }
 
 } // namespace chrissly

@@ -2,26 +2,14 @@
 #define CHRISSLYMEMORY_H_
 //------------------------------------------------------------------------------
 /**
-    @class chrissly::core::Memory
+    @file core/chrisslymemory.h
 
     Low level utility memory functions.
 
     (C) 2012 Christian Bleicher
 */
-//------------------------------------------------------------------------------
-namespace chrissly
-{
-namespace core
-{
 
-class Memory
-{
-public:
-    /// fill a buffer interleaved with the given stride from 2 source buffers
-    static void FillInterleaved(void const* src0, void const* src1, void* dst, unsigned short stride, unsigned int dstLen);
-};
+/// fill a buffer interleaved with the given stride from 2 source buffers
+void ce_memory_fill_interleaved(void const* src0, void const* src1, void* dst, unsigned short stride, unsigned int dst_len);
 
-} // namespace core
-} // namespace chrissly
-//------------------------------------------------------------------------------
 #endif

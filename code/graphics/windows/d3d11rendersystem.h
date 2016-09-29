@@ -65,11 +65,11 @@ public:
     void _UseLights(ce_hash_table* lights);
     /// sets the colour & strength of the ambient (global directionless) light in the world
     void SetAmbientLight(unsigned int colour);
-    /// notify the rendersystem that a morphkeyframe was build
-    void _NotifyMorphKeyFrameBuild();
 
     /// get pointer to the d3d11 device
     ID3D11Device* GetDevice() const;
+    /// get pointer to the d3d11 device context
+    ID3D11DeviceContext* GetContext() const;
 
 private:
     /// copy constructor

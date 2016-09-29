@@ -1,36 +1,28 @@
-#ifndef GLES2HARDWAREVERTEXBUFFER_H_
-#define GLES2HARDWAREVERTEXBUFFER_H_
+#ifndef PSPHARDWAREVERTEXBUFFER_H_
+#define PSPHARDWAREVERTEXBUFFER_H_
 //------------------------------------------------------------------------------
 /**
-    @class chrissly::GLES2HardwareVertexBuffer
-
-    Encapsulates a OpenGL Vertex Buffer Object (VBO).
+    @class chrissly::PSPHardwareVertexBuffer
 
     (C) 2016 Christian Bleicher
 */
 #include "hardwarevertexbufferbase.h"
-#include <GLES2/gl2.h>
 
 //------------------------------------------------------------------------------
 namespace chrissly
 {
 
-class GLES2HardwareVertexBuffer : public graphics::HardwareVertexBufferBase
+class PSPHardwareVertexBuffer : public graphics::HardwareVertexBufferBase
 {
 public:
     /// construct from vertex count and vertex size
-    GLES2HardwareVertexBuffer(unsigned int numVertices, unsigned int bytesPerVertex, graphics::Usage usage);
+    PSPHardwareVertexBuffer(unsigned int numVertices, unsigned int bytesPerVertex, graphics::Usage usage);
     /// destructor
-    ~GLES2HardwareVertexBuffer();
+    ~PSPHardwareVertexBuffer();
     /// enable the cpu to access the data in the buffer and return a pointer to it
     void* Map();
     /// updates the modified data on the the gpu
     void Unmap();
-    /// return gl buffer name
-    GLuint GetName() const;
-
-private:
-    GLuint bufferName;
 };
 
 } // namespace chrissly

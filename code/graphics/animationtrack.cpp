@@ -99,16 +99,14 @@ VertexAnimationTrack::ApplyToVertexData(VertexData* data, int timeIndex)
             HardwareVertexBuffer* kf1 = ((VertexMorphKeyFrame*)ce_dynamic_array_get(&this->keyFrames, timeIndex))->vertexData->vertexBuffer;
             HardwareVertexBuffer* kf2 = ((VertexMorphKeyFrame*)ce_dynamic_array_get(&this->keyFrames, timeIndex + 1))->vertexData->vertexBuffer;
             HardwareVertexBuffer* dst = data->vertexBuffer;
-            Memory::FillInterleaved(kf1->Lock(), kf2->Lock(),
-                                    dst->Lock(), (unsigned short)kf1->GetBytesPerVertex(),
-                                    dst->GetBytesPerVertex() * dst->GetNumVertices());
-            kf1->Unlock();
-            kf2->Unlock();
-            dst->Unlock();
+            ce_memory_fill_interleaved(kf1->Map(), kf2->Map(),
+                                       dst->Map(), (unsigned short)kf1->GetBytesPerVertex(),
+                                       dst->GetBytesPerVertex() * dst->GetNumVertices());
+            kf1->Unmap();
+            kf2->Unmap();
+            dst->Unmap();
 
             this->currentTimeIndex = timeIndex;
-
-            GraphicsSystem::Instance()->GetRenderSystem()->_NotifyMorphKeyFrameBuild();
         }
     }
 }

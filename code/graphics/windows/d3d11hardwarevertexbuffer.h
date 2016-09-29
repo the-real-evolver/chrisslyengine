@@ -21,10 +21,10 @@ public:
     D3D11HardwareVertexBuffer(unsigned int numVertices, unsigned int bytesPerVertex, graphics::Usage usage);
     /// destructor
     ~D3D11HardwareVertexBuffer();
-    /// lock the entire buffer
-    void* Lock();
-    /// unlock the buffer
-    void Unlock();
+    /// enable the cpu to access the data in the buffer and return a pointer to it
+    void* Map();
+    /// updates the modified data on the the gpu
+    void Unmap();
 
     /// gets a pointer to the d3d11 buffer
     ID3D11Buffer* GetD3D11Buffer() const;

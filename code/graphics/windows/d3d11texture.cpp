@@ -43,8 +43,8 @@ D3D11Texture::CreateInternalResources()
 {
     D3D11_TEXTURE2D_DESC desc;
     ZeroMemory(&desc, sizeof(desc));
-    desc.Width = (unsigned int)this->width;
-    desc.Height = (unsigned int)this->height;
+    desc.Width = (UINT)this->width;
+    desc.Height = (UINT)this->height;
     desc.MipLevels = 1;
     desc.ArraySize = 1;
     desc.Format = D3D11Mappings::Get(this->format);

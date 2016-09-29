@@ -30,7 +30,7 @@ public:
     /// swaps the frame buffers to display the next frame
     virtual void SwapBuffers() = 0;
     /// adds a viewport to the rendering target
-    Viewport* AddViewport(Camera *cam, int left, int top, int w, int h);
+    Viewport* AddViewport(Camera* cam, int left, int top, int w, int h);
     /// returns the number of viewports attached to this target
     unsigned short GetNumViewports() const;
     /// retrieves a pointer to the viewport with the given index

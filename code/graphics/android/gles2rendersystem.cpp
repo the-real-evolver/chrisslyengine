@@ -213,7 +213,7 @@ GLES2RenderSystem::_Render(graphics::SubEntity* renderable)
         CE_GL_ERROR_CHECK("glUniform1f");
 
         graphics::HardwareVertexBuffer* vertexBuffer = renderable->_GetHardwareVertexAnimVertexData()->vertexBuffer;
-        unsigned char* buffer = (unsigned char*)vertexBuffer->Lock();
+        unsigned char* buffer = (unsigned char*)vertexBuffer->Map();
 
         GLint vertexTexCoordHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_TEXTURE_COORDINATES);
         glVertexAttribPointer(vertexTexCoordHandle, 2, GL_FLOAT, GL_FALSE, 72, buffer);

@@ -36,10 +36,6 @@ public:
     HardwareVertexBufferBase(unsigned int numVertices, unsigned int bytesPerVertex, Usage usage);
     /// destructor
     virtual ~HardwareVertexBufferBase();
-    /// lock the entire buffer
-    virtual void* Lock();
-    /// unlock the buffer
-    virtual void Unlock();
     /// gets the size in bytes of a single vertex in this buffer
     unsigned int GetBytesPerVertex() const;
     /// get the number of vertices in this buffer

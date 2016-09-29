@@ -29,6 +29,7 @@ public:
     void SwapBuffers();
     /// get the type of the rendertarget
     RenderTargetType GetType() const;
+
     /// gets a pointer to the rendertarget view of the swapchain's buffer
     ID3D11RenderTargetView* GetRenderTargetView() const;
     /// gets a pointer to the depth stencil view

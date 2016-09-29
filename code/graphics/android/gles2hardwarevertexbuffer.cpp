@@ -38,16 +38,16 @@ GLES2HardwareVertexBuffer::~GLES2HardwareVertexBuffer()
 /**
 */
 void*
-GLES2HardwareVertexBuffer::Lock()
+GLES2HardwareVertexBuffer::Map()
 {
-    return HardwareVertexBufferBase::Lock();
+    return this->vertexBuffer;
 }
 
 //------------------------------------------------------------------------------
 /**
 */
 void
-GLES2HardwareVertexBuffer::Unlock()
+GLES2HardwareVertexBuffer::Unmap()
 {
     if (graphics::HBU_STATIC == this->usage)
     {

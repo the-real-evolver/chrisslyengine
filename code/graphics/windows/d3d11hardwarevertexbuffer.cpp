@@ -17,7 +17,21 @@ D3D11HardwareVertexBuffer::D3D11HardwareVertexBuffer(unsigned int numVertices, u
     HardwareVertexBufferBase(numVertices, bytesPerVertex, usage),
     d3d11Buffer(NULL)
 {
-    CE_ASSERT(graphics::HBU_STATIC == usage, "D3D11HardwareVertexBuffer::D3D11HardwareVertexBuffer(): dynamic vertexbuffers not supported\n");
+    if (graphics::HBU_DYNAMIC == this->usage)
+    {
+        D3D11_BUFFER_DESC desc;
+        ZeroMemory(&desc, sizeof(desc));
+        desc.ByteWidth = this->numVertices * this->bytesPerVertex;
+        desc.Usage = D3D11_USAGE_DYNAMIC;
+        desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+        desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+
+#if __DEBUG__
+        HRESULT result =
+#endif
+        D3D11RenderSystem::Instance()->GetDevice()->CreateBuffer(&desc, NULL, &this->d3d11Buffer);
+        CE_ASSERT(SUCCEEDED(result), "D3D11HardwareVertexBuffer::Unlock(): failed to create d3d11 buffer\n");
+    }
 }
 
 //------------------------------------------------------------------------------
@@ -35,32 +49,54 @@ D3D11HardwareVertexBuffer::~D3D11HardwareVertexBuffer()
 /**
 */
 void*
-D3D11HardwareVertexBuffer::Lock()
+D3D11HardwareVertexBuffer::Map()
 {
-    return HardwareVertexBufferBase::Lock();
+    if (graphics::HBU_STATIC == this->usage)
+    {
+        return this->vertexBuffer;
+    }
+    else if (graphics::HBU_DYNAMIC == this->usage)
+    {
+        D3D11_MAPPED_SUBRESOURCE resource;
+#if __DEBUG__
+        HRESULT result =
+#endif
+        D3D11RenderSystem::Instance()->GetContext()->Map(this->d3d11Buffer, 0, D3D11_MAP_WRITE, 0, &resource);
+        CE_ASSERT(SUCCEEDED(result), "D3D11HardwareVertexBuffer::Map(): failed to map d3d11 buffer\n");
+        return resource.pData;
+    }
+
+    return NULL;
 }
 
 //------------------------------------------------------------------------------
 /**
 */
 void
-D3D11HardwareVertexBuffer::Unlock()
+D3D11HardwareVertexBuffer::Unmap()
 {
-    D3D11_BUFFER_DESC desc;
-    ZeroMemory(&desc, sizeof(desc));
-    desc.ByteWidth = this->numVertices * this->bytesPerVertex;
-    desc.Usage = D3D11_USAGE_IMMUTABLE;
-    desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+    if (graphics::HBU_STATIC == this->usage)
+    {
+        D3D11_BUFFER_DESC desc;
+        ZeroMemory(&desc, sizeof(desc));
+        desc.ByteWidth = this->numVertices * this->bytesPerVertex;
+        desc.Usage = D3D11_USAGE_IMMUTABLE;
+        desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 
-    D3D11_SUBRESOURCE_DATA data;
-    ZeroMemory(&data, sizeof(data));
-    data.pSysMem = this->vertexBuffer;
+        D3D11_SUBRESOURCE_DATA data;
+        ZeroMemory(&data, sizeof(data));
+        data.pSysMem = this->vertexBuffer;
 
 #if __DEBUG__
-    HRESULT result =
+        HRESULT result =
 #endif
-    D3D11RenderSystem::Instance()->GetDevice()->CreateBuffer(&desc, &data, &this->d3d11Buffer);
-    CE_ASSERT(SUCCEEDED(result), "D3D11HardwareVertexBuffer::Unlock(): failed to create d3d11 buffer\n");
+        D3D11RenderSystem::Instance()->GetDevice()->CreateBuffer(&desc, &data, &this->d3d11Buffer);
+        CE_ASSERT(SUCCEEDED(result), "D3D11HardwareVertexBuffer::Unlock(): failed to create d3d11 buffer\n");
+    }
+    else if (graphics::HBU_DYNAMIC == this->usage)
+    {
+        D3D11RenderSystem::Instance()->GetContext()->Unmap(this->d3d11Buffer, 0);
+    }
 }
 
 //------------------------------------------------------------------------------
