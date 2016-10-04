@@ -30,6 +30,9 @@ public:
     GLuint GetName() const;
 
 private:
+    /// private default constructor
+    GLES2HardwareVertexBuffer();
+
     GLuint bufferName;
 };
 

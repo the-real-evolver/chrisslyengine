@@ -11,6 +11,14 @@ namespace chrissly
 //------------------------------------------------------------------------------
 /**
 */
+GLES2HardwareVertexBuffer::GLES2HardwareVertexBuffer()
+{
+
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
 GLES2HardwareVertexBuffer::GLES2HardwareVertexBuffer(unsigned int numVertices, unsigned int bytesPerVertex, graphics::Usage usage) :
     HardwareVertexBufferBase(numVertices, bytesPerVertex, usage),
     bufferName(0)

@@ -23,6 +23,10 @@ public:
     void* Map();
     /// updates the modified data on the the gpu
     void Unmap();
+
+private:
+    /// private default constructor
+    PSPHardwareVertexBuffer();
 };
 
 } // namespace chrissly

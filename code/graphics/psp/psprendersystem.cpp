@@ -17,9 +17,9 @@ namespace chrissly
 PSPRenderSystem* PSPRenderSystem::Singleton = NULL;
 
 /// the GE store the commands for processing in this array
-unsigned int __attribute__((aligned(16))) PSPRenderSystem::DisplayList[262144];
+static unsigned int __attribute__((aligned(16))) DisplayList[262144];
 
-int PSPRenderSystem::MaxLights = 4;
+static const int MaxLights = 4;
 
 //------------------------------------------------------------------------------
 /**
@@ -28,6 +28,12 @@ PSPRenderSystem::PSPRenderSystem() :
     ambientLight(0x00000000)
 {
     Singleton = this;
+    memset(&this->lightPos, 0, sizeof(this->lightPos));
+    memset(&this->lightDir, 0, sizeof(this->lightDir));
+    memset(&this->viewMat, 0, sizeof(this->viewMat));
+    memset(&this->projMat, 0, sizeof(this->projMat));
+    memset(&this->worldMat, 0, sizeof(this->worldMat));
+    memset(&this->texMat, 0, sizeof(this->texMat));
 }
 
 //------------------------------------------------------------------------------

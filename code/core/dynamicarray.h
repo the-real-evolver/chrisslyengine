@@ -37,7 +37,7 @@ ce_dynamic_array_init(ce_dynamic_array* v, unsigned int initial_size)
         return NULL;
     }
 
-    v->data = (void**)CE_CALLOC(initial_size, sizeof(void*));
+    v->data = initial_size > 0 ? (void**)CE_CALLOC(initial_size, sizeof(void*)) : NULL;
     v->capacity = initial_size;
     v->size = 0;
 

@@ -14,10 +14,10 @@ namespace chrissly
 //------------------------------------------------------------------------------
 /**
 */
-PSPChannel::PSPChannel()
+PSPChannel::PSPChannel() :
+    threadId(-1),
+    requestRelease(false)
 {
-    this->requestRelease = false;
-
     unsigned int addr = (unsigned int)this;
 
     char str[32];

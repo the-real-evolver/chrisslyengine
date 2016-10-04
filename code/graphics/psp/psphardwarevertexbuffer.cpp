@@ -11,6 +11,14 @@ namespace chrissly
 //------------------------------------------------------------------------------
 /**
 */
+PSPHardwareVertexBuffer::PSPHardwareVertexBuffer()
+{
+
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
 PSPHardwareVertexBuffer::PSPHardwareVertexBuffer(unsigned int numVertices, unsigned int bytesPerVertex, graphics::Usage usage) :
     HardwareVertexBufferBase(numVertices, bytesPerVertex, usage)
 {
@@ -42,7 +50,7 @@ PSPHardwareVertexBuffer::Unmap()
 {
     if (graphics::HBU_DYNAMIC == this->usage)
     {
-        sceKernelDcacheWritebackAll();
+        sceKernelDcacheWritebackRange(this->vertexBuffer, this->numVertices * this->bytesPerVertex);
     }
 }
 

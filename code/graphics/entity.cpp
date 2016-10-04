@@ -22,25 +22,25 @@ Entity::Entity(Mesh* mesh) :
     castShadows(false),
     receivesShadows(false)
 {
+    ce_hash_table_init(&this->animationStates, 0);
+
     this->BuildSubEntities();
 
-    ce_hash_table_init(&this->animationState, 1);
     if (this->HasVertexAnimation())
     {
-        this->mesh->_InitAnimationState(&this->animationState);
+        this->mesh->_InitAnimationState(&this->animationStates);
 
         unsigned int i;
-        for (i = 0; i < this->animationState.bucket_count; ++i)
+        for (i = 0; i < this->animationStates.bucket_count; ++i)
         {
-            ce_linked_list* it = ce_hash_table_begin(&this->animationState, i);
+            ce_linked_list* it = ce_hash_table_begin(&this->animationStates, i);
             while (it != NULL)
             {
                 AnimationState* state = (AnimationState*)((ce_key_value_pair*)it->data)->value;
                 Animation* anim = this->mesh->GetAnimation(state->GetAnimationName());
 
-                unsigned short numVertexTracks = anim->GetNumVertexTracks();
                 unsigned short trackIndex;
-                for (trackIndex = 0; trackIndex < numVertexTracks; ++trackIndex)
+                for (trackIndex = 0; trackIndex < anim->GetNumVertexTracks(); ++trackIndex)
                 {
                     VertexAnimationTrack* vertexTrack = anim->GetVertexTrack(trackIndex);
                     SubEntity* subEntity = this->GetSubEntity(vertexTrack->GetHandle());
@@ -70,9 +70,9 @@ Entity::~Entity()
 
     ce_dynamic_array_delete(&this->subEntities);
 
-    for (i = 0; i < this->animationState.bucket_count; ++i)
+    for (i = 0; i < this->animationStates.bucket_count; ++i)
     {
-        ce_linked_list* it = ce_hash_table_begin(&this->animationState, i);
+        ce_linked_list* it = ce_hash_table_begin(&this->animationStates, i);
         while (it != NULL)
         {
             CE_DELETE (AnimationState*)((ce_key_value_pair*)it->data)->value;
@@ -80,7 +80,7 @@ Entity::~Entity()
         }
     }
 
-    ce_hash_table_clear(&this->animationState);
+    ce_hash_table_clear(&this->animationStates);
 }
 
 //------------------------------------------------------------------------------
@@ -161,7 +161,7 @@ Entity::HasVertexAnimation() const
 AnimationState*
 Entity::GetAnimationState(const char* name) const
 {
-    return (AnimationState*)ce_hash_table_find(&this->animationState, name);
+    return (AnimationState*)ce_hash_table_find(&this->animationStates, name);
 }
 
 //------------------------------------------------------------------------------
@@ -172,9 +172,9 @@ Entity::UpdateAnimation()
 {
     // loop trough all animstates, update enabled ones
     unsigned int i;
-    for (i = 0; i < this->animationState.bucket_count; ++i)
+    for (i = 0; i < this->animationStates.bucket_count; ++i)
     {
-        ce_linked_list* it = ce_hash_table_begin(&this->animationState, i);
+        ce_linked_list* it = ce_hash_table_begin(&this->animationStates, i);
         while (it != NULL)
         {
             AnimationState* state = (AnimationState*)((ce_key_value_pair*)it->data)->value;

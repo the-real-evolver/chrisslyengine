@@ -249,6 +249,7 @@ D3D11RenderSystem::_SetViewport(graphics::Viewport* vp)
     this->viewPort.Height = (FLOAT)vp->GetActualHeight();
     this->viewPort.MinDepth = 0.0f;
     this->viewPort.MaxDepth = 1.0f;
+
     this->context->RSSetViewports(1, &this->viewPort);
 
     FLOAT clearColour[4] = {0.0f, 0.0f, 0.0f, 0.0f};
@@ -261,6 +262,10 @@ D3D11RenderSystem::_SetViewport(graphics::Viewport* vp)
         DXGIRenderWindow* renderWindow = (DXGIRenderWindow*)target;
         renderTargetView = renderWindow->GetRenderTargetView();
         depthStencilView = renderWindow->GetDepthStencilView();
+    }
+    else
+    {
+        return;
     }
 
     this->context->ClearRenderTargetView(renderTargetView, clearColour);

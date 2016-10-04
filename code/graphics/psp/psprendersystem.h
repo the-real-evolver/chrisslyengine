@@ -68,7 +68,7 @@ public:
     /// sets the colour & strength of the ambient (global directionless) light in the world
     void SetAmbientLight(unsigned int colour);
 
-    /// returns displaylist
+    /// returns a pointer to the displaylist
     void* GetDisplayList() const;
 
 private:
@@ -76,10 +76,6 @@ private:
     PSPRenderSystem(const PSPRenderSystem&cc) {};
 
     static PSPRenderSystem* Singleton;
-
-    /// the GE store the commands for processing in this array
-    static unsigned int __attribute__((aligned(16))) DisplayList[262144];
-    static int MaxLights;
 
     unsigned int ambientLight;
     ScePspFVector3 lightPos;

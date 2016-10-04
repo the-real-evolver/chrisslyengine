@@ -20,7 +20,7 @@ Mesh::Mesh() :
     boundingRadius(0.0f)
 {
     ce_dynamic_array_init(&this->subMeshes, 1);
-    ce_hash_table_init(&this->animations, 1);
+    ce_hash_table_init(&this->animations, 0);
 }
 
 //------------------------------------------------------------------------------

@@ -63,6 +63,7 @@ private:
     Entity(Mesh* mesh);
     /// builds a list of SubEntities based on the SubMeshes contained in the Mesh
     void BuildSubEntities();
+
     /// node to which this object is attached
     SceneNode* parentNode;
     /// the Mesh that this Entity is based on
@@ -74,7 +75,7 @@ private:
     /// does this object receive shadows?
     bool receivesShadows;
     /// state of animation for animable meshes
-    mutable ce_hash_table animationState;
+    mutable ce_hash_table animationStates;
 };
 
 } // namespace graphics

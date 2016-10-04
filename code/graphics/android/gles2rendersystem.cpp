@@ -35,11 +35,11 @@ GLES2RenderSystem::GLES2RenderSystem() :
 {
     Singleton = this;
 
-    memset(this->glWorldMatrix, 0, 64);
-    memset(this->glViewMatrix, 0, 64);
-    memset(this->glProjectionMatrix, 0, 64);
-    memset(this->glTextureMatrix, 0, 64);
-    memset(this->glWorldViewProjectionMatrix, 0, 64);
+    memset(this->glWorldMatrix, 0, sizeof(this->glWorldMatrix));
+    memset(this->glViewMatrix, 0, sizeof(this->glViewMatrix));
+    memset(this->glProjectionMatrix, 0, sizeof(this->glProjectionMatrix));
+    memset(this->glTextureMatrix, 0, sizeof(this->glTextureMatrix));
+    memset(this->glWorldViewProjectionMatrix, 0, sizeof(this->glWorldViewProjectionMatrix));
 }
 
 //------------------------------------------------------------------------------

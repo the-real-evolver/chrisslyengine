@@ -30,6 +30,9 @@ public:
     ID3D11Buffer* GetD3D11Buffer() const;
 
 private:
+    /// private default constructor
+    D3D11HardwareVertexBuffer();
+
     ID3D11Buffer* d3d11Buffer;
 };
 
