@@ -33,7 +33,7 @@ class HardwareVertexBufferBase
 {
 public:
     /// construct from vertex count and vertex size
-    HardwareVertexBufferBase(unsigned int numVertices, unsigned int bytesPerVertex, Usage usage);
+    HardwareVertexBufferBase(unsigned int numVertices, unsigned int bytesPerVertex, Usage usage, bool useShadowBuffer);
     /// destructor
     virtual ~HardwareVertexBufferBase();
     /// gets the size in bytes of a single vertex in this buffer
@@ -51,6 +51,7 @@ protected:
     unsigned int bytesPerVertex;
     void* vertexBuffer;
     Usage usage;
+    bool useShadowBuffer;
 };
 
 } // namespace graphics

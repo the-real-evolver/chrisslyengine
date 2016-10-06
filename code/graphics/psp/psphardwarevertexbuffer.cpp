@@ -19,8 +19,8 @@ PSPHardwareVertexBuffer::PSPHardwareVertexBuffer()
 //------------------------------------------------------------------------------
 /**
 */
-PSPHardwareVertexBuffer::PSPHardwareVertexBuffer(unsigned int numVertices, unsigned int bytesPerVertex, graphics::Usage usage) :
-    HardwareVertexBufferBase(numVertices, bytesPerVertex, usage)
+PSPHardwareVertexBuffer::PSPHardwareVertexBuffer(unsigned int numVertices, unsigned int bytesPerVertex, graphics::Usage usage, bool useShadowBuffer) :
+    HardwareVertexBufferBase(numVertices, bytesPerVertex, usage, useShadowBuffer)
 {
 
 }

@@ -46,15 +46,8 @@ public:
     /// get pointer to buffer
     void* GetBuffer() const;
 
-    /// render target type - default is RT_NONE
-    enum RenderTargetType
-    {
-        RT_NONE,
-        RT_WINDOW,
-        RT_TETXTURE
-    };
     /// get the type of the rendertarget
-    virtual RenderTargetType GetType() const;
+    virtual unsigned int GetType() const;
 
 protected:
     mutable ce_dynamic_array viewports;

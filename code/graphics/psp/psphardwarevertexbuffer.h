@@ -16,7 +16,7 @@ class PSPHardwareVertexBuffer : public graphics::HardwareVertexBufferBase
 {
 public:
     /// construct from vertex count and vertex size
-    PSPHardwareVertexBuffer(unsigned int numVertices, unsigned int bytesPerVertex, graphics::Usage usage);
+    PSPHardwareVertexBuffer(unsigned int numVertices, unsigned int bytesPerVertex, graphics::Usage usage, bool useShadowBuffer);
     /// destructor
     ~PSPHardwareVertexBuffer();
     /// enable the cpu to access the data in the buffer and return a pointer to it

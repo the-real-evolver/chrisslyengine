@@ -114,10 +114,10 @@ RenderTarget::GetBuffer() const
 //------------------------------------------------------------------------------
 /**
 */
-RenderTarget::RenderTargetType
+unsigned int
 RenderTarget::GetType() const
 {
-    return RT_NONE;
+    return 0;
 }
 
 } // namespace graphics

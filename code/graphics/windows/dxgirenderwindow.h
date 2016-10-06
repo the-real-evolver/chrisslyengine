@@ -28,7 +28,7 @@ public:
     /// swaps the frame buffers to display the next frame
     void SwapBuffers();
     /// get the type of the rendertarget
-    RenderTargetType GetType() const;
+    unsigned int GetType() const;
 
     /// gets a pointer to the rendertarget view of the swapchain's buffer
     ID3D11RenderTargetView* GetRenderTargetView() const;

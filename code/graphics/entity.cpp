@@ -47,7 +47,7 @@ Entity::Entity(Mesh* mesh) :
                     CE_ASSERT(subEntity != NULL, "Entity::Entity(): subEntity not valid\n");
                     VertexData* subMeshVertexData = subEntity->GetSubMesh()->vertexData;
                     HardwareVertexBuffer* vertexBuffer = CE_NEW HardwareVertexBuffer(subMeshVertexData->vertexBuffer->GetNumVertices(),
-                                                                                    2 * subMeshVertexData->vertexBuffer->GetBytesPerVertex(), HBU_DYNAMIC);
+                                                                                    2 * subMeshVertexData->vertexBuffer->GetBytesPerVertex(), HBU_DYNAMIC, false);
                     subEntity->hardwareVertexAnimVertexData = CE_NEW VertexData(vertexBuffer);
                 }
 

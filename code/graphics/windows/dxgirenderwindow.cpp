@@ -210,10 +210,10 @@ DXGIRenderWindow::SwapBuffers()
 //------------------------------------------------------------------------------
 /**
 */
-graphics::RenderTarget::RenderTargetType
+unsigned int
 DXGIRenderWindow::GetType() const
 {
-    return RT_WINDOW;
+    return 'DXGW';
 }
 
 //------------------------------------------------------------------------------

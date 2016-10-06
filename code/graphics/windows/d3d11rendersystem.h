@@ -84,6 +84,7 @@ private:
     core::Matrix4 projectionMatrix;
 
     D3D11GpuProgram* defaultGpuProgram;
+    D3D11GpuProgram* defaultGpuProgramMorphAnim;
     D3D11GpuProgram* currentGpuProgram;
 
     ID3D11Device* device;
@@ -94,6 +95,7 @@ private:
     ID3D11BlendState* blendState;
     ID3D11SamplerState* samplerState;
     ID3D11InputLayout* inputLayout;
+    ID3D11InputLayout* inputLayoutMorphAnim;
 };
 
 } // namespace chrissly

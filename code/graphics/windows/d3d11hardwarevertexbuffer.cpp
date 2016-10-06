@@ -21,8 +21,8 @@ D3D11HardwareVertexBuffer::D3D11HardwareVertexBuffer()
 //------------------------------------------------------------------------------
 /**
 */
-D3D11HardwareVertexBuffer::D3D11HardwareVertexBuffer(unsigned int numVertices, unsigned int bytesPerVertex, graphics::Usage usage) :
-    HardwareVertexBufferBase(numVertices, bytesPerVertex, usage),
+D3D11HardwareVertexBuffer::D3D11HardwareVertexBuffer(unsigned int numVertices, unsigned int bytesPerVertex, graphics::Usage usage, bool useShadowBuffer) :
+    HardwareVertexBufferBase(numVertices, bytesPerVertex, usage, useShadowBuffer),
     d3d11Buffer(NULL)
 {
     if (graphics::HBU_DYNAMIC == this->usage)
@@ -69,7 +69,7 @@ D3D11HardwareVertexBuffer::Map()
 #if __DEBUG__
         HRESULT result =
 #endif
-        D3D11RenderSystem::Instance()->GetContext()->Map(this->d3d11Buffer, 0, D3D11_MAP_WRITE, 0, &resource);
+        D3D11RenderSystem::Instance()->GetContext()->Map(this->d3d11Buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
         CE_ASSERT(SUCCEEDED(result), "D3D11HardwareVertexBuffer::Map(): failed to map d3d11 buffer\n");
         return resource.pData;
     }
@@ -83,7 +83,7 @@ D3D11HardwareVertexBuffer::Map()
 void
 D3D11HardwareVertexBuffer::Unmap()
 {
-    if (graphics::HBU_STATIC == this->usage)
+    if (graphics::HBU_STATIC == this->usage && NULL == this->d3d11Buffer && !this->useShadowBuffer)
     {
         D3D11_BUFFER_DESC desc;
         ZeroMemory(&desc, sizeof(desc));

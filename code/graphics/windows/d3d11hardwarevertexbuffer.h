@@ -18,7 +18,7 @@ class D3D11HardwareVertexBuffer : public graphics::HardwareVertexBufferBase
 {
 public:
     /// construct from vertex count and vertex size
-    D3D11HardwareVertexBuffer(unsigned int numVertices, unsigned int bytesPerVertex, graphics::Usage usage);
+    D3D11HardwareVertexBuffer(unsigned int numVertices, unsigned int bytesPerVertex, graphics::Usage usage, bool useShadowBuffer);
     /// destructor
     ~D3D11HardwareVertexBuffer();
     /// enable the cpu to access the data in the buffer and return a pointer to it

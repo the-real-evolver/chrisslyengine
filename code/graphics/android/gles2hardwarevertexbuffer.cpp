@@ -19,11 +19,11 @@ GLES2HardwareVertexBuffer::GLES2HardwareVertexBuffer()
 //------------------------------------------------------------------------------
 /**
 */
-GLES2HardwareVertexBuffer::GLES2HardwareVertexBuffer(unsigned int numVertices, unsigned int bytesPerVertex, graphics::Usage usage) :
-    HardwareVertexBufferBase(numVertices, bytesPerVertex, usage),
+GLES2HardwareVertexBuffer::GLES2HardwareVertexBuffer(unsigned int numVertices, unsigned int bytesPerVertex, graphics::Usage usage, bool useShadowBuffer) :
+    HardwareVertexBufferBase(numVertices, bytesPerVertex, usage, useShadowBuffer),
     bufferName(0)
 {
-    if (graphics::HBU_STATIC == this->usage)
+    if (graphics::HBU_STATIC == this->usage && !this->useShadowBuffer)
     {
         glGenBuffers(1, &this->bufferName);
         CE_GL_ERROR_CHECK("glGenBuffers");
@@ -35,7 +35,7 @@ GLES2HardwareVertexBuffer::GLES2HardwareVertexBuffer(unsigned int numVertices, u
 */
 GLES2HardwareVertexBuffer::~GLES2HardwareVertexBuffer()
 {
-    if (graphics::HBU_STATIC == this->usage)
+    if (graphics::HBU_STATIC == this->usage && !this->useShadowBuffer)
     {
         glDeleteBuffers(1, &this->bufferName);
         CE_GL_ERROR_CHECK("glDeleteBuffers");
@@ -57,7 +57,7 @@ GLES2HardwareVertexBuffer::Map()
 void
 GLES2HardwareVertexBuffer::Unmap()
 {
-    if (graphics::HBU_STATIC == this->usage)
+    if (graphics::HBU_STATIC == this->usage && !this->useShadowBuffer)
     {
         glBindBuffer(GL_ARRAY_BUFFER, this->bufferName);
         CE_GL_ERROR_CHECK("glBindBuffer");

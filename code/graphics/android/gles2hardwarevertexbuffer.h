@@ -19,7 +19,7 @@ class GLES2HardwareVertexBuffer : public graphics::HardwareVertexBufferBase
 {
 public:
     /// construct from vertex count and vertex size
-    GLES2HardwareVertexBuffer(unsigned int numVertices, unsigned int bytesPerVertex, graphics::Usage usage);
+    GLES2HardwareVertexBuffer(unsigned int numVertices, unsigned int bytesPerVertex, graphics::Usage usage, bool useShadowBuffer);
     /// destructor
     ~GLES2HardwareVertexBuffer();
     /// enable the cpu to access the data in the buffer and return a pointer to it
