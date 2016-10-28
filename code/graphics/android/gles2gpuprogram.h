@@ -38,13 +38,11 @@ private:
     /// creates a new parameters object compatible with this program definition
     graphics::GpuProgramParameters* CreateParameters();
     /// populate named constants
-    void ExtractConstantDefs(graphics::GpuNamedConstants* constantDefs);
+    void ExtractConstantDefs();
     /// create and compiles a shader from the given string and returns a handle to it
     GLuint CreateShaderFromString(GLenum shaderType, const char* source);
     /// creates a gpu program from the given shader handles
     GLuint CreateProgram(GLuint vertexShader, GLuint fragmentShader);
-    /// returns true if the given string names a auto constant type
-    bool IsAutoConstantType(const char* name);
 
     graphics::GpuProgramParameters* defaultParams;
     graphics::GpuNamedConstants* constantDefs;

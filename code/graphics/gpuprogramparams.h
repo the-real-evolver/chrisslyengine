@@ -114,12 +114,22 @@ namespace graphics
         void SetNamedConstant(const char* name, const core::Matrix4& m);
         /// sets a list of Matrix4 parameters to the program
         void SetNamedConstant(const char* name, const core::Matrix4* m, unsigned int numEntries);
+        /// sets a single matrix constant which will automatically be updated by the system
+        void SetAutoConstant(AutoConstantType autoType, const core::Matrix4& m);
+        /// sets a single float constant which will automatically be updated by the system
+        void SetAutoConstant(AutoConstantType autoType, float val);
 
         /// internal method for providing a link to a name->definition map for parameters
-        void _SetNamedConstants(GpuNamedConstants* constantmap);
+        void _SetNamedConstants(GpuNamedConstants* constantMap);
+        /// internal method for providing a link to a auto constant definition for parameters
+        void _SetAutoConstant(AutoConstantType autoType, GpuConstantDefinition* def);
+
+        /// gets the AutoConstantType enum value if the given string matches an auto type, otherwise returns ACT_COUNT
+        static AutoConstantType AutoConstantTypeFromString(const char* name);
 
     private:
         GpuNamedConstants* constantDefs;
+        GpuConstantDefinition* autoConstants[ACT_COUNT];
     };
 
 } // namespace graphics

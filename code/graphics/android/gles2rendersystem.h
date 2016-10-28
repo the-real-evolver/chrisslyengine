@@ -67,8 +67,6 @@ public:
     void _UseLights(ce_hash_table* lights);
     /// sets the colour & strength of the ambient (global directionless) light in the world
     void SetAmbientLight(unsigned int colour);
-    /// notify the rendersystem that a morphkeyframe was build
-    void _NotifyMorphKeyFrameBuild();
 
     /// gets the default light shader parameters (useful if a custom shader wants to use the default lighting)
     const core::Matrix4* GetDefaultLightShaderParams() const;

@@ -20,7 +20,8 @@ GLES2GpuProgram::GLES2GpuProgram()
 //------------------------------------------------------------------------------
 /**
 */
-GLES2GpuProgram::GLES2GpuProgram(const char* vertexShaderSource, const char* fragmentShaderSource)
+GLES2GpuProgram::GLES2GpuProgram(const char* vertexShaderSource, const char* fragmentShaderSource) :
+    defaultParams(NULL)
 {
     GLuint vertexShader = this->CreateShaderFromString(GL_VERTEX_SHADER, vertexShaderSource);
     CE_ASSERT(0 != vertexShader, "Could not create vertex shader.");
@@ -51,9 +52,7 @@ GLES2GpuProgram::GLES2GpuProgram(const char* vertexShaderSource, const char* fra
     CE_GL_ERROR_CHECK("glGetAttribLocation");
 
     this->constantDefs = CE_NEW graphics::GpuNamedConstants;
-    this->ExtractConstantDefs(this->constantDefs);
-
-    this->defaultParams = NULL;
+    this->ExtractConstantDefs();
 }
 
 //------------------------------------------------------------------------------
@@ -62,7 +61,10 @@ GLES2GpuProgram::GLES2GpuProgram(const char* vertexShaderSource, const char* fra
 GLES2GpuProgram::~GLES2GpuProgram()
 {
     CE_DELETE this->constantDefs;
-    if (this->defaultParams != NULL) CE_DELETE this->defaultParams;
+    if (this->defaultParams != NULL)
+    {
+        CE_DELETE this->defaultParams;
+    }
 
     GLint numAttachedShaders;
     glGetProgramiv(this->gpuProgram, GL_ATTACHED_SHADERS, &numAttachedShaders);
@@ -153,7 +155,7 @@ GLES2GpuProgram::CreateParameters()
 /**
 */
 void
-GLES2GpuProgram::ExtractConstantDefs(graphics::GpuNamedConstants* constantDefs)
+GLES2GpuProgram::ExtractConstantDefs()
 {
     int samplerIndex = 0;
 
@@ -170,7 +172,7 @@ GLES2GpuProgram::ExtractConstantDefs(graphics::GpuNamedConstants* constantDefs)
         GLint arraySize = -1;
         GLenum type;
         glGetActiveUniform(this->gpuProgram, i, activeUniformMaxLength, &uniformNameLength, &arraySize, &type, stringBuffer);
-        if (!this->IsAutoConstantType(stringBuffer))
+        if (graphics::GpuProgramParameters::ACT_COUNT == graphics::GpuProgramParameters::AutoConstantTypeFromString(stringBuffer))
         {
             graphics::GpuConstantDefinition* uniform = CE_NEW graphics::GpuConstantDefinition();
             uniform->location = glGetUniformLocation(this->gpuProgram, stringBuffer);
@@ -214,11 +216,13 @@ GLES2GpuProgram::ExtractConstantDefs(graphics::GpuNamedConstants* constantDefs)
                     memcpy(uniform->buffer, &samplerIndex, uniform->size);
                     ++samplerIndex;
                     break;
+                default:
+                    CE_ASSERT(false, "GLES2GpuProgram::ExtractConstantDefs(): unsupported uniform type '%i'\n", type);
             }
 
             CE_LOG("GLES2GpuProgram::ExtractConstantDefs(): add '%i' '%s' '%u' '%i' '%i'\n", type, stringBuffer, uniform->size, uniform->location, arraySize);
 
-            ce_hash_table_insert(&constantDefs->map, stringBuffer, uniform);
+            ce_hash_table_insert(&this->constantDefs->map, stringBuffer, uniform);
         }
     }
 
@@ -301,21 +305,6 @@ GLES2GpuProgram::CreateProgram(GLuint vertexShader, GLuint fragmentShader)
     }
 
     return program;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-bool
-GLES2GpuProgram::IsAutoConstantType(const char* name)
-{
-    if (0 == strcmp(name, "worldMatrix"))         return true;
-    if (0 == strcmp(name, "viewMatrix"))          return true;
-    if (0 == strcmp(name, "projectionMatrix"))    return true;
-    if (0 == strcmp(name, "worldViewProjMatrix")) return true;
-    if (0 == strcmp(name, "morphWeight"))         return true;
-
-    return false;
 }
 
 } // namespace chrissly

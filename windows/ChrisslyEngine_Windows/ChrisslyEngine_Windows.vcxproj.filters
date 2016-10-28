@@ -128,6 +128,9 @@
     <ClCompile Include="..\..\code\graphics\windows\dxgirenderwindow.cpp">
       <Filter>graphics\windows</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\code\graphics\windows\d3d11constantbuffer.cpp">
+      <Filter>graphics\windows</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="core">
@@ -350,6 +353,9 @@
     </ClInclude>
     <ClInclude Include="..\..\code\thirdparty\stb\stb_c_lexer.h">
       <Filter>thirdparty\stb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\graphics\windows\d3d11constantbuffer.h">
+      <Filter>graphics\windows</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -69,8 +69,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(DXSDK_DIR)Include</IncludePath>
-    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(DXSDK_DIR)Lib\x86</LibraryPath>
+    <IncludePath>$(VC_IncludePath);$(DXSDK_DIR)Include;$(WindowsSDK_IncludePath)</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_x86);$(DXSDK_DIR)Lib\x86;$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -82,7 +82,7 @@
       <FloatingPointModel>Fast</FloatingPointModel>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;d3d11.lib;d3dx11.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;d3d11.lib;d3dx11.lib;d3dcompiler.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -154,6 +154,7 @@
     <ClCompile Include="..\..\code\graphics\texturemanager.cpp" />
     <ClCompile Include="..\..\code\graphics\textureunitstate.cpp" />
     <ClCompile Include="..\..\code\graphics\viewport.cpp" />
+    <ClCompile Include="..\..\code\graphics\windows\d3d11constantbuffer.cpp" />
     <ClCompile Include="..\..\code\graphics\windows\d3d11gpuprogram.cpp" />
     <ClCompile Include="..\..\code\graphics\windows\d3d11hardwarevertexbuffer.cpp" />
     <ClCompile Include="..\..\code\graphics\windows\d3d11mappings.cpp" />
@@ -221,6 +222,7 @@
     <ClInclude Include="..\..\code\graphics\textureunitstate.h" />
     <ClInclude Include="..\..\code\graphics\vertexdata.h" />
     <ClInclude Include="..\..\code\graphics\viewport.h" />
+    <ClInclude Include="..\..\code\graphics\windows\d3d11constantbuffer.h" />
     <ClInclude Include="..\..\code\graphics\windows\d3d11defaultshaders.h" />
     <ClInclude Include="..\..\code\graphics\windows\d3d11gpuprogram.h" />
     <ClInclude Include="..\..\code\graphics\windows\d3d11hardwarevertexbuffer.h" />

@@ -25,30 +25,34 @@ public:
     graphics::GpuProgramParameters* GetDefaultParameters();
     /// get the full list of named constants
     graphics::GpuNamedConstants* GetConstantDefinitions() const;
+    /// sets the vertex and fragment shader to the device
+    void Bind();
+    /// set the constant buffers used by the vertex shader pipeline stage
+    void BindConstantBuffers();
+    /// updates per object constant buffers
+    void UpdatePerObjectConstantBuffers();
+    /// updates per pass constant buffers
+    void UpdatePerPassConstantBuffers();
 
     /// gets a pointer to the vertex shader code
     ID3D10Blob* GetVertexShaderCode() const;
-    /// gets a pointer to the vertex shader
-    ID3D11VertexShader* GetVertexShader() const;
-    /// gets a pointer to the fragment shader
-    ID3D11PixelShader* GetFragmentShader() const;
-    /// gets a pointer to the auto constant buffer
-    ID3D11Buffer* GetAutoConstantBuffer() const;
 
 private:
     /// private default constructor
     D3D11GpuProgram();
-    /// creates a new parameters object compatible with this program definition
-    graphics::GpuProgramParameters* CreateParameters();
+    /// populate named constants
+    void ExtractConstantDefs();
 
     graphics::GpuProgramParameters* defaultParams;
     graphics::GpuNamedConstants* constantDefs;
+
+    ce_dynamic_array constantBuffersPerObject;
+    ce_dynamic_array constantBuffersPerPass;
 
     ID3D10Blob* vertexShaderCode;
     ID3D10Blob* fragmentShaderCode;
     ID3D11VertexShader* vertexShader;
     ID3D11PixelShader* fragmentShader;
-    ID3D11Buffer* autoConstantBuffer;
 };
 
 } // namespace chrissly

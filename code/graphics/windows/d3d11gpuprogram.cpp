@@ -3,8 +3,10 @@
 //  (C) 2016 Christian Bleicher
 //------------------------------------------------------------------------------
 #include "d3d11gpuprogram.h"
+#include "d3d11constantbuffer.h"
 #include "d3d11rendersystem.h"
 #include "debug.h"
+#include <D3DCompiler.h>
 
 namespace chrissly
 {
@@ -21,11 +23,12 @@ D3D11GpuProgram::D3D11GpuProgram()
 /**
 */
 D3D11GpuProgram::D3D11GpuProgram(const char* source, const char* fileName, const char* vertexShaderFunctionName, const char* fragmentShaderFunctionName) :
+    defaultParams(NULL),
+    constantDefs(NULL),
     vertexShaderCode(NULL),
     fragmentShaderCode(NULL),
     vertexShader(NULL),
-    fragmentShader(NULL),
-    autoConstantBuffer(NULL)
+    fragmentShader(NULL)
 {
     /* compile and create vertex shader */
     ID3D10Blob* errorBlob = NULL;
@@ -92,19 +95,7 @@ D3D11GpuProgram::D3D11GpuProgram(const char* source, const char* fileName, const
         errorBlob = NULL;
     }
 
-    /* create constant buffer */
-    D3D11_BUFFER_DESC desc;
-    ZeroMemory(&desc, sizeof(desc));
-    desc.Usage = D3D11_USAGE_DYNAMIC;
-    desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-    desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-    desc.MiscFlags = 0;
-    desc.ByteWidth = 16 * sizeof(float);
-    result = D3D11RenderSystem::Instance()->GetDevice()->CreateBuffer(&desc, NULL, &this->autoConstantBuffer);
-    CE_ASSERT(SUCCEEDED(result), "D3D11GpuProgram::D3D11GpuProgram(): failed to create constant buffer\n");
-
-    this->constantDefs = CE_NEW graphics::GpuNamedConstants;
-    this->defaultParams = NULL;
+    this->ExtractConstantDefs();
 }
 
 //------------------------------------------------------------------------------
@@ -113,15 +104,21 @@ D3D11GpuProgram::D3D11GpuProgram(const char* source, const char* fileName, const
 D3D11GpuProgram::~D3D11GpuProgram()
 {
     CE_DELETE this->constantDefs;
-    if (this->defaultParams != NULL)
-    {
-        CE_DELETE this->defaultParams;
-    }
+    CE_DELETE this->defaultParams;
 
-    if (this->autoConstantBuffer != NULL)
+    unsigned int i;
+    for (i = 0; i < this->constantBuffersPerObject.size; ++i)
     {
-        this->autoConstantBuffer->Release();
+        CE_DELETE (D3D11ConstantBuffer*)ce_dynamic_array_get(&this->constantBuffersPerObject, i);
     }
+    ce_dynamic_array_delete(&this->constantBuffersPerObject);
+
+    for (i = 0; i < this->constantBuffersPerPass.size; ++i)
+    {
+        CE_DELETE (D3D11ConstantBuffer*)ce_dynamic_array_get(&this->constantBuffersPerPass, i);
+    }
+    ce_dynamic_array_delete(&this->constantBuffersPerPass);
+
     if (this->vertexShaderCode != NULL)
     {
         this->vertexShaderCode->Release();
@@ -146,11 +143,6 @@ D3D11GpuProgram::~D3D11GpuProgram()
 graphics::GpuProgramParameters*
 D3D11GpuProgram::GetDefaultParameters()
 {
-    if (NULL == this->defaultParams)
-    {
-        this->defaultParams = this->CreateParameters();
-    }
-
     return this->defaultParams;
 }
 
@@ -166,17 +158,189 @@ D3D11GpuProgram::GetConstantDefinitions() const
 //------------------------------------------------------------------------------
 /**
 */
-graphics::GpuProgramParameters*
-D3D11GpuProgram::CreateParameters()
+void
+D3D11GpuProgram::Bind()
 {
-    graphics::GpuProgramParameters* ret = CE_NEW graphics::GpuProgramParameters;
+    ID3D11DeviceContext* context = D3D11RenderSystem::Instance()->GetContext();
+    context->VSSetShader(this->vertexShader, NULL, 0);
+    context->PSSetShader(this->fragmentShader, NULL, 0);
+}
 
-    if (this->constantDefs != NULL)
+//------------------------------------------------------------------------------
+/**
+*/
+void
+D3D11GpuProgram::BindConstantBuffers()
+{
+    unsigned int i;
+    for (i = 0; i < this->constantBuffersPerObject.size; ++i)
     {
-        ret->_SetNamedConstants(this->constantDefs);
+        ((D3D11ConstantBuffer*)ce_dynamic_array_get(&this->constantBuffersPerObject, i))->Bind();
     }
+    for (i = 0; i < this->constantBuffersPerPass.size; ++i)
+    {
+        ((D3D11ConstantBuffer*)ce_dynamic_array_get(&this->constantBuffersPerPass, i))->Bind();
+    }
+}
 
-    return ret;
+//------------------------------------------------------------------------------
+/**
+*/
+void
+D3D11GpuProgram::UpdatePerObjectConstantBuffers()
+{
+    unsigned int i;
+    for (i = 0; i < this->constantBuffersPerObject.size; ++i)
+    {
+        ((D3D11ConstantBuffer*)ce_dynamic_array_get(&this->constantBuffersPerObject, i))->UpdateConstants();
+    }
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+D3D11GpuProgram::UpdatePerPassConstantBuffers()
+{
+    unsigned int i;
+    for (i = 0; i < this->constantBuffersPerPass.size; ++i)
+    {
+        ((D3D11ConstantBuffer*)ce_dynamic_array_get(&this->constantBuffersPerPass, i))->UpdateConstants();
+    }
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+D3D11GpuProgram::ExtractConstantDefs()
+{
+    this->constantDefs = CE_NEW graphics::GpuNamedConstants;
+    this->defaultParams = CE_NEW graphics::GpuProgramParameters;
+    this->defaultParams->_SetNamedConstants(this->constantDefs);
+
+    ce_dynamic_array_init(&this->constantBuffersPerObject, 1);
+    ce_dynamic_array_init(&this->constantBuffersPerPass, 0);
+
+    ID3D11ShaderReflection* reflector = NULL;
+    HRESULT result = D3DReflect(this->vertexShaderCode->GetBufferPointer(), this->vertexShaderCode->GetBufferSize(), IID_ID3D11ShaderReflection, (void**)&reflector);
+    CE_ASSERT(SUCCEEDED(result), "D3D11GpuProgram::ExtractConstantDefs(): failed to reflect vertex shader source code\n");
+    D3D11_SHADER_DESC shaderDesc;
+    result = reflector->GetDesc(&shaderDesc);
+    CE_ASSERT(SUCCEEDED(result), "D3D11GpuProgram::ExtractConstantDefs(): failed to get shader description\n");
+
+    UINT bufferIndex;
+    for (bufferIndex = 0; bufferIndex < shaderDesc.ConstantBuffers; ++bufferIndex)
+    {
+        bool updatePerObject = false;
+
+        ID3D11ShaderReflectionConstantBuffer* reflectionBuffer = reflector->GetConstantBufferByIndex(bufferIndex);
+        CE_ASSERT(reflectionBuffer != NULL, "D3D11GpuProgram::ExtractConstantDefs(): failed to get constant buffer by index\n");
+        D3D11_SHADER_BUFFER_DESC bufferDesc;
+        result = reflectionBuffer->GetDesc(&bufferDesc);
+        CE_ASSERT(SUCCEEDED(result), "D3D11GpuProgram::ExtractConstantDefs(): failed to get buffer description\n");
+
+        /* create constant buffer */
+        D3D11ConstantBuffer* constantBuffer = CE_NEW D3D11ConstantBuffer(bufferDesc.Size, bufferIndex, bufferDesc.Variables);
+
+        UINT constantIndex;
+        for (constantIndex = 0; constantIndex < bufferDesc.Variables; ++constantIndex)
+        {
+            ID3D11ShaderReflectionVariable* reflectionVariable = reflectionBuffer->GetVariableByIndex(constantIndex);
+            CE_ASSERT(reflectionVariable != NULL, "D3D11GpuProgram::ExtractConstantDefs(): failed to get variable by index\n");
+            D3D11_SHADER_VARIABLE_DESC variableDesc;
+            result = reflectionVariable->GetDesc(&variableDesc);
+            CE_ASSERT(SUCCEEDED(result), "D3D11GpuProgram::ExtractConstantDefs(): failed to get variable description\n");
+
+            ID3D11ShaderReflectionType* reflectionType = reflectionVariable->GetType();
+            CE_ASSERT(reflectionType != NULL, "D3D11GpuProgram::ExtractConstantDefs(): failed to get reflection type\n");
+            D3D11_SHADER_TYPE_DESC typeDesc;
+            result = reflectionType->GetDesc(&typeDesc);
+            CE_ASSERT(SUCCEEDED(result), "D3D11GpuProgram::ExtractConstantDefs(): failed to get type description\n");
+
+            /* create constant definiton */
+            graphics::GpuConstantDefinition* variable = CE_NEW graphics::GpuConstantDefinition();
+            switch (typeDesc.Type)
+            {
+            case D3D_SVT_INT:
+                switch (typeDesc.Columns)
+                {
+                case 1:
+                    variable->constType = graphics::GCT_INT1;
+                    break;
+                }
+                break;
+            case D3D_SVT_FLOAT:
+                switch (typeDesc.Rows)
+                {
+                case 1:
+                    switch (typeDesc.Columns)
+                    {
+                    case 1:
+                        variable->constType = graphics::GCT_FLOAT1;
+                        break;
+                    case 3:
+                        variable->constType = graphics::GCT_FLOAT3;
+                        break;
+                    case 4:
+                        variable->constType = graphics::GCT_FLOAT4;
+                        break;
+                    }
+                case 4:
+                    switch (typeDesc.Columns)
+                    {
+                    case 4:
+                        variable->constType = graphics::GCT_MATRIX_4X4;
+                        break;
+                    }
+                }
+                break;
+            case D3D_SVT_SAMPLER2D:
+                variable->constType = graphics::GCT_SAMPLER2D;
+                break;
+            }
+            CE_ASSERT(variable->constType != 0, "D3D11GpuProgram::ExtractConstantDefs(): unsupported variable type\n");
+
+            variable->location = variableDesc.StartOffset;
+            variable->size = variableDesc.Size;
+            variable->arraySize = 0;
+            variable->buffer = CE_MALLOC(variable->size);
+
+            ce_dynamic_array_push_back(&constantBuffer->constants, variable);
+
+            ce_hash_table_insert(&this->constantDefs->map, variableDesc.Name, variable);
+
+            switch (graphics::GpuProgramParameters::AutoConstantTypeFromString(variableDesc.Name))
+            {
+            case graphics::GpuProgramParameters::ACT_WORLD_MATRIX:
+                this->defaultParams->_SetAutoConstant(graphics::GpuProgramParameters::ACT_WORLD_MATRIX, variable);
+                updatePerObject = true;
+                break;
+            case graphics::GpuProgramParameters::ACT_VIEW_MATRIX:
+                this->defaultParams->_SetAutoConstant(graphics::GpuProgramParameters::ACT_VIEW_MATRIX, variable);
+                break;
+            case graphics::GpuProgramParameters::ACT_PROJECTION_MATRIX:
+                this->defaultParams->_SetAutoConstant(graphics::GpuProgramParameters::ACT_PROJECTION_MATRIX, variable);
+                break;
+            case graphics::GpuProgramParameters::ACT_WORLDVIEWPROJ_MATRIX:
+                this->defaultParams->_SetAutoConstant(graphics::GpuProgramParameters::ACT_WORLDVIEWPROJ_MATRIX, variable);
+                updatePerObject = true;
+                break;
+            case graphics::GpuProgramParameters::ACT_TEXTURE_MATRIX:
+                this->defaultParams->_SetAutoConstant(graphics::GpuProgramParameters::ACT_TEXTURE_MATRIX, variable);
+                updatePerObject = true;
+                break;
+            case graphics::GpuProgramParameters::ACT_MORPH_WEIGHT:
+                this->defaultParams->_SetAutoConstant(graphics::GpuProgramParameters::ACT_MORPH_WEIGHT, variable);
+                updatePerObject = true;
+                break;
+            }
+
+            CE_LOG("D3D11GpuProgram::ExtractConstantDefs(): add type: %i name: '%s' size: %u offset: %i arraySize %i\n", variable->constType, variableDesc.Name, variable->size, variable->location, variable->arraySize);
+        }
+
+        ce_dynamic_array_push_back(updatePerObject ? &this->constantBuffersPerObject : &this->constantBuffersPerPass, constantBuffer);
+    }
 }
 
 //------------------------------------------------------------------------------
@@ -186,33 +350,6 @@ ID3D10Blob*
 D3D11GpuProgram::GetVertexShaderCode() const
 {
     return this->vertexShaderCode;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-ID3D11VertexShader*
-D3D11GpuProgram::GetVertexShader() const
-{
-    return this->vertexShader;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-ID3D11PixelShader*
-D3D11GpuProgram::GetFragmentShader() const
-{
-    return this->fragmentShader;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-ID3D11Buffer*
-D3D11GpuProgram::GetAutoConstantBuffer() const
-{
-    return this->autoConstantBuffer;
 }
 
 } // namespace chrissly

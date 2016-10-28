@@ -22,7 +22,6 @@ D3D11RenderSystem::D3D11RenderSystem() :
     viewMatrix(core::Matrix4::ZERO),
     projectionMatrix(core::Matrix4::ZERO),
     defaultGpuProgram(NULL),
-    defaultGpuProgramMorphAnim(NULL),
     currentGpuProgram(NULL),
     device(NULL),
     context(NULL),
@@ -30,8 +29,7 @@ D3D11RenderSystem::D3D11RenderSystem() :
     depthStencilState(NULL),
     blendState(NULL),
     samplerState(NULL),
-    inputLayout(NULL),
-    inputLayoutMorphAnim(NULL)
+    inputLayout(NULL)
 {
     Singleton = this;
     this->viewPort = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
@@ -163,29 +161,6 @@ D3D11RenderSystem::_Initialise(void* customParams)
     );
     CE_ASSERT(SUCCEEDED(result), "D3D11RenderSystem::_Initialise(): failed to create input layout\n");
 
-    /* create default gpu program for morph animation */
-    this->defaultGpuProgramMorphAnim = CE_NEW D3D11GpuProgram(DefaultGpuProgramMorphAnim, "defaultshadermorphanim.fx", "DefaultVertexShader", "DefaultFragmentShader");
-
-    /* create default input layout for morph animation */
-    D3D11_INPUT_ELEMENT_DESC inputDescMorphAnim[] =
-    {
-        {"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-        {"COLOR",    0, DXGI_FORMAT_R8G8B8A8_UNORM,  0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-        {"NORMAL",   0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-        {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-        {"TEXCOORD", 1, DXGI_FORMAT_R32G32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-        {"COLOR",    1, DXGI_FORMAT_R8G8B8A8_UNORM,  0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-        {"NORMAL",   1, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-        {"POSITION", 1, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0}
-    };
-    result = this->device->CreateInputLayout(
-        inputDescMorphAnim, _countof(inputDescMorphAnim),
-        this->defaultGpuProgramMorphAnim->GetVertexShaderCode()->GetBufferPointer(),
-        this->defaultGpuProgramMorphAnim->GetVertexShaderCode()->GetBufferSize(),
-        &this->inputLayoutMorphAnim
-    );
-    CE_ASSERT(SUCCEEDED(result), "D3D11RenderSystem::_Initialise(): failed to create input layout\n");
-
     /* setup default context states */
     this->context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
@@ -202,17 +177,10 @@ D3D11RenderSystem::_Initialise(void* customParams)
 void
 D3D11RenderSystem::Shutdown()
 {
-    CE_DELETE this->defaultGpuProgramMorphAnim;
-    this->defaultGpuProgramMorphAnim = NULL;
     CE_DELETE this->defaultGpuProgram;
     this->defaultGpuProgram = NULL;
     this->currentGpuProgram = NULL;
 
-    if (this->inputLayoutMorphAnim != NULL)
-    {
-        this->inputLayoutMorphAnim->Release();
-        this->inputLayoutMorphAnim = NULL;
-    }
     if (this->inputLayout != NULL)
     {
         this->inputLayout->Release();
@@ -284,8 +252,6 @@ D3D11RenderSystem::_SetViewport(graphics::Viewport* vp)
 
     this->context->RSSetViewports(1, &this->viewPort);
 
-    FLOAT clearColour[4] = {0.0f, 0.0f, 0.0f, 0.0f};
-    D3D11Mappings::Get(vp->GetBackgroundColour(), clearColour[0], clearColour[1], clearColour[2], clearColour[3]);
     ID3D11RenderTargetView* renderTargetView = NULL;
     ID3D11DepthStencilView* depthStencilView = NULL;
     graphics::RenderTarget* target = vp->GetTarget();
@@ -299,6 +265,8 @@ D3D11RenderSystem::_SetViewport(graphics::Viewport* vp)
     {
         return;
     }
+    FLOAT clearColour[4] = {0.0f, 0.0f, 0.0f, 0.0f};
+    D3D11Mappings::Get(vp->GetBackgroundColour(), clearColour[0], clearColour[1], clearColour[2], clearColour[3]);
 
     this->context->ClearRenderTargetView(renderTargetView, clearColour);
     this->context->ClearDepthStencilView(depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
@@ -365,19 +333,14 @@ void
 D3D11RenderSystem::_Render(graphics::SubEntity* renderable)
 {
     /* update auto constants */
-    D3D11_MAPPED_SUBRESOURCE mappedResource;
-    ZeroMemory(&mappedResource, sizeof(mappedResource));
-    ID3D11Buffer* autoConstantBuffer = this->currentGpuProgram->GetAutoConstantBuffer();
-    this->context->Map(autoConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+    graphics::GpuProgramParameters* params = this->currentGpuProgram->GetDefaultParameters();
     core::Matrix4 m = this->projectionMatrix * this->viewMatrix * this->worldMatrix;
-    memcpy(mappedResource.pData, m[0], 16 * sizeof(float));
-    this->context->Unmap(autoConstantBuffer, 0);
-    this->context->VSSetConstantBuffers(0, 1, &autoConstantBuffer);
+    params->SetAutoConstant(graphics::GpuProgramParameters::ACT_WORLDVIEWPROJ_MATRIX, m);
+    this->currentGpuProgram->UpdatePerObjectConstantBuffers();
 
     graphics::HardwareVertexBuffer* vertexBuffer = NULL;
     if (graphics::VAT_MORPH == renderable->GetSubMesh()->GetVertexAnimationType())
     {
-        this->context->IASetInputLayout(this->inputLayoutMorphAnim);
         vertexBuffer = renderable->_GetHardwareVertexAnimVertexData()->vertexBuffer;
     }
     else
@@ -439,13 +402,15 @@ D3D11RenderSystem::_SetPass(graphics::Pass* pass)
     /* set gpu program to use */
     if (pass->IsProgrammable())
     {
-
+        this->currentGpuProgram = pass->GetGpuProgram();
     }
     else
     {
-        this->context->VSSetShader(this->defaultGpuProgram->GetVertexShader(), NULL, 0);
-        this->context->PSSetShader(this->defaultGpuProgram->GetFragmentShader(), NULL, 0);
+        this->currentGpuProgram = this->defaultGpuProgram;
     }
+    this->currentGpuProgram->Bind();
+    this->currentGpuProgram->BindConstantBuffers();
+    this->currentGpuProgram->UpdatePerPassConstantBuffers();
 
     /* texture unit parameters */
     unsigned short textureUnitState;

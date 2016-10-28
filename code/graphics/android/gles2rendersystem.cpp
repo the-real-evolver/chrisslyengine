@@ -515,15 +515,6 @@ GLES2RenderSystem::SetAmbientLight(unsigned int colour)
 //------------------------------------------------------------------------------
 /**
 */
-void
-GLES2RenderSystem::_NotifyMorphKeyFrameBuild()
-{
-
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
 const core::Matrix4*
 GLES2RenderSystem::GetDefaultLightShaderParams() const
 {
