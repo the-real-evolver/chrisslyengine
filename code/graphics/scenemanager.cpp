@@ -359,10 +359,16 @@ SceneManager::_RenderScene(Camera* camera, Viewport* vp)
             // for all attached entities
             Entity* entity = sceneNode->GetAttachedObject((unsigned short)entityIndex);
 
-            if (this->IsShadowTechniqueInUse() && this->illuminationStage == IRS_RENDER_TO_TEXTURE && !entity->GetCastShadows()) continue;
+            if (this->IsShadowTechniqueInUse() && this->illuminationStage == IRS_RENDER_TO_TEXTURE && !entity->GetCastShadows())
+            {
+                continue;
+            }
 
             // update animation
-            if (entity->HasVertexAnimation() && this->illuminationStage != IRS_RENDER_TO_TEXTURE) entity->UpdateAnimation();
+            if (entity->HasVertexAnimation() && this->illuminationStage != IRS_RENDER_TO_TEXTURE)
+            {
+                entity->UpdateAnimation();
+            }
 
             unsigned int subEntityIndex;
             for (subEntityIndex = 0; subEntityIndex < entity->GetNumSubEntities(); ++subEntityIndex)
@@ -370,10 +376,16 @@ SceneManager::_RenderScene(Camera* camera, Viewport* vp)
                 // for all subentities
                 SubEntity* subEntity = entity->GetSubEntity(subEntityIndex);
 
-                if (!subEntity->IsVisible()) continue;
+                if (!subEntity->IsVisible())
+                {
+                    continue;
+                }
 
                 Material* material = subEntity->GetMaterial();
-                if (NULL == material) continue;
+                if (NULL == material)
+                {
+                    continue;
+                }
 
                 // add to shadow caster queue
                 if (this->IsShadowTechniqueInUse() && this->illuminationStage == IRS_RENDER_TO_TEXTURE)

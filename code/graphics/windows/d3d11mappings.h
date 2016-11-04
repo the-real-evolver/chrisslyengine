@@ -7,9 +7,11 @@
     (C) 2016 Christian Bleicher
 */
 #include "pixelformat.h"
+#include "gpuprogramparams.h"
 #include <windows.h>
 #pragma warning(disable : 4005)
 #include <d3dx11.h>
+#include <D3DCompiler.h>
 
 //------------------------------------------------------------------------------
 namespace chrissly
@@ -23,6 +25,8 @@ public:
     static DXGI_FORMAT Get(graphics::PixelFormat pf);
     /// return the distance (in bytes) from the beginning of one line of a texture to the next line
     static UINT GetSysMemPitch(unsigned int width, graphics::PixelFormat pf);
+    /// get GpuConstantType from the given d3d11 shader type description
+    static graphics::GpuConstantType Get(D3D11_SHADER_TYPE_DESC& typeDesc);
 };
 } // namespace chrissly
 //------------------------------------------------------------------------------

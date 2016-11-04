@@ -165,7 +165,10 @@ SLESAudioRenderer::UpdateChannel(audio::Channel* channel)
         {
             float volume;
             channel->GetVolume(&volume);
-            if (mode & audio::MODE_3D) volume *= channel->_GetAttenuationFactor();
+            if (mode & audio::MODE_3D)
+            {
+                volume *= channel->_GetAttenuationFactor();
+            }
             SLVolumeItf volumeInterface = channel->GetVolumeInterface();
             SLmillibel slVolume;
             if (volume >= 1.0f)
@@ -176,7 +179,10 @@ SLESAudioRenderer::UpdateChannel(audio::Channel* channel)
             else
             {
                 float l = (float)M_LN2 / logf(1.0f / (1.0f - volume));
-                if (l > 32.768f) l = 32.768f;
+                if (l > 32.768f)
+                {
+                    l = 32.768f;
+                }
                 slVolume = l * -1000.0f;
             }
             result = (*volumeInterface)->SetVolumeLevel(volumeInterface, slVolume);

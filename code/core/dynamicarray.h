@@ -113,7 +113,10 @@ ce_dynamic_array_set(ce_dynamic_array* v, unsigned int index, void* item)
 
         void** temp = (void**)CE_REALLOC(v->data, sizeof(void*) * new_size);
 
-        if (NULL == temp) return false;
+        if (NULL == temp)
+        {
+            return false;
+        }
         v->data = temp;
         memset(v->data + v->capacity, 0, sizeof(void*) * (new_size - v->capacity));
         v->capacity = new_size;

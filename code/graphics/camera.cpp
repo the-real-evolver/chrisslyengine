@@ -258,7 +258,10 @@ Camera::GetAspectRatio() const
 const Matrix4&
 Camera::GetViewMatrix() const
 {
-    if (this->recalcView) this->UpdateView();
+    if (this->recalcView)
+    {
+        this->UpdateView();
+    }
 
     return this->viewMatrix;
 }
@@ -269,7 +272,10 @@ Camera::GetViewMatrix() const
 const Matrix4&
 Camera::GetProjectionMatrixRS() const
 {
-    if (this->recalcFrustum) this->UpdateFrustum();
+    if (this->recalcFrustum)
+    {
+        this->UpdateFrustum();
+    }
 
     return this->projMatrixRS;
 }

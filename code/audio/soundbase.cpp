@@ -55,10 +55,22 @@ SoundBase::GetLength(unsigned int* length)
 Result
 SoundBase::GetFormat(SoundType* type, AudioFormat* format, int* channels, int* bits)
 {
-    if (type != NULL) *type = this->type;
-    if (format != NULL) *format = this->format;
-    if (channels != NULL) *channels = this->numChannels;
-    if (bits != NULL) *bits = this->bitsPerSample;
+    if (type != NULL)
+    {
+        *type = this->type;
+    }
+    if (format != NULL)
+    {
+        *format = this->format;
+    }
+    if (channels != NULL)
+    {
+        *channels = this->numChannels;
+    }
+    if (bits != NULL)
+    {
+        *bits = this->bitsPerSample;
+    }
     return OK;
 }
 
@@ -153,7 +165,7 @@ SoundBase::_IncrementUseCount()
 {
     this->releaseSyncLock.Lock();
 
-    this->useCount++;
+    ++this->useCount;
 
     this->releaseSyncLock.Unlock();
 }
@@ -167,7 +179,7 @@ SoundBase::_DecrementUseCount()
     this->releaseSyncLock.Lock();
 
     CE_ASSERT(this->useCount > 0, "SoundBase::_DecrementUseCout(): useCount already zero\n");
-    this->useCount--;
+    --this->useCount;
     if (this->requestRelease && 0 == this->useCount)
     {
         this->_Release();

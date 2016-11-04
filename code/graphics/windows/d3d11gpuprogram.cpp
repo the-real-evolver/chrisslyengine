@@ -5,6 +5,7 @@
 #include "d3d11gpuprogram.h"
 #include "d3d11constantbuffer.h"
 #include "d3d11rendersystem.h"
+#include "d3d11mappings.h"
 #include "debug.h"
 #include <D3DCompiler.h>
 
@@ -141,7 +142,7 @@ D3D11GpuProgram::~D3D11GpuProgram()
 /**
 */
 graphics::GpuProgramParameters*
-D3D11GpuProgram::GetDefaultParameters()
+D3D11GpuProgram::GetDefaultParameters() const
 {
     return this->defaultParams;
 }
@@ -260,51 +261,19 @@ D3D11GpuProgram::ExtractConstantDefs()
 
             /* create constant definiton */
             graphics::GpuConstantDefinition* variable = CE_NEW graphics::GpuConstantDefinition();
-            switch (typeDesc.Type)
-            {
-            case D3D_SVT_INT:
-                switch (typeDesc.Columns)
-                {
-                case 1:
-                    variable->constType = graphics::GCT_INT1;
-                    break;
-                }
-                break;
-            case D3D_SVT_FLOAT:
-                switch (typeDesc.Rows)
-                {
-                case 1:
-                    switch (typeDesc.Columns)
-                    {
-                    case 1:
-                        variable->constType = graphics::GCT_FLOAT1;
-                        break;
-                    case 3:
-                        variable->constType = graphics::GCT_FLOAT3;
-                        break;
-                    case 4:
-                        variable->constType = graphics::GCT_FLOAT4;
-                        break;
-                    }
-                case 4:
-                    switch (typeDesc.Columns)
-                    {
-                    case 4:
-                        variable->constType = graphics::GCT_MATRIX_4X4;
-                        break;
-                    }
-                }
-                break;
-            case D3D_SVT_SAMPLER2D:
-                variable->constType = graphics::GCT_SAMPLER2D;
-                break;
-            }
-            CE_ASSERT(variable->constType != 0, "D3D11GpuProgram::ExtractConstantDefs(): unsupported variable type\n");
-
+            variable->constType = D3D11Mappings::Get(typeDesc);
             variable->location = variableDesc.StartOffset;
-            variable->size = variableDesc.Size;
-            variable->arraySize = 0;
-            variable->buffer = CE_MALLOC(variable->size);
+            variable->buffer = CE_MALLOC(variableDesc.Size);
+            if (typeDesc.Elements > 0)
+            {
+                variable->size = variableDesc.Size / typeDesc.Elements;
+                variable->arraySize = typeDesc.Elements;
+            }
+            else
+            {
+                variable->size = variableDesc.Size;
+                variable->arraySize = 1;
+            }
 
             ce_dynamic_array_push_back(&constantBuffer->constants, variable);
 
@@ -312,28 +281,28 @@ D3D11GpuProgram::ExtractConstantDefs()
 
             switch (graphics::GpuProgramParameters::AutoConstantTypeFromString(variableDesc.Name))
             {
-            case graphics::GpuProgramParameters::ACT_WORLD_MATRIX:
-                this->defaultParams->_SetAutoConstant(graphics::GpuProgramParameters::ACT_WORLD_MATRIX, variable);
-                updatePerObject = true;
-                break;
-            case graphics::GpuProgramParameters::ACT_VIEW_MATRIX:
-                this->defaultParams->_SetAutoConstant(graphics::GpuProgramParameters::ACT_VIEW_MATRIX, variable);
-                break;
-            case graphics::GpuProgramParameters::ACT_PROJECTION_MATRIX:
-                this->defaultParams->_SetAutoConstant(graphics::GpuProgramParameters::ACT_PROJECTION_MATRIX, variable);
-                break;
-            case graphics::GpuProgramParameters::ACT_WORLDVIEWPROJ_MATRIX:
-                this->defaultParams->_SetAutoConstant(graphics::GpuProgramParameters::ACT_WORLDVIEWPROJ_MATRIX, variable);
-                updatePerObject = true;
-                break;
-            case graphics::GpuProgramParameters::ACT_TEXTURE_MATRIX:
-                this->defaultParams->_SetAutoConstant(graphics::GpuProgramParameters::ACT_TEXTURE_MATRIX, variable);
-                updatePerObject = true;
-                break;
-            case graphics::GpuProgramParameters::ACT_MORPH_WEIGHT:
-                this->defaultParams->_SetAutoConstant(graphics::GpuProgramParameters::ACT_MORPH_WEIGHT, variable);
-                updatePerObject = true;
-                break;
+                case graphics::GpuProgramParameters::ACT_WORLD_MATRIX:
+                    this->defaultParams->_SetAutoConstant(graphics::GpuProgramParameters::ACT_WORLD_MATRIX, variable);
+                    updatePerObject = true;
+                    break;
+                case graphics::GpuProgramParameters::ACT_VIEW_MATRIX:
+                    this->defaultParams->_SetAutoConstant(graphics::GpuProgramParameters::ACT_VIEW_MATRIX, variable);
+                    break;
+                case graphics::GpuProgramParameters::ACT_PROJECTION_MATRIX:
+                    this->defaultParams->_SetAutoConstant(graphics::GpuProgramParameters::ACT_PROJECTION_MATRIX, variable);
+                    break;
+                case graphics::GpuProgramParameters::ACT_WORLDVIEWPROJ_MATRIX:
+                    this->defaultParams->_SetAutoConstant(graphics::GpuProgramParameters::ACT_WORLDVIEWPROJ_MATRIX, variable);
+                    updatePerObject = true;
+                    break;
+                case graphics::GpuProgramParameters::ACT_TEXTURE_MATRIX:
+                    this->defaultParams->_SetAutoConstant(graphics::GpuProgramParameters::ACT_TEXTURE_MATRIX, variable);
+                    updatePerObject = true;
+                    break;
+                case graphics::GpuProgramParameters::ACT_MORPH_WEIGHT:
+                    this->defaultParams->_SetAutoConstant(graphics::GpuProgramParameters::ACT_MORPH_WEIGHT, variable);
+                    updatePerObject = true;
+                    break;
             }
 
             CE_LOG("D3D11GpuProgram::ExtractConstantDefs(): add type: %i name: '%s' size: %u offset: %i arraySize %i\n", variable->constType, variableDesc.Name, variable->size, variable->location, variable->arraySize);

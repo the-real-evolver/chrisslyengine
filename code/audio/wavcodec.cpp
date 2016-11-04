@@ -83,7 +83,10 @@ WavCodec::SetupSound(const char* filename, Mode mode, void** sampleBuffer, unsig
             FSWrapper::Read(fd, &byteRate, 4);      // sampleRate * numChannels * bitsPerSample / 8
             FSWrapper::Read(fd, &blockAlign, 2);    // numChannels * bitsPerSample / 8
             FSWrapper::Read(fd, &bitsPerSample, 2); // 8 bits = 8, 16 bits = 16, etc.
-            if (chunkSize > 16) FSWrapper::Seek(fd, chunkSize - 16, Current);
+            if (chunkSize > 16)
+            {
+                FSWrapper::Seek(fd, chunkSize - 16, Current);
+            }
             this->riffWavHeaderSize += chunkSize;
         }
         else if (0 == strncmp(chunkID, "data", 4))
@@ -101,6 +104,10 @@ WavCodec::SetupSound(const char* filename, Mode mode, void** sampleBuffer, unsig
                 length = dataSize >> 1;
                 format = AUDIO_FORMAT_PCM16;
                 this->bytesPerSample = 2 * numChannels;
+            }
+            else
+            {
+                CE_ASSERT(false, "WavCodec::SetupSound(): '%i' bit samples not supported\n", bitsPerSample);
             }
             length = length / numChannels;
             type = SOUND_TYPE_WAV;
@@ -158,7 +165,10 @@ WavCodec::InitialiseStream()
 void
 WavCodec::FillStreamBackBuffer()
 {
-    if (this->endOfStream) return;
+    if (this->endOfStream)
+    {
+        return;
+    }
 
     if (!this->backBufferFilled)
     {
@@ -184,7 +194,10 @@ WavCodec::SwapStreamBuffers()
     this->currentStreamBufferLength = this->bytesToLoadToBackBuffer;
     this->currentStreamBufferIndex ^= 1;
     this->backBufferFilled = false;
-    if (this->seekPosition >= this->lengthInBytes) this->endOfStream = true;
+    if (this->seekPosition >= this->lengthInBytes)
+    {
+        this->endOfStream = true;
+    }
 }
 
 //------------------------------------------------------------------------------

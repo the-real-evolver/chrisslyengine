@@ -22,7 +22,7 @@ public:
     /// destructor
     ~D3D11GpuProgram();
     /// get a reference to the default parameters which are to be used for all uses of this program
-    graphics::GpuProgramParameters* GetDefaultParameters();
+    graphics::GpuProgramParameters* GetDefaultParameters() const;
     /// get the full list of named constants
     graphics::GpuNamedConstants* GetConstantDefinitions() const;
     /// sets the vertex and fragment shader to the device

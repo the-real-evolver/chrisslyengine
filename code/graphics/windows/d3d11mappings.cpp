@@ -70,4 +70,43 @@ D3D11Mappings::GetSysMemPitch(unsigned int width, graphics::PixelFormat pf)
     return 0;
 }
 
+//------------------------------------------------------------------------------
+/**
+*/
+graphics::GpuConstantType
+D3D11Mappings::Get(D3D11_SHADER_TYPE_DESC& typeDesc)
+{
+    switch (typeDesc.Type)
+    {
+        case D3D_SVT_INT:
+            switch (typeDesc.Columns)
+            {
+                case 1: return graphics::GCT_INT1;
+            }
+            break;
+        case D3D_SVT_FLOAT:
+            switch (typeDesc.Rows)
+            {
+                case 1:
+                    switch (typeDesc.Columns)
+                    {
+                        case 1: return graphics::GCT_FLOAT1;
+                        case 3: return graphics::GCT_FLOAT3;
+                        case 4: return graphics::GCT_FLOAT4;
+                    }
+                case 4:
+                    switch (typeDesc.Columns)
+                    {
+                        case 4: return graphics::GCT_MATRIX_4X4;
+                    }
+            }
+            break;
+        case D3D_SVT_SAMPLER2D: return graphics::GCT_SAMPLER2D;
+    }
+
+    CE_ASSERT(false, "D3D11GpuProgram::ExtractConstantDefs(): unsupported variable type\n");
+
+    return graphics::GCT_UNKNOWN;
+}
+
 } // namespace chrissly

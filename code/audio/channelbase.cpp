@@ -254,7 +254,10 @@ ChannelBase::GetPosition(unsigned int* position)
 Result
 ChannelBase::Set3DAttributes(const Vector3* pos)
 {
-    if (pos != NULL) this->pos = *pos;
+    if (pos != NULL)
+    {
+        this->pos = *pos;
+    }
     return OK;
 }
 
@@ -264,7 +267,10 @@ ChannelBase::Set3DAttributes(const Vector3* pos)
 Result
 ChannelBase::Get3DAttributes(Vector3* pos)
 {
-    if (pos != NULL) *pos = this->pos;
+    if (pos != NULL)
+    {
+        *pos = this->pos;
+    }
     return OK;
 }
 
@@ -287,8 +293,14 @@ ChannelBase::Set3DMinMaxDistance(float mindistance, float maxdistance)
 Result
 ChannelBase::Get3DMinMaxDistance(float* mindistance, float* maxdistance)
 {
-    if (mindistance != NULL) *mindistance = this->minDistance;
-    if (maxdistance != NULL) *maxdistance = this->maxDistance;
+    if (mindistance != NULL)
+    {
+        *mindistance = this->minDistance;
+    }
+    if (maxdistance != NULL)
+    {
+        *maxdistance = this->maxDistance;
+    }
     return OK;
 }
 

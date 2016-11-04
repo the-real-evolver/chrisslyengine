@@ -107,12 +107,21 @@ AudioSystem::CreateSound(const char* name, Mode mode, Sound** sound)
     for (i = 0; i < this->soundPool.capacity; ++i)
     {
         snd = (Sound*)ce_dynamic_array_get(&this->soundPool, i);
-        if (!snd->_IsRealized()) break;
+        if (!snd->_IsRealized())
+        {
+            break;
+        }
     }
-    if (i == this->soundPool.capacity) return ERR_MEMORY;
+    if (i == this->soundPool.capacity)
+    {
+        return ERR_MEMORY;
+    }
 
     char* ext = strrchr(name, '.');
-    if (NULL == ext) return ERR_PLUGIN_MISSING;
+    if (NULL == ext)
+    {
+        return ERR_PLUGIN_MISSING;
+    }
     ++ext;
     Codec* codec;
     if (0 == strcmp(ext, "wav"))
@@ -148,9 +157,15 @@ AudioSystem::PlaySound(int channelid, Sound* sound, bool paused, Channel** chann
         chn = (Channel*)ce_dynamic_array_get(&this->channelPool, i);
         int index;
         chn->GetIndex(&index);
-        if (Channel::CHANNEL_FREE == index) break;
+        if (Channel::CHANNEL_FREE == index)
+        {
+            break;
+        }
     }
-    if (i == this->channelPool.capacity) return ERR_CHANNEL_ALLOC;
+    if (i == this->channelPool.capacity)
+    {
+        return ERR_CHANNEL_ALLOC;
+    }
 
     if (channelid != Channel::CHANNEL_FREE)
     {
@@ -224,9 +239,18 @@ AudioSystem::Update()
 Result
 AudioSystem::Set3DListenerAttributes(const Vector3* pos, const Vector3* forward, const Vector3* up)
 {
-    if (pos != NULL) this->listenerPos = *pos;
-    if (forward != NULL) this->listenerForward = *forward;
-    if (up != NULL) this->listenerUp = *up;
+    if (pos != NULL)
+    {
+        this->listenerPos = *pos;
+    }
+    if (forward != NULL)
+    {
+        this->listenerForward = *forward;
+    }
+    if (up != NULL)
+    {
+        this->listenerUp = *up;
+    }
 
     return OK;
 }
