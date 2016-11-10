@@ -222,7 +222,7 @@ GLES2GpuProgram::ExtractConstantDefs()
 
             CE_LOG("GLES2GpuProgram::ExtractConstantDefs(): add '%i' '%s' '%u' '%i' '%i'\n", type, stringBuffer, uniform->size, uniform->location, arraySize);
 
-            ce_hash_table_insert(&this->constantDefs->map, stringBuffer, uniform);
+            ce_hash_table_insert(&this->constantDefs->map, stringBuffer, strlen(stringBuffer), uniform);
         }
     }
 

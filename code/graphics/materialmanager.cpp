@@ -56,7 +56,7 @@ MaterialManager::ParseScript(const char* name)
 Material*
 MaterialManager::CreateOrRetrieve(const char* name)
 {
-    Material* material = (Material*)ce_hash_table_find(&this->resources, name);
+    Material* material = (Material*)ce_hash_table_find(&this->resources, name, strlen(name));
     if (material != NULL)
     {
         return material;
@@ -64,7 +64,7 @@ MaterialManager::CreateOrRetrieve(const char* name)
 
     material = CE_NEW Material();
 
-    ce_hash_table_insert(&this->resources, name, material);
+    ce_hash_table_insert(&this->resources, name, strlen(name), material);
 
     return material;
 }
@@ -75,7 +75,7 @@ MaterialManager::CreateOrRetrieve(const char* name)
 Material*
 MaterialManager::GetByName(const char* name)
 {
-    return (Material*)ce_hash_table_find(&this->resources, name);
+    return (Material*)ce_hash_table_find(&this->resources, name, strlen(name));
 }
 
 //------------------------------------------------------------------------------

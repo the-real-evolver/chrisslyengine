@@ -8,36 +8,36 @@ CFLAGS = -O2 -G0 -Wall -D__PSP__ -D__DEBUG__
 CXXFLAGS = $(CFLAGS) -fno-exceptions
 ASFLAGS = $(CFLAGS)
 PSPSDK = $(shell psp-config --pspsdk-path)
-CE = ../
+CE = ../code
 
 #------------------------------------------------------------------------------
 # includes
 # PSPSDK = C:/dev/devkitpro/devkitPSP/psp/sdk
 #------------------------------------------------------------------------------ 
-INCDIR = $(PSPSDK) $(CE)/code/core $(CE)/code/graphics $(CE)/code/audio $(CE)/code/thirdparty/stb $(CE)/code/application code/tests
+INCDIR = $(PSPSDK) $(CE)/core $(CE)/graphics $(CE)/audio $(CE)/thirdparty/stb $(CE)/application code/tests
 
 #------------------------------------------------------------------------------
 # object files
 #------------------------------------------------------------------------------
-OBJS = $(CE)/code/core/quaternion.o $(CE)/code/core/vector3.o $(CE)/code/core/matrix3.o $(CE)/code/core/matrix4.o $(CE)/code/core/chrisslymemory.o $(CE)/code/core/chrisslystring.o \
-       $(CE)/code/core/psp/pspfswrapper.o $(CE)/code/core/psp/pspdebug.o \
-       $(CE)/code/graphics/psp/pspmappings.o $(CE)/code/graphics/psp/psphardwarebuffermanager.o $(CE)/code/graphics/psp/psprendersystem.o \
-       $(CE)/code/graphics/psp/psphardwarevertexbuffer.o \
-       $(CE)/code/graphics/graphicssystem.o \
-       $(CE)/code/graphics/texturemanager.o $(CE)/code/graphics/texturebase.o $(CE)/code/graphics/psp/psptexture.o \
-       $(CE)/code/graphics/materialmanager.o $(CE)/code/graphics/materialparser.o $(CE)/code/graphics/textureunitstate.o $(CE)/code/graphics/pass.o $(CE)/code/graphics/material.o \
-       $(CE)/code/graphics/hardwarevertexbufferbase.o \
-       $(CE)/code/graphics/meshmanager.o $(CE)/code/graphics/mesh.o $(CE)/code/graphics/submesh.o \
-       $(CE)/code/graphics/subentity.o $(CE)/code/graphics/entity.o \
-       $(CE)/code/graphics/renderqueuesortinggrouping.o \
-       $(CE)/code/graphics/light.o \
-       $(CE)/code/graphics/scenemanager.o $(CE)/code/graphics/scenenode.o \
-       $(CE)/code/graphics/camera.o $(CE)/code/graphics/viewport.o \
-       $(CE)/code/graphics/animation.o $(CE)/code/graphics/animationtrack.o $(CE)/code/graphics/keyframe.o $(CE)/code/graphics/animationstate.o \
-       $(CE)/code/graphics/rendertarget.o $(CE)/code/graphics/psp/psprendertexture.o $(CE)/code/graphics/psp/psprenderwindow.o \
-       $(CE)/code/audio/wavcodec.o $(CE)/code/audio/vorbiscodec.o $(CE)/code/audio/soundbase.o $(CE)/code/audio/audiosystem.o $(CE)/code/audio/channelbase.o \
-       $(CE)/code/audio/psp/pspaudiorenderer.o $(CE)/code/audio/psp/pspchannel.o \
-       $(CE)/code/application/statemanager.o \
+OBJS = $(CE)/core/quaternion.o $(CE)/core/vector3.o $(CE)/core/matrix3.o $(CE)/core/matrix4.o $(CE)/core/chrisslymemory.o $(CE)/core/chrisslystring.o \
+       $(CE)/core/psp/pspfswrapper.o $(CE)/core/psp/pspdebug.o \
+       $(CE)/graphics/psp/pspmappings.o $(CE)/graphics/psp/psphardwarebuffermanager.o $(CE)/graphics/psp/psprendersystem.o \
+       $(CE)/graphics/psp/psphardwarevertexbuffer.o \
+       $(CE)/graphics/graphicssystem.o \
+       $(CE)/graphics/texturemanager.o $(CE)/graphics/texturebase.o $(CE)/graphics/psp/psptexture.o \
+       $(CE)/graphics/materialmanager.o $(CE)/graphics/materialparser.o $(CE)/graphics/textureunitstate.o $(CE)/graphics/pass.o $(CE)/graphics/material.o \
+       $(CE)/graphics/hardwarevertexbufferbase.o \
+       $(CE)/graphics/meshmanager.o $(CE)/graphics/mesh.o $(CE)/graphics/submesh.o \
+       $(CE)/graphics/subentity.o $(CE)/graphics/entity.o \
+       $(CE)/graphics/renderqueuesortinggrouping.o \
+       $(CE)/graphics/light.o \
+       $(CE)/graphics/scenemanager.o $(CE)/graphics/scenenode.o \
+       $(CE)/graphics/camera.o $(CE)/graphics/viewport.o \
+       $(CE)/graphics/animation.o $(CE)/graphics/animationtrack.o $(CE)/graphics/keyframe.o $(CE)/graphics/animationstate.o \
+       $(CE)/graphics/rendertarget.o $(CE)/graphics/psp/psprendertexture.o $(CE)/graphics/psp/psprenderwindow.o \
+       $(CE)/audio/wavcodec.o $(CE)/audio/vorbiscodec.o $(CE)/audio/soundbase.o $(CE)/audio/audiosystem.o $(CE)/audio/channelbase.o \
+       $(CE)/audio/psp/pspaudiorenderer.o $(CE)/audio/psp/pspchannel.o \
+       $(CE)/application/statemanager.o \
        code/main.o \
        code/tests/stateanimationtest.o code/tests/statematerialtest.o
 

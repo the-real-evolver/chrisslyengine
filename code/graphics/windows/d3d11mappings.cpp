@@ -11,13 +11,129 @@ namespace chrissly
 //------------------------------------------------------------------------------
 /**
 */
-void
-D3D11Mappings::Get(unsigned int colour, float& red, float& green, float& blue, float& alpha)
+D3D11_BLEND_OP
+D3D11Mappings::Get(graphics::SceneBlendOperation op)
 {
-    alpha = ((colour & 0xff000000) >> 24) / 255.0f;
-    blue  = ((colour & 0x00ff0000) >> 16) / 255.0f;
-    green = ((colour & 0x0000ff00) >> 8) / 255.0f;
-    red   = (colour & 0x000000ff) / 255.0f;
+    switch (op)
+    {
+        case graphics::SBO_ADD:                 return D3D11_BLEND_OP_ADD;
+        case graphics::SBO_SUBTRACT:            return D3D11_BLEND_OP_SUBTRACT;
+        case graphics::SBO_REVERSE_SUBTRACT:    return D3D11_BLEND_OP_REV_SUBTRACT;
+        case graphics::SBO_MIN:                 return D3D11_BLEND_OP_MIN;
+        case graphics::SBO_MAX:                 return D3D11_BLEND_OP_MAX;
+        case graphics::SBO_ABS:
+        default: CE_ASSERT(false, "D3D11Mappings::Get(): illegal SceneBlendOperation '%i'\n", op);
+    }
+
+    return D3D11_BLEND_OP();
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+D3D11_BLEND
+D3D11Mappings::Get(graphics::SceneBlendFactor sbf)
+{
+    switch (sbf)
+    {
+        case graphics::SBF_ONE:                     return D3D11_BLEND_ONE;
+        case graphics::SBF_ZERO:                    return D3D11_BLEND_ZERO;
+        case graphics::SBF_DEST_COLOUR:             return D3D11_BLEND_DEST_COLOR;
+        case graphics::SBF_SOURCE_COLOUR:           return D3D11_BLEND_SRC_COLOR;
+        case graphics::SBF_ONE_MINUS_DEST_COLOUR:   return D3D11_BLEND_INV_DEST_COLOR;
+        case graphics::SBF_ONE_MINUS_SOURCE_COLOUR: return D3D11_BLEND_INV_SRC_COLOR;
+        case graphics::SBF_DEST_ALPHA:              return D3D11_BLEND_DEST_ALPHA;
+        case graphics::SBF_SOURCE_ALPHA:            return D3D11_BLEND_SRC_ALPHA;
+        case graphics::SBF_ONE_MINUS_DEST_ALPHA:    return D3D11_BLEND_INV_DEST_ALPHA;
+        case graphics::SBF_ONE_MINUS_SOURCE_ALPHA:  return D3D11_BLEND_INV_SRC_ALPHA;
+        case graphics::SBF_FIX:
+        default: CE_ASSERT(false, "D3D11Mappings::Get(): illegal SceneBlendFactor '%i'\n", sbf);
+    }
+
+    return D3D11_BLEND();
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+D3D11_FILTER
+D3D11Mappings::Get(graphics::FilterOptions minFilter, graphics::FilterOptions magFilter, graphics::FilterOptions mipFilter)
+{
+    switch (minFilter)
+    {
+        case graphics::FO_NONE:
+        case graphics::FO_POINT:
+        {
+            switch (magFilter)
+            {
+                case graphics::FO_NONE:
+                case graphics::FO_POINT:
+                    switch (mipFilter)
+                    {
+                        case graphics::FO_NONE:
+                        case graphics::FO_POINT:    return D3D11_FILTER_MIN_MAG_MIP_POINT;
+                        case graphics::FO_LINEAR:   return D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+                    }
+                    break;
+                case graphics::FO_LINEAR:
+                    switch (mipFilter)
+                    {
+                        case graphics::FO_NONE:
+                        case graphics::FO_POINT:    return D3D11_FILTER_MIN_POINT_MAG_LINEAR_MIP_POINT;
+                        case graphics::FO_LINEAR:   return D3D11_FILTER_MIN_POINT_MAG_MIP_LINEAR;
+                    }
+                    break;
+            }
+        }
+        break;
+
+        case graphics::FO_LINEAR:
+        {
+            switch (magFilter)
+            {
+                case graphics::FO_NONE:
+                case graphics::FO_POINT:
+                    switch (mipFilter)
+                    {
+                        case graphics::FO_NONE:
+                        case graphics::FO_POINT:    return D3D11_FILTER_MIN_LINEAR_MAG_MIP_POINT;
+                        case graphics::FO_LINEAR:   return D3D11_FILTER_MIN_LINEAR_MAG_POINT_MIP_LINEAR;
+                    }
+                    break;
+                case graphics::FO_LINEAR:
+                    switch (mipFilter)
+                    {
+                        case graphics::FO_NONE:
+                        case graphics::FO_POINT:    return D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT;
+                        case graphics::FO_LINEAR:   return D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+                    }
+                    break;
+            }
+        }
+        break;
+    }
+
+    CE_ASSERT(false, "D3D11Mappings::Get(): illegal FilterOptions '%i' '%i' '%i'\n", minFilter, magFilter, mipFilter);
+
+    return D3D11_FILTER();
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+D3D11_TEXTURE_ADDRESS_MODE
+D3D11Mappings::Get(graphics::TextureUnitState::TextureAddressingMode tam)
+{
+    switch (tam)
+    {
+        case graphics::TextureUnitState::TAM_WRAP:      return D3D11_TEXTURE_ADDRESS_WRAP;
+        case graphics::TextureUnitState::TAM_MIRROR:    return D3D11_TEXTURE_ADDRESS_MIRROR;
+        case graphics::TextureUnitState::TAM_CLAMP:     return D3D11_TEXTURE_ADDRESS_CLAMP;
+        case graphics::TextureUnitState::TAM_BORDER:    return D3D11_TEXTURE_ADDRESS_BORDER;
+        default: CE_ASSERT(false, "D3D11Mappings::Get(): illegal TextureAddressingMode '%i'\n", tam);
+    }
+
+    return D3D11_TEXTURE_ADDRESS_MODE();
 }
 
 //------------------------------------------------------------------------------
@@ -107,6 +223,18 @@ D3D11Mappings::Get(D3D11_SHADER_TYPE_DESC& typeDesc)
     CE_ASSERT(false, "D3D11GpuProgram::ExtractConstantDefs(): unsupported variable type\n");
 
     return graphics::GCT_UNKNOWN;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+D3D11Mappings::Get(unsigned int colour, float& red, float& green, float& blue, float& alpha)
+{
+    alpha = ((colour & 0xff000000) >> 24) / 255.0f;
+    blue  = ((colour & 0x00ff0000) >> 16) / 255.0f;
+    green = ((colour & 0x0000ff00) >> 8) / 255.0f;
+    red   = (colour & 0x000000ff) / 255.0f;
 }
 
 } // namespace chrissly

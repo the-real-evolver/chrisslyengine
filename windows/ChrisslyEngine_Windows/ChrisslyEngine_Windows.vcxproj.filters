@@ -131,6 +131,9 @@
     <ClCompile Include="..\..\code\graphics\windows\d3d11constantbuffer.cpp">
       <Filter>graphics\windows</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\code\graphics\windows\d3d11statecache.cpp">
+      <Filter>graphics\windows</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="core">
@@ -355,6 +358,9 @@
       <Filter>thirdparty\stb</Filter>
     </ClInclude>
     <ClInclude Include="..\..\code\graphics\windows\d3d11constantbuffer.h">
+      <Filter>graphics\windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\graphics\windows\d3d11statecache.h">
       <Filter>graphics\windows</Filter>
     </ClInclude>
   </ItemGroup>

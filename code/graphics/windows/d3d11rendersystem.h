@@ -9,6 +9,7 @@
 #include "renderwindow.h"
 #include "subentity.h"
 #include "hashtable.h"
+#include "d3d11statecache.h"
 
 //------------------------------------------------------------------------------
 namespace chrissly
@@ -46,7 +47,7 @@ public:
     /// Sets the projection transform matrix
     void _SetProjectionMatrix(const core::Matrix4& m);
     /// sets the texture coordinate transformation matrix for the texture unit
-    void _SetTextureMatrix(const core::Matrix4& xform);
+    void _SetTextureMatrix(const core::Matrix4& m);
     /// render something to the active viewport
     /**
         Low-level rendering interface to perform rendering
@@ -89,11 +90,13 @@ private:
     ID3D11Device* device;
     ID3D11DeviceContext* context;
     D3D11_VIEWPORT viewPort;
-    ID3D11RasterizerState* rasterState;
-    ID3D11DepthStencilState* depthStencilState;
-    ID3D11BlendState* blendState;
-    ID3D11SamplerState* samplerState;
     ID3D11InputLayout* inputLayout;
+
+    D3D11StateCache* stateCache;
+    D3D11_RASTERIZER_DESC currentRasterState;
+    D3D11_DEPTH_STENCIL_DESC currentDepthStencilState;
+    D3D11_BLEND_DESC currentBlendState;
+    D3D11_SAMPLER_DESC currentSamplerState;
 };
 
 } // namespace chrissly

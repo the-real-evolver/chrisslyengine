@@ -160,6 +160,7 @@
     <ClCompile Include="..\..\code\graphics\windows\d3d11mappings.cpp" />
     <ClCompile Include="..\..\code\graphics\windows\d3d11rendersystem.cpp" />
     <ClCompile Include="..\..\code\graphics\windows\d3d11rendertexture.cpp" />
+    <ClCompile Include="..\..\code\graphics\windows\d3d11statecache.cpp" />
     <ClCompile Include="..\..\code\graphics\windows\d3d11texture.cpp" />
     <ClCompile Include="..\..\code\graphics\windows\dxgirenderwindow.cpp" />
     <ClCompile Include="main.cpp" />
@@ -229,6 +230,7 @@
     <ClInclude Include="..\..\code\graphics\windows\d3d11mappings.h" />
     <ClInclude Include="..\..\code\graphics\windows\d3d11rendersystem.h" />
     <ClInclude Include="..\..\code\graphics\windows\d3d11rendertexture.h" />
+    <ClInclude Include="..\..\code\graphics\windows\d3d11statecache.h" />
     <ClInclude Include="..\..\code\graphics\windows\d3d11texture.h" />
     <ClInclude Include="..\..\code\graphics\windows\dxgirenderwindow.h" />
     <ClInclude Include="..\..\code\thirdparty\stb\stb_c_lexer.h" />

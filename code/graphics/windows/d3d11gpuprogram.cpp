@@ -277,7 +277,7 @@ D3D11GpuProgram::ExtractConstantDefs()
 
             ce_dynamic_array_push_back(&constantBuffer->constants, variable);
 
-            ce_hash_table_insert(&this->constantDefs->map, variableDesc.Name, variable);
+            ce_hash_table_insert(&this->constantDefs->map, variableDesc.Name, strlen(variableDesc.Name), variable);
 
             switch (graphics::GpuProgramParameters::AutoConstantTypeFromString(variableDesc.Name))
             {

@@ -69,7 +69,7 @@ GpuProgramParameters::~GpuProgramParameters()
 void
 GpuProgramParameters::SetNamedConstant(const char* name, float val)
 {
-    GpuConstantDefinition* def = (GpuConstantDefinition*)ce_hash_table_find(&this->constantDefs->map, name);
+    GpuConstantDefinition* def = (GpuConstantDefinition*)ce_hash_table_find(&this->constantDefs->map, name, strlen(name));
     if (def != NULL)
     {
         memcpy(def->buffer, &val, def->size);
@@ -82,7 +82,7 @@ GpuProgramParameters::SetNamedConstant(const char* name, float val)
 void
 GpuProgramParameters::SetNamedConstant(const char* name, int val)
 {
-    GpuConstantDefinition* def = (GpuConstantDefinition*)ce_hash_table_find(&this->constantDefs->map, name);
+    GpuConstantDefinition* def = (GpuConstantDefinition*)ce_hash_table_find(&this->constantDefs->map, name, strlen(name));
     if (def != NULL)
     {
         memcpy(def->buffer, &val, def->size);
@@ -95,7 +95,7 @@ GpuProgramParameters::SetNamedConstant(const char* name, int val)
 void
 GpuProgramParameters::SetNamedConstant(const char* name, const Vector3& vec)
 {
-    GpuConstantDefinition* def = (GpuConstantDefinition*)ce_hash_table_find(&this->constantDefs->map, name);
+    GpuConstantDefinition* def = (GpuConstantDefinition*)ce_hash_table_find(&this->constantDefs->map, name, strlen(name));
     if (def != NULL)
     {
         memcpy(def->buffer, &vec.x, def->size);
@@ -108,7 +108,7 @@ GpuProgramParameters::SetNamedConstant(const char* name, const Vector3& vec)
 void
 GpuProgramParameters::SetNamedConstant(const char* name, const Vector3* vec, unsigned int numEntries)
 {
-    GpuConstantDefinition* def = (GpuConstantDefinition*)ce_hash_table_find(&this->constantDefs->map, name);
+    GpuConstantDefinition* def = (GpuConstantDefinition*)ce_hash_table_find(&this->constantDefs->map, name, strlen(name));
     if (def != NULL)
     {
         CE_ASSERT(numEntries <= def->arraySize, "GpuProgramParameters::SetNamedConstant(): Vector3 numEntries: '%u' > arraySize: '%u'\n", numEntries, def->arraySize);
@@ -122,7 +122,7 @@ GpuProgramParameters::SetNamedConstant(const char* name, const Vector3* vec, uns
 void
 GpuProgramParameters::SetNamedConstant(const char* name, const Quaternion& q)
 {
-    GpuConstantDefinition* def = (GpuConstantDefinition*)ce_hash_table_find(&this->constantDefs->map, name);
+    GpuConstantDefinition* def = (GpuConstantDefinition*)ce_hash_table_find(&this->constantDefs->map, name, strlen(name));
     if (def != NULL)
     {
         memcpy(def->buffer, &q.w, def->size);
@@ -135,7 +135,7 @@ GpuProgramParameters::SetNamedConstant(const char* name, const Quaternion& q)
 void
 GpuProgramParameters::SetNamedConstant(const char* name, const Matrix4& m)
 {
-    GpuConstantDefinition* def = (GpuConstantDefinition*)ce_hash_table_find(&this->constantDefs->map, name);
+    GpuConstantDefinition* def = (GpuConstantDefinition*)ce_hash_table_find(&this->constantDefs->map, name, strlen(name));
     if (def != NULL)
     {
         memcpy(def->buffer, m[0], def->size);
@@ -148,7 +148,7 @@ GpuProgramParameters::SetNamedConstant(const char* name, const Matrix4& m)
 void
 GpuProgramParameters::SetNamedConstant(const char* name, const Matrix4* m, unsigned int numEntries)
 {
-    GpuConstantDefinition* def = (GpuConstantDefinition*)ce_hash_table_find(&this->constantDefs->map, name);
+    GpuConstantDefinition* def = (GpuConstantDefinition*)ce_hash_table_find(&this->constantDefs->map, name, strlen(name));
     if (def != NULL)
     {
         CE_ASSERT(numEntries <= def->arraySize, "GpuProgramParameters::SetNamedConstant(): Matrix4 numEntries: '%u' > arraySize: '%u'\n", numEntries, def->arraySize);
@@ -211,11 +211,11 @@ GpuProgramParameters::_SetAutoConstant(AutoConstantType autoType, GpuConstantDef
 GpuProgramParameters::AutoConstantType
 GpuProgramParameters::AutoConstantTypeFromString(const char* name)
 {
-    if (0 == strcmp(name, "worldMatrix"))         return ACT_WORLD_MATRIX;
-    if (0 == strcmp(name, "viewMatrix"))          return ACT_VIEW_MATRIX;
-    if (0 == strcmp(name, "projectionMatrix"))    return ACT_PROJECTION_MATRIX;
-    if (0 == strcmp(name, "worldViewProjMatrix")) return ACT_WORLDVIEWPROJ_MATRIX;
-    if (0 == strcmp(name, "morphWeight"))         return ACT_MORPH_WEIGHT;
+    if (0 == strcmp(name, "worldMatrix"))           {return ACT_WORLD_MATRIX;}
+    if (0 == strcmp(name, "viewMatrix"))            {return ACT_VIEW_MATRIX;}
+    if (0 == strcmp(name, "projectionMatrix"))      {return ACT_PROJECTION_MATRIX;}
+    if (0 == strcmp(name, "worldViewProjMatrix"))   {return ACT_WORLDVIEWPROJ_MATRIX;}
+    if (0 == strcmp(name, "morphWeight"))           {return ACT_MORPH_WEIGHT;}
 
     return ACT_COUNT;
 }

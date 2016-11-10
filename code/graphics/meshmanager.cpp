@@ -43,14 +43,14 @@ MeshManager::~MeshManager()
 Mesh*
 MeshManager::Load(const char* filename)
 {
-    Mesh* mesh = (Mesh*)ce_hash_table_find(&this->resources, filename);
+    Mesh* mesh = (Mesh*)ce_hash_table_find(&this->resources, filename, strlen(filename));
     if (mesh != NULL)
     {
         return mesh;
     }
 
     mesh = CE_NEW Mesh();
-    ce_hash_table_insert(&this->resources, filename, mesh);
+    ce_hash_table_insert(&this->resources, filename, strlen(filename), mesh);
 
     unsigned int bytesPerVertex = 36;
     unsigned char currentChunk = 0;

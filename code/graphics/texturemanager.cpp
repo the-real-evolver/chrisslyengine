@@ -41,7 +41,7 @@ TextureManager::~TextureManager()
 Texture*
 TextureManager::Load(const char* name)
 {
-    Texture* texture = (Texture*)ce_hash_table_find(&this->resources, name);
+    Texture* texture = (Texture*)ce_hash_table_find(&this->resources, name, strlen(name));
     if (texture != NULL)
     {
         return texture;
@@ -76,7 +76,7 @@ TextureManager::Load(const char* name)
     texture->SetBuffer(textureBuffer);
     texture->CreateInternalResources();
 
-    ce_hash_table_insert(&this->resources, name, texture);
+    ce_hash_table_insert(&this->resources, name, strlen(name), texture);
 
     return texture;
 }

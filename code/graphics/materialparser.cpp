@@ -93,9 +93,9 @@ MaterialParser::ParseRoot()
 {
     if (0 == strcmp(this->lexer.string, "material"))
     {
-        if (0 == stb_c_lexer_get_token(&this->lexer)) return;
+        if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
         char* matName = this->lexer.string;
-        if (0 == stb_c_lexer_get_token(&this->lexer)) return;
+        if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
         if (this->lexer.token == '{')
         {
             this->parserState = StateParseMaterial;
@@ -116,7 +116,7 @@ MaterialParser::ParseMaterial()
     }
     else if (0 == strcmp(this->lexer.string, "pass"))
     {
-        if (0 == stb_c_lexer_get_token(&this->lexer)) return;
+        if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
         if (this->lexer.token == '{')
         {
             this->parserState = StateParsePass;
@@ -137,7 +137,7 @@ MaterialParser::ParsePass()
     }
     else if (0 == strcmp(this->lexer.string, "texture_unit"))
     {
-        if (0 == stb_c_lexer_get_token(&this->lexer)) return;
+        if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
         if (this->lexer.token == '{')
         {
             this->parserState = StateParseTextureUnit;
@@ -146,7 +146,7 @@ MaterialParser::ParsePass()
     }
     else if (0 == strcmp(this->lexer.string, "lighting"))
     {
-        if (0 == stb_c_lexer_get_token(&this->lexer)) return;
+        if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
         if (0 == strcmp(this->lexer.string, "on"))
         {
             this->currentPass->SetLightingEnabled(true);
@@ -158,18 +158,18 @@ MaterialParser::ParsePass()
     }
     else if (0 == strcmp(this->lexer.string, "fog_override"))
     {
-        if (0 == stb_c_lexer_get_token(&this->lexer)) return;
+        if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
         if (0 == strcmp(this->lexer.string, "true"))
         {
-            if (0 == stb_c_lexer_get_token(&this->lexer)) return;
+            if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
             float red = (float)this->lexer.real_number;
-            if (0 == stb_c_lexer_get_token(&this->lexer)) return;
+            if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
             float green = (float)this->lexer.real_number;
-            if (0 == stb_c_lexer_get_token(&this->lexer)) return;
+            if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
             float blue = (float)this->lexer.real_number;
-            if (0 == stb_c_lexer_get_token(&this->lexer)) return;
+            if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
             float start = (float)this->lexer.real_number;
-            if (0 == stb_c_lexer_get_token(&this->lexer)) return;
+            if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
             float end = (float)this->lexer.real_number;
             this->currentPass->SetFog(FOG_LINEAR, this->GetRGBAValue(red, green, blue, 1.0f), start, end);
         }
@@ -180,7 +180,7 @@ MaterialParser::ParsePass()
     }
     else if (0 == strcmp(this->lexer.string, "emissive"))
     {
-        if (0 == stb_c_lexer_get_token(&this->lexer)) return;
+        if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
         if (this->lexer.token == CLEX_id && 0 == strcmp(this->lexer.string, "vertexcolour"))
         {
             this->currentPass->SetVertexColourTracking(this->currentPass->GetVertexColourTracking() | TVC_EMISSIVE);
@@ -188,18 +188,18 @@ MaterialParser::ParsePass()
         else
         {
             float red = (float)this->lexer.real_number;
-            if (0 == stb_c_lexer_get_token(&this->lexer)) return;
+            if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
             float green = (float)this->lexer.real_number;
-            if (0 == stb_c_lexer_get_token(&this->lexer)) return;
+            if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
             float blue = (float)this->lexer.real_number;
-            if (0 == stb_c_lexer_get_token(&this->lexer)) return;
+            if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
             float alpha = (float)this->lexer.real_number;
             this->currentPass->SetSelfIllumination(this->GetRGBAValue(red, green, blue, alpha));
         }
     }
     else if (0 == strcmp(this->lexer.string, "ambient"))
     {
-        if (0 == stb_c_lexer_get_token(&this->lexer)) return;
+        if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
         if (this->lexer.token == CLEX_id && 0 == strcmp(this->lexer.string, "vertexcolour"))
         {
             this->currentPass->SetVertexColourTracking(this->currentPass->GetVertexColourTracking() | TVC_AMBIENT);
@@ -207,18 +207,18 @@ MaterialParser::ParsePass()
         else
         {
             float red = (float)this->lexer.real_number;
-            if (0 == stb_c_lexer_get_token(&this->lexer)) return;
+            if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
             float green = (float)this->lexer.real_number;
-            if (0 == stb_c_lexer_get_token(&this->lexer)) return;
+            if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
             float blue = (float)this->lexer.real_number;
-            if (0 == stb_c_lexer_get_token(&this->lexer)) return;
+            if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
             float alpha = (float)this->lexer.real_number;
             this->currentPass->SetAmbient(this->GetRGBAValue(red, green, blue, alpha));
         }
     }
     else if (0 == strcmp(this->lexer.string, "diffuse"))
     {
-        if (0 == stb_c_lexer_get_token(&this->lexer)) return;
+        if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
         if (this->lexer.token == CLEX_id && 0 == strcmp(this->lexer.string, "vertexcolour"))
         {
             this->currentPass->SetVertexColourTracking(this->currentPass->GetVertexColourTracking() | TVC_DIFFUSE);
@@ -226,18 +226,18 @@ MaterialParser::ParsePass()
         else
         {
             float red = (float)this->lexer.real_number;
-            if (0 == stb_c_lexer_get_token(&this->lexer)) return;
+            if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
             float green = (float)this->lexer.real_number;
-            if (0 == stb_c_lexer_get_token(&this->lexer)) return;
+            if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
             float blue = (float)this->lexer.real_number;
-            if (0 == stb_c_lexer_get_token(&this->lexer)) return;
+            if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
             float alpha = (float)this->lexer.real_number;
             this->currentPass->SetDiffuse(this->GetRGBAValue(red, green, blue, alpha));
         }
     }
     else if (0 == strcmp(this->lexer.string, "specular"))
     {
-        if (0 == stb_c_lexer_get_token(&this->lexer)) return;
+        if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
         if (this->lexer.token == CLEX_id && 0 == strcmp(this->lexer.string, "vertexcolour"))
         {
             this->currentPass->SetVertexColourTracking(this->currentPass->GetVertexColourTracking() | TVC_SPECULAR);
@@ -245,49 +245,49 @@ MaterialParser::ParsePass()
         else
         {
             float red = (float)this->lexer.real_number;
-            if (0 == stb_c_lexer_get_token(&this->lexer)) return;
+            if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
             float green = (float)this->lexer.real_number;
-            if (0 == stb_c_lexer_get_token(&this->lexer)) return;
+            if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
             float blue = (float)this->lexer.real_number;
-            if (0 == stb_c_lexer_get_token(&this->lexer)) return;
+            if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
             float alpha = (float)this->lexer.real_number;
             this->currentPass->SetSpecular(this->GetRGBAValue(red, green, blue, alpha));
         }
-        if (0 == stb_c_lexer_get_token(&this->lexer)) return;
+        if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
         this->currentPass->SetShininess((float)this->lexer.real_number);
     }
     else if (0 == strcmp(this->lexer.string, "scene_blend"))
     {
         this->currentPass->SetSceneBlendingEnabled(true);
-        if (0 == stb_c_lexer_get_token(&this->lexer)) return;
+        if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
         SceneBlendFactor source = this->GetSceneBlendFactorFromString(this->lexer.string);
-        if (0 == stb_c_lexer_get_token(&this->lexer)) return;
+        if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
         SceneBlendFactor dest = this->GetSceneBlendFactorFromString(this->lexer.string);
         this->currentPass->SetSceneBlending(source, dest);
         if (SBF_FIX == source)
         {
-            if (0 == stb_c_lexer_get_token(&this->lexer)) return;
+            if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
             float red = (float)this->lexer.real_number;
-            if (0 == stb_c_lexer_get_token(&this->lexer)) return;
+            if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
             float green = (float)this->lexer.real_number;
-            if (0 == stb_c_lexer_get_token(&this->lexer)) return;
+            if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
             float blue = (float)this->lexer.real_number;
             this->currentPass->SetBlendingFixColors(this->GetRGBAValue(red, green, blue, 1.0f), this->currentPass->GetDestinationBlendingFixColor());
         }
         if (SBF_FIX == dest)
         {
-            if (0 == stb_c_lexer_get_token(&this->lexer)) return;
+            if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
             float red = (float)this->lexer.real_number;
-            if (0 == stb_c_lexer_get_token(&this->lexer)) return;
+            if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
             float green = (float)this->lexer.real_number;
-            if (0 == stb_c_lexer_get_token(&this->lexer)) return;
+            if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
             float blue = (float)this->lexer.real_number;
             this->currentPass->SetBlendingFixColors(this->currentPass->GetSourceBlendingFixColor(), this->GetRGBAValue(red, green, blue, 1.0f));
         }
     }
     else if (0 == strcmp(this->lexer.string, "cull_hardware"))
     {
-        if (0 == stb_c_lexer_get_token(&this->lexer)) return;
+        if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
         if (0 == strcmp(this->lexer.string, "none"))
         {
             this->currentPass->SetCullingMode(CULL_NONE);
@@ -303,7 +303,7 @@ MaterialParser::ParsePass()
     }
     else if (0 == strcmp(this->lexer.string, "depth_check"))
     {
-        if (0 == stb_c_lexer_get_token(&this->lexer)) return;
+        if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
         if (0 == strcmp(this->lexer.string, "on"))
         {
             this->currentPass->SetDepthCheckEnabled(true);
@@ -328,12 +328,12 @@ MaterialParser::ParseTextureUnitState()
     }
     else if (0 == strcmp(this->lexer.string, "texture"))
     {
-        if (0 == stb_c_lexer_get_token(&this->lexer)) return;
+        if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
         this->currentTextureUnitState->SetTextureName(this->lexer.string);
     }
     else if (0 == strcmp(this->lexer.string, "colour_op"))
     {
-        if (0 == stb_c_lexer_get_token(&this->lexer)) return;
+        if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
         LayerBlendOperation operation = LBO_MODULATE;
         if (0 == strcmp(this->lexer.string, "replace"))
         {
@@ -351,7 +351,7 @@ MaterialParser::ParseTextureUnitState()
         {
             operation = LBO_DECAL;
         }
-        if (0 == stb_c_lexer_get_token(&this->lexer)) return;
+        if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
         LayerBlendType type = LBT_COLOUR;
         if (0 == strcmp(this->lexer.string, "alpha"))
         {
@@ -361,27 +361,27 @@ MaterialParser::ParseTextureUnitState()
     }
     else if (0 == strcmp(this->lexer.string, "filtering"))
     {
-        if (0 == stb_c_lexer_get_token(&this->lexer)) return;
+        if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
         FilterOptions minFilter = this->GetFilterOptionsFromString(this->lexer.string);
-        if (0 == stb_c_lexer_get_token(&this->lexer)) return;
+        if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
         FilterOptions magFilter = this->GetFilterOptionsFromString(this->lexer.string);
-        if (0 == stb_c_lexer_get_token(&this->lexer)) return;
+        if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
         FilterOptions mipFilter = this->GetFilterOptionsFromString(this->lexer.string);
         this->currentTextureUnitState->SetTextureFiltering(minFilter, magFilter, mipFilter);
     }
     else if (0 == strcmp(this->lexer.string, "scroll"))
     {
-        if (0 == stb_c_lexer_get_token(&this->lexer)) return;
+        if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
         float uMod = (float)this->lexer.real_number;
-        if (0 == stb_c_lexer_get_token(&this->lexer)) return;
+        if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
         float vMod = (float)this->lexer.real_number;
         this->currentTextureUnitState->SetTextureScroll(uMod, vMod);
     }
     else if (0 == strcmp(this->lexer.string, "scale"))
     {
-        if (0 == stb_c_lexer_get_token(&this->lexer)) return;
+        if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
         float uScale = (float)this->lexer.real_number;
-        if (0 == stb_c_lexer_get_token(&this->lexer)) return;
+        if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
         float vScale = (float)this->lexer.real_number;
         this->currentTextureUnitState->SetTextureScale(uScale, vScale);
     }

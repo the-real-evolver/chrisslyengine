@@ -77,7 +77,7 @@ Mesh::CreateAnimation(const char* name, float length)
 {
     Animation* animation = CE_NEW Animation(name, length);
 
-    ce_hash_table_insert(&this->animations, name, animation);
+    ce_hash_table_insert(&this->animations, name, strlen(name), animation);
 
     return animation;
 }
@@ -88,7 +88,7 @@ Mesh::CreateAnimation(const char* name, float length)
 Animation*
 Mesh::GetAnimation(const char* name)
 {
-    return (Animation*)ce_hash_table_find(&this->animations, name);
+    return (Animation*)ce_hash_table_find(&this->animations, name, strlen(name));
 }
 
 //------------------------------------------------------------------------------
@@ -134,7 +134,7 @@ Mesh::_InitAnimationState(ce_hash_table* animSet)
         {
             Animation* animation = (Animation*)((ce_key_value_pair*)it->data)->value;
             AnimationState* animationState = CE_NEW AnimationState(animation->GetName(), animation->GetLength());
-            ce_hash_table_insert(animSet, animation->GetName(), animationState);
+            ce_hash_table_insert(animSet, animation->GetName(), strlen(animation->GetName()), animationState);
             it = it->next;
         }
     }

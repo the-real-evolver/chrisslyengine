@@ -78,7 +78,7 @@ SceneManager::CreateCamera(const char* name)
 {
     Camera* camera = CE_NEW Camera();
 
-    ce_hash_table_insert(&this->cameras, name, camera);
+    ce_hash_table_insert(&this->cameras, name, strlen(name), camera);
 
     return camera;
 }
@@ -89,7 +89,7 @@ SceneManager::CreateCamera(const char* name)
 Camera*
 SceneManager::GetCamera(const char* name) const
 {
-    return (Camera*)ce_hash_table_find(&this->cameras, name);
+    return (Camera*)ce_hash_table_find(&this->cameras, name, strlen(name));
 }
 
 //------------------------------------------------------------------------------
@@ -120,7 +120,7 @@ SceneManager::CreateLight(const char* name)
 {
     Light* light = CE_NEW Light();
 
-    ce_hash_table_insert(&this->lights, name, light);
+    ce_hash_table_insert(&this->lights, name, strlen(name), light);
 
     return light;
 }
@@ -131,7 +131,7 @@ SceneManager::CreateLight(const char* name)
 Light*
 SceneManager::GetLight(const char* name) const
 {
-    return (Light*)ce_hash_table_find(&this->lights, name);
+    return (Light*)ce_hash_table_find(&this->lights, name, strlen(name));
 }
 
 //------------------------------------------------------------------------------

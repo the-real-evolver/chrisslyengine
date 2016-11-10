@@ -246,10 +246,10 @@ PSPMappings::Get(graphics::FrameBufferType fbt)
 {
     int clearBits = 0;
 
-    if (fbt & graphics::FBT_COLOUR)     clearBits |= GU_COLOR_BUFFER_BIT;
-    if (fbt & graphics::FBT_DEPTH)      clearBits |= GU_DEPTH_BUFFER_BIT;
-    if (fbt & graphics::FBT_STENCIL)    clearBits |= GU_STENCIL_BUFFER_BIT;
-    if (fbt & graphics::FBT_FAST_CLEAR) clearBits |= GU_FAST_CLEAR_BIT;
+    if (fbt & graphics::FBT_COLOUR)     {clearBits |= GU_COLOR_BUFFER_BIT;}
+    if (fbt & graphics::FBT_DEPTH)      {clearBits |= GU_DEPTH_BUFFER_BIT;}
+    if (fbt & graphics::FBT_STENCIL)    {clearBits |= GU_STENCIL_BUFFER_BIT;}
+    if (fbt & graphics::FBT_FAST_CLEAR) {clearBits |= GU_FAST_CLEAR_BIT;}
  
     return clearBits;
 }
@@ -262,10 +262,10 @@ PSPMappings::Get(graphics::TrackVertexColourType tvct)
 {
     int colorComponent = 0;
 
-    if (graphics::TVC_NONE == tvct)    return GU_UNKNOWN_LIGHT_COMPONENT;
-    if (tvct & graphics::TVC_AMBIENT)  colorComponent |= GU_AMBIENT;
-    if (tvct & graphics::TVC_DIFFUSE)  colorComponent |= GU_DIFFUSE;
-    if (tvct & graphics::TVC_SPECULAR) colorComponent |= GU_SPECULAR;
+    if (graphics::TVC_NONE == tvct)    {return GU_UNKNOWN_LIGHT_COMPONENT;}
+    if (tvct & graphics::TVC_AMBIENT)  {colorComponent |= GU_AMBIENT;}
+    if (tvct & graphics::TVC_DIFFUSE)  {colorComponent |= GU_DIFFUSE;}
+    if (tvct & graphics::TVC_SPECULAR) {colorComponent |= GU_SPECULAR;}
 
     return colorComponent;
 }
@@ -276,9 +276,9 @@ PSPMappings::Get(graphics::TrackVertexColourType tvct)
 int
 PSPMappings::Get(graphics::Light::LightTypes lt)
 {
-    if (graphics::Light::LT_DIRECTIONAL == lt) return GU_DIRECTIONAL;
-    if (graphics::Light::LT_POINT == lt)       return GU_POINTLIGHT;
-    if (graphics::Light::LT_SPOTLIGHT == lt)   return GU_SPOTLIGHT;
+    if (graphics::Light::LT_DIRECTIONAL == lt) {return GU_DIRECTIONAL;}
+    if (graphics::Light::LT_POINT == lt)       {return GU_POINTLIGHT;}
+    if (graphics::Light::LT_SPOTLIGHT == lt)   {return GU_SPOTLIGHT;}
 
     CE_ASSERT(false, "PSPMappings::Get(): illegal LightTypes '%i'\n", lt);
 

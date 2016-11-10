@@ -4,7 +4,7 @@
 /**
     @file core/hashtable.h
 
-    A simple hash table using separate chaining and strings as keys.
+    A simple hash table using separate chaining and byte buffers as keys.
 
     (C) 2012 Christian Bleicher (evolver)
 */
@@ -32,6 +32,7 @@ struct ce_bucket
 struct ce_key_value_pair
 {
     char* key;
+    size_t key_length;
     void* value;
 };
 
@@ -42,14 +43,14 @@ static void ce_hash_table_resize(ce_hash_table* table, unsigned int new_size);
 /**
 */
 static unsigned int
-ce_hash_function(const char* key)
+ce_hash_function(const char* key, size_t key_length)
 {
     // hashfunction: djb2
     unsigned int hash = 5381;
-    int c;
-    while ((c = *key++))
+    unsigned int i;
+    for (i = 0; i < key_length; ++i)
     {
-        hash = ((hash << 5) + hash) + c;
+        hash = ((hash << 5) + hash) + *key++;
     }
 
     return hash;
@@ -117,7 +118,7 @@ ce_hash_table_clear(ce_hash_table* table)
 /**
 */
 inline void
-ce_hash_table_insert(ce_hash_table* table, const char* key, void* value)
+ce_hash_table_insert(ce_hash_table* table, const char* key, size_t key_length, void* value)
 {
     if (NULL == table)
     {
@@ -135,13 +136,12 @@ ce_hash_table_insert(ce_hash_table* table, const char* key, void* value)
     }
 
     ce_key_value_pair* kvp = (ce_key_value_pair*)CE_MALLOC(sizeof(ce_key_value_pair));
-    size_t length = strlen(key);
-    kvp->key = (char*)CE_MALLOC(length + 1);
-    strncpy(kvp->key, key, length);
-    kvp->key[length] = '\0';
+    kvp->key = (char*)CE_MALLOC(key_length);
+    kvp->key_length = key_length;
+    memcpy(kvp->key, key, key_length);
     kvp->value = value;
 
-    ce_bucket* bucket = (ce_bucket*)ce_dynamic_array_get(&table->buckets, ce_hash_function(key) % table->bucket_count);
+    ce_bucket* bucket = (ce_bucket*)ce_dynamic_array_get(&table->buckets, ce_hash_function(key, key_length) % table->bucket_count);
     ce_linked_list_add(&(bucket->list), kvp);
     ++bucket->size;
 
@@ -152,7 +152,7 @@ ce_hash_table_insert(ce_hash_table* table, const char* key, void* value)
 /**
 */
 inline void*
-ce_hash_table_find(ce_hash_table* table, const char* key)
+ce_hash_table_find(ce_hash_table* table, const char* key, size_t key_length)
 {
     if (NULL == table)
     {
@@ -164,10 +164,10 @@ ce_hash_table_find(ce_hash_table* table, const char* key)
         return NULL;
     }
 
-    ce_linked_list* it = ((ce_bucket*)ce_dynamic_array_get(&table->buckets, ce_hash_function(key) % table->bucket_count))->list;
+    ce_linked_list* it = ((ce_bucket*)ce_dynamic_array_get(&table->buckets, ce_hash_function(key, key_length) % table->bucket_count))->list;
     while (it != NULL)
     {
-        if (0 == strcmp(key, ((ce_key_value_pair*)it->data)->key))
+        if (0 == memcmp(key, ((ce_key_value_pair*)it->data)->key, key_length))
         {
             return ((ce_key_value_pair*)it->data)->value;
         }
@@ -207,7 +207,7 @@ ce_hash_table_resize(ce_hash_table* table, unsigned int new_size)
         while (it != NULL)
         {
             ce_key_value_pair* kvp = (ce_key_value_pair*)it->data;
-            ce_hash_table_insert(&new_table, kvp->key, kvp->value);
+            ce_hash_table_insert(&new_table, kvp->key, kvp->key_length, kvp->value);
             it = it->next;
         }
     }

@@ -245,9 +245,9 @@ GLES2Mappings::Get(graphics::FrameBufferType fbt)
 {
     GLbitfield clearBits = 0;
 
-    if (fbt & graphics::FBT_COLOUR)  clearBits |= GL_COLOR_BUFFER_BIT;
-    if (fbt & graphics::FBT_DEPTH)   clearBits |= GL_DEPTH_BUFFER_BIT;
-    if (fbt & graphics::FBT_STENCIL) clearBits |= GL_STENCIL_BUFFER_BIT;
+    if (fbt & graphics::FBT_COLOUR)  {clearBits |= GL_COLOR_BUFFER_BIT;}
+    if (fbt & graphics::FBT_DEPTH)   {clearBits |= GL_DEPTH_BUFFER_BIT;}
+    if (fbt & graphics::FBT_STENCIL) {clearBits |= GL_STENCIL_BUFFER_BIT;}
 
     return clearBits;
 }

@@ -161,7 +161,7 @@ Entity::HasVertexAnimation() const
 AnimationState*
 Entity::GetAnimationState(const char* name) const
 {
-    return (AnimationState*)ce_hash_table_find(&this->animationStates, name);
+    return (AnimationState*)ce_hash_table_find(&this->animationStates, name, strlen(name));
 }
 
 //------------------------------------------------------------------------------
