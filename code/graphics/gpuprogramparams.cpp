@@ -31,7 +31,7 @@ GpuNamedConstants::~GpuNamedConstants()
         ce_linked_list* it = ce_hash_table_begin(&this->map, i);
         while (it != NULL)
         {
-            CE_LOG("GpuNamedConstants::~GpuNamedConstants(): remove '%s'\n", ((ce_key_value_pair*)it->data)->key);
+            CE_LOG("GpuNamedConstants::~GpuNamedConstants(): remove constant definition\n");
             GpuConstantDefinition* def = (GpuConstantDefinition*)((ce_key_value_pair*)it->data)->value;
             CE_FREE(def->buffer);
             CE_DELETE def;

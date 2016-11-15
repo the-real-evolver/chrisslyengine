@@ -72,7 +72,7 @@ D3D11Mappings::Get(graphics::FilterOptions minFilter, graphics::FilterOptions ma
                     {
                         case graphics::FO_NONE:
                         case graphics::FO_POINT:    return D3D11_FILTER_MIN_MAG_MIP_POINT;
-                        case graphics::FO_LINEAR:   return D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+                        case graphics::FO_LINEAR:   return D3D11_FILTER_MIN_MAG_POINT_MIP_LINEAR;
                     }
                     break;
                 case graphics::FO_LINEAR:

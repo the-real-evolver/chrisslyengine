@@ -60,7 +60,7 @@ MaterialParser::ParseScript(const char* name)
 
     while (stb_c_lexer_get_token(&this->lexer))
     {
-        if (this->lexer.token == CLEX_parse_error)
+        if (CLEX_parse_error == this->lexer.token)
         {
             break;
         }

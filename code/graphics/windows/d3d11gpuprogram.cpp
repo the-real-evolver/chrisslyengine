@@ -224,7 +224,7 @@ D3D11GpuProgram::ExtractConstantDefs()
     ce_dynamic_array_init(&this->constantBuffersPerPass, 0);
 
     ID3D11ShaderReflection* reflector = NULL;
-    HRESULT result = D3DReflect(this->vertexShaderCode->GetBufferPointer(), this->vertexShaderCode->GetBufferSize(), IID_ID3D11ShaderReflection, (void**)&reflector);
+    HRESULT result = D3DReflect(this->fragmentShaderCode->GetBufferPointer(), this->fragmentShaderCode->GetBufferSize(), IID_ID3D11ShaderReflection, (void**)&reflector);
     CE_ASSERT(SUCCEEDED(result), "D3D11GpuProgram::ExtractConstantDefs(): failed to reflect vertex shader source code\n");
     D3D11_SHADER_DESC shaderDesc;
     result = reflector->GetDesc(&shaderDesc);

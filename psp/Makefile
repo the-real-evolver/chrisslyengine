@@ -2,7 +2,6 @@
 #  makefile for the psp
 #  (C) 2011 Christian Bleicher
 #------------------------------------------------------------------------------
-TARGET = ChrisslyEngine_PSP
 # for a custom root directroy use: -DROOT_DIR=\"ms0:/PSP/GAME/YourApplication/\"
 CFLAGS = -O2 -G0 -Wall -D__PSP__ -D__DEBUG__
 CXXFLAGS = $(CFLAGS) -fno-exceptions
@@ -46,7 +45,8 @@ OBJS = $(CE)/core/quaternion.o $(CE)/core/vector3.o $(CE)/core/matrix3.o $(CE)/c
 #------------------------------------------------------------------------------
 LIBS = -lpsplibc -lstdc++ -lpspgum -lpspgu -lm -lpspfpu -lpspaudio
 
-EXTRA_TARGETS = EBOOT.PBP
 PSP_EBOOT_TITLE = ChrisslyEngine
+TARGET = ChrisslyEngine_PSP
+EXTRA_TARGETS = EBOOT.PBP
 
 include $(PSPSDK)/lib/build.mak

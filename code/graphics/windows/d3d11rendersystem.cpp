@@ -13,6 +13,8 @@ namespace chrissly
 
 D3D11RenderSystem* D3D11RenderSystem::Singleton = NULL;
 
+static const unsigned int MaxLights = 4;
+
 //------------------------------------------------------------------------------
 /**
 */
@@ -22,6 +24,9 @@ D3D11RenderSystem::D3D11RenderSystem() :
     viewMatrix(core::Matrix4::ZERO),
     projectionMatrix(core::Matrix4::ZERO),
     defaultGpuProgram(NULL),
+    defaultGpuProgramFog(NULL),
+    defaultGpuProgramLit(NULL),
+    defaultGpuProgramLitFog(NULL),
     currentGpuProgram(NULL),
     device(NULL),
     context(NULL),
@@ -125,8 +130,11 @@ D3D11RenderSystem::_Initialise(void* customParams)
     /* create renderstate cache */
     this->stateCache = CE_NEW D3D11StateCache(this->device);
 
-    /* create default gpu program */
+    /* create default gpu programs */
     this->defaultGpuProgram = CE_NEW D3D11GpuProgram(DefaultGpuProgram, "defaultshader.fx", "DefaultVertexShader", "DefaultFragmentShader");
+    this->defaultGpuProgramFog = CE_NEW D3D11GpuProgram(DefaultGpuProgramFog, "defaultshaderfog.fx", "DefaultVertexShader", "DefaultFragmentShader");
+    this->defaultGpuProgramLit = CE_NEW D3D11GpuProgram(DefaultGpuProgramLit, "defaultshaderlit.fx", "DefaultVertexShader", "DefaultFragmentShader");
+    this->defaultGpuProgramLitFog = CE_NEW D3D11GpuProgram(DefaultGpuProgramLitFog, "defaultshaderlitfog.fx", "DefaultVertexShader", "DefaultFragmentShader");
     this->currentGpuProgram = this->defaultGpuProgram;
 
     /* create default input layout */
@@ -163,6 +171,12 @@ D3D11RenderSystem::Shutdown()
 {
     CE_DELETE this->defaultGpuProgram;
     this->defaultGpuProgram = NULL;
+    CE_DELETE this->defaultGpuProgramFog;
+    this->defaultGpuProgramFog = NULL;
+    CE_DELETE this->defaultGpuProgramLit;
+    this->defaultGpuProgramLit = NULL;
+    CE_DELETE this->defaultGpuProgramLitFog;
+    this->defaultGpuProgramLitFog = NULL;
     this->currentGpuProgram = NULL;
 
     CE_DELETE this->stateCache;
@@ -303,6 +317,7 @@ D3D11RenderSystem::_Render(graphics::SubEntity* renderable)
     graphics::GpuProgramParameters* params = this->currentGpuProgram->GetDefaultParameters();
     core::Matrix4 m = this->projectionMatrix * this->viewMatrix * this->worldMatrix;
     params->SetAutoConstant(graphics::GpuProgramParameters::ACT_WORLDVIEWPROJ_MATRIX, m);
+    params->SetAutoConstant(graphics::GpuProgramParameters::ACT_WORLD_MATRIX, this->worldMatrix);
     this->currentGpuProgram->UpdatePerObjectConstantBuffers();
 
     graphics::HardwareVertexBuffer* vertexBuffer = NULL;
@@ -361,7 +376,7 @@ D3D11RenderSystem::_SetPass(graphics::Pass* pass)
     float blendFactor[4] = {0.0f, 0.0f, 0.0f, 0.0f};
     this->context->OMSetBlendState(blendState, blendFactor, 0xffffffff);
 
-    /* depth check and depth write*/
+    /* depth check and depth write */
     this->currentDepthStencilState.DepthEnable = pass->GetDepthCheckEnabled();
     this->currentDepthStencilState.DepthWriteMask = pass->GetDepthWriteEnabled() ? D3D11_DEPTH_WRITE_MASK_ALL : D3D11_DEPTH_WRITE_MASK_ZERO;
     ID3D11DepthStencilState* depthStencilState = this->stateCache->GetDepthStencilState(this->currentDepthStencilState);
@@ -390,7 +405,56 @@ D3D11RenderSystem::_SetPass(graphics::Pass* pass)
     }
     else
     {
-        this->currentGpuProgram = this->defaultGpuProgram;
+        bool lit = pass->GetLightingEnabled();
+        bool fog = (graphics::FOG_LINEAR == pass->GetFogMode());
+        if (!fog && !lit)
+        {
+            this->currentGpuProgram = this->defaultGpuProgram;
+        }
+        else if (fog && !lit)
+        {
+            this->currentGpuProgram = this->defaultGpuProgramFog;
+        }
+        else if (!fog && lit)
+        {
+            this->currentGpuProgram = this->defaultGpuProgramLit;
+        }
+        else if (fog && lit)
+        {
+            this->currentGpuProgram = this->defaultGpuProgramLitFog;
+        }
+
+        graphics::GpuProgramParameters* params = this->currentGpuProgram->GetDefaultParameters();
+
+        if (pass->GetNumTextureUnitStates() > 0)
+        {
+            graphics::TextureUnitState* tus = pass->GetTextureUnitState(0);
+            params->SetNamedConstant("uMod", tus->GetTextureUScroll());
+            params->SetNamedConstant("vMod", tus->GetTextureVScroll());
+            params->SetNamedConstant("uScale", tus->GetTextureUScale());
+            params->SetNamedConstant("vScale", tus->GetTextureVScale());
+        }
+
+        if (fog)
+        {
+            core::Vector3 fogColour;
+            float alpha;
+            D3D11Mappings::Get(pass->GetFogColour(), fogColour.x, fogColour.y, fogColour.z, alpha);
+            params->SetNamedConstant("fogColour", fogColour);
+            params->SetNamedConstant("fogMode", (int)pass->GetFogMode());
+            params->SetNamedConstant("fogStart", pass->GetFogStart());
+            params->SetNamedConstant("fogEnd", pass->GetFogEnd());
+        }
+
+        if (lit)
+        {
+            core::Matrix4 invViewMat = this->viewMatrix.Inverse();
+            core::Vector3 cameraPosition(invViewMat[0][3], invViewMat[1][3], invViewMat[2][3]);
+            params->SetNamedConstant("cameraPosition", cameraPosition);
+            params->SetNamedConstant("lightParams", this->defaultLightShaderParams, MaxLights);
+        }
+
+        params->SetAutoConstant(graphics::GpuProgramParameters::ACT_VIEW_MATRIX, this->viewMatrix);
     }
     this->currentGpuProgram->Bind();
     this->currentGpuProgram->BindConstantBuffers();
@@ -426,10 +490,31 @@ D3D11RenderSystem::_UseLights(ce_hash_table* lights)
         while (it != NULL)
         {
             graphics::Light* light = (graphics::Light*)((ce_key_value_pair*)it->data)->value;
-            CE_UNREFERENCED_PARAMETER(light);
+
+            const core::Vector3& position = light->GetPosition();
+            this->defaultLightShaderParams[lightIndex][0][0] = position.x;
+            this->defaultLightShaderParams[lightIndex][0][1] = position.y;
+            this->defaultLightShaderParams[lightIndex][0][2] = position.z;
+
+            float red, green, blue, alpha;
+            D3D11Mappings::Get(light->GetDiffuseColour(), red, green, blue, alpha);
+            this->defaultLightShaderParams[lightIndex][1][0] = red;
+            this->defaultLightShaderParams[lightIndex][1][1] = green;
+            this->defaultLightShaderParams[lightIndex][1][2] = blue;
+
+            D3D11Mappings::Get(light->GetSpecularColour(), red, green, blue, alpha);
+            this->defaultLightShaderParams[lightIndex][2][0] = red;
+            this->defaultLightShaderParams[lightIndex][2][1] = green;
+            this->defaultLightShaderParams[lightIndex][2][2] = blue;
+
             ++lightIndex;
             it = it->next;
         }
+    }
+
+    for (i = lightIndex; i < MaxLights; ++i)
+    {
+        this->defaultLightShaderParams[lightIndex] = core::Matrix4::ZERO;
     }
 }
 

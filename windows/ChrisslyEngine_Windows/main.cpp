@@ -33,6 +33,19 @@ WinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prevInstance, _In_ LPSTR cmd
     camera->SetPosition(-0.5f, -0.25f, 1.0f);
     camera->SetOrientation(Quaternion());
 
+    Light* light = SceneManager::Instance()->CreateLight("WhitePointLight");
+    light->SetType(Light::LT_POINT);
+    light->SetDiffuseColour(0xffffffff);
+    light->SetPosition(-0.5f, 2.0f, 1.0f);
+    light = SceneManager::Instance()->CreateLight("RedPointLight");
+    light->SetType(Light::LT_POINT);
+    light->SetDiffuseColour(0xff0000ff);
+    light->SetPosition(-1.0f, 0.0f, 0.0f);
+    light = SceneManager::Instance()->CreateLight("MagentaPointLight");
+    light->SetType(Light::LT_POINT);
+    light->SetDiffuseColour(0xffff00ff);
+    light->SetPosition(1.0f, 0.0f, 0.0f);
+
     MSG msg;
     while (true)
     {

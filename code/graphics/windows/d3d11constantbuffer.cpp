@@ -59,7 +59,9 @@ D3D11ConstantBuffer::~D3D11ConstantBuffer()
 void
 D3D11ConstantBuffer::Bind()
 {
-    D3D11RenderSystem::Instance()->GetContext()->VSSetConstantBuffers(this->slot, 1, &this->buffer);
+    ID3D11DeviceContext* context = D3D11RenderSystem::Instance()->GetContext();
+    context->VSSetConstantBuffers(this->slot, 1, &this->buffer);
+    context->PSSetConstantBuffers(this->slot, 1, &this->buffer);
 }
 
 //------------------------------------------------------------------------------

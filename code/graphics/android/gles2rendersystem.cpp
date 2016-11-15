@@ -98,9 +98,14 @@ void
 GLES2RenderSystem::Shutdown()
 {
     CE_DELETE this->defaultGpuProgram;
+    this->defaultGpuProgram = NULL;
     CE_DELETE this->defaultGpuProgramFog;
+    this->defaultGpuProgramFog = NULL;
     CE_DELETE this->defaultGpuProgramLit;
+    this->defaultGpuProgramLit = NULL;
     CE_DELETE this->defaultGpuProgramLitFog;
+    this->defaultGpuProgramLitFog = NULL;
+    this->currentGpuProgram = NULL;
 
     CE_LOG("GLES2RenderSystem::Shutdown\n");
 }
@@ -476,7 +481,7 @@ GLES2RenderSystem::_UseLights(ce_hash_table* lights)
         {
             graphics::Light* light = (graphics::Light*)((ce_key_value_pair*)it->data)->value;
 
-            const core::Vector3 position = light->GetPosition();
+            const core::Vector3& position = light->GetPosition();
             this->defaultLightShaderParams[lightIndex][0][0] = position.x;
             this->defaultLightShaderParams[lightIndex][0][1] = position.y;
             this->defaultLightShaderParams[lightIndex][0][2] = position.z;

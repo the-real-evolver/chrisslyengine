@@ -79,12 +79,16 @@ private:
     static D3D11RenderSystem* Singleton;
 
     unsigned int ambientLight;
+    core::Matrix4 defaultLightShaderParams[4];
 
     core::Matrix4 worldMatrix;
     core::Matrix4 viewMatrix;
     core::Matrix4 projectionMatrix;
 
     D3D11GpuProgram* defaultGpuProgram;
+    D3D11GpuProgram* defaultGpuProgramFog;
+    D3D11GpuProgram* defaultGpuProgramLit;
+    D3D11GpuProgram* defaultGpuProgramLitFog;
     D3D11GpuProgram* currentGpuProgram;
 
     ID3D11Device* device;
