@@ -89,12 +89,14 @@ private:
     D3D11GpuProgram* defaultGpuProgramFog;
     D3D11GpuProgram* defaultGpuProgramLit;
     D3D11GpuProgram* defaultGpuProgramLitFog;
+    D3D11GpuProgram* defaultGpuProgramMorphAnim;
     D3D11GpuProgram* currentGpuProgram;
 
     ID3D11Device* device;
     ID3D11DeviceContext* context;
     D3D11_VIEWPORT viewPort;
     ID3D11InputLayout* inputLayout;
+    ID3D11InputLayout* inputLayoutMorphAnim;
 
     D3D11StateCache* stateCache;
     D3D11_RASTERIZER_DESC currentRasterState;

@@ -27,10 +27,12 @@ D3D11RenderSystem::D3D11RenderSystem() :
     defaultGpuProgramFog(NULL),
     defaultGpuProgramLit(NULL),
     defaultGpuProgramLitFog(NULL),
+    defaultGpuProgramMorphAnim(NULL),
     currentGpuProgram(NULL),
     device(NULL),
     context(NULL),
     inputLayout(NULL),
+    inputLayoutMorphAnim(NULL),
     stateCache(NULL)
 {
     Singleton = this;
@@ -135,6 +137,7 @@ D3D11RenderSystem::_Initialise(void* customParams)
     this->defaultGpuProgramFog = CE_NEW D3D11GpuProgram(DefaultGpuProgramFog, "defaultshaderfog.fx", "DefaultVertexShader", "DefaultFragmentShader");
     this->defaultGpuProgramLit = CE_NEW D3D11GpuProgram(DefaultGpuProgramLit, "defaultshaderlit.fx", "DefaultVertexShader", "DefaultFragmentShader");
     this->defaultGpuProgramLitFog = CE_NEW D3D11GpuProgram(DefaultGpuProgramLitFog, "defaultshaderlitfog.fx", "DefaultVertexShader", "DefaultFragmentShader");
+    this->defaultGpuProgramMorphAnim = CE_NEW D3D11GpuProgram(DefaultGpuProgramMorphAnim, "defaultshadermorphanim.fx", "DefaultVertexShader", "DefaultFragmentShader");
     this->currentGpuProgram = this->defaultGpuProgram;
 
     /* create default input layout */
@@ -150,6 +153,26 @@ D3D11RenderSystem::_Initialise(void* customParams)
         this->currentGpuProgram->GetVertexShaderCode()->GetBufferPointer(),
         this->currentGpuProgram->GetVertexShaderCode()->GetBufferSize(),
         &this->inputLayout
+    );
+    CE_ASSERT(SUCCEEDED(result), "D3D11RenderSystem::_Initialise(): failed to create input layout\n");
+
+    /* create default input layout for morph animation */
+    D3D11_INPUT_ELEMENT_DESC inputDescMorphAnim[] =
+    {
+        {"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+        {"COLOR",    0, DXGI_FORMAT_R8G8B8A8_UNORM,  0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+        {"NORMAL",   0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+        {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+        {"TEXCOORD", 1, DXGI_FORMAT_R32G32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+        {"COLOR",    1, DXGI_FORMAT_R8G8B8A8_UNORM,  0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+        {"NORMAL",   1, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+        {"POSITION", 1, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0}
+    };
+    result = this->device->CreateInputLayout(
+        inputDescMorphAnim, _countof(inputDescMorphAnim),
+        this->defaultGpuProgramMorphAnim->GetVertexShaderCode()->GetBufferPointer(),
+        this->defaultGpuProgramMorphAnim->GetVertexShaderCode()->GetBufferSize(),
+        &this->inputLayoutMorphAnim
     );
     CE_ASSERT(SUCCEEDED(result), "D3D11RenderSystem::_Initialise(): failed to create input layout\n");
 
@@ -177,6 +200,8 @@ D3D11RenderSystem::Shutdown()
     this->defaultGpuProgramLit = NULL;
     CE_DELETE this->defaultGpuProgramLitFog;
     this->defaultGpuProgramLitFog = NULL;
+    CE_DELETE this->defaultGpuProgramMorphAnim;
+    this->defaultGpuProgramMorphAnim = NULL;
     this->currentGpuProgram = NULL;
 
     CE_DELETE this->stateCache;
@@ -186,6 +211,11 @@ D3D11RenderSystem::Shutdown()
     {
         this->inputLayout->Release();
         this->inputLayout = NULL;
+    }
+    if (this->inputLayoutMorphAnim != NULL)
+    {
+        this->inputLayoutMorphAnim->Release();
+        this->inputLayoutMorphAnim = NULL;
     }
     if (this->context != NULL)
     {
@@ -319,18 +349,20 @@ D3D11RenderSystem::_Render(graphics::SubEntity* renderable)
     core::Matrix4 m = this->projectionMatrix * this->viewMatrix * this->worldMatrix;
     params->SetAutoConstant(graphics::GpuProgramParameters::ACT_WORLDVIEWPROJ_MATRIX, m);
     params->SetAutoConstant(graphics::GpuProgramParameters::ACT_WORLD_MATRIX, this->worldMatrix);
-    this->currentGpuProgram->UpdatePerObjectConstantBuffers();
 
     graphics::HardwareVertexBuffer* vertexBuffer = NULL;
     if (graphics::VAT_MORPH == renderable->GetSubMesh()->GetVertexAnimationType())
     {
+        this->context->IASetInputLayout(this->inputLayoutMorphAnim);
         vertexBuffer = renderable->_GetHardwareVertexAnimVertexData()->vertexBuffer;
+        params->SetAutoConstant(graphics::GpuProgramParameters::ACT_MORPH_WEIGHT, renderable->GetMorphWeight());
     }
     else
     {
         this->context->IASetInputLayout(this->inputLayout);
         vertexBuffer = renderable->GetSubMesh()->vertexData->vertexBuffer;
     }
+    this->currentGpuProgram->UpdatePerObjectConstantBuffers();
     ID3D11Buffer* d3d11Buffer = vertexBuffer->GetD3D11Buffer();
     UINT stride = vertexBuffer->GetBytesPerVertex(), offset = 0;
     this->context->IASetVertexBuffers(0, 1, &d3d11Buffer, &stride, &offset);
@@ -463,11 +495,11 @@ D3D11RenderSystem::_SetPass(graphics::Pass* pass)
 
     /* texture unit parameters */
     unsigned short textureUnitState;
-    for (textureUnitState = 0; textureUnitState < pass->GetNumTextureUnitStates() && textureUnitState < 1; ++textureUnitState)
+    for (textureUnitState = 0; textureUnitState < pass->GetNumTextureUnitStates(); ++textureUnitState)
     {
         graphics::TextureUnitState* tus = pass->GetTextureUnitState(textureUnitState);
         ID3D11ShaderResourceView* shaderResourceView = tus->GetTexture()->GetShaderResourceView();
-        this->context->PSSetShaderResources(0, 1, &shaderResourceView);
+        this->context->PSSetShaderResources(textureUnitState, 1, &shaderResourceView);
 
         this->currentSamplerState.Filter = D3D11Mappings::Get(tus->GetTextureFiltering(graphics::FT_MIN), tus->GetTextureFiltering(graphics::FT_MAG), tus->GetTextureFiltering(graphics::FT_MIP));
         this->currentSamplerState.AddressU = D3D11Mappings::Get(tus->GetTextureAddressingMode().u);
