@@ -190,7 +190,7 @@ D3D11Mappings::GetSysMemPitch(unsigned int width, graphics::PixelFormat pf)
 /**
 */
 graphics::GpuConstantType
-D3D11Mappings::Get(D3D11_SHADER_TYPE_DESC& typeDesc)
+D3D11Mappings::Get(const D3D11_SHADER_TYPE_DESC& typeDesc)
 {
     switch (typeDesc.Type)
     {

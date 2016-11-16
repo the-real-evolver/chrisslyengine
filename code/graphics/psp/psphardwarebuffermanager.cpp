@@ -9,7 +9,7 @@
 namespace chrissly
 {
 
-unsigned int PSPHardwareBufferManager::StaticOffset = 0;
+uintptr_t PSPHardwareBufferManager::StaticOffset = 0;
 
 //------------------------------------------------------------------------------
 /**
@@ -60,7 +60,7 @@ void*
 PSPHardwareBufferManager::GetStaticVramTexture(unsigned int width, unsigned int height, unsigned int psm)
 {
     void* result = GetStaticVramBuffer(width, height, psm);
-    return (void*)(((unsigned int)result) + ((unsigned int)sceGeEdramGetAddr()));
+    return (void*)(((uintptr_t)result) + ((uintptr_t)sceGeEdramGetAddr()));
 }
 
 } // namespace chrissly

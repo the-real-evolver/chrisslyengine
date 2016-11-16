@@ -39,7 +39,7 @@ inline
 PSPMutex::PSPMutex()
 {
     char str[16];
-    snprintf(str, 16, "Mutex%u", (unsigned int)this);
+    snprintf(str, 16, "Mutex%u", (uintptr_t)this);
     this->semaphoreId = sceKernelCreateSema(str, 0, 1, 1, NULL);
     CE_ASSERT(this->semaphoreId >= 0, "PSPMutex::PSPMutex(): sceKernelCreateSema() failed: %08x\n", this->semaphoreId);
 }

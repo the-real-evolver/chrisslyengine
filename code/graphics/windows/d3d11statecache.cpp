@@ -3,6 +3,7 @@
 //  (C) 2016 Christian Bleicher
 //------------------------------------------------------------------------------
 #include "d3d11statecache.h"
+#include "d3d11rendersystem.h"
 #include "debug.h"
 
 namespace chrissly
@@ -12,15 +13,6 @@ namespace chrissly
 /**
 */
 D3D11StateCache::D3D11StateCache()
-{
-
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-D3D11StateCache::D3D11StateCache(ID3D11Device* dev) :
-    device(dev)
 {
     ce_hash_table_init(&this->rasterizerStates, 2);
     ce_hash_table_init(&this->depthStencilStates, 2);
@@ -99,7 +91,7 @@ D3D11StateCache::GetRasterizerState(const D3D11_RASTERIZER_DESC& desc)
 #if __DEBUG__
     HRESULT result =
 #endif
-    this->device->CreateRasterizerState(&desc, &state);
+    D3D11RenderSystem::Instance()->GetDevice()->CreateRasterizerState(&desc, &state);
     CE_ASSERT(SUCCEEDED(result), "D3D11StateCache::GetRasterizerState(): failed to create rasterizer state\n");
 
     ce_hash_table_insert(&this->rasterizerStates, (const char*)&desc, sizeof(desc), state);
@@ -122,7 +114,7 @@ D3D11StateCache::GetDepthStencilState(const D3D11_DEPTH_STENCIL_DESC& desc)
 #if __DEBUG__
     HRESULT result =
 #endif
-    this->device->CreateDepthStencilState(&desc, &state);
+    D3D11RenderSystem::Instance()->GetDevice()->CreateDepthStencilState(&desc, &state);
     CE_ASSERT(SUCCEEDED(result), "D3D11StateCache::GetDepthStencilState(): failed to create depth stencil state\n");
 
     ce_hash_table_insert(&this->depthStencilStates, (const char*)&desc, sizeof(desc), state);
@@ -145,7 +137,7 @@ D3D11StateCache::GetBlendState(const D3D11_BLEND_DESC& desc)
 #if __DEBUG__
     HRESULT result =
 #endif
-    this->device->CreateBlendState(&desc, &state);
+    D3D11RenderSystem::Instance()->GetDevice()->CreateBlendState(&desc, &state);
     CE_ASSERT(SUCCEEDED(result), "D3D11StateCache::GetBlendState(): failed to create blend state\n");
 
     ce_hash_table_insert(&this->blendStates, (const char*)&desc, sizeof(desc), state);
@@ -168,7 +160,7 @@ D3D11StateCache::GetSamplerState(const D3D11_SAMPLER_DESC& desc)
 #if __DEBUG__
     HRESULT result =
 #endif
-    this->device->CreateSamplerState(&desc, &state);
+    D3D11RenderSystem::Instance()->GetDevice()->CreateSamplerState(&desc, &state);
     CE_ASSERT(SUCCEEDED(result), "D3D11StateCache::GetSamplerState(): failed to create sampler state\n");
 
     ce_hash_table_insert(&this->samplerStates, (const char*)&desc, sizeof(desc), state);

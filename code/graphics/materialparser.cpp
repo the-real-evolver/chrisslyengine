@@ -51,7 +51,7 @@ MaterialParser::ParseScript(const char* name)
     FSWrapper::Read(fd, fileBuffer, fileSize);
     FSWrapper::Close(fd);
 
-    stb_c_lexer_init(&this->lexer, (char*)fileBuffer, (char*)((unsigned int)fileBuffer + fileSize), this->textBuffer, LexerTextBufferSize);
+    stb_c_lexer_init(&this->lexer, (char*)fileBuffer, (char*)((uintptr_t)fileBuffer + fileSize), this->textBuffer, LexerTextBufferSize);
 
     this->parserState = StateParseRoot;
     this->currentMaterial = NULL;
@@ -407,17 +407,17 @@ MaterialParser::GetRGBAValue(float red, float green, float blue, float alpha) co
 SceneBlendFactor
 MaterialParser::GetSceneBlendFactorFromString(const char* blendFactor) const
 {
-    if (0 == strcmp(blendFactor, "one")) return SBF_ONE;
-    if (0 == strcmp(blendFactor, "zero")) return SBF_ZERO;
-    if (0 == strcmp(blendFactor, "dest_colour")) return SBF_DEST_COLOUR;
-    if (0 == strcmp(blendFactor, "src_colour")) return SBF_SOURCE_COLOUR;
-    if (0 == strcmp(blendFactor, "one_minus_dest_colour")) return SBF_ONE_MINUS_DEST_COLOUR;
-    if (0 == strcmp(blendFactor, "one_minus_src_colour")) return SBF_ONE_MINUS_SOURCE_COLOUR;
-    if (0 == strcmp(blendFactor, "dest_alpha")) return SBF_DEST_ALPHA;
-    if (0 == strcmp(blendFactor, "src_alpha")) return SBF_SOURCE_ALPHA;
-    if (0 == strcmp(blendFactor, "one_minus_dest_alpha")) return SBF_ONE_MINUS_DEST_ALPHA;
-    if (0 == strcmp(blendFactor, "one_minus_src_alpha")) return SBF_ONE_MINUS_SOURCE_ALPHA;
-    if (0 == strcmp(blendFactor, "fix")) return SBF_FIX;
+    if (0 == strcmp(blendFactor, "one"))                    {return SBF_ONE;}
+    if (0 == strcmp(blendFactor, "zero"))                   {return SBF_ZERO;}
+    if (0 == strcmp(blendFactor, "dest_colour"))            {return SBF_DEST_COLOUR;}
+    if (0 == strcmp(blendFactor, "src_colour"))             {return SBF_SOURCE_COLOUR;}
+    if (0 == strcmp(blendFactor, "one_minus_dest_colour"))  {return SBF_ONE_MINUS_DEST_COLOUR;}
+    if (0 == strcmp(blendFactor, "one_minus_src_colour"))   {return SBF_ONE_MINUS_SOURCE_COLOUR;}
+    if (0 == strcmp(blendFactor, "dest_alpha"))             {return SBF_DEST_ALPHA;}
+    if (0 == strcmp(blendFactor, "src_alpha"))              {return SBF_SOURCE_ALPHA;}
+    if (0 == strcmp(blendFactor, "one_minus_dest_alpha"))   {return SBF_ONE_MINUS_DEST_ALPHA;}
+    if (0 == strcmp(blendFactor, "one_minus_src_alpha"))    {return SBF_ONE_MINUS_SOURCE_ALPHA;}
+    if (0 == strcmp(blendFactor, "fix"))                    {return SBF_FIX;}
 
     return SBF_ONE;
 }
@@ -428,9 +428,9 @@ MaterialParser::GetSceneBlendFactorFromString(const char* blendFactor) const
 FilterOptions
 MaterialParser::GetFilterOptionsFromString(const char* filterOption) const
 {
-    if (0 == strcmp(filterOption, "none")) return FO_NONE;
-    if (0 == strcmp(filterOption, "point")) return FO_POINT;
-    if (0 == strcmp(filterOption, "linear")) return FO_LINEAR;
+    if (0 == strcmp(filterOption, "none"))      {return FO_NONE;}
+    if (0 == strcmp(filterOption, "point"))     {return FO_POINT;}
+    if (0 == strcmp(filterOption, "linear"))    {return FO_LINEAR;}
 
     return FO_NONE;
 }

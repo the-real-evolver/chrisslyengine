@@ -128,7 +128,7 @@ D3D11RenderSystem::_Initialise(void* customParams)
     this->currentSamplerState.MaxLOD = FLT_MAX;
 
     /* create renderstate cache */
-    this->stateCache = CE_NEW D3D11StateCache(this->device);
+    this->stateCache = CE_NEW D3D11StateCache();
 
     /* create default gpu programs */
     this->defaultGpuProgram = CE_NEW D3D11GpuProgram(DefaultGpuProgram, "defaultshader.fx", "DefaultVertexShader", "DefaultFragmentShader");
@@ -197,6 +197,7 @@ D3D11RenderSystem::Shutdown()
         this->device->Release();
         this->device = NULL;
     }
+
     CE_LOG("D3D11RenderSystem::Shutdown()\n");
 }
 

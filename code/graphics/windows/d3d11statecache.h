@@ -17,8 +17,8 @@ namespace chrissly
 class D3D11StateCache
 {
 public:
-    /// constructor with device
-    D3D11StateCache(ID3D11Device* dev);
+    /// default constructor
+    D3D11StateCache();
     /// destructor
     ~D3D11StateCache();
 
@@ -32,11 +32,6 @@ public:
     ID3D11SamplerState* GetSamplerState(const D3D11_SAMPLER_DESC& desc);
 
 private:
-    /// private default constructor
-    D3D11StateCache();
-
-    ID3D11Device* device;
-
     ce_hash_table rasterizerStates;
     ce_hash_table depthStencilStates;
     ce_hash_table blendStates;

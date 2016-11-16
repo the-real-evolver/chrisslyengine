@@ -79,7 +79,7 @@ D3D11ConstantBuffer::UpdateConstants()
     for (i = 0; i < this->constants.size; ++i)
     {
         graphics::GpuConstantDefinition* variable = (graphics::GpuConstantDefinition*)ce_dynamic_array_get(&this->constants, i);
-        memcpy((void*)((UINT)mappedResource.pData + (UINT)variable->location), variable->buffer, variable->size * variable->arraySize);
+        memcpy((void*)((UINT_PTR)mappedResource.pData + (UINT_PTR)variable->location), variable->buffer, variable->size * variable->arraySize);
     }
 
     context->Unmap(this->buffer, 0);

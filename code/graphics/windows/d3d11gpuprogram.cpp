@@ -221,7 +221,7 @@ D3D11GpuProgram::ExtractConstantDefs()
     this->defaultParams->_SetNamedConstants(this->constantDefs);
 
     ce_dynamic_array_init(&this->constantBuffersPerObject, 1);
-    ce_dynamic_array_init(&this->constantBuffersPerPass, 0);
+    ce_dynamic_array_init(&this->constantBuffersPerPass, 1);
 
     ID3D11ShaderReflection* reflector = NULL;
     HRESULT result = D3DReflect(this->fragmentShaderCode->GetBufferPointer(), this->fragmentShaderCode->GetBufferSize(), IID_ID3D11ShaderReflection, (void**)&reflector);
