@@ -118,16 +118,16 @@ DXGIRenderWindow::Create()
 
     DXGI_SWAP_CHAIN_DESC sd;
     ZeroMemory(&sd, sizeof(sd));
-    sd.BufferCount = 1;
     sd.BufferDesc.Width = WindowWidth;
     sd.BufferDesc.Height = WindowHeight;
-    sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
     sd.BufferDesc.RefreshRate.Numerator = 60;
     sd.BufferDesc.RefreshRate.Denominator = 1;
-    sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-    sd.OutputWindow = this->hwnd;
+    sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
     sd.SampleDesc.Count = 1;
     sd.SampleDesc.Quality = 0;
+    sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+    sd.BufferCount = 1;
+    sd.OutputWindow = this->hwnd;
     sd.Windowed = TRUE;
 
     result = dxgiFactory->CreateSwapChain(
@@ -178,20 +178,6 @@ DXGIRenderWindow::Create()
     this->width = WindowWidth;
     this->height = WindowHeight;
     this->format = graphics::PF_R8G8B8A8;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-void
-DXGIRenderWindow::Update()
-{
-    /* update all viewports */
-    unsigned int index;
-    for (index = 0; index < this->viewports.size; ++index)
-    {
-        ((graphics::Viewport*)ce_dynamic_array_get(&this->viewports, index))->Update();
-    }
 }
 
 //------------------------------------------------------------------------------

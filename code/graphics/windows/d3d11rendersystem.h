@@ -42,9 +42,9 @@ public:
     void _SetViewport(graphics::Viewport* vp);
     /// sets the world transform matrix
     void _SetWorldMatrix(const core::Matrix4& m);
-    /// Sets the view transform matrix
+    /// sets the view transform matrix
     void _SetViewMatrix(const core::Matrix4& m);
-    /// Sets the projection transform matrix
+    /// sets the projection transform matrix
     void _SetProjectionMatrix(const core::Matrix4& m);
     /// sets the texture coordinate transformation matrix for the texture unit
     void _SetTextureMatrix(const core::Matrix4& m);
@@ -67,6 +67,8 @@ public:
     /// sets the colour & strength of the ambient (global directionless) light in the world
     void SetAmbientLight(unsigned int colour);
 
+    /// get pointer to the default morph animation gpu program (useful if a custom pass wants to use morph animation)
+    D3D11GpuProgram* GetDefaultMorphAnimationGpuProgram() const;
     /// get pointer to the d3d11 device
     ID3D11Device* GetDevice() const;
     /// get pointer to the d3d11 device context

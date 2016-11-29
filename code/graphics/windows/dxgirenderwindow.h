@@ -23,8 +23,6 @@ public:
     ~DXGIRenderWindow();
     /// creates & displays the new window
     void Create();
-    /// tells the window to update it's contents
-    void Update();
     /// swaps the frame buffers to display the next frame
     void SwapBuffers();
     /// get the type of the rendertarget

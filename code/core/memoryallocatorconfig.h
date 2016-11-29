@@ -4,7 +4,8 @@
 /**
     This file configures the engine's memory allocators.
 
-    You can modify this file to alter the allocation routines used for the engine's main objects.
+    You can modify this file to alter the allocation routines used for the
+    engine's main objects.
 
     (C) 2011 Christian Bleicher
 */

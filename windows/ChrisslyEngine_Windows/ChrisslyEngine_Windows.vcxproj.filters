@@ -157,6 +157,9 @@
     <Filter Include="thirdparty\stb">
       <UniqueIdentifier>{37df9488-36c2-4b0c-860d-86df1742d06f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{773e7525-02b6-4fae-967c-87efa694c593}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\code\core\chrisslymath.h">

@@ -22,7 +22,7 @@ Timer::Timer() :
     diffTime(0),
     stopTime(0)
 {
-    // empty
+
 }
 
 //------------------------------------------------------------------------------
@@ -54,14 +54,9 @@ Timer::Stop()
 void
 Timer::Reset()
 {
-    bool wasRunning = this->running;
-    if (wasRunning)
-    {
-        this->Stop();
-    }
     this->stopTime = 0;
     this->diffTime = 0;
-    if (wasRunning)
+    if (this->running)
     {
         this->Start();
     }
@@ -103,8 +98,7 @@ Timer::InternalTime() const
 double
 Timer::GetTime() const
 {
-    double seconds = ((double)this->InternalTime()) / ((double)CLOCKS_PER_SEC);
-    return seconds;
+    return ((double)this->InternalTime()) / ((double)CLOCKS_PER_SEC);
 }
 
 } // namespace core

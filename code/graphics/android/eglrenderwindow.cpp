@@ -18,12 +18,13 @@ EGLRenderWindow::EGLRenderWindow()
 //------------------------------------------------------------------------------
 /**
 */
-EGLRenderWindow::EGLRenderWindow(void* windowHandle)
+EGLRenderWindow::EGLRenderWindow(void* windowHandle) :
+    window((EGLNativeWindowType)windowHandle),
+    display(EGL_NO_DISPLAY),
+    surface(EGL_NO_SURFACE),
+    context(EGL_NO_CONTEXT)
 {
-    this->window = (EGLNativeWindowType)windowHandle;
-    this->display = EGL_NO_DISPLAY;
-    this->surface = EGL_NO_SURFACE;
-    this->context = EGL_NO_CONTEXT;
+
 }
 
 //------------------------------------------------------------------------------
@@ -118,12 +119,7 @@ EGLRenderWindow::Update()
         return;
     }
 
-    // update all viewports
-    unsigned int index;
-    for (index = 0; index < this->viewports.size; ++index)
-    {
-        ((graphics::Viewport*)ce_dynamic_array_get(&this->viewports, index))->Update();
-    }
+    graphics::RenderTarget::Update();
 }
 
 //------------------------------------------------------------------------------

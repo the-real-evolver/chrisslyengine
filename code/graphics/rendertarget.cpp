@@ -3,7 +3,6 @@
 //  (C) 2011 Christian Bleicher
 //------------------------------------------------------------------------------
 #include "rendertarget.h"
-#include "debug.h"
 
 namespace chrissly
 {
@@ -17,9 +16,11 @@ RenderTarget::RenderTarget() :
     buffer(NULL),
     width(0),
     height(0),
-    format(PF_UNKNOWN)
+    format(PF_UNKNOWN),
+    frameTime(0.0)
 {
     ce_dynamic_array_init(&this->viewports, 1);
+    this->timer.Start();
 }
 
 //------------------------------------------------------------------------------
@@ -28,6 +29,22 @@ RenderTarget::RenderTarget() :
 RenderTarget::~RenderTarget()
 {
 
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+RenderTarget::Update()
+{
+    unsigned int i;
+    for (i = 0; i < this->viewports.size; ++i)
+    {
+        ((Viewport*)ce_dynamic_array_get(&this->viewports, i))->Update();
+    }
+
+    this->frameTime = this->timer.GetTime();
+    this->timer.Reset();
 }
 
 //------------------------------------------------------------------------------
@@ -109,6 +126,15 @@ void*
 RenderTarget::GetBuffer() const
 {
     return this->buffer;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+double
+RenderTarget::GetFrameTime() const
+{
+    return this->frameTime;
 }
 
 //------------------------------------------------------------------------------

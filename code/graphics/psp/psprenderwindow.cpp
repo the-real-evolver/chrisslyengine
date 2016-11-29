@@ -58,20 +58,6 @@ PSPRenderWindow::Create()
 /**
 */
 void
-PSPRenderWindow::Update()
-{
-    // update all viewports
-    unsigned int index;
-    for (index = 0; index < this->viewports.size; ++index)
-    {
-        ((graphics::Viewport*)ce_dynamic_array_get(&this->viewports, index))->Update();
-    }
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-void
 PSPRenderWindow::SwapBuffers()
 {
     sceDisplayWaitVblankStart();

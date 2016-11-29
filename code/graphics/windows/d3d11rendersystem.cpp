@@ -245,7 +245,6 @@ D3D11RenderSystem::_SetRenderTarget(graphics::RenderTarget* target)
         renderTargetView = renderWindow->GetRenderTargetView();
         depthStencilView = renderWindow->GetDepthStencilView();
     }
-
     this->context->OMSetRenderTargets(1, &renderTargetView, depthStencilView);
 }
 
@@ -261,7 +260,6 @@ D3D11RenderSystem::_SetViewport(graphics::Viewport* vp)
     this->viewPort.Height = (FLOAT)vp->GetActualHeight();
     this->viewPort.MinDepth = 0.0f;
     this->viewPort.MaxDepth = 1.0f;
-
     this->context->RSSetViewports(1, &this->viewPort);
 
     ID3D11RenderTargetView* renderTargetView = NULL;
@@ -279,7 +277,6 @@ D3D11RenderSystem::_SetViewport(graphics::Viewport* vp)
     }
     FLOAT clearColour[4] = {0.0f, 0.0f, 0.0f, 0.0f};
     D3D11Mappings::Get(vp->GetBackgroundColour(), clearColour[0], clearColour[1], clearColour[2], clearColour[3]);
-
     this->context->ClearRenderTargetView(renderTargetView, clearColour);
     this->context->ClearDepthStencilView(depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 }
@@ -346,8 +343,8 @@ D3D11RenderSystem::_Render(graphics::SubEntity* renderable)
 {
     /* update auto constants */
     graphics::GpuProgramParameters* params = this->currentGpuProgram->GetDefaultParameters();
-    core::Matrix4 m = this->projectionMatrix * this->viewMatrix * this->worldMatrix;
-    params->SetAutoConstant(graphics::GpuProgramParameters::ACT_WORLDVIEWPROJ_MATRIX, m);
+    core::Matrix4 mvp = this->projectionMatrix * this->viewMatrix * this->worldMatrix;
+    params->SetAutoConstant(graphics::GpuProgramParameters::ACT_WORLDVIEWPROJ_MATRIX, mvp);
     params->SetAutoConstant(graphics::GpuProgramParameters::ACT_WORLD_MATRIX, this->worldMatrix);
 
     graphics::HardwareVertexBuffer* vertexBuffer = NULL;
@@ -505,7 +502,7 @@ D3D11RenderSystem::_SetPass(graphics::Pass* pass)
         this->currentSamplerState.AddressU = D3D11Mappings::Get(tus->GetTextureAddressingMode().u);
         this->currentSamplerState.AddressV = D3D11Mappings::Get(tus->GetTextureAddressingMode().v);
         ID3D11SamplerState* samplerState = this->stateCache->GetSamplerState(this->currentSamplerState);
-        this->context->PSSetSamplers(0, 1, &samplerState);
+        this->context->PSSetSamplers(textureUnitState, 1, &samplerState);
     }
 }
 
@@ -558,6 +555,16 @@ void
 D3D11RenderSystem::SetAmbientLight(unsigned int colour)
 {
     this->ambientLight = colour;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+D3D11GpuProgram*
+D3D11RenderSystem::GetDefaultMorphAnimationGpuProgram() const
+{
+    CE_ASSERT(this->defaultGpuProgramMorphAnim != NULL, "D3D11RenderSystem::GetDefaultMorphAnimatioGpuProgram(): gpu program not valid\n");
+    return this->defaultGpuProgramMorphAnim;
 }
 
 //------------------------------------------------------------------------------

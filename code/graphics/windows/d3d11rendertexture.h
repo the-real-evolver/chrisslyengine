@@ -19,8 +19,6 @@ public:
     D3D11RenderTexture();
     /// destructor
     ~D3D11RenderTexture();
-    /// tells the texture to update it's contents
-    void Update();
     /// does nothing no need for doublebuffering when rendering offline
     void SwapBuffers();
 };

@@ -42,9 +42,9 @@ public:
     void _SetViewport(graphics::Viewport* vp);
     /// sets the world transform matrix
     void _SetWorldMatrix(const core::Matrix4& m);
-    /// Sets the view transform matrix
+    /// sets the view transform matrix
     void _SetViewMatrix(const core::Matrix4& m);
-    /// Sets the projection transform matrix
+    /// sets the projection transform matrix
     void _SetProjectionMatrix(const core::Matrix4& m);
     /// sets the texture coordinate transformation matrix for the texture unit
     void _SetTextureMatrix(const core::Matrix4& xform);
