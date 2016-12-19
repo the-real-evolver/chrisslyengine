@@ -52,7 +52,7 @@ MeshManager::Load(const char* filename)
     mesh = CE_NEW Mesh();
     ce_hash_table_insert(&this->resources, filename, strlen(filename), mesh);
 
-    unsigned int bytesPerVertex = 36;
+    const unsigned int bytesPerVertex = 36;
     unsigned char currentChunk = 0;
     unsigned int vertexCount = 0;
     HardwareVertexBuffer* vertexBuffer = NULL;

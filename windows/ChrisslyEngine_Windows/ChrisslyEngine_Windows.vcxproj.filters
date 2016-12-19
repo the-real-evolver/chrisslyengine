@@ -134,6 +134,24 @@
     <ClCompile Include="..\..\code\graphics\windows\d3d11statecache.cpp">
       <Filter>graphics\windows</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\code\audio\audiosystem.cpp">
+      <Filter>audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\audio\channelbase.cpp">
+      <Filter>audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\audio\soundbase.cpp">
+      <Filter>audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\audio\vorbiscodec.cpp">
+      <Filter>audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\audio\wavcodec.cpp">
+      <Filter>audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\audio\windows\wasapiaudiorenderer.cpp">
+      <Filter>audio\windows</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="core">
@@ -159,6 +177,9 @@
     </Filter>
     <Filter Include="audio">
       <UniqueIdentifier>{773e7525-02b6-4fae-967c-87efa694c593}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\windows">
+      <UniqueIdentifier>{31efd57d-d93b-4515-b550-bd4a97e8fd6a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -365,6 +386,51 @@
     </ClInclude>
     <ClInclude Include="..\..\code\graphics\windows\d3d11statecache.h">
       <Filter>graphics\windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\audio\audioformat.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\audio\audiorenderer.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\audio\audiosystem.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\audio\channel.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\audio\channelbase.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\audio\codec.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\audio\errorcode.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\audio\modeflags.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\audio\propertychangedflags.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\audio\sound.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\audio\soundbase.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\audio\soundtype.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\audio\vorbiscodec.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\audio\wavcodec.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\audio\windows\wasapiaudiorenderer.h">
+      <Filter>audio\windows</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

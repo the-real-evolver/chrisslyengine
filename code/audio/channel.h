@@ -31,6 +31,18 @@ typedef chrissly::SLESChannel Channel;
 
 } // namespace audio
 } // namespace chrissly
+  //------------------------------------------------------------------------------
+#elif __WINDOWS__
+#include "channelbase.h"
+namespace chrissly
+{
+namespace audio
+{
+
+typedef ChannelBase Channel;
+
+} // namespace audio
+} // namespace chrissly
 //------------------------------------------------------------------------------
 #else
 #error "Channel class not implemented on this platform!"

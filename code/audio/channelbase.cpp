@@ -24,7 +24,7 @@ ChannelBase::ChannelBase() :
     volume(1.0f),
     panning(0.0f),
     mode(MODE_DEFAULT),
-    position(0),
+    samplePosition(0),
     minDistance(1.0f),
     maxDistance(10000.0f),
     currentSound(NULL),
@@ -71,9 +71,9 @@ ChannelBase::IsPlaying(bool* isplaying)
 /**
 */
 Result
-ChannelBase::SetPaused(bool paused)
+ChannelBase::SetPaused(bool pause)
 {
-    this->paused = paused;
+    this->paused = pause;
 
     this->propertiesHaveChanged |= PROPERTY_PAUSED;
 
@@ -84,9 +84,9 @@ ChannelBase::SetPaused(bool paused)
 /**
 */
 Result
-ChannelBase::GetPaused(bool* paused)
+ChannelBase::GetPaused(bool* pause)
 {
-    *paused = this->paused;
+    *pause = this->paused;
     return OK;
 }
 
@@ -94,19 +94,19 @@ ChannelBase::GetPaused(bool* paused)
 /**
 */
 Result
-ChannelBase::SetVolume(float volume)
+ChannelBase::SetVolume(float vol)
 {
-    if (volume > 1.0f)
+    if (vol > 1.0f)
     {
         this->volume = 1.0f;
     }
-    else if (volume < 0.0f)
+    else if (vol < 0.0f)
     {
         this->volume = 0.0f;
     }
     else
     {
-        this->volume = volume;
+        this->volume = vol;
     }
 
     this->propertiesHaveChanged |= PROPERTY_VOLUME;
@@ -118,9 +118,9 @@ ChannelBase::SetVolume(float volume)
 /**
 */
 Result
-ChannelBase::GetVolume(float* volume)
+ChannelBase::GetVolume(float* vol)
 {
-    *volume = this->volume;
+    *vol = this->volume;
     return OK;
 }
 
@@ -186,28 +186,28 @@ ChannelBase::GetPan(float* pan)
 /**
 */
 Result
-ChannelBase::SetMode(Mode mode)
+ChannelBase::SetMode(Mode modeflags)
 {
-    if (mode & (MODE_LOOP_OFF | MODE_LOOP_NORMAL))
+    if (modeflags & (MODE_LOOP_OFF | MODE_LOOP_NORMAL))
     {
         this->mode &= ~(MODE_LOOP_OFF | MODE_LOOP_NORMAL);
 
-        if (mode & MODE_LOOP_OFF)
+        if (modeflags & MODE_LOOP_OFF)
         {
             this->mode |= MODE_LOOP_OFF;
         }
-        else if (mode & MODE_LOOP_NORMAL)
+        else if (modeflags & MODE_LOOP_NORMAL)
         {
             this->mode |= MODE_LOOP_NORMAL;
         }
     }
 
-    if (mode & MODE_3D)
+    if (modeflags & MODE_3D)
     {
         this->mode &= ~MODE_2D;
         this->mode |= MODE_3D;
     }
-    else if (mode & MODE_2D)
+    else if (modeflags & MODE_2D)
     {
         this->mode &= ~MODE_3D;
         this->mode |= MODE_2D;
@@ -222,9 +222,9 @@ ChannelBase::SetMode(Mode mode)
 /**
 */
 Result
-ChannelBase::GetMode(Mode* mode)
+ChannelBase::GetMode(Mode* modeflags)
 {
-    *mode = this->mode;
+    *modeflags = this->mode;
     return OK;
 }
 
@@ -234,7 +234,7 @@ ChannelBase::GetMode(Mode* mode)
 Result
 ChannelBase::SetPosition(unsigned int position)
 {
-    this->position = position;
+    this->samplePosition = position;
     return OK;
 }
 
@@ -244,7 +244,7 @@ ChannelBase::SetPosition(unsigned int position)
 Result
 ChannelBase::GetPosition(unsigned int* position)
 {
-    *position = this->position;
+    *position = this->samplePosition;
     return OK;
 }
 
@@ -252,11 +252,11 @@ ChannelBase::GetPosition(unsigned int* position)
 /**
 */
 Result
-ChannelBase::Set3DAttributes(const Vector3* pos)
+ChannelBase::Set3DAttributes(const Vector3* position)
 {
-    if (pos != NULL)
+    if (position != NULL)
     {
-        this->pos = *pos;
+        this->spatialPosition = *position;
     }
     return OK;
 }
@@ -265,11 +265,11 @@ ChannelBase::Set3DAttributes(const Vector3* pos)
 /**
 */
 Result
-ChannelBase::Get3DAttributes(Vector3* pos)
+ChannelBase::Get3DAttributes(Vector3* position)
 {
-    if (pos != NULL)
+    if (position != NULL)
     {
-        *pos = this->pos;
+        *position = this->spatialPosition;
     }
     return OK;
 }
@@ -318,9 +318,9 @@ ChannelBase::GetCurrentSound(Sound** sound)
 /**
 */
 Result
-ChannelBase::GetIndex(int* index)
+ChannelBase::GetIndex(int* idx)
 {
-    *index = this->index;
+    *idx = this->index;
     return OK;
 }
 
@@ -338,9 +338,9 @@ ChannelBase::_AttachSound(Sound* sound)
 /**
 */
 void
-ChannelBase::_SetIndex(int index)
+ChannelBase::_SetIndex(int idx)
 {
-    this->index = index;
+    this->index = idx;
 }
 
 //------------------------------------------------------------------------------
@@ -378,9 +378,9 @@ ChannelBase::_GetAttenuationFactor() const
 PropertyChange
 ChannelBase::_PropertiesHaveChanged()
 {
-    PropertyChange propertiesHaveChanged = this->propertiesHaveChanged;
+    PropertyChange propsHaveChanged = this->propertiesHaveChanged;
     this->propertiesHaveChanged = UNCHANGED;
-    return propertiesHaveChanged;
+    return propsHaveChanged;
 }
 
 //------------------------------------------------------------------------------

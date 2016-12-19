@@ -30,6 +30,8 @@ public:
     ID3D11BlendState* GetBlendState(const D3D11_BLEND_DESC& desc);
     /// returns a sampler state object for the given description
     ID3D11SamplerState* GetSamplerState(const D3D11_SAMPLER_DESC& desc);
+    /// invalidates/clears the cache
+    void Invalidate();
 
 private:
     ce_hash_table rasterizerStates;

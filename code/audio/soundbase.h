@@ -28,12 +28,12 @@ public:
     /// returns format information about the sound
     Result GetFormat(SoundType* type, AudioFormat* format, int* channels, int* bits);
     /// retrieves the mode bits set by the codec and the user when opening the sound
-    Result GetMode(Mode* mode);
+    Result GetMode(Mode* modeflags);
     /// requests release
     Result Release();
 
     /// initialize sound object
-    void _Setup(const char* filename, Mode mode, Codec* codec);
+    void _Setup(const char* filename, Mode modeflags, Codec* codec);
     /// internal method that frees a sound object
     void _Release();
     /// returns if the sound is setup
@@ -51,13 +51,13 @@ public:
 
 protected:
     Mode mode;
-    SoundType type;
-    AudioFormat format;
-    unsigned int length;
+    SoundType soundType;
+    AudioFormat audioFormat;
+    unsigned int lengthInSamples;
     int numChannels;
     int bitsPerSample;
     void* sampleBuffer;
-    Codec* codec;
+    Codec* audioCodec;
     bool realized;
     bool requestRelease;
     unsigned int useCount;

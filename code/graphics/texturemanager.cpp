@@ -49,7 +49,7 @@ TextureManager::Load(const char* name)
 
     FileHandle fd = FSWrapper::Open(name, ReadAccess, Random, 0777);
     unsigned int fileSize = FSWrapper::GetFileSize(fd);
-    unsigned int headerSizeBytes = 7;
+    const unsigned int headerSizeBytes = 7;
 
     unsigned char format = PF_UNKNOWN;
     unsigned short width = 0;

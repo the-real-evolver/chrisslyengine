@@ -32,8 +32,7 @@ D3D11RenderSystem::D3D11RenderSystem() :
     device(NULL),
     context(NULL),
     inputLayout(NULL),
-    inputLayoutMorphAnim(NULL),
-    stateCache(NULL)
+    inputLayoutMorphAnim(NULL)
 {
     Singleton = this;
     this->viewPort = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
@@ -129,9 +128,6 @@ D3D11RenderSystem::_Initialise(void* customParams)
     this->currentSamplerState.MinLOD = -FLT_MAX;
     this->currentSamplerState.MaxLOD = FLT_MAX;
 
-    /* create renderstate cache */
-    this->stateCache = CE_NEW D3D11StateCache();
-
     /* create default gpu programs */
     this->defaultGpuProgram = CE_NEW D3D11GpuProgram(DefaultGpuProgram, "defaultshader.fx", "DefaultVertexShader", "DefaultFragmentShader");
     this->defaultGpuProgramFog = CE_NEW D3D11GpuProgram(DefaultGpuProgramFog, "defaultshaderfog.fx", "DefaultVertexShader", "DefaultFragmentShader");
@@ -204,8 +200,7 @@ D3D11RenderSystem::Shutdown()
     this->defaultGpuProgramMorphAnim = NULL;
     this->currentGpuProgram = NULL;
 
-    CE_DELETE this->stateCache;
-    this->stateCache = NULL;
+    this->stateCache.Invalidate();
 
     if (this->inputLayout != NULL)
     {
@@ -402,14 +397,14 @@ D3D11RenderSystem::_SetPass(graphics::Pass* pass)
     {
         this->currentBlendState.RenderTarget[0].BlendEnable = FALSE;
     }
-    ID3D11BlendState* blendState = this->stateCache->GetBlendState(this->currentBlendState);
+    ID3D11BlendState* blendState = this->stateCache.GetBlendState(this->currentBlendState);
     float blendFactor[4] = {0.0f, 0.0f, 0.0f, 0.0f};
     this->context->OMSetBlendState(blendState, blendFactor, 0xffffffff);
 
     /* depth check and depth write */
     this->currentDepthStencilState.DepthEnable = pass->GetDepthCheckEnabled();
     this->currentDepthStencilState.DepthWriteMask = pass->GetDepthWriteEnabled() ? D3D11_DEPTH_WRITE_MASK_ALL : D3D11_DEPTH_WRITE_MASK_ZERO;
-    ID3D11DepthStencilState* depthStencilState = this->stateCache->GetDepthStencilState(this->currentDepthStencilState);
+    ID3D11DepthStencilState* depthStencilState = this->stateCache.GetDepthStencilState(this->currentDepthStencilState);
     this->context->OMSetDepthStencilState(depthStencilState, 1);
 
     /* culling mode */
@@ -425,7 +420,7 @@ D3D11RenderSystem::_SetPass(graphics::Pass* pass)
             this->currentRasterState.CullMode = D3D11_CULL_FRONT;
             break;
     }
-    ID3D11RasterizerState* rasterState = this->stateCache->GetRasterizerState(this->currentRasterState);
+    ID3D11RasterizerState* rasterState = this->stateCache.GetRasterizerState(this->currentRasterState);
     this->context->RSSetState(rasterState);
 
     /* set gpu program to use */
@@ -501,7 +496,7 @@ D3D11RenderSystem::_SetPass(graphics::Pass* pass)
         this->currentSamplerState.Filter = D3D11Mappings::Get(tus->GetTextureFiltering(graphics::FT_MIN), tus->GetTextureFiltering(graphics::FT_MAG), tus->GetTextureFiltering(graphics::FT_MIP));
         this->currentSamplerState.AddressU = D3D11Mappings::Get(tus->GetTextureAddressingMode().u);
         this->currentSamplerState.AddressV = D3D11Mappings::Get(tus->GetTextureAddressingMode().v);
-        ID3D11SamplerState* samplerState = this->stateCache->GetSamplerState(this->currentSamplerState);
+        ID3D11SamplerState* samplerState = this->stateCache.GetSamplerState(this->currentSamplerState);
         this->context->PSSetSamplers(textureUnitState, 1, &samplerState);
     }
 }

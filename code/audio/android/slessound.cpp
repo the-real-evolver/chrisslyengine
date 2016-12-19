@@ -36,7 +36,7 @@ SLESSound::_CreateInternalResources()
     this->pcm.containerSize = 16;
     this->pcm.endianness    = SL_BYTEORDER_LITTLEENDIAN;
     this->pcm.numChannels   = this->numChannels;
-    switch (this->format)
+    switch (this->audioFormat)
     {
         case audio::AUDIO_FORMAT_PCM8:
             this->pcm.bitsPerSample = SL_PCMSAMPLEFORMAT_FIXED_8;

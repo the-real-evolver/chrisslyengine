@@ -8,7 +8,7 @@
 */
 
 //------------------------------------------------------------------------------
-#if __PSP__
+#if __PSP__ || __WINDOWS__
 #include "soundbase.h"
 namespace chrissly
 {

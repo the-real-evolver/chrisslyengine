@@ -31,6 +31,18 @@ typedef chrissly::SLESAudioRenderer AudioRenderer;
 
 } // namespace audio
 } // namespace chrissly
+  //------------------------------------------------------------------------------
+#elif __WINDOWS__
+#include "windows/wasapiaudiorenderer.h"
+namespace chrissly
+{
+namespace audio
+{
+
+typedef chrissly::WASAPIAudioRenderer AudioRenderer;
+
+} // namespace audio
+} // namespace chrissly
 //------------------------------------------------------------------------------
 #else
 #error "AudioRenderer class not implemented on this platform!"

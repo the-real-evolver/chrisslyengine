@@ -17,13 +17,13 @@ namespace audio
 */
 SoundBase::SoundBase() :
     mode(MODE_DEFAULT),
-    type(SOUND_TYPE_UNKNOWN),
-    format(AUDIO_FORMAT_NONE),
-    length(0),
+    soundType(SOUND_TYPE_UNKNOWN),
+    audioFormat(AUDIO_FORMAT_NONE),
+    lengthInSamples(0),
     numChannels(0),
     bitsPerSample(0),
     sampleBuffer(NULL),
-    codec(NULL),
+    audioCodec(NULL),
     realized(false),
     requestRelease(false),
     useCount(0)
@@ -45,7 +45,7 @@ SoundBase::~SoundBase()
 Result
 SoundBase::GetLength(unsigned int* length)
 {
-    *length = this->length;
+    *length = this->lengthInSamples;
     return OK;
 }
 
@@ -57,11 +57,11 @@ SoundBase::GetFormat(SoundType* type, AudioFormat* format, int* channels, int* b
 {
     if (type != NULL)
     {
-        *type = this->type;
+        *type = this->soundType;
     }
     if (format != NULL)
     {
-        *format = this->format;
+        *format = this->audioFormat;
     }
     if (channels != NULL)
     {
@@ -78,9 +78,9 @@ SoundBase::GetFormat(SoundType* type, AudioFormat* format, int* channels, int* b
 /**
 */
 Result
-SoundBase::GetMode(Mode* mode)
+SoundBase::GetMode(Mode* modeflags)
 {
-    *mode = this->mode;
+    *modeflags = this->mode;
     return OK;
 }
 
@@ -110,11 +110,11 @@ SoundBase::Release()
 /**
 */
 void
-SoundBase::_Setup(const char* filename, Mode mode, Codec* codec)
+SoundBase::_Setup(const char* filename, Mode modeflags, Codec* codec)
 {
-    this->mode = mode;
-    this->codec = codec;
-    this->codec->SetupSound(filename, mode, &this->sampleBuffer, this->length, this->format, this->type, this->numChannels, this->bitsPerSample);
+    this->mode = modeflags;
+    this->audioCodec = codec;
+    this->audioCodec->SetupSound(filename, modeflags, &this->sampleBuffer, this->lengthInSamples, this->audioFormat, this->soundType, this->numChannels, this->bitsPerSample);
     this->_CreateInternalResources();
     this->realized = true;
 }
@@ -126,9 +126,9 @@ void
 SoundBase::_Release()
 {
     this->mode = MODE_DEFAULT;
-    this->type = SOUND_TYPE_UNKNOWN;
-    this->format = AUDIO_FORMAT_NONE;
-    this->length = 0;
+    this->soundType = SOUND_TYPE_UNKNOWN;
+    this->audioFormat = AUDIO_FORMAT_NONE;
+    this->lengthInSamples = 0;
     this->numChannels = 0;
     this->bitsPerSample = 0;
 
@@ -137,10 +137,10 @@ SoundBase::_Release()
         CE_FREE(this->sampleBuffer);
         this->sampleBuffer = NULL;
     }
-    if (this->codec != NULL)
+    if (this->audioCodec != NULL)
     {
-        CE_DELETE this->codec;
-        this->codec = NULL;
+        CE_DELETE this->audioCodec;
+        this->audioCodec = NULL;
     }
 
     this->realized = false;
@@ -198,13 +198,13 @@ SoundBase::_GetSampleBufferPointer(unsigned int position) const
     {
         return NULL;
     }
-    else if (this->mode & MODE_CREATECOMPRESSEDSAMPLE && this->type != SOUND_TYPE_WAV)
+    else if (this->mode & MODE_CREATECOMPRESSEDSAMPLE && this->soundType != SOUND_TYPE_WAV)
     {
         return NULL;
     }
-    else if (MODE_DEFAULT == this->mode || this->mode & MODE_CREATESAMPLE || SOUND_TYPE_WAV == this->type)
+    else if (MODE_DEFAULT == this->mode || this->mode & MODE_CREATESAMPLE || SOUND_TYPE_WAV == this->soundType)
     {
-        switch (this->format)
+        switch (this->audioFormat)
         {
             case AUDIO_FORMAT_PCM8:
                 return (void*)((uintptr_t)this->sampleBuffer + position * this->numChannels);
@@ -224,7 +224,7 @@ SoundBase::_GetSampleBufferPointer(unsigned int position) const
 Codec*
 SoundBase::_GetCodec() const
 {
-    return this->codec;
+    return this->audioCodec;
 }
 
 //------------------------------------------------------------------------------

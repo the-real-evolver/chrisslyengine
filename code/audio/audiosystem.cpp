@@ -34,9 +34,9 @@ AudioSystem::AudioSystem()
 */
 AudioSystem::~AudioSystem()
 {
-    Singleton = NULL;
     this->Release();
     CE_DELETE this->activeRenderer;
+    Singleton = NULL;
 }
 
 //------------------------------------------------------------------------------
@@ -61,6 +61,7 @@ AudioSystem::Initialise(void* customParams)
         Channel* channel = CE_NEW Channel();
         ce_dynamic_array_set(&this->channelPool, i, channel);
     }
+    this->channelPool.size = this->activeRenderer->GetNumHardwareChannels();
 
     return OK;
 }
@@ -71,6 +72,7 @@ AudioSystem::Initialise(void* customParams)
 Result
 AudioSystem::Release()
 {
+    this->channelPool.size = 0;
     unsigned int i;
     for (i = 0; i < this->channelPool.capacity; ++i)
     {
@@ -117,7 +119,7 @@ AudioSystem::CreateSound(const char* name, Mode mode, Sound** sound)
         return ERR_MEMORY;
     }
 
-    char* ext = strrchr(name, '.');
+    char* ext = (char*)strrchr(name, '.');
     if (NULL == ext)
     {
         return ERR_PLUGIN_MISSING;
@@ -253,6 +255,58 @@ AudioSystem::Set3DListenerAttributes(const Vector3* pos, const Vector3* forward,
     }
 
     return OK;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+AudioSystem::Mix(unsigned int numSamples, unsigned char* buffer)
+{
+    memset(buffer, 0, numSamples << 2);
+    unsigned int i;
+    for (i = 0; i < this->channelPool.size; ++i)
+    {
+        Channel* channel = (Channel*)ce_dynamic_array_get(&this->channelPool, i);
+        int index;
+        channel->GetIndex(&index);
+        if (index != Channel::CHANNEL_FREE)
+        {
+            bool isPlaying;
+            channel->IsPlaying(&isPlaying);
+            if (isPlaying)
+            {
+                Sound* sound;
+                channel->GetCurrentSound(&sound);
+                unsigned int length;
+                sound->GetLength(&length);
+                unsigned int position;
+                channel->GetPosition(&position);
+                int numChannels, bits;
+                sound->GetFormat(NULL, NULL, &numChannels, &bits);
+                if (2 == numChannels && 16 == bits)
+                {
+                    if (position + numSamples > length)
+                    {
+                        memcpy(buffer, sound->_GetSampleBufferPointer(position), (length - position) << 2);
+                        audio::Mode mode;
+                        channel->GetMode(&mode);
+                        if (mode & audio::MODE_LOOP_NORMAL)
+                        {
+                            memcpy(buffer, sound->_GetSampleBufferPointer(0), (position + numSamples - length) << 2);
+                            channel->SetPosition(position + numSamples - length);
+                        }
+                    }
+                    else
+                    {
+                        memcpy(buffer, sound->_GetSampleBufferPointer(position), numSamples << 2);
+                        channel->SetPosition(position + numSamples);
+                    }
+                }
+                break;
+            }
+        }
+    }
 }
 
 //------------------------------------------------------------------------------

@@ -56,7 +56,7 @@ WavCodec::SetupSound(const char* filename, Mode mode, void** sampleBuffer, unsig
 {
     FileHandle fd = FSWrapper::Open(filename, ReadAccess, (mode & MODE_CREATESTREAM) ? Streaming : Random, 0777);
 
-    char chunkID[4];
+    char chunkID[4] = {'\0'};
     unsigned int chunkSize;
 
     // "RIFF" chunk descriptor
@@ -97,13 +97,13 @@ WavCodec::SetupSound(const char* filename, Mode mode, void** sampleBuffer, unsig
             {
                 length = dataSize;
                 format = AUDIO_FORMAT_PCM8;
-                this->bytesPerSample = numChannels;
+                this->bytesPerSample = (unsigned char)numChannels;
             }
             else if (16 == bitsPerSample)
             {
                 length = dataSize >> 1;
                 format = AUDIO_FORMAT_PCM16;
-                this->bytesPerSample = 2 * numChannels;
+                this->bytesPerSample = 2 * (unsigned char)numChannels;
             }
             else
             {

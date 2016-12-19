@@ -78,11 +78,11 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>__WINDOWS__;__DEBUG__;_CRT_SECURE_NO_WARNINGS;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\dev\chrisslyengine\code;C:\dev\chrisslyengine\code\core;C:\dev\chrisslyengine\code\core\standard;C:\dev\chrisslyengine\code\core\windows;C:\dev\chrisslyengine\code\graphics;C:\dev\chrisslyengine\code\graphics\windows;C:\dev\chrisslyengine\code\thirdparty\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\dev\chrisslyengine\code;C:\dev\chrisslyengine\code\core;C:\dev\chrisslyengine\code\core\standard;C:\dev\chrisslyengine\code\core\windows;C:\dev\chrisslyengine\code\graphics;C:\dev\chrisslyengine\code\graphics\windows;C:\dev\chrisslyengine\code\audio;C:\dev\chrisslyengine\code\audio\windows;C:\dev\chrisslyengine\code\thirdparty\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <FloatingPointModel>Fast</FloatingPointModel>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;d3d11.lib;d3dx11.lib;d3dcompiler.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;d3d11.lib;d3dx11.lib;d3dcompiler.lib;dxguid.lib;MMDevAPI.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -119,6 +119,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\code\audio\audiosystem.cpp" />
+    <ClCompile Include="..\..\code\audio\channelbase.cpp" />
+    <ClCompile Include="..\..\code\audio\soundbase.cpp" />
+    <ClCompile Include="..\..\code\audio\vorbiscodec.cpp" />
+    <ClCompile Include="..\..\code\audio\wavcodec.cpp" />
+    <ClCompile Include="..\..\code\audio\windows\wasapiaudiorenderer.cpp" />
     <ClCompile Include="..\..\code\core\chrisslymemory.cpp" />
     <ClCompile Include="..\..\code\core\chrisslystring.cpp" />
     <ClCompile Include="..\..\code\core\matrix3.cpp" />
@@ -166,6 +172,21 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\code\audio\audioformat.h" />
+    <ClInclude Include="..\..\code\audio\audiorenderer.h" />
+    <ClInclude Include="..\..\code\audio\audiosystem.h" />
+    <ClInclude Include="..\..\code\audio\channel.h" />
+    <ClInclude Include="..\..\code\audio\channelbase.h" />
+    <ClInclude Include="..\..\code\audio\codec.h" />
+    <ClInclude Include="..\..\code\audio\errorcode.h" />
+    <ClInclude Include="..\..\code\audio\modeflags.h" />
+    <ClInclude Include="..\..\code\audio\propertychangedflags.h" />
+    <ClInclude Include="..\..\code\audio\sound.h" />
+    <ClInclude Include="..\..\code\audio\soundbase.h" />
+    <ClInclude Include="..\..\code\audio\soundtype.h" />
+    <ClInclude Include="..\..\code\audio\vorbiscodec.h" />
+    <ClInclude Include="..\..\code\audio\wavcodec.h" />
+    <ClInclude Include="..\..\code\audio\windows\wasapiaudiorenderer.h" />
     <ClInclude Include="..\..\code\core\chrisslymath.h" />
     <ClInclude Include="..\..\code\core\chrisslymemory.h" />
     <ClInclude Include="..\..\code\core\chrisslymutex.h" />

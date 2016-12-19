@@ -146,7 +146,7 @@ PSPAudioRenderer::ReleaseChannel(audio::Channel* channel)
 int
 PSPAudioRenderer::ChannelThread(SceSize args, void* argp)
 {
-    audio::Channel* channel = (audio::Channel*)(*(unsigned int*)argp);
+    audio::Channel* channel = (audio::Channel*)(*(uintptr_t*)argp);
     const core::Mutex& syncLock = channel->_GetSyncLock();
     while (true)
     {
@@ -161,8 +161,8 @@ PSPAudioRenderer::ChannelThread(SceSize args, void* argp)
         {
             sceAudioChangeChannelVolume(index, 0, 0);
             sceAudioChRelease(index);
-            channel->_SetIndex(audio::Channel::CHANNEL_FREE);
             channel->_SetIsPlaying(false);
+            channel->_SetIndex(audio::Channel::CHANNEL_FREE);
             sound->_DecrementUseCount();
         }
 
@@ -264,8 +264,8 @@ PSPAudioRenderer::ChannelThread(SceSize args, void* argp)
                 else
                 {
                     sceAudioChRelease(index);
-                    channel->_SetIndex(audio::Channel::CHANNEL_FREE);
                     channel->_SetIsPlaying(false);
+                    channel->_SetIndex(audio::Channel::CHANNEL_FREE);
                     sound->_DecrementUseCount();
 
                     syncLock.Unlock();
