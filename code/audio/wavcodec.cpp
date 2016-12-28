@@ -189,6 +189,15 @@ WavCodec::FillStreamBackBuffer()
 /**
 */
 void
+WavCodec::FillStreamBuffer(unsigned int numSamples)
+{
+    CE_UNREFERENCED_PARAMETER(numSamples);
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
 WavCodec::SwapStreamBuffers()
 {
     this->currentStreamBufferLength = this->bytesToLoadToBackBuffer;

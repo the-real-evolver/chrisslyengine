@@ -45,7 +45,7 @@ public:
     /// updates the position and orientation of the 3D sound listener
     Result Set3DListenerAttributes(const core::Vector3* pos, const core::Vector3* forward, const core::Vector3* up);
 
-    /// software mix the all currently active channels to 16 bit stereo output
+    /// software mix all currently active channels to 16 bit stereo output
     void Mix(unsigned int numSamples, unsigned char* buffer);
 
 private:

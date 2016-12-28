@@ -82,6 +82,15 @@ VorbisCodec::FillStreamBackBuffer()
 /**
 */
 void
+VorbisCodec::FillStreamBuffer(unsigned int numSamples)
+{
+    CE_UNREFERENCED_PARAMETER(numSamples);
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
 VorbisCodec::SwapStreamBuffers()
 {
 

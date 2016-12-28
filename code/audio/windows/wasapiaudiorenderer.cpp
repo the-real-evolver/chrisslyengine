@@ -89,11 +89,6 @@ WASAPIAudioRenderer::_Initialise(void* customParams)
 
     result = this->audioClient->Start();
     CE_ASSERT(SUCCEEDED(result), "WASAPIAudioRenderer::_Initialise() failed to start audio client\n");
-
-    this->running = true;
-
-    this->thread = CreateThread(NULL, 0, ThreadProc, (LPVOID)this, 0, NULL);
-    CE_ASSERT(this->thread != 0, "WASAPIAudioRenderer::_Initialise(): failed to create audio thread\n");
 }
 
 //------------------------------------------------------------------------------
@@ -102,19 +97,6 @@ WASAPIAudioRenderer::_Initialise(void* customParams)
 void
 WASAPIAudioRenderer::Shutdown()
 {
-    this->running = false;
-
-#if __DEBUG__
-    DWORD state =
-#endif
-    WaitForSingleObject(this->thread, INFINITE);
-    CE_ASSERT(WAIT_OBJECT_0 == state, "WASAPIAudioRenderer::Shutdown(): failed to wait for thread '%p'\n", this->thread);
-#if __DEBUG__
-    BOOL result =
-#endif
-    CloseHandle(this->thread);
-    CE_ASSERT(result != 0, "WASAPIAudioRenderer::Shutdown(): failed to close thread handle '%p'\n", this->thread);
-
     if (this->audioClient != NULL)
     {
         HRESULT hr = this->audioClient->Stop();
@@ -139,6 +121,43 @@ WASAPIAudioRenderer::Shutdown()
     }
 
     CoUninitialize();
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+WASAPIAudioRenderer::StartAudioProcessing()
+{
+    this->running = true;
+
+    this->thread = CreateThread(NULL, 0, ThreadProc, (LPVOID)this, 0, NULL);
+    CE_ASSERT(this->thread != 0, "WASAPIAudioRenderer::StartAudioProcessing(): failed to create audio thread\n");
+#if __DEBUG__
+    BOOL success =
+#endif
+    SetThreadPriority(this->thread, THREAD_PRIORITY_HIGHEST);
+    CE_ASSERT(success != 0, "WASAPIAudioRenderer::StartAudioProcessing(): failed to set thread priority\n");
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+WASAPIAudioRenderer::StopAudioProcessing()
+{
+    this->running = false;
+
+#if __DEBUG__
+    DWORD state =
+#endif
+    WaitForSingleObject(this->thread, INFINITE);
+    CE_ASSERT(WAIT_OBJECT_0 == state, "WASAPIAudioRenderer::StopAudioProcessing(): failed to wait for thread '%p'\n", this->thread);
+#if __DEBUG__
+    BOOL result =
+#endif
+    CloseHandle(this->thread);
+    CE_ASSERT(result != 0, "WASAPIAudioRenderer::StopAudioProcessing(): failed to close thread handle '%p'\n", this->thread);
 }
 
 //------------------------------------------------------------------------------

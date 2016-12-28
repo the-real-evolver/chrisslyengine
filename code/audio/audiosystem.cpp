@@ -61,7 +61,8 @@ AudioSystem::Initialise(void* customParams)
         Channel* channel = CE_NEW Channel();
         ce_dynamic_array_set(&this->channelPool, i, channel);
     }
-    this->channelPool.size = this->activeRenderer->GetNumHardwareChannels();
+
+    this->activeRenderer->StartAudioProcessing();
 
     return OK;
 }
@@ -72,7 +73,8 @@ AudioSystem::Initialise(void* customParams)
 Result
 AudioSystem::Release()
 {
-    this->channelPool.size = 0;
+    this->activeRenderer->StopAudioProcessing();
+
     unsigned int i;
     for (i = 0; i < this->channelPool.capacity; ++i)
     {
@@ -265,7 +267,7 @@ AudioSystem::Mix(unsigned int numSamples, unsigned char* buffer)
 {
     memset(buffer, 0, numSamples << 2);
     unsigned int i;
-    for (i = 0; i < this->channelPool.size; ++i)
+    for (i = 0; i < this->channelPool.capacity; ++i)
     {
         Channel* channel = (Channel*)ce_dynamic_array_get(&this->channelPool, i);
         int index;

@@ -55,6 +55,24 @@ PSPAudioRenderer::Shutdown()
 //------------------------------------------------------------------------------
 /**
 */
+void
+PSPAudioRenderer::StartAudioProcessing()
+{
+
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+PSPAudioRenderer::StopAudioProcessing()
+{
+
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
 unsigned short
 PSPAudioRenderer::GetNumHardwareChannels() const
 {

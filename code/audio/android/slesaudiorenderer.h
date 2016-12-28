@@ -32,6 +32,10 @@ public:
     void _Initialise(void* customParams);
     /// shutdown the renderer and cleanup resources
     void Shutdown();
+    /// starts calling the softwaremixer and sends mixed buffer to the output
+    void StartAudioProcessing();
+    /// stops the softwaremixer, close mixerthread etc.
+    void StopAudioProcessing();
     /// gets the number of hardware channels
     unsigned short GetNumHardwareChannels() const;
     /// start playback on the given channel

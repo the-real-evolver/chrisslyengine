@@ -88,6 +88,24 @@ SLESAudioRenderer::Shutdown()
 //------------------------------------------------------------------------------
 /**
 */
+void
+SLESAudioRenderer::StartAudioProcessing()
+{
+
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+SLESAudioRenderer::StopAudioProcessing()
+{
+
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
 unsigned short
 SLESAudioRenderer::GetNumHardwareChannels() const
 {
