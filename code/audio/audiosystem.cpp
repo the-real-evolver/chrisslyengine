@@ -5,6 +5,7 @@
 #include "audiosystem.h"
 #include "wavcodec.h"
 #include "vorbiscodec.h"
+#include "dsp/mixer.h"
 #include "memoryallocatorconfig.h"
 #include "chrisslymath.h"
 #include "debug.h"
@@ -278,34 +279,54 @@ AudioSystem::Mix(unsigned int numSamples, unsigned char* buffer)
             channel->IsPlaying(&isPlaying);
             if (isPlaying)
             {
-                Sound* sound;
-                channel->GetCurrentSound(&sound);
-                unsigned int length;
-                sound->GetLength(&length);
-                unsigned int position;
-                channel->GetPosition(&position);
-                int numChannels, bits;
-                sound->GetFormat(NULL, NULL, &numChannels, &bits);
-                if (2 == numChannels && 16 == bits)
+                bool paused;
+                channel->GetPaused(&paused);
+                if (!paused)
                 {
-                    if (position + numSamples > length)
+                    unsigned int position;
+                    channel->GetPosition(&position);
+                    float volume, pan;
+                    channel->GetVolume(&volume);
+                    channel->GetPan(&pan);
+                    audio::Mode mode;
+                    channel->GetMode(&mode);
+                    Sound* sound;
+                    channel->GetCurrentSound(&sound);
+                    unsigned int length;
+                    sound->GetLength(&length);
+                    int numChannels, bits;
+                    sound->GetFormat(NULL, NULL, &numChannels, &bits);
+                    if (length < numSamples)
                     {
-                        memcpy(buffer, sound->_GetSampleBufferPointer(position), (length - position) << 2);
-                        audio::Mode mode;
-                        channel->GetMode(&mode);
+                        ce_audio_mix_signed16_stereo(bits, numChannels, sound->_GetSampleBufferPointer(0), (short*)buffer, length, volume, pan);
+                        if (!(mode & audio::MODE_LOOP_NORMAL))
+                        {
+                            channel->_SetIsPlaying(false);
+                            channel->_SetIndex(audio::Channel::CHANNEL_FREE);
+                            sound->_DecrementUseCount();
+                        }
+                    }
+                    else if (position + numSamples > length)
+                    {
+                        ce_audio_mix_signed16_stereo(bits, numChannels, sound->_GetSampleBufferPointer(position), (short*)buffer, length - position, volume, pan);
                         if (mode & audio::MODE_LOOP_NORMAL)
                         {
-                            memcpy(buffer, sound->_GetSampleBufferPointer(0), (position + numSamples - length) << 2);
+                            ce_audio_mix_signed16_stereo(bits, numChannels, sound->_GetSampleBufferPointer(0), (short*)buffer, position + numSamples - length, volume, pan);
                             channel->SetPosition(position + numSamples - length);
+                        }
+                        else
+                        {
+                            channel->_SetIsPlaying(false);
+                            channel->_SetIndex(audio::Channel::CHANNEL_FREE);
+                            sound->_DecrementUseCount();
                         }
                     }
                     else
                     {
-                        memcpy(buffer, sound->_GetSampleBufferPointer(position), numSamples << 2);
+                        ce_audio_mix_signed16_stereo(bits, numChannels, sound->_GetSampleBufferPointer(position), (short*)buffer, numSamples, volume, pan);
                         channel->SetPosition(position + numSamples);
                     }
                 }
-                break;
             }
         }
     }

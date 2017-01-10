@@ -47,19 +47,8 @@ public:
     static int ChannelThread(SceSize args, void* argp);
 
 private:
-    /// describes the panning mode used during playback on a channel
-    enum PanningMode
-    {
-        /// linear having at least one channel at full volume -1.0 = full left muted right, 0.0 = full left and right, 1.0 = full right muted left
-        PAN_CLAMPEDLINEAR,
-        /// constant power pan = 0.0, the balance for the sound in each speaker is 71% left and 71% right
-        PAN_CONSTANTPOWER
-    };
-
     /// copy constructor
     PSPAudioRenderer(const PSPAudioRenderer&cc) {};
-    /// calculate left and right volume from volume and panning
-    static void CalculateVolumesFromPanning(PanningMode mode, float volume, float panning, int& leftVolume, int& rightVolume);
 
     static PSPAudioRenderer* Singleton;
 };

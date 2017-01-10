@@ -6,7 +6,8 @@
 #include "modeflags.h"
 #include "sound.h"
 #include "propertychangedflags.h"
-#include "chrisslymath.h"
+#include "dsp/mixer.h"
+// #include "chrisslymath.h"
 #include "debug.h"
 #include <stdio.h>
 #include <pspthreadman.h>
@@ -234,31 +235,31 @@ PSPAudioRenderer::ChannelThread(SceSize args, void* argp)
 
                 float volume;
                 channel->GetVolume(&volume);
-                float panning;
-                channel->GetPan(&panning);
-                int leftVolume, rightVolume;
+                float pan;
+                channel->GetPan(&pan);
+                float leftVolume, rightVolume;
                 if (mode & audio::MODE_3D)
                 {
-                    CalculateVolumesFromPanning(PAN_CONSTANTPOWER, volume *= channel->_GetAttenuationFactor(), panning, leftVolume, rightVolume);
+                    ce_audio_calculate_stereo_channel_volumes(PAN_CONSTANTPOWER, volume *= channel->_GetAttenuationFactor(), pan, &leftVolume, &rightVolume);
                 }
                 else if (1 == numChannels)
                 {
-                    CalculateVolumesFromPanning(PAN_CONSTANTPOWER, volume, panning, leftVolume, rightVolume);
+                    ce_audio_calculate_stereo_channel_volumes(PAN_CONSTANTPOWER, volume, pan, &leftVolume, &rightVolume);
                 }
                 else
                 {
-                    CalculateVolumesFromPanning(PAN_CLAMPEDLINEAR, volume, panning, leftVolume, rightVolume);
+                    ce_audio_calculate_stereo_channel_volumes(PAN_STEREO, volume, pan, &leftVolume, &rightVolume);
                 }
 
                 syncLock.Unlock();
 
                 if (mode & audio::MODE_CREATESTREAM)
                 {
-                    sceAudioOutputPannedBlocking(index, leftVolume, rightVolume, codec->GetStreamBufferPointer());
+                    sceAudioOutputPannedBlocking(index, (int)((float)PSP_AUDIO_VOLUME_MAX * leftVolume), (int)((float)PSP_AUDIO_VOLUME_MAX * rightVolume), codec->GetStreamBufferPointer());
                 }
                 else
                 {
-                    sceAudioOutputPannedBlocking(index, leftVolume, rightVolume, sound->_GetSampleBufferPointer(position));
+                    sceAudioOutputPannedBlocking(index, (int)((float)PSP_AUDIO_VOLUME_MAX * leftVolume), (int)((float)PSP_AUDIO_VOLUME_MAX * rightVolume), sound->_GetSampleBufferPointer(position));
                 }
             }
             else
@@ -298,36 +299,6 @@ PSPAudioRenderer::ChannelThread(SceSize args, void* argp)
     }
 
     return 0;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-void
-PSPAudioRenderer::CalculateVolumesFromPanning(PanningMode mode, float volume, float panning, int& leftVolume, int& rightVolume)
-{
-    switch (mode)
-    {
-        case PAN_CLAMPEDLINEAR:
-            {
-                float leftGain = 1.0f - panning;
-                float rightGain = panning + 1.0f;
-                leftVolume = (int)((float)PSP_AUDIO_VOLUME_MAX * volume * ((leftGain > 1.0f) ? 1.0f : leftGain));
-                rightVolume = (int)((float)PSP_AUDIO_VOLUME_MAX * volume * ((rightGain > 1.0f) ? 1.0f : rightGain));
-            }
-            break;
-
-        case PAN_CONSTANTPOWER:
-            {
-                float var = 0.785398f * (panning + 1.0f);
-                leftVolume = (int)((float)PSP_AUDIO_VOLUME_MAX * volume * core::Math::Cos(var));
-                rightVolume = (int)((float)PSP_AUDIO_VOLUME_MAX * volume * core::Math::Sin(var));
-            }
-            break;
-
-        default:
-            CE_ASSERT(false, "PSPAudioRenderer::CalculateVolumesFromPanning(): panningmode '%i' not supported\n", mode);
-    }
 }
 
 } // namespace chrissly

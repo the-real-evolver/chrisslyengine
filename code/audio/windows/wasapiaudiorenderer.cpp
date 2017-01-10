@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 //  wasapiaudiorenderer.cpp
-//  (C) 2014 Christian Bleicher
+//  (C) 2016 Christian Bleicher
 //------------------------------------------------------------------------------
 #include "wasapiaudiorenderer.h"
 #include "audiosystem.h"
@@ -10,6 +10,7 @@ namespace chrissly
 
 WASAPIAudioRenderer* WASAPIAudioRenderer::Singleton = NULL;
 
+static const unsigned int RequestedBufferSizeInSamples = 1024;
 static const unsigned short AudioChannelMax = 8;
 static const REFERENCE_TIME ReftimesPerSec = 10000000;
 
@@ -77,7 +78,7 @@ WASAPIAudioRenderer::_Initialise(void* customParams)
     format->nAvgBytesPerSec = format->nSamplesPerSec * format->nBlockAlign;
     format->cbSize = 0;
 
-    REFERENCE_TIME hnsRequestedDuration = (REFERENCE_TIME)(1024.0 / (double)format->nSamplesPerSec * (double)ReftimesPerSec);
+    REFERENCE_TIME hnsRequestedDuration = (REFERENCE_TIME)((double)RequestedBufferSizeInSamples / (double)format->nSamplesPerSec * (double)ReftimesPerSec);
     result = this->audioClient->Initialize(AUDCLNT_SHAREMODE_SHARED, 0, hnsRequestedDuration, 0, format, NULL);
     CE_ASSERT(SUCCEEDED(result), "WASAPIAudioRenderer::_Initialise() failed to initialize audio client\n");
 
@@ -89,6 +90,8 @@ WASAPIAudioRenderer::_Initialise(void* customParams)
 
     result = this->audioClient->Start();
     CE_ASSERT(SUCCEEDED(result), "WASAPIAudioRenderer::_Initialise() failed to start audio client\n");
+
+    CoTaskMemFree(format);
 }
 
 //------------------------------------------------------------------------------

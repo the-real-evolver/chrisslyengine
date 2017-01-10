@@ -152,6 +152,9 @@
     <ClCompile Include="..\..\code\audio\windows\wasapiaudiorenderer.cpp">
       <Filter>audio\windows</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\code\audio\dsp\mixer.cpp">
+      <Filter>audio\dsp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="core">
@@ -180,6 +183,9 @@
     </Filter>
     <Filter Include="audio\windows">
       <UniqueIdentifier>{31efd57d-d93b-4515-b550-bd4a97e8fd6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\dsp">
+      <UniqueIdentifier>{e9a0ab98-b9f5-452e-a3d7-e6a21293ea4d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -431,6 +437,9 @@
     </ClInclude>
     <ClInclude Include="..\..\code\audio\windows\wasapiaudiorenderer.h">
       <Filter>audio\windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\audio\dsp\mixer.h">
+      <Filter>audio\dsp</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

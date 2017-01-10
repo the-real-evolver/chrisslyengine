@@ -200,6 +200,7 @@ D3D11Mappings::Get(const D3D11_SHADER_TYPE_DESC& typeDesc)
                 case 1: return graphics::GCT_INT1;
             }
             break;
+
         case D3D_SVT_FLOAT:
             switch (typeDesc.Rows)
             {
@@ -217,6 +218,7 @@ D3D11Mappings::Get(const D3D11_SHADER_TYPE_DESC& typeDesc)
                     }
             }
             break;
+
         case D3D_SVT_SAMPLER2D: return graphics::GCT_SAMPLER2D;
     }
 

@@ -35,6 +35,7 @@ OBJS = $(CE)/core/quaternion.o $(CE)/core/vector3.o $(CE)/core/matrix3.o $(CE)/c
        $(CE)/graphics/animation.o $(CE)/graphics/animationtrack.o $(CE)/graphics/keyframe.o $(CE)/graphics/animationstate.o \
        $(CE)/graphics/rendertarget.o $(CE)/graphics/psp/psprendertexture.o $(CE)/graphics/psp/psprenderwindow.o \
        $(CE)/audio/wavcodec.o $(CE)/audio/vorbiscodec.o $(CE)/audio/soundbase.o $(CE)/audio/audiosystem.o $(CE)/audio/channelbase.o \
+       $(CE)/audio/dsp/mixer.o \
        $(CE)/audio/psp/pspaudiorenderer.o $(CE)/audio/psp/pspchannel.o \
        $(CE)/application/statemanager.o \
        code/main.o \
