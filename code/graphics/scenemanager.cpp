@@ -21,7 +21,6 @@ SceneManager* SceneManager::Singleton = NULL;
 /**
 */
 SceneManager::SceneManager() :
-    entities(NULL),
     sceneRoot(NULL),
     ambientLight(0x00000000),
     suppressRenderStateChanges(false),
@@ -38,6 +37,7 @@ SceneManager::SceneManager() :
 
     ce_hash_table_init(&this->cameras, 2);
     ce_hash_table_init(&this->lights, 4);
+    ce_dynamic_array_init(&this->entities, 256);
     ce_dynamic_array_init(&this->sceneNodes, 256);
 
     this->renderQueueOpaque.Initialise(128);
@@ -162,7 +162,7 @@ SceneManager::CreateEntity(const char* meshName)
 {
     Entity* entity = CE_NEW Entity(MeshManager::Instance()->Load(meshName));
 
-    ce_linked_list_add(&this->entities, entity);
+    ce_dynamic_array_push_back(&this->entities, entity);
 
     return entity;
 }
@@ -212,15 +212,11 @@ SceneManager::ClearScene()
     }
     ce_dynamic_array_delete(&this->sceneNodes);
 
-    ce_linked_list* it = this->entities;
-    while (it != NULL)
+    for (i = 0; i < this->entities.size; ++i)
     {
-        ce_linked_list* node = it;
-        CE_DELETE (Entity*)node->data;
-        it = it->next;
-        ce_linked_list_remove(node);
+        CE_DELETE(Entity*)ce_dynamic_array_get(&this->entities, i);
     }
-    this->entities = NULL;
+    ce_dynamic_array_delete(&this->entities);
 }
 
 //------------------------------------------------------------------------------

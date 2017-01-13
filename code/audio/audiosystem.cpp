@@ -283,41 +283,33 @@ AudioSystem::Mix(unsigned int numSamples, unsigned char* buffer)
                 channel->GetPaused(&paused);
                 if (!paused)
                 {
-                    unsigned int position;
-                    channel->GetPosition(&position);
+                    Mode mode;
+                    channel->GetMode(&mode);
                     float volume, pan;
                     channel->GetVolume(&volume);
                     channel->GetPan(&pan);
-                    audio::Mode mode;
-                    channel->GetMode(&mode);
+                    unsigned int position, length;
+                    channel->GetPosition(&position);
                     Sound* sound;
                     channel->GetCurrentSound(&sound);
-                    unsigned int length;
-                    sound->GetLength(&length);
                     int numChannels, bits;
                     sound->GetFormat(NULL, NULL, &numChannels, &bits);
-                    if (length < numSamples)
-                    {
-                        ce_audio_mix_signed16_stereo(bits, numChannels, sound->_GetSampleBufferPointer(0), (short*)buffer, length, volume, pan);
-                        if (!(mode & audio::MODE_LOOP_NORMAL))
-                        {
-                            channel->_SetIsPlaying(false);
-                            channel->_SetIndex(audio::Channel::CHANNEL_FREE);
-                            sound->_DecrementUseCount();
-                        }
-                    }
-                    else if (position + numSamples > length)
+                    sound->GetLength(&length);
+                    if (position + numSamples > length)
                     {
                         ce_audio_mix_signed16_stereo(bits, numChannels, sound->_GetSampleBufferPointer(position), (short*)buffer, length - position, volume, pan);
-                        if (mode & audio::MODE_LOOP_NORMAL)
+                        if (mode & MODE_LOOP_NORMAL)
                         {
-                            ce_audio_mix_signed16_stereo(bits, numChannels, sound->_GetSampleBufferPointer(0), (short*)buffer, position + numSamples - length, volume, pan);
-                            channel->SetPosition(position + numSamples - length);
+                            if (length > numSamples)
+                            {
+                                ce_audio_mix_signed16_stereo(bits, numChannels, sound->_GetSampleBufferPointer(0), (short*)buffer, position + numSamples - length, volume, pan);
+                                channel->SetPosition(position + numSamples - length);
+                            }
                         }
                         else
                         {
                             channel->_SetIsPlaying(false);
-                            channel->_SetIndex(audio::Channel::CHANNEL_FREE);
+                            channel->_SetIndex(Channel::CHANNEL_FREE);
                             sound->_DecrementUseCount();
                         }
                     }

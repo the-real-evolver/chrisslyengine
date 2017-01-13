@@ -19,7 +19,7 @@ mix_signed16_stereo_signed16(int num_channels, short* buffer_to_mix, short* buff
     unsigned int i;
     for (i = 0; i < num_samples; ++i)
     {
-        sample = ((float)(*buffer) / 32767.0f) + ((float)(*buffer_to_mix) / 32767.0f) * volume_left;
+        sample = (float)(*buffer) / 32767.0f + (float)(*buffer_to_mix) / 32767.0f * volume_left;
         CLAMP_SAMPLE(sample);
         *buffer = (short)(sample * 32767.0f);
         ++buffer;
@@ -28,7 +28,7 @@ mix_signed16_stereo_signed16(int num_channels, short* buffer_to_mix, short* buff
             ++buffer_to_mix;
         }
 
-        sample = ((float)(*buffer) / 32767.0f) + ((float)(*buffer_to_mix) / 32767.0f) * volume_right;
+        sample = (float)(*buffer) / 32767.0f + (float)(*buffer_to_mix) / 32767.0f * volume_right;
         CLAMP_SAMPLE(sample);
         *buffer = (short)(sample * 32767.0f);
         ++buffer;
@@ -47,7 +47,7 @@ mix_signed16_stereo_unsigned8(int num_channels, unsigned char* buffer_to_mix, sh
     unsigned int i;
     for (i = 0; i < num_samples; ++i)
     {
-        sample = ((float)(*buffer) / 32767.0f) + (((float)(*buffer_to_mix) - 127.0f) / 128.0f) * volume_left;
+        sample = (float)(*buffer) / 32767.0f + ((float)(*buffer_to_mix) - 127.0f) / 128.0f * volume_left;
         CLAMP_SAMPLE(sample);
         *buffer = (short)(sample * 32767.0f);
         ++buffer;
@@ -56,7 +56,7 @@ mix_signed16_stereo_unsigned8(int num_channels, unsigned char* buffer_to_mix, sh
             ++buffer_to_mix;
         }
 
-        sample = ((float)(*buffer) / 32767.0f) + (((float)(*buffer_to_mix) - 127.0f) / 128.0f) * volume_right;
+        sample = (float)(*buffer) / 32767.0f + ((float)(*buffer_to_mix) - 127.0f) / 128.0f * volume_right;
         CLAMP_SAMPLE(sample);
         *buffer = (short)(sample * 32767.0f);
         ++buffer;
@@ -76,8 +76,8 @@ ce_audio_calculate_stereo_channel_volumes(ce_audio_panning_mode mode, float volu
             {
                 float leftGain = 1.0f - pan;
                 float rightGain = pan + 1.0f;
-                *volume_left = volume * ((leftGain > 1.0f) ? 1.0f : leftGain);
-                *volume_right = volume * ((rightGain > 1.0f) ? 1.0f : rightGain);
+                *volume_left = volume * leftGain > 1.0f ? 1.0f : leftGain;
+                *volume_right = volume * rightGain > 1.0f ? 1.0f : rightGain;
             }
             break;
 
@@ -101,7 +101,7 @@ void
 ce_audio_mix_signed16_stereo(int bits, int num_channels, void* buffer_to_mix, short* buffer, unsigned int num_samples, float volume, float pan)
 {
     float volume_left, volume_right;
-    ce_audio_calculate_stereo_channel_volumes(PAN_CONSTANTPOWER, volume, pan, &volume_left, &volume_right);
+    ce_audio_calculate_stereo_channel_volumes(2 == num_channels ? PAN_STEREO : PAN_CONSTANTPOWER, volume, pan, &volume_left, &volume_right);
 
     switch (bits)
     {

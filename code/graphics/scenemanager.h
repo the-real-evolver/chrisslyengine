@@ -153,7 +153,7 @@ private:
 
     mutable ce_hash_table cameras;
     mutable ce_hash_table lights;
-    ce_linked_list* entities;
+    ce_dynamic_array entities;
     ce_dynamic_array sceneNodes;
     SceneNode* sceneRoot;
     unsigned int ambientLight;
