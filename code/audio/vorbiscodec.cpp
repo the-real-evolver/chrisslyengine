@@ -35,7 +35,7 @@ VorbisCodec::~VorbisCodec()
 /**
 */
 void
-VorbisCodec::SetupSound(const char* filename, Mode mode, void** sampleBuffer, unsigned int& length, AudioFormat& format, SoundType& type, int& channels, int& bits)
+VorbisCodec::SetupSound(const char* filename, Mode mode, void** sampleBuffer, unsigned int& length, AudioFormat& format, SoundType& type, int& channels, int& bits, unsigned int& sampleRate)
 {
     FileHandle fd = FSWrapper::Open(filename, ReadAccess, Buffer, 0777);
 
@@ -51,7 +51,9 @@ VorbisCodec::SetupSound(const char* filename, Mode mode, void** sampleBuffer, un
         CE_ASSERT(fileBuffer != NULL, "VorbisCodec::SetupSound(): failed to allocate '%i' bytes for samplebuffer\n", fileSize);
         FSWrapper::Read(fd, fileBuffer, fileSize);
         FSWrapper::Close(fd);
-        length = stb_vorbis_decode_memory((unsigned char*)fileBuffer, fileSize, &channels, NULL, (short int**)sampleBuffer);
+        int samplingRate;
+        length = stb_vorbis_decode_memory((unsigned char*)fileBuffer, (int)fileSize, &channels, &samplingRate, (short**)sampleBuffer);
+        sampleRate = (unsigned int)samplingRate;
         CE_FREE(fileBuffer);
     }
 

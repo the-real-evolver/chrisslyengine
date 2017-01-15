@@ -24,7 +24,7 @@ public:
     /// destructor
     virtual ~Codec() {};
     /// called by Sound, create buffers ect.
-    virtual void SetupSound(const char* name, Mode mode, void** sampleBuffer, unsigned int& length, AudioFormat& format, SoundType& type, int& channels, int& bits) = 0;
+    virtual void SetupSound(const char* name, Mode mode, void** sampleBuffer, unsigned int& length, AudioFormat& format, SoundType& type, int& channels, int& bits, unsigned int& sampleRate) = 0;
     /// initialise the codec for streaming
     virtual void InitialiseStream() = 0;
     /// loads data into the current streambackbuffer

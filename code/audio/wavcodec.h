@@ -23,7 +23,7 @@ public:
     /// destructor
     ~WavCodec();
     /// called by Sound, create buffers ect.
-    void SetupSound(const char* filename, Mode mode, void** sampleBuffer, unsigned int& length, AudioFormat& format, SoundType& type, int& channels, int& bits);
+    void SetupSound(const char* filename, Mode mode, void** sampleBuffer, unsigned int& length, AudioFormat& format, SoundType& type, int& channels, int& bits, unsigned int& sampleRate);
     /// initialise the codec for streaming
     void InitialiseStream();
     /// loads data into the current streambackbuffer

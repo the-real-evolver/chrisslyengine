@@ -102,8 +102,11 @@ WASAPIAudioRenderer::Shutdown()
 {
     if (this->audioClient != NULL)
     {
-        HRESULT hr = this->audioClient->Stop();
-        CE_ASSERT(SUCCEEDED(hr), "WASAPIAudioRenderer::Shutdown() failed to stop audio client\n");
+#if __DEBUG__
+        HRESULT result =
+#endif
+        this->audioClient->Stop();
+        CE_ASSERT(SUCCEEDED(result), "WASAPIAudioRenderer::Shutdown() failed to stop audio client\n");
         this->audioClient->Release();
         this->audioClient = NULL;
     }

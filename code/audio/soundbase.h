@@ -56,6 +56,7 @@ protected:
     unsigned int lengthInSamples;
     int numChannels;
     int bitsPerSample;
+    unsigned int sampleRate;
     void* sampleBuffer;
     Codec* audioCodec;
     bool realized;

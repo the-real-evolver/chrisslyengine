@@ -22,6 +22,7 @@ SoundBase::SoundBase() :
     lengthInSamples(0),
     numChannels(0),
     bitsPerSample(0),
+    sampleRate(0),
     sampleBuffer(NULL),
     audioCodec(NULL),
     realized(false),
@@ -114,7 +115,7 @@ SoundBase::_Setup(const char* filename, Mode modeflags, Codec* codec)
 {
     this->mode = modeflags;
     this->audioCodec = codec;
-    this->audioCodec->SetupSound(filename, modeflags, &this->sampleBuffer, this->lengthInSamples, this->audioFormat, this->soundType, this->numChannels, this->bitsPerSample);
+    this->audioCodec->SetupSound(filename, modeflags, &this->sampleBuffer, this->lengthInSamples, this->audioFormat, this->soundType, this->numChannels, this->bitsPerSample, this->sampleRate);
     this->_CreateInternalResources();
     this->realized = true;
 }
@@ -131,6 +132,7 @@ SoundBase::_Release()
     this->lengthInSamples = 0;
     this->numChannels = 0;
     this->bitsPerSample = 0;
+    this->sampleRate = 0;
 
     if (this->sampleBuffer != NULL)
     {

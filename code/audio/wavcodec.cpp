@@ -52,12 +52,12 @@ WavCodec::~WavCodec()
 /**
 */
 void
-WavCodec::SetupSound(const char* filename, Mode mode, void** sampleBuffer, unsigned int& length, AudioFormat& format, SoundType& type, int& channels, int& bits)
+WavCodec::SetupSound(const char* filename, Mode mode, void** sampleBuffer, unsigned int& length, AudioFormat& format, SoundType& type, int& channels, int& bits, unsigned int& sampleRate)
 {
     FileHandle fd = FSWrapper::Open(filename, ReadAccess, (mode & MODE_CREATESTREAM) ? Streaming : Random, 0777);
 
     char chunkID[4] = {'\0'};
-    unsigned int chunkSize;
+    unsigned int chunkSize, byteRate;
 
     // "RIFF" chunk descriptor
     FSWrapper::Read(fd, chunkID, 4);
@@ -67,8 +67,7 @@ WavCodec::SetupSound(const char* filename, Mode mode, void** sampleBuffer, unsig
     CE_ASSERT(0 == strncmp(chunkID, "WAVE", 4), "WavCodec::SetupSound(): '%s' RIFF file but not a wave file\n", filename);
     this->riffWavHeaderSize = 12;
 
-    short audioFormat, numChannels, blockAlign, bitsPerSample;
-    unsigned int sampleRate, byteRate;
+    short audioFormat, numChannels = 0, blockAlign, bitsPerSample = 0;
 
     while (FSWrapper::Read(fd, chunkID, 4) > 0)
     {
