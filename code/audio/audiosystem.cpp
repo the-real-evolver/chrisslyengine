@@ -295,14 +295,14 @@ AudioSystem::Mix(unsigned int numSamples, unsigned char* buffer)
                     int numChannels, bits;
                     sound->GetFormat(NULL, NULL, &numChannels, &bits);
                     sound->GetLength(&length);
-                    if (position + numSamples > length)
+                    if (position + numSamples >= length)
                     {
                         ce_audio_mix_signed16_stereo(bits, numChannels, sound->_GetSampleBufferPointer(position), (short*)buffer, length - position, volume, pan);
                         if (mode & MODE_LOOP_NORMAL)
                         {
-                            if (length > numSamples)
+                            if (length >= numSamples)
                             {
-                                ce_audio_mix_signed16_stereo(bits, numChannels, sound->_GetSampleBufferPointer(0), (short*)buffer, position + numSamples - length, volume, pan);
+                                ce_audio_mix_signed16_stereo(bits, numChannels, sound->_GetSampleBufferPointer(0), (short*)buffer + (uintptr_t)(length - position), position + numSamples - length, volume, pan);
                                 channel->SetPosition(position + numSamples - length);
                             }
                         }

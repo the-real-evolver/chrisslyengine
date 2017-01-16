@@ -29,8 +29,8 @@ public:
     virtual void InitialiseStream() = 0;
     /// loads data into the current streambackbuffer
     virtual void FillStreamBackBuffer() = 0;
-    /// loads the given number of samples into the current streambuffer
-    virtual void FillStreamBuffer(unsigned int numSamples) = 0;
+    /// loads the given number of samples at the given position of the stream into the current streambuffer and returns a pointer to it
+    virtual void* FillStreamBuffer(unsigned int numSamples, unsigned int position) = 0;
     /// swaps the streambuffers, called when a buffer finishes playing
     virtual void SwapStreamBuffers() = 0;
     /// get pointer to the current streambuffer

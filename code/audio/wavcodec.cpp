@@ -91,16 +91,15 @@ WavCodec::SetupSound(const char* filename, Mode mode, void** sampleBuffer, unsig
         else if (0 == strncmp(chunkID, "data", 4))
         {
             // "data" sub-chunk
-            unsigned int dataSize = chunkSize;
             if (8 == bitsPerSample)
             {
-                length = dataSize;
+                length = chunkSize;
                 format = AUDIO_FORMAT_PCM8;
                 this->bytesPerSample = (unsigned char)numChannels;
             }
             else if (16 == bitsPerSample)
             {
-                length = dataSize >> 1;
+                length = chunkSize >> 1;
                 format = AUDIO_FORMAT_PCM16;
                 this->bytesPerSample = 2 * (unsigned char)numChannels;
             }
@@ -117,16 +116,16 @@ WavCodec::SetupSound(const char* filename, Mode mode, void** sampleBuffer, unsig
             {
                 this->openedAsStream = true;
                 this->streamFileHandle = fd;
-                this->lengthInBytes = dataSize;
+                this->lengthInBytes = chunkSize;
                 this->streamBuffers[0] = CE_MALLOC_ALIGN(CE_CACHE_LINE_SIZE, MaxStreamBufferSamples * this->bytesPerSample);
                 this->streamBuffers[1] = CE_MALLOC_ALIGN(CE_CACHE_LINE_SIZE, MaxStreamBufferSamples * this->bytesPerSample);
                 *sampleBuffer = NULL;
             }
             else
             {
-                void* buffer = CE_MALLOC_ALIGN(CE_CACHE_LINE_SIZE, dataSize);
-                CE_ASSERT(buffer != NULL, "WavCodec::SetupSound(): failed to allocate '%i' bytes for samplebuffer\n", dataSize);
-                FSWrapper::Read(fd, buffer, dataSize); // read the actual sound data
+                void* buffer = CE_MALLOC_ALIGN(CE_CACHE_LINE_SIZE, chunkSize);
+                CE_ASSERT(buffer != NULL, "WavCodec::SetupSound(): failed to allocate '%i' bytes for samplebuffer\n", chunkSize);
+                FSWrapper::Read(fd, buffer, chunkSize); // read the actual sound data
                 FSWrapper::Close(fd);
                 *sampleBuffer = buffer;
             }
@@ -187,10 +186,13 @@ WavCodec::FillStreamBackBuffer()
 //------------------------------------------------------------------------------
 /**
 */
-void
-WavCodec::FillStreamBuffer(unsigned int numSamples)
+void*
+WavCodec::FillStreamBuffer(unsigned int numSamples, unsigned int position)
 {
     CE_UNREFERENCED_PARAMETER(numSamples);
+    CE_UNREFERENCED_PARAMETER(position);
+
+    return NULL;
 }
 
 //------------------------------------------------------------------------------
