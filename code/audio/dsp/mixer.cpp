@@ -6,7 +6,7 @@
 #include "debug.h"
 #include "chrisslymath.h"
 
-#define CLAMP_SAMPLE(sample) {if (sample > 1.0f) {sample = 1.0f;} else if (sample < -1.0f) {sample = -1.0f;}}
+#define CLAMP_SAMPLE(sample) {if (sample > 32767) {sample = 32767;} else if (sample < -32767) {sample = -32767;}}
 
 //------------------------------------------------------------------------------
 /**
@@ -14,23 +14,23 @@
 static void
 mix_signed16_stereo_signed16(int num_channels, short* buffer_to_mix, short* buffer, unsigned int num_samples, float volume_left, float volume_right)
 {
-    float sample;
+    int sample;
 
     unsigned int i;
     for (i = 0; i < num_samples; ++i)
     {
-        sample = (float)(*buffer) / 32767.0f + (float)(*buffer_to_mix) / 32767.0f * volume_left;
+        sample = *buffer + (short)((float)(*buffer_to_mix) * volume_left);
         CLAMP_SAMPLE(sample);
-        *buffer = (short)(sample * 32767.0f);
+        *buffer = (short)sample;
         ++buffer;
         if (2 == num_channels)
         {
             ++buffer_to_mix;
         }
 
-        sample = (float)(*buffer) / 32767.0f + (float)(*buffer_to_mix) / 32767.0f * volume_right;
+        sample = *buffer + (short)((float)(*buffer_to_mix) * volume_right);
         CLAMP_SAMPLE(sample);
-        *buffer = (short)(sample * 32767.0f);
+        *buffer = (short)sample;
         ++buffer;
         ++buffer_to_mix;
     }
@@ -42,23 +42,23 @@ mix_signed16_stereo_signed16(int num_channels, short* buffer_to_mix, short* buff
 static void
 mix_signed16_stereo_unsigned8(int num_channels, unsigned char* buffer_to_mix, short* buffer, unsigned int num_samples, float volume_left, float volume_right)
 {
-    float sample;
+    int sample;
 
     unsigned int i;
     for (i = 0; i < num_samples; ++i)
     {
-        sample = (float)(*buffer) / 32767.0f + ((float)(*buffer_to_mix) - 127.0f) / 128.0f * volume_left;
+        sample = *buffer + (short)(((float)(*buffer_to_mix) - 127.0f) / 0.0039063f * volume_left);
         CLAMP_SAMPLE(sample);
-        *buffer = (short)(sample * 32767.0f);
+        *buffer = (short)sample;
         ++buffer;
         if (2 == num_channels)
         {
             ++buffer_to_mix;
         }
 
-        sample = (float)(*buffer) / 32767.0f + ((float)(*buffer_to_mix) - 127.0f) / 128.0f * volume_right;
+        sample = *buffer + (short)(((float)(*buffer_to_mix) - 127.0f) / 0.0039063f * volume_right);
         CLAMP_SAMPLE(sample);
-        *buffer = (short)(sample * 32767.0f);
+        *buffer = (short)sample;
         ++buffer;
         ++buffer_to_mix;
     }
