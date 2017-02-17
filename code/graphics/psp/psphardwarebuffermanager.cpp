@@ -20,7 +20,7 @@ PSPHardwareBufferManager::GetMemorySize(unsigned int width, unsigned int height,
     switch (psm)
     {
         case GU_PSM_T4:
-            return (width * height) >> 1;
+            return (width * height) >> 1U;
 
         case GU_PSM_T8:
             return width * height;

@@ -52,15 +52,15 @@ MeshManager::Load(const char* filename)
     mesh = CE_NEW Mesh();
     ce_hash_table_insert(&this->resources, filename, strlen(filename), mesh);
 
-    const unsigned int bytesPerVertex = 36;
-    unsigned char currentChunk = 0;
-    unsigned int vertexCount = 0;
+    const unsigned int bytesPerVertex = 36U;
+    unsigned char currentChunk = 0U;
+    unsigned int vertexCount = 0U;
     HardwareVertexBuffer* vertexBuffer = NULL;
     Animation* animation = NULL;
     VertexAnimationTrack* animationTrack = NULL;
     char stringBuffer[256] = {'\0'};
     String materialName;
-    unsigned char materialNameLength = 0;
+    unsigned char materialNameLength = 0U;
 
     FileHandle fd = FSWrapper::Open(filename, ReadAccess, Random, 0777);
 
@@ -115,7 +115,7 @@ MeshManager::Load(const char* filename)
                 {
                     // read animation track
                     CE_ASSERT(animation != NULL, "MeshManager::Load(): can't create VertexAnimationTrack without Animation\n");
-                    unsigned char handle = 0;
+                    unsigned char handle = 0U;
                     FSWrapper::Read(fd, &handle, 1);
                     animationTrack = animation->CreateVertexTrack(handle);
                 }

@@ -112,12 +112,12 @@ PSPAudioRenderer::StartChannel(audio::Channel* channel)
             CE_ASSERT(false, "PSPAudioRenderer::StartChannel(): %i channel audio output not supported\n", numChannels);
     }
 
-    unsigned int samplecount = 0;
+    unsigned int samplecount = 0U;
     if (mode & audio::MODE_CREATESTREAM)
     {
         audio::Codec* codec = sound->_GetCodec();
         codec->InitialiseStream();
-        samplecount = codec->GetStreamBufferLength() / (numChannels * (bits >> 3));
+        samplecount = codec->GetStreamBufferLength() / (numChannels * ((unsigned int)bits >> 3U));
     }
     else
     {
@@ -206,7 +206,7 @@ PSPAudioRenderer::ChannelThread(SceSize args, void* argp)
             int numChannels, bits;
             sound->GetFormat(NULL, NULL, &numChannels, &bits);
             audio::Codec* codec = sound->_GetCodec();
-            unsigned int samplecount = 0;
+            unsigned int samplecount = 0U;
 
             int samplesRemaining = length - position;
             if (samplesRemaining > 0)
@@ -219,7 +219,7 @@ PSPAudioRenderer::ChannelThread(SceSize args, void* argp)
                         codec->FillStreamBackBuffer();
                         codec->SwapStreamBuffers();
                     }
-                    samplecount = codec->GetStreamBufferLength() / (numChannels * (bits >> 3));
+                    samplecount = codec->GetStreamBufferLength() / (numChannels * ((unsigned int)bits >> 3U));
                 }
                 else
                 {
@@ -268,7 +268,7 @@ PSPAudioRenderer::ChannelThread(SceSize args, void* argp)
                     if (mode & audio::MODE_CREATESTREAM)
                     {
                         codec->InitialiseStream();
-                        samplecount = codec->GetStreamBufferLength() / (numChannels * (bits >> 3));
+                        samplecount = codec->GetStreamBufferLength() / (numChannels * ((unsigned int)bits >> 3U));
                     }
                     else
                     {

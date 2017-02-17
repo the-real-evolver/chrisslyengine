@@ -14,7 +14,7 @@ namespace audio
 
 using namespace chrissly::core;
 
-static const unsigned int MaxStreamBufferSamples = 2048;
+static const unsigned int MaxStreamBufferSamples = 2048U;
 
 //------------------------------------------------------------------------------
 /**
@@ -99,7 +99,7 @@ WavCodec::SetupSound(const char* filename, Mode mode, void** sampleBuffer, unsig
             }
             else if (16 == bitsPerSample)
             {
-                length = chunkSize >> 1;
+                length = chunkSize >> 1U;
                 format = AUDIO_FORMAT_PCM16;
                 this->bytesPerSample = 2 * (unsigned char)numChannels;
             }

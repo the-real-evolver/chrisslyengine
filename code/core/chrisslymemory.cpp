@@ -13,7 +13,7 @@ ce_memory_fill_interleaved(void const* src0, void const* src1, void* dst, unsign
     char* ptr_dst = (char*)dst;
     char const* ptr_src0 = (char const*)src0;
     char const* ptr_src1 = (char const*)src1;
-    unsigned int double_stride = stride << 1;
+    unsigned int double_stride = stride << 1U;
 
     unsigned int i;
     while (dst_len)

@@ -13,7 +13,7 @@ namespace chrissly
 
 D3D11RenderSystem* D3D11RenderSystem::Singleton = NULL;
 
-static const unsigned int MaxLights = 4;
+static const unsigned int MaxLights = 4U;
 
 //------------------------------------------------------------------------------
 /**
@@ -507,7 +507,7 @@ D3D11RenderSystem::_SetPass(graphics::Pass* pass)
 void
 D3D11RenderSystem::_UseLights(ce_hash_table* lights)
 {
-    unsigned int lightIndex = 0;
+    unsigned int lightIndex = 0U;
     unsigned int i;
     for (i = 0; i < lights->bucket_count; ++i)
     {

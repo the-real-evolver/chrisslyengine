@@ -145,7 +145,7 @@ SLESAudioRenderer::StartChannel(audio::Channel* channel)
     }
     else
     {
-        result = (*bufferQueueInterface)->Enqueue(bufferQueueInterface, sound->_GetSampleBufferPointer(0), length * numChannels * (bits >> 3));
+        result = (*bufferQueueInterface)->Enqueue(bufferQueueInterface, sound->_GetSampleBufferPointer(0), length * numChannels * ((unsigned int)bits >> 3U));
     }
     CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::StartChannel(): failed to enqueue buffer\n");
 
@@ -293,7 +293,7 @@ SLESAudioRenderer::BufferQueueCallback(SLAndroidSimpleBufferQueueItf bufferQueue
             int numChannels, bits;
             sound->GetFormat(NULL, NULL, &numChannels, &bits);
 
-            result = (*bufferQueueInterface)->Enqueue(bufferQueueInterface, sound->_GetSampleBufferPointer(0), length * numChannels * (bits >> 3));
+            result = (*bufferQueueInterface)->Enqueue(bufferQueueInterface, sound->_GetSampleBufferPointer(0), length * numChannels * ((unsigned int)bits >> 3U));
             CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::BufferQueueCallback(): failed to enqueue buffer\n");
         }
         else

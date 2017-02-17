@@ -47,8 +47,8 @@ PSPTexture::CreateInternalResources()
     for (i = 0; i < this->mipmapInfos.capacity; ++i)
     {
         mipmapbuffer = (void*)((uintptr_t)mipmapbuffer + PSPHardwareBufferManager::GetMemorySize(mipmapWidth, mipmapHeight, PSPMappings::Get(this->format)));
-        mipmapWidth = mipmapWidth >> 1;
-        mipmapHeight = mipmapHeight >> 1;
+        mipmapWidth = (unsigned int)mipmapWidth >> 1U;
+        mipmapHeight = (unsigned int)mipmapHeight >> 1U;
 
         MipmapInfo* mipmapInfo = CE_NEW MipmapInfo;
         mipmapInfo->buffer = mipmapbuffer;

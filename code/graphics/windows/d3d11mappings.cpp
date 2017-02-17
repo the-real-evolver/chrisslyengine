@@ -169,10 +169,10 @@ D3D11Mappings::GetSysMemPitch(unsigned int width, graphics::PixelFormat pf)
 {
     switch (pf)
     {
-        case graphics::PF_R8G8B8A8:      return width << 2;
-        case graphics::PF_DXT1:          return (width >> 2) << 3;
-        case graphics::PF_DXT3:          return (width >> 2) << 4;
-        case graphics::PF_DXT5:          return (width >> 2) << 4;
+        case graphics::PF_R8G8B8A8:      return width << 2U;
+        case graphics::PF_DXT1:          return (width >> 2U) << 3U;
+        case graphics::PF_DXT3:          return (width >> 2U) << 4U;
+        case graphics::PF_DXT5:          return (width >> 2U) << 4U;
         case graphics::PF_R5G6B5:
         case graphics::PF_A1R5G5B5:
         case graphics::PF_A4R4G4B4:
@@ -233,9 +233,9 @@ D3D11Mappings::Get(const D3D11_SHADER_TYPE_DESC& typeDesc)
 void
 D3D11Mappings::Get(unsigned int colour, float& red, float& green, float& blue, float& alpha)
 {
-    alpha = ((colour & 0xff000000) >> 24) / 255.0f;
-    blue  = ((colour & 0x00ff0000) >> 16) / 255.0f;
-    green = ((colour & 0x0000ff00) >> 8) / 255.0f;
+    alpha = ((colour & 0xff000000) >> 24U) / 255.0f;
+    blue  = ((colour & 0x00ff0000) >> 16U) / 255.0f;
+    green = ((colour & 0x0000ff00) >> 8U) / 255.0f;
     red   = (colour & 0x000000ff) / 255.0f;
 }
 

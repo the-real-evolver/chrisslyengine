@@ -46,11 +46,11 @@ static unsigned int
 ce_hash_function(const char* key, size_t key_length)
 {
     // hashfunction: djb2
-    unsigned int hash = 5381;
+    unsigned int hash = 5381U;
     unsigned int i;
     for (i = 0; i < key_length; ++i)
     {
-        hash = ((hash << 5) + hash) + *key++;
+        hash = ((hash << 5U) + hash) + *key++;
     }
 
     return hash;

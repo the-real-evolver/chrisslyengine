@@ -17,7 +17,7 @@ namespace graphics
 
 using namespace chrissly::core;
 
-static const unsigned int LexerTextBufferSize = 65536;
+static const unsigned int LexerTextBufferSize = 65536U;
 
 //------------------------------------------------------------------------------
 /**
@@ -29,6 +29,7 @@ MaterialParser::MaterialParser() :
     currentTextureUnitState(NULL)
 {
     this->textBuffer = (char*)CE_MALLOC_ALIGN(CE_CACHE_LINE_SIZE, LexerTextBufferSize);
+    CE_ASSERT(this->textBuffer != NULL, "MaterialParser::MaterialParser(): failed to allocate '%i' bytes\n", LexerTextBufferSize);
 }
 
 //------------------------------------------------------------------------------
@@ -48,6 +49,7 @@ MaterialParser::ParseScript(const char* name)
     FileHandle fd = FSWrapper::Open(name, ReadAccess, Buffer, 0777);
     unsigned int fileSize = FSWrapper::GetFileSize(fd);
     void* fileBuffer = CE_MALLOC_ALIGN(CE_CACHE_LINE_SIZE, fileSize);
+    CE_ASSERT(this->textBuffer != NULL, "MaterialParser::ParseScript(): failed to allocate '%i' bytes\n", fileSize);
     FSWrapper::Read(fd, fileBuffer, fileSize);
     FSWrapper::Close(fd);
 
@@ -58,7 +60,7 @@ MaterialParser::ParseScript(const char* name)
     this->currentPass = NULL;
     this->currentTextureUnitState = NULL;
 
-    while (stb_c_lexer_get_token(&this->lexer))
+    while (stb_c_lexer_get_token(&this->lexer) != 0)
     {
         if (CLEX_parse_error == this->lexer.token)
         {
@@ -96,7 +98,7 @@ MaterialParser::ParseRoot()
         if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
         char* matName = this->lexer.string;
         if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
-        if (this->lexer.token == '{')
+        if ('{' == this->lexer.token)
         {
             this->parserState = StateParseMaterial;
             this->currentMaterial = MaterialManager::Instance()->CreateOrRetrieve(matName);
@@ -110,14 +112,14 @@ MaterialParser::ParseRoot()
 void
 MaterialParser::ParseMaterial()
 {
-    if (this->lexer.token == '}')
+    if ('}' == this->lexer.token)
     {
         this->parserState = StateParseRoot;
     }
     else if (0 == strcmp(this->lexer.string, "pass"))
     {
         if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
-        if (this->lexer.token == '{')
+        if ('{' == this->lexer.token)
         {
             this->parserState = StateParsePass;
             this->currentPass = this->currentMaterial->CreatePass();
@@ -131,14 +133,14 @@ MaterialParser::ParseMaterial()
 void
 MaterialParser::ParsePass()
 {
-    if (this->lexer.token == '}')
+    if ('}' == this->lexer.token)
     {
         this->parserState = StateParseMaterial;
     }
     else if (0 == strcmp(this->lexer.string, "texture_unit"))
     {
         if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
-        if (this->lexer.token == '{')
+        if ('{' == this->lexer.token)
         {
             this->parserState = StateParseTextureUnit;
             this->currentTextureUnitState = this->currentPass->CreateTextureUnitState();
@@ -321,7 +323,7 @@ MaterialParser::ParsePass()
 void
 MaterialParser::ParseTextureUnitState()
 {
-    if (this->lexer.token == '}')
+    if ('}' == this->lexer.token)
     {
         CE_ASSERT(this->currentTextureUnitState->GetTextureName().C_Str() != NULL, "MaterialParser::ParseTextureUnitState(): parse error, missing 'texture' in 'texture_unit'\n");
         this->parserState = StateParsePass;
@@ -393,11 +395,11 @@ MaterialParser::ParseTextureUnitState()
 unsigned int
 MaterialParser::GetRGBAValue(float red, float green, float blue, float alpha) const
 {
-    unsigned int colour = 0;
-    colour |= (int)(alpha * 255.0f) << 24;
-    colour |= (int)(blue * 255.0f) << 16;
-    colour |= (int)(green * 255.0f) << 8;
-    colour |= (int)(red * 255.0f);
+    unsigned int colour = 0U;
+    colour |= (unsigned int)(alpha * 255.0f) << 24U;
+    colour |= (unsigned int)(blue * 255.0f) << 16U;
+    colour |= (unsigned int)(green * 255.0f) << 8U;
+    colour |= (unsigned int)(red * 255.0f);
     return colour;
 }
 

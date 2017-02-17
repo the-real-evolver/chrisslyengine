@@ -266,7 +266,7 @@ AudioSystem::Set3DListenerAttributes(const Vector3* pos, const Vector3* forward,
 void
 AudioSystem::Mix(unsigned int numSamples, unsigned char* buffer)
 {
-    memset(buffer, 0, numSamples << 2);
+    memset(buffer, 0, numSamples << 2U);
     unsigned int i;
     for (i = 0; i < this->channelPool.capacity; ++i)
     {
@@ -297,12 +297,12 @@ AudioSystem::Mix(unsigned int numSamples, unsigned char* buffer)
                     sound->GetLength(&length);
                     if (position + numSamples >= length)
                     {
-                        ce_audio_mix_signed16_stereo(bits, numChannels, sound->_GetSampleBufferPointer(position), (short*)buffer, length - position, volume, pan);
+                        ce_audio_mix_s16_stereo(bits, numChannels, sound->_GetSampleBufferPointer(position), (short*)buffer, length - position, volume, pan);
                         if (mode & MODE_LOOP_NORMAL)
                         {
                             if (length >= numSamples)
                             {
-                                ce_audio_mix_signed16_stereo(bits, numChannels, sound->_GetSampleBufferPointer(0), (short*)buffer + (uintptr_t)(length - position), position + numSamples - length, volume, pan);
+                                ce_audio_mix_s16_stereo(bits, numChannels, sound->_GetSampleBufferPointer(0), (short*)buffer + (uintptr_t)(length - position), position + numSamples - length, volume, pan);
                                 channel->SetPosition(position + numSamples - length);
                             }
                         }
@@ -315,7 +315,7 @@ AudioSystem::Mix(unsigned int numSamples, unsigned char* buffer)
                     }
                     else
                     {
-                        ce_audio_mix_signed16_stereo(bits, numChannels, sound->_GetSampleBufferPointer(position), (short*)buffer, numSamples, volume, pan);
+                        ce_audio_mix_s16_stereo(bits, numChannels, sound->_GetSampleBufferPointer(position), (short*)buffer, numSamples, volume, pan);
                         channel->SetPosition(position + numSamples);
                     }
                 }

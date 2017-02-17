@@ -10,8 +10,8 @@ namespace chrissly
 
 WASAPIAudioRenderer* WASAPIAudioRenderer::Singleton = NULL;
 
-static const unsigned int RequestedBufferSizeInSamples = 1024;
-static const unsigned short AudioChannelMax = 8;
+static const unsigned int RequestedBufferSizeInSamples = 1024U;
+static const unsigned short AudioChannelMax = 8U;
 static const REFERENCE_TIME ReftimesPerSec = 10000000;
 
 //------------------------------------------------------------------------------

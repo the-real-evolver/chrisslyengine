@@ -21,6 +21,6 @@ enum ce_audio_panning_mode
 /// calculate volumes of stereo channels from volume, panning and pan mode
 void ce_audio_calculate_stereo_channel_volumes(ce_audio_panning_mode mode, float volume, float pan, float* volume_left, float* volume_right);
 /// mix the given buffer with a signed 16 bit stereo buffer to signed 16 bit stereo output
-void ce_audio_mix_signed16_stereo(int bits, int num_channels, void* buffer_to_mix, short* buffer, unsigned int num_samples, float volume, float pan);
+void ce_audio_mix_s16_stereo(int bits, int num_channels, void* buffer_to_mix, short* buffer, unsigned int num_samples, float volume, float pan);
 
 #endif

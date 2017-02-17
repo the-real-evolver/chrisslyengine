@@ -97,7 +97,7 @@ PSPRenderSystem::_SetViewport(graphics::Viewport* vp)
     int left = vp->GetActualLeft();
     int top = vp->GetActualTop();
 
-    sceGuOffset(2048 - (width >> 1) - left, 2048 - (height >> 1) - top);
+    sceGuOffset(2048 - (int)((unsigned int)width >> 1U) - left, 2048 - (int)((unsigned int)height >> 1U) - top);
     sceGuViewport(2048, 2048, width, height);
     sceGuScissor(left, top, left + width, top + height);
 
@@ -248,7 +248,7 @@ PSPRenderSystem::_SetPass(graphics::Pass* pass)
         sceGuAmbient(this->ambientLight);
         sceGuSendCommandi(0x54, pass->GetSelfIllumination() & 0xffffff);
         sceGuSendCommandi(0x55, pass->GetAmbient() & 0xffffff);
-        sceGuSendCommandi(0x58, pass->GetAmbient() >> 24);
+        sceGuSendCommandi(0x58, pass->GetAmbient() >> 24U);
         sceGuSendCommandi(0x56, pass->GetDiffuse() & 0xffffff);
         sceGuSendCommandi(0x57, pass->GetSpecular() & 0xffffff);
         sceGuSpecular(pass->GetShininess());

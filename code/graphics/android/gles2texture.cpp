@@ -52,13 +52,13 @@ GLES2Texture::CreateInternalResources()
         if (0 == this->numMipmaps)
         {
             glGenerateMipmap(GL_TEXTURE_2D);
-            int mipmapWidth = this->width;
-            int mipmapHeight = this->height;
-            while (mipmapWidth > 1 && mipmapHeight > 1)
+            unsigned int mipmapWidth = this->width;
+            unsigned int mipmapHeight = this->height;
+            while (mipmapWidth > 1U && mipmapHeight > 1U)
             {
                 ++this->numMipmaps;
-                mipmapWidth = mipmapWidth >> 1;
-                mipmapHeight = mipmapHeight >> 1;
+                mipmapWidth = mipmapWidth >> 1U;
+                mipmapHeight = mipmapHeight >> 1U;
             }
         }
     }

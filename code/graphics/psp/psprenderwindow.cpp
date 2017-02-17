@@ -33,9 +33,9 @@ PSPRenderWindow::~PSPRenderWindow()
 void
 PSPRenderWindow::Create()
 {
-    const unsigned int bufferWidth = 512;
-    const unsigned int width = 480;
-    const unsigned int height = 272;
+    const unsigned int bufferWidth = 512U;
+    const unsigned int width = 480U;
+    const unsigned int height = 272U;
 
     void* drawBuffer = PSPHardwareBufferManager::GetStaticVramBuffer(bufferWidth, height, GU_PSM_8888);
     void* dispBuffer = PSPHardwareBufferManager::GetStaticVramBuffer(bufferWidth, height, GU_PSM_8888);

@@ -16,7 +16,7 @@ namespace chrissly
 
 GLES2RenderSystem* GLES2RenderSystem::Singleton = NULL;
 
-static const unsigned int MaxLights = 4;
+static const unsigned int MaxLights = 4U;
 
 //------------------------------------------------------------------------------
 /**
@@ -472,7 +472,7 @@ GLES2RenderSystem::_SetPass(graphics::Pass* pass)
 void
 GLES2RenderSystem::_UseLights(ce_hash_table* lights)
 {
-    unsigned int lightIndex = 0;
+    unsigned int lightIndex = 0U;
     unsigned int i;
     for (i = 0; i < lights->bucket_count && lightIndex < MaxLights; ++i)
     {

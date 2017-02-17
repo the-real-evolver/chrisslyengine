@@ -49,13 +49,13 @@ TextureManager::Load(const char* name)
 
     FileHandle fd = FSWrapper::Open(name, ReadAccess, Random, 0777);
     unsigned int fileSize = FSWrapper::GetFileSize(fd);
-    const unsigned int headerSizeBytes = 7;
+    const unsigned int headerSizeBytes = 7U;
 
     unsigned char format = PF_UNKNOWN;
-    unsigned short width = 0;
-    unsigned short height = 0;
-    unsigned char numMipmaps = 0;
-    unsigned char swizzled = 0;
+    unsigned short width = 0U;
+    unsigned short height = 0U;
+    unsigned char numMipmaps = 0U;
+    unsigned char swizzled = 0U;
 
     FSWrapper::Read(fd, &format, 1);
     FSWrapper::Read(fd, &width, 2);
