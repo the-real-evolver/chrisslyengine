@@ -76,8 +76,8 @@ ce_audio_calculate_stereo_channel_volumes(ce_audio_panning_mode mode, float volu
             {
                 float leftGain = 1.0f - pan;
                 float rightGain = pan + 1.0f;
-                *volume_left = volume * leftGain > 1.0f ? 1.0f : leftGain;
-                *volume_right = volume * rightGain > 1.0f ? 1.0f : rightGain;
+                *volume_left = volume * (leftGain > 1.0f ? 1.0f : leftGain);
+                *volume_right = volume * (rightGain > 1.0f ? 1.0f : rightGain);
             }
             break;
 

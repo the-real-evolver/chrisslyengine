@@ -373,8 +373,6 @@ GLES2RenderSystem::_SetPass(graphics::Pass* pass)
     if (pass->IsProgrammable())
     {
         this->currentGpuProgram = pass->GetGpuProgram();
-        glUseProgram(this->currentGpuProgram->GetProgramHandle());
-        CE_GL_ERROR_CHECK("glUseProgram");
     }
     else
     {
@@ -396,8 +394,6 @@ GLES2RenderSystem::_SetPass(graphics::Pass* pass)
         {
             this->currentGpuProgram = this->defaultGpuProgramLitFog;
         }
-        glUseProgram(this->currentGpuProgram->GetProgramHandle());
-        CE_GL_ERROR_CHECK("glUseProgram");
 
         graphics::GpuProgramParameters* params = this->currentGpuProgram->GetDefaultParameters();
 
@@ -429,6 +425,9 @@ GLES2RenderSystem::_SetPass(graphics::Pass* pass)
             params->SetNamedConstant("lightParams[0]", this->defaultLightShaderParams, MaxLights);
         }
     }
+
+    glUseProgram(this->currentGpuProgram->GetProgramHandle());
+    CE_GL_ERROR_CHECK("glUseProgram");
 
     // apply shader parameters
     graphics::GpuNamedConstants* constantDefs = this->currentGpuProgram->GetConstantDefinitions();

@@ -423,6 +423,21 @@ D3D11RenderSystem::_SetPass(graphics::Pass* pass)
     ID3D11RasterizerState* rasterState = this->stateCache.GetRasterizerState(this->currentRasterState);
     this->context->RSSetState(rasterState);
 
+    /* texture unit parameters */
+    unsigned short textureUnitState;
+    for (textureUnitState = 0; textureUnitState < pass->GetNumTextureUnitStates(); ++textureUnitState)
+    {
+        graphics::TextureUnitState* tus = pass->GetTextureUnitState(textureUnitState);
+        ID3D11ShaderResourceView* shaderResourceView = tus->GetTexture()->GetShaderResourceView();
+        this->context->PSSetShaderResources(textureUnitState, 1, &shaderResourceView);
+
+        this->currentSamplerState.Filter = D3D11Mappings::Get(tus->GetTextureFiltering(graphics::FT_MIN), tus->GetTextureFiltering(graphics::FT_MAG), tus->GetTextureFiltering(graphics::FT_MIP));
+        this->currentSamplerState.AddressU = D3D11Mappings::Get(tus->GetTextureAddressingMode().u);
+        this->currentSamplerState.AddressV = D3D11Mappings::Get(tus->GetTextureAddressingMode().v);
+        ID3D11SamplerState* samplerState = this->stateCache.GetSamplerState(this->currentSamplerState);
+        this->context->PSSetSamplers(textureUnitState, 1, &samplerState);
+    }
+
     /* set gpu program to use */
     if (pass->IsProgrammable())
     {
@@ -484,21 +499,6 @@ D3D11RenderSystem::_SetPass(graphics::Pass* pass)
     this->currentGpuProgram->Bind();
     this->currentGpuProgram->BindConstantBuffers();
     this->currentGpuProgram->UpdatePerPassConstantBuffers();
-
-    /* texture unit parameters */
-    unsigned short textureUnitState;
-    for (textureUnitState = 0; textureUnitState < pass->GetNumTextureUnitStates(); ++textureUnitState)
-    {
-        graphics::TextureUnitState* tus = pass->GetTextureUnitState(textureUnitState);
-        ID3D11ShaderResourceView* shaderResourceView = tus->GetTexture()->GetShaderResourceView();
-        this->context->PSSetShaderResources(textureUnitState, 1, &shaderResourceView);
-
-        this->currentSamplerState.Filter = D3D11Mappings::Get(tus->GetTextureFiltering(graphics::FT_MIN), tus->GetTextureFiltering(graphics::FT_MAG), tus->GetTextureFiltering(graphics::FT_MIP));
-        this->currentSamplerState.AddressU = D3D11Mappings::Get(tus->GetTextureAddressingMode().u);
-        this->currentSamplerState.AddressV = D3D11Mappings::Get(tus->GetTextureAddressingMode().v);
-        ID3D11SamplerState* samplerState = this->stateCache.GetSamplerState(this->currentSamplerState);
-        this->context->PSSetSamplers(textureUnitState, 1, &samplerState);
-    }
 }
 
 //------------------------------------------------------------------------------

@@ -54,10 +54,11 @@ material cube_material
 {
     pass
     {
+        lighting on
         texture_unit
         {
             texture floor.tex
-            colour_op replace colour
+            colour_op modulate colour
         }
     }
     pass

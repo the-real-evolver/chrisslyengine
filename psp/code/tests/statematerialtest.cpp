@@ -62,7 +62,7 @@ StateMaterialTest::Enter()
     Entity* lightConeEntity = SceneManager::Instance()->CreateEntity("cone.mesh");
     SceneNode* lightConeSceneNode = SceneManager::Instance()->GetRootSceneNode()->CreateChildSceneNode();
     lightConeSceneNode->SetScale(2.0f, 2.0f,2.0f);
-    lightConeSceneNode->SetPosition(4.0f, 3.0f, -4.0f);
+    lightConeSceneNode->SetPosition(4.0f, 4.0f, -4.0f);
     lightConeSceneNode->Yaw(2.14f);
     lightConeSceneNode->Pitch(-1.0f);
     lightConeSceneNode->AttachObject(lightConeEntity);
@@ -73,10 +73,10 @@ StateMaterialTest::Enter()
     light->SetDiffuseColour(0xff0077ff);
     light->SetSpecularColour(0x00000000);
     light->SetAttenuation(100.0f, 1.0f, 0.0f, 0.0f);
-    light->SetPosition(6.0f, 6.0f, -1.4f);
-    light->SetDirection(-1.0f, -1.0f, 0.0f);
-    light->SetSpotlightFalloff(5.0f);
-    light->SetSpotlightOuterAngle(0.6f);
+    light->SetPosition(4.0f, 4.0f, -4.0f);
+    light->SetDirection(lightConeSceneNode->GetOrientation() * Vector3(0.0f, 0.0f, -1.0f));
+    light->SetSpotlightOuterAngle(0.78f);
+    light->SetSpotlightFalloff(0.1f);
     light = SceneManager::Instance()->CreateLight("PointLight");
     light->SetType(Light::LT_POINT);
     light->SetDiffuseColour(0xff777777);

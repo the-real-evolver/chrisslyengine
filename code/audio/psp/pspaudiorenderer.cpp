@@ -225,7 +225,7 @@ PSPAudioRenderer::ChannelThread(SceSize args, void* argp)
                 {
                     samplecount = NumOutputSamples;
                 }
-                if ((unsigned int)samplesRemaining < samplecount)
+                if ((unsigned int)samplesRemaining <= samplecount)
                 {
                     samplecount = PSP_AUDIO_SAMPLE_ALIGN(samplesRemaining);
                     sceAudioSetChannelDataLen(index, samplecount > PSP_AUDIO_SAMPLE_MIN ? samplecount - PSP_AUDIO_SAMPLE_MIN : 0);

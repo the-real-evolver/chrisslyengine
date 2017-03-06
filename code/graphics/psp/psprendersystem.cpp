@@ -97,7 +97,7 @@ PSPRenderSystem::_SetViewport(graphics::Viewport* vp)
     int left = vp->GetActualLeft();
     int top = vp->GetActualTop();
 
-    sceGuOffset(2048 - (int)((unsigned int)width >> 1U) - left, 2048 - (int)((unsigned int)height >> 1U) - top);
+    sceGuOffset(2048U - ((unsigned int)width >> 1U) - left, 2048U - ((unsigned int)height >> 1U) - top);
     sceGuViewport(2048, 2048, width, height);
     sceGuScissor(left, top, left + width, top + height);
 
@@ -241,24 +241,6 @@ PSPRenderSystem::_SetPass(graphics::Pass* pass)
             break;
     }
 
-    // lighting
-    if (pass->GetLightingEnabled())
-    {
-        sceGuEnable(GU_LIGHTING);
-        sceGuAmbient(this->ambientLight);
-        sceGuSendCommandi(0x54, pass->GetSelfIllumination() & 0xffffff);
-        sceGuSendCommandi(0x55, pass->GetAmbient() & 0xffffff);
-        sceGuSendCommandi(0x58, pass->GetAmbient() >> 24U);
-        sceGuSendCommandi(0x56, pass->GetDiffuse() & 0xffffff);
-        sceGuSendCommandi(0x57, pass->GetSpecular() & 0xffffff);
-        sceGuSpecular(pass->GetShininess());
-        sceGuColorMaterial(PSPMappings::Get((graphics::TrackVertexColourType)pass->GetVertexColourTracking()));
-    }
-    else
-    {
-        sceGuDisable(GU_LIGHTING);
-    }
-
     // texture unit parameters
     if (pass->GetNumTextureUnitStates() > 0)
     {
@@ -294,6 +276,24 @@ PSPRenderSystem::_SetPass(graphics::Pass* pass)
     else
     {
         sceGuDisable(GU_TEXTURE_2D);
+    }
+
+    // lighting
+    if (pass->GetLightingEnabled())
+    {
+        sceGuEnable(GU_LIGHTING);
+        sceGuAmbient(this->ambientLight);
+        sceGuSendCommandi(0x54, pass->GetSelfIllumination() & 0xffffff);
+        sceGuSendCommandi(0x55, pass->GetAmbient() & 0xffffff);
+        sceGuSendCommandi(0x58, pass->GetAmbient() >> 24U);
+        sceGuSendCommandi(0x56, pass->GetDiffuse() & 0xffffff);
+        sceGuSendCommandi(0x57, pass->GetSpecular() & 0xffffff);
+        sceGuSpecular(pass->GetShininess());
+        sceGuColorMaterial(PSPMappings::Get((graphics::TrackVertexColourType)pass->GetVertexColourTracking()));
+    }
+    else
+    {
+        sceGuDisable(GU_LIGHTING);
     }
 
     // fog parameters
