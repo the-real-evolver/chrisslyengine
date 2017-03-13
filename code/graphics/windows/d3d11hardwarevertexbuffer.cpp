@@ -38,7 +38,7 @@ D3D11HardwareVertexBuffer::D3D11HardwareVertexBuffer(unsigned int numVertices, u
         HRESULT result =
 #endif
         D3D11RenderSystem::Instance()->GetDevice()->CreateBuffer(&desc, NULL, &this->d3d11Buffer);
-        CE_ASSERT(SUCCEEDED(result), "D3D11HardwareVertexBuffer::Unlock(): failed to create d3d11 buffer\n");
+        CE_ASSERT(SUCCEEDED(result), "D3D11HardwareVertexBuffer::D3D11HardwareVertexBuffer(): failed to create d3d11 buffer\n");
     }
 }
 
@@ -99,7 +99,7 @@ D3D11HardwareVertexBuffer::Unmap()
         HRESULT result =
 #endif
         D3D11RenderSystem::Instance()->GetDevice()->CreateBuffer(&desc, &data, &this->d3d11Buffer);
-        CE_ASSERT(SUCCEEDED(result), "D3D11HardwareVertexBuffer::Unlock(): failed to create d3d11 buffer\n");
+        CE_ASSERT(SUCCEEDED(result), "D3D11HardwareVertexBuffer::Unmap(): failed to create d3d11 buffer\n");
     }
     else if (graphics::HBU_DYNAMIC == this->usage)
     {

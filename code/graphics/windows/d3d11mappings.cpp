@@ -222,7 +222,7 @@ D3D11Mappings::Get(const D3D11_SHADER_TYPE_DESC& typeDesc)
         case D3D_SVT_SAMPLER2D: return graphics::GCT_SAMPLER2D;
     }
 
-    CE_ASSERT(false, "D3D11GpuProgram::ExtractConstantDefs(): unsupported variable type\n");
+    CE_ASSERT(false, "D3D11Mappings::Get(): unsupported variable type\n");
 
     return graphics::GCT_UNKNOWN;
 }

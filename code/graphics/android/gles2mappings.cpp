@@ -188,7 +188,7 @@ GLES2Mappings::GetInternalFormat(graphics::PixelFormat pf)
         case graphics::PF_DXT1:
         case graphics::PF_DXT3:
         case graphics::PF_DXT5:
-        default: CE_ASSERT(false, "GLES2Mappings::Get(): illegal or not supported PixelFormat '%i'\n", pf);
+        default: CE_ASSERT(false, "GLES2Mappings::GetInternalFormat(): illegal or not supported PixelFormat '%i'\n", pf);
     }
 
     return 0;

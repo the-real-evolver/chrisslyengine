@@ -114,7 +114,7 @@ ce_audio_mix_s16_stereo(int bits, int num_channels, void* buffer_to_mix, short* 
                         mix_s16_stereo_u8(num_channels, (unsigned char*)buffer_to_mix, buffer, num_samples, volume_left, volume_right);
                         break;
                     default:
-                        CE_ASSERT(false, "ce_audio_mix_signed16_stereo(): mixing '%i' channels not supported\n", num_channels);
+                        CE_ASSERT(false, "ce_audio_mix_s16_stereo(): mixing '%i' channels not supported\n", num_channels);
                 }
             }
             break;
@@ -128,12 +128,12 @@ ce_audio_mix_s16_stereo(int bits, int num_channels, void* buffer_to_mix, short* 
                         mix_s16_stereo_s16(num_channels, (short*)buffer_to_mix, buffer, num_samples, volume_left, volume_right);
                         break;
                     default:
-                        CE_ASSERT(false, "ce_audio_mix_signed16_stereo(): mixing '%i' channels not supported\n", num_channels);
+                        CE_ASSERT(false, "ce_audio_mix_s16_stereo(): mixing '%i' channels not supported\n", num_channels);
                 }
             }
             break;
 
         default:
-            CE_ASSERT(false, "ce_audio_mix_signed16_stereo(): unsupported bitrate: '%i'\n", bits);
+            CE_ASSERT(false, "ce_audio_mix_s16_stereo(): unsupported bitrate: '%i'\n", bits);
     }
 }
