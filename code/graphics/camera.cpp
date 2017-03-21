@@ -91,6 +91,23 @@ Camera::GetOrientation() const
 //------------------------------------------------------------------------------
 /**
 */
+void
+Camera::SetDirection(const Vector3& direction)
+{
+    Vector3 yawFixedAxis(0.0f, 1.0f, 0.0f);
+    Vector3 zAxis = direction;
+    zAxis *= -1.0f;
+    zAxis.Normalise();
+    Vector3 xAxis = yawFixedAxis.CrossProduct(zAxis);
+    xAxis.Normalise();
+    Vector3 yAxis = zAxis.CrossProduct(xAxis);
+    yAxis.Normalise();
+    this->orientation.FromAxes(xAxis, yAxis, zAxis);
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
 Vector3
 Camera::GetDirection() const
 {

@@ -16,10 +16,10 @@ ce_windows_assert(bool cond, const char* exp, const char* file, int line, const 
 {
     if (!cond)
     {
-        char message[128];
+        char message[128U];
         va_list args;
         va_start(args, msg);
-        StringCchVPrintf(message, 128, msg, args);
+        StringCchVPrintf(message, 128U, msg, args);
         va_end(args);
         ce_windows_log("Assertion: '%s' in file '%s' at line %i, %s\n", exp, file, line, message);
         assert(0);
@@ -32,10 +32,10 @@ ce_windows_assert(bool cond, const char* exp, const char* file, int line, const 
 void
 ce_windows_log(const char* msg, ...)
 {
-    char output[256];
+    char output[256U];
     va_list args;
     va_start(args, msg);
-    StringCchVPrintf(output, 256, msg, args);
+    StringCchVPrintf(output, 256U, msg, args);
     va_end(args);
     OutputDebugString(output);
 }

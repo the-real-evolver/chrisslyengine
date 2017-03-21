@@ -35,6 +35,8 @@ public:
     void SetOrientation(const core::Quaternion& q);
     /// returns the camera's current orientation
     const core::Quaternion& GetOrientation() const;
+    /// sets the camera's direction
+    void SetDirection(const core::Vector3& direction);
     /// gets the camera's direction
     core::Vector3 GetDirection() const;
     /// gets the camera's up vector

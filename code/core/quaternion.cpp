@@ -39,6 +39,60 @@ Quaternion::~Quaternion()
 
 //------------------------------------------------------------------------------
 /**
+    Algorithm from Ken Shoemake's "Quaternions" tutorial:
+
+    "Construct a unit quaternion from rotation matrix. Assumes matrix is used to
+    multiply column vector on the left: vnew = mat vold. Works correctly for
+    right-handed coordinate system and right-handed rotations. Translation and
+    perspective components ignored.
+
+    This algorithm avoids near-zero divides by looking for a large component -
+    first w, then x, y, or z. When the trace is greater than zero, |w| is
+    greater than 1/2, which is as small as a largest component can be. Otherwise
+    , the largest diagonal entry corresponds to the largest of |x|, |y|, or |z|,
+    one of which must be larger than |w|, and at least 1/2."
+*/
+void
+Quaternion::FromRotationMatrix(const Matrix3& rot)
+{
+    float trace = rot[0][0] + rot[1][1] + rot[2][2];
+    float root;
+
+    if (trace > 0.0f)
+    {
+        root = Math::Sqrt(trace + 1.0f);
+        this->w = 0.5f * root;
+        root = 0.5f / root;
+        this->x = (rot[2][1] - rot[1][2]) * root;
+        this->y = (rot[0][2] - rot[2][0]) * root;
+        this->z = (rot[1][0] - rot[0][1]) * root;
+    }
+    else
+    {
+        static unsigned int NextIndex[3] = {1, 2, 0};
+        unsigned int i = 0;
+        if (rot[1][1] > rot[0][0])
+        {
+            i = 1;
+        }
+        if (rot[2][2] > rot[i][i])
+        {
+            i = 2;
+        }
+        unsigned int j = NextIndex[i];
+        unsigned int k = NextIndex[j];
+        root = Math::Sqrt(rot[i][i] - rot[j][j] - rot[k][k] + 1.0f);
+        float* quatAxis[3] = {&this->x, &this->y, &this->z};
+        *quatAxis[i] = 0.5f * root;
+        root = 0.5f / root;
+        this->w = (rot[k][j] - rot[j][k]) * root;
+        *quatAxis[j] = (rot[j][i] + rot[i][j]) * root;
+        *quatAxis[k] = (rot[k][i]+ rot[i][k]) * root;
+    }
+}
+
+//------------------------------------------------------------------------------
+/**
 */
 void
 Quaternion::ToRotationMatrix(Matrix3& kRot) const
@@ -65,6 +119,48 @@ Quaternion::ToRotationMatrix(Matrix3& kRot) const
     kRot[2][0] = fTxz - fTwy;
     kRot[2][1] = fTyz + fTwx;
     kRot[2][2] = 1.0f - (fTxx + fTyy);
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+Quaternion::FromAxes(const Vector3& xAxis, const Vector3& yAxis, const Vector3& zAxis)
+{
+    Matrix3 rot;
+
+    rot[0][0] = xAxis.x;
+    rot[1][0] = xAxis.y;
+    rot[2][0] = xAxis.z;
+
+    rot[0][1] = yAxis.x;
+    rot[1][1] = yAxis.y;
+    rot[2][1] = yAxis.z;
+
+    rot[0][2] = zAxis.x;
+    rot[1][2] = zAxis.y;
+    rot[2][2] = zAxis.z;
+
+    this->FromRotationMatrix(rot);
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+Quaternion::FromAngleAxis(float rfAngle, const Vector3& rkAxis)
+{
+    // assert:  axis[] is unit length
+    //
+    // The quaternion representing the rotation is
+    //   q = cos(A/2) + sin(A/2) * (x*i+y*j+z*k)
+
+    float fHalfAngle = 0.5f * rfAngle;
+    float fSin = Math::Sin(fHalfAngle);
+    this->w = Math::Cos(fHalfAngle);
+    this->x = fSin * rkAxis.x;
+    this->y = fSin * rkAxis.y;
+    this->z = fSin * rkAxis.z;
 }
 
 //------------------------------------------------------------------------------
@@ -134,25 +230,6 @@ Quaternion
 Quaternion::operator * (float fScalar) const
 {
     return Quaternion(fScalar * this->w, fScalar * this->x, fScalar * this->y, fScalar * this->z);
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-void
-Quaternion::FromAngleAxis(float rfAngle, const Vector3& rkAxis)
-{
-    // assert:  axis[] is unit length
-    //
-    // The quaternion representing the rotation is
-    //   q = cos(A/2) + sin(A/2) * (x*i+y*j+z*k)
-
-    float fHalfAngle = 0.5f * rfAngle;
-    float fSin = Math::Sin(fHalfAngle);
-    this->w = Math::Cos(fHalfAngle);
-    this->x = fSin * rkAxis.x;
-    this->y = fSin * rkAxis.y;
-    this->z = fSin * rkAxis.z;
 }
 
 //------------------------------------------------------------------------------

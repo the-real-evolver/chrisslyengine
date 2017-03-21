@@ -58,7 +58,7 @@ MeshManager::Load(const char* filename)
     HardwareVertexBuffer* vertexBuffer = NULL;
     Animation* animation = NULL;
     VertexAnimationTrack* animationTrack = NULL;
-    char stringBuffer[256] = {'\0'};
+    char stringBuffer[256U] = {'\0'};
     String materialName;
     unsigned char materialNameLength = 0U;
 
@@ -72,6 +72,7 @@ MeshManager::Load(const char* filename)
                 {
                     // read material name
                     FSWrapper::Read(fd, &materialNameLength, 1);
+                    CE_ASSERT(materialNameLength <= 256U, "MeshManager::Load(): material name too long (limit is 256 characters)\n");
                     FSWrapper::Read(fd, &stringBuffer, materialNameLength);
                     materialName.Set(stringBuffer, materialNameLength);
 

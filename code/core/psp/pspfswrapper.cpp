@@ -23,7 +23,8 @@ static const char* RootDirectory = "ms0:/PSP/GAME/ChrisslyEngine_PSP/export/";
 core::FileHandle
 PSPFSWrapper::Open(const char* fileName, core::AccessMode flags, core::AccessPattern pattern, int mode)
 {
-    char filePath[128];
+    char filePath[128U] = {'\0'};
+    CE_ASSERT(strlen(RootDirectory) + strlen(fileName) < 128U, "FSWrapper::Open(): file path too long (limit is 128 characters) '%s%s'\n", RootDirectory, fileName)
     strcpy(filePath, RootDirectory);
     strcat(filePath, fileName);
     core::FileHandle fileHandle;

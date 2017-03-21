@@ -24,8 +24,14 @@ public:
     Quaternion(float w, float x, float y, float z);
     /// destructor
     ~Quaternion();
+    /// update from rotationmatrix
+    void FromRotationMatrix(const Matrix3& rot);
     /// contruct rotationmatrix from quaternion
     void ToRotationMatrix(Matrix3& kRot) const;
+    /// updates the quaternion from 3 orthonormal axes
+    void FromAxes(const Vector3& xAxis, const Vector3& yAxis, const Vector3& zAxis);
+    /// update from angle and axis
+    void FromAngleAxis(float rfAngle, const Vector3& rkAxis);
     /// assign operator
     Quaternion& operator = (const Quaternion& rkQ);
     /// quaternion multiplication
@@ -34,8 +40,6 @@ public:
     Vector3 operator * (const Vector3& rkVector) const;
     /// multiply by a scalar
     Quaternion operator * (float fScalar) const;
-    /// update from angle and axis
-    void FromAngleAxis(float rfAngle, const Vector3& rkAxis);
     /// normalises this quaternion
     void Normalise();
     /// squared-length

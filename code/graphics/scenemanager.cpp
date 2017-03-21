@@ -294,12 +294,7 @@ SceneManager::SetShadowTechnique(ShadowTechnique technique)
             this->shadowTextureProjScaleTrans[0][3] = 0.5f;
             this->shadowTextureProjScaleTrans[1][3] = 0.5f;
 
-            this->shadowCamera->SetPosition(4.0f, 4.0f, -4.0f);
-            this->shadowCamera->Yaw(2.14f);
-            this->shadowCamera->Pitch(-1.0f);
-
-            this->shadowProjection = this->shadowCamera->GetProjectionMatrixRS() * this->shadowCamera->GetViewMatrix();
-            this->shadowProjection = this->shadowTextureProjScaleTrans * this->shadowProjection;
+            this->shadowProjection = this->shadowTextureProjScaleTrans * (this->shadowCamera->GetProjectionMatrixRS() * this->shadowCamera->GetViewMatrix());
 
             this->shadowTextureConfigDirty = false;
         }
@@ -469,6 +464,24 @@ void
 SceneManager::PrepareShadowTextures()
 {
     this->illuminationStage = IRS_RENDER_TO_TEXTURE;
+
+    unsigned int i;
+    for (i = 0; i < this->lights.bucket_count; ++i)
+    {
+        ce_linked_list* it = ce_hash_table_begin(&this->lights, i);
+        while (it != NULL)
+        {
+            Light* light = (graphics::Light*)((ce_key_value_pair*)it->data)->value;
+            if (Light::LT_SPOTLIGHT == light->GetType())
+            {
+                this->shadowCamera->SetPosition(light->GetPosition());
+                this->shadowCamera->SetDirection(light->GetDirection());
+                this->shadowProjection = this->shadowTextureProjScaleTrans * (this->shadowCamera->GetProjectionMatrixRS() * this->shadowCamera->GetViewMatrix());
+                break;
+            }
+            it = it->next;
+        }
+    }
 
     this->shadowRenderTexture->Update();
 
