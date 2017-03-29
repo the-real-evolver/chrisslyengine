@@ -19,15 +19,15 @@ SoundBase::SoundBase() :
     mode(MODE_DEFAULT),
     soundType(SOUND_TYPE_UNKNOWN),
     audioFormat(AUDIO_FORMAT_NONE),
-    lengthInSamples(0),
+    lengthInSamples(0U),
     numChannels(0),
     bitsPerSample(0),
-    sampleRate(0),
+    sampleRate(0U),
     sampleBuffer(NULL),
     audioCodec(NULL),
     realized(false),
     requestRelease(false),
-    useCount(0)
+    useCount(0U)
 {
 
 }
@@ -129,10 +129,10 @@ SoundBase::_Release()
     this->mode = MODE_DEFAULT;
     this->soundType = SOUND_TYPE_UNKNOWN;
     this->audioFormat = AUDIO_FORMAT_NONE;
-    this->lengthInSamples = 0;
+    this->lengthInSamples = 0U;
     this->numChannels = 0;
     this->bitsPerSample = 0;
-    this->sampleRate = 0;
+    this->sampleRate = 0U;
 
     if (this->sampleBuffer != NULL)
     {
@@ -180,9 +180,9 @@ SoundBase::_DecrementUseCount()
 {
     this->releaseSyncLock.Lock();
 
-    CE_ASSERT(this->useCount > 0, "SoundBase::_DecrementUseCout(): useCount already zero\n");
+    CE_ASSERT(this->useCount > 0U, "SoundBase::_DecrementUseCout(): useCount already zero\n");
     --this->useCount;
-    if (this->requestRelease && 0 == this->useCount)
+    if (this->requestRelease && 0U == this->useCount)
     {
         this->_Release();
     }

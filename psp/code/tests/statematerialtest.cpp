@@ -18,7 +18,12 @@ StateMaterialTest* StateMaterialTest::Singleton = NULL;
 //------------------------------------------------------------------------------
 /**
 */
-StateMaterialTest::StateMaterialTest()
+StateMaterialTest::StateMaterialTest() :
+    camera(NULL),
+    gothSceneNode(NULL),
+    cubeMaterial(NULL),
+    lightConeSceneNode(NULL),
+    spotLight(NULL)
 {
     Singleton = this;
 }
@@ -60,24 +65,24 @@ StateMaterialTest::Enter()
     this->vMod = 0.0f;
 
     Entity* lightConeEntity = SceneManager::Instance()->CreateEntity("cone.mesh");
-    SceneNode* lightConeSceneNode = SceneManager::Instance()->GetRootSceneNode()->CreateChildSceneNode();
-    lightConeSceneNode->SetScale(2.0f, 2.0f,2.0f);
-    lightConeSceneNode->SetPosition(4.0f, 4.0f, -4.0f);
-    lightConeSceneNode->Yaw(2.14f);
-    lightConeSceneNode->Pitch(-1.0f);
-    lightConeSceneNode->AttachObject(lightConeEntity);
+    this->lightConeSceneNode = SceneManager::Instance()->GetRootSceneNode()->CreateChildSceneNode();
+    this->lightConeSceneNode->SetScale(2.0f, 2.0f,2.0f);
+    this->lightConeSceneNode->SetPosition(4.0f, 4.0f, -4.0f);
+    this->lightConeSceneNode->Yaw(2.14f);
+    this->lightConeSceneNode->Pitch(-1.0f);
+    this->lightConeSceneNode->AttachObject(lightConeEntity);
 
     SceneManager::Instance()->SetAmbientLight(0xff222222);
-    Light* light = SceneManager::Instance()->CreateLight("SpotLight");
-    light->SetType(Light::LT_SPOTLIGHT);
-    light->SetDiffuseColour(0xff0077ff);
-    light->SetSpecularColour(0x00000000);
-    light->SetAttenuation(100.0f, 1.0f, 0.0f, 0.0f);
-    light->SetPosition(4.0f, 4.0f, -4.0f);
-    light->SetDirection(lightConeSceneNode->GetOrientation() * Vector3(0.0f, 0.0f, -1.0f));
-    light->SetSpotlightOuterAngle(0.78f);
-    light->SetSpotlightFalloff(0.1f);
-    light = SceneManager::Instance()->CreateLight("PointLight");
+    this->spotLight = SceneManager::Instance()->CreateLight("SpotLight");
+    this->spotLight->SetType(Light::LT_SPOTLIGHT);
+    this->spotLight->SetDiffuseColour(0xff0077ff);
+    this->spotLight->SetSpecularColour(0x00000000);
+    this->spotLight->SetAttenuation(100.0f, 1.0f, 0.0f, 0.0f);
+    this->spotLight->SetPosition(4.0f, 4.0f, -4.0f);
+    this->spotLight->SetDirection(this->lightConeSceneNode->GetOrientation() * Vector3(0.0f, 0.0f, -1.0f));
+    this->spotLight->SetSpotlightOuterAngle(0.78f);
+    this->spotLight->SetSpotlightFalloff(0.1f);
+    Light* light = SceneManager::Instance()->CreateLight("PointLight");
     light->SetType(Light::LT_POINT);
     light->SetDiffuseColour(0xff777777);
     light->SetSpecularColour(0x00000000);
@@ -143,6 +148,17 @@ StateMaterialTest::Trigger()
     if (this->pad.Buttons & PSP_CTRL_RIGHT) this->gothSceneNode->SetPosition(pos.x + 0.05f, pos.y, pos.z);
     if (this->pad.Buttons & PSP_CTRL_UP)    this->gothSceneNode->SetPosition(pos.x, pos.y, pos.z - 0.05f);
     if (this->pad.Buttons & PSP_CTRL_DOWN)  this->gothSceneNode->SetPosition(pos.x, pos.y, pos.z + 0.05f);
+
+    if (this->pad.Buttons & PSP_CTRL_LTRIGGER)
+    {
+        this->lightConeSceneNode->Pitch(0.01f);
+        this->spotLight->SetDirection(this->lightConeSceneNode->GetOrientation() * Vector3(0.0f, 0.0f, -1.0f));
+    }
+    if (this->pad.Buttons & PSP_CTRL_RTRIGGER)
+    {
+        this->lightConeSceneNode->Pitch(-0.01f);
+        this->spotLight->SetDirection(this->lightConeSceneNode->GetOrientation() * Vector3(0.0f, 0.0f, -1.0f));
+    }
 
     // test uv animation
     this->vMod += 0.003f;

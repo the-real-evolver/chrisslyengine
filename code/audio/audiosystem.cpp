@@ -48,16 +48,16 @@ AudioSystem::Initialise(void* customParams)
 {
     this->activeRenderer->_Initialise(customParams);
 
-    ce_dynamic_array_init(&this->soundPool, 8);
+    ce_dynamic_array_init(&this->soundPool, 8U);
     unsigned int i;
-    for (i = 0; i < this->soundPool.capacity; ++i)
+    for (i = 0U; i < this->soundPool.capacity; ++i)
     {
         Sound* sound = CE_NEW Sound();
         ce_dynamic_array_set(&this->soundPool, i, sound);
     }
 
     ce_dynamic_array_init(&this->channelPool, this->activeRenderer->GetNumHardwareChannels());
-    for (i = 0; i < this->channelPool.capacity; ++i)
+    for (i = 0U; i < this->channelPool.capacity; ++i)
     {
         Channel* channel = CE_NEW Channel();
         ce_dynamic_array_set(&this->channelPool, i, channel);
@@ -77,7 +77,7 @@ AudioSystem::Release()
     this->activeRenderer->StopAudioProcessing();
 
     unsigned int i;
-    for (i = 0; i < this->channelPool.capacity; ++i)
+    for (i = 0U; i < this->channelPool.capacity; ++i)
     {
         Channel* channel = (Channel*)ce_dynamic_array_get(&this->channelPool, i);
         int index;
@@ -90,7 +90,7 @@ AudioSystem::Release()
     }
     ce_dynamic_array_delete(&this->channelPool);
 
-    for (i = 0; i < this->soundPool.capacity; ++i)
+    for (i = 0U; i < this->soundPool.capacity; ++i)
     {
         CE_DELETE (Sound*)ce_dynamic_array_get(&this->soundPool, i);
     }
@@ -109,7 +109,7 @@ AudioSystem::CreateSound(const char* name, Mode mode, Sound** sound)
 {
     Sound* snd = NULL;
     unsigned int i;
-    for (i = 0; i < this->soundPool.capacity; ++i)
+    for (i = 0U; i < this->soundPool.capacity; ++i)
     {
         snd = (Sound*)ce_dynamic_array_get(&this->soundPool, i);
         if (!snd->_IsRealized())
@@ -157,7 +157,7 @@ AudioSystem::PlaySound(int channelid, Sound* sound, bool paused, Channel** chann
 {
     Channel* chn = NULL;
     unsigned int i;
-    for (i = 0; i < this->channelPool.capacity; ++i)
+    for (i = 0U; i < this->channelPool.capacity; ++i)
     {
         chn = (Channel*)ce_dynamic_array_get(&this->channelPool, i);
         int index;
@@ -174,13 +174,13 @@ AudioSystem::PlaySound(int channelid, Sound* sound, bool paused, Channel** chann
 
     if (channelid != Channel::CHANNEL_FREE)
     {
-        CE_ASSERT(channelid < (int)this->channelPool.capacity, "AudioSystem::PlaySound(): invalid channelid '%i' (exceeds channel range '0 - %i')\n", channelid, this->channelPool.capacity - 1);
+        CE_ASSERT(channelid < (int)this->channelPool.capacity, "AudioSystem::PlaySound(): invalid channelid '%i' (exceeds channel range '0 - %i')\n", channelid, this->channelPool.capacity - 1U);
         chn->_SetIndex(channelid);
     }
 
     chn->_AttachSound(sound);
     chn->SetPaused(paused);
-    chn->SetPosition(0);
+    chn->SetPosition(0U);
     chn->SetVolume(1.0f);
     chn->SetPan(0.0f);
     chn->_SetAttenuationFactor(0.0f);
@@ -202,7 +202,7 @@ AudioSystem::Update()
     sideVec.Normalise();
 
     unsigned int i;
-    for (i = 0; i < this->channelPool.capacity; ++i)
+    for (i = 0U; i < this->channelPool.capacity; ++i)
     {
         Channel* channel = (Channel*)ce_dynamic_array_get(&this->channelPool, i);
         int index;
@@ -268,7 +268,7 @@ AudioSystem::Mix(unsigned int numSamples, unsigned char* buffer)
 {
     memset(buffer, 0, numSamples << 2U);
     unsigned int i;
-    for (i = 0; i < this->channelPool.capacity; ++i)
+    for (i = 0U; i < this->channelPool.capacity; ++i)
     {
         Channel* channel = (Channel*)ce_dynamic_array_get(&this->channelPool, i);
         int index;
@@ -295,14 +295,17 @@ AudioSystem::Mix(unsigned int numSamples, unsigned char* buffer)
                     int numChannels, bits;
                     sound->GetFormat(NULL, NULL, &numChannels, &bits);
                     sound->GetLength(&length);
+                    void* sampleBuffer = NULL;
                     if (position + numSamples >= length)
                     {
-                        ce_audio_mix_s16_stereo(bits, numChannels, sound->_GetSampleBufferPointer(position), (short*)buffer, length - position, volume, pan);
+                        sampleBuffer = mode & MODE_CREATESTREAM ? sound->_GetCodec()->FillStreamBuffer(length - position, position) : sound->_GetSampleBufferPointer(position);
+                        ce_audio_mix_s16_stereo(bits, numChannels, sampleBuffer, (short*)buffer, length - position, volume, pan);
                         if (mode & MODE_LOOP_NORMAL)
                         {
                             if (length >= numSamples)
                             {
-                                ce_audio_mix_s16_stereo(bits, numChannels, sound->_GetSampleBufferPointer(0), (short*)buffer + (uintptr_t)(length - position), position + numSamples - length, volume, pan);
+                                sampleBuffer = mode & MODE_CREATESTREAM ? sound->_GetCodec()->FillStreamBuffer(position + numSamples - length, position) : sound->_GetSampleBufferPointer(0U);
+                                ce_audio_mix_s16_stereo(bits, numChannels, sampleBuffer, (short*)buffer + (uintptr_t)(length - position), position + numSamples - length, volume, pan);
                                 channel->SetPosition(position + numSamples - length);
                             }
                         }
@@ -315,7 +318,8 @@ AudioSystem::Mix(unsigned int numSamples, unsigned char* buffer)
                     }
                     else
                     {
-                        ce_audio_mix_s16_stereo(bits, numChannels, sound->_GetSampleBufferPointer(position), (short*)buffer, numSamples, volume, pan);
+                        sampleBuffer = mode & MODE_CREATESTREAM ? sound->_GetCodec()->FillStreamBuffer(numSamples, position) : sound->_GetSampleBufferPointer(position);
+                        ce_audio_mix_s16_stereo(bits, numChannels, sampleBuffer, (short*)buffer, numSamples, volume, pan);
                         channel->SetPosition(position + numSamples);
                     }
                 }

@@ -10,6 +10,7 @@
 #include "material.h"
 #include "scenenode.h"
 #include "camera.h"
+#include "light.h"
 #include <pspctrl.h>
 
 //------------------------------------------------------------------------------
@@ -42,6 +43,8 @@ private:
     chrissly::graphics::Camera* camera;
     chrissly::graphics::SceneNode* gothSceneNode;
     chrissly::graphics::Material* cubeMaterial;
+    chrissly::graphics::SceneNode* lightConeSceneNode;
+    chrissly::graphics::Light* spotLight;
     float vMod;
 
     SceCtrlData pad;

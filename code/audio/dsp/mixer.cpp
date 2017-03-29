@@ -17,7 +17,7 @@ mix_s16_stereo_s16(int num_channels, short* buffer_to_mix, short* buffer, unsign
     int sample;
 
     unsigned int i;
-    for (i = 0; i < num_samples; ++i)
+    for (i = 0U; i < num_samples; ++i)
     {
         sample = *buffer + (short)((float)(*buffer_to_mix) * volume_left);
         CLAMP_SAMPLE(sample);
@@ -45,7 +45,7 @@ mix_s16_stereo_u8(int num_channels, unsigned char* buffer_to_mix, short* buffer,
     int sample;
 
     unsigned int i;
-    for (i = 0; i < num_samples; ++i)
+    for (i = 0U; i < num_samples; ++i)
     {
         sample = *buffer + (short)(((float)(*buffer_to_mix) - 127.0f) / 0.0039063f * volume_left);
         CLAMP_SAMPLE(sample);

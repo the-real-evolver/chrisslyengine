@@ -26,7 +26,7 @@ public:
     ~Quaternion();
     /// update from rotationmatrix
     void FromRotationMatrix(const Matrix3& rot);
-    /// contruct rotationmatrix from quaternion
+    /// construct rotationmatrix from quaternion
     void ToRotationMatrix(Matrix3& kRot) const;
     /// updates the quaternion from 3 orthonormal axes
     void FromAxes(const Vector3& xAxis, const Vector3& yAxis, const Vector3& zAxis);

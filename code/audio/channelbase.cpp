@@ -24,7 +24,7 @@ ChannelBase::ChannelBase() :
     volume(1.0f),
     panning(0.0f),
     mode(MODE_DEFAULT),
-    samplePosition(0),
+    samplePosition(0U),
     minDistance(1.0f),
     maxDistance(10000.0f),
     currentSound(NULL),

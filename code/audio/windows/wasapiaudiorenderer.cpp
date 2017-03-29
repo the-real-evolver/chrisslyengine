@@ -35,7 +35,7 @@ WASAPIAudioRenderer::WASAPIAudioRenderer() :
     device(NULL),
     audioClient(NULL),
     renderClient(NULL),
-    bufferFrameCount(0)
+    bufferFrameCount(0U)
 {
     Singleton = this;
 }
@@ -221,7 +221,7 @@ void
 WASAPIAudioRenderer::RunAudioThread()
 {
     HRESULT result;
-    UINT32 numFramesPadding = 0, numFramesAvailable = 0;
+    UINT32 numFramesPadding = 0U, numFramesAvailable = 0U;
     BYTE* data = NULL;
     DWORD flags = 0;
 
@@ -236,7 +236,7 @@ WASAPIAudioRenderer::RunAudioThread()
         result = this->renderClient->GetBuffer(numFramesAvailable, &data);
         CE_ASSERT(SUCCEEDED(result), "WASAPIAudioRenderer::RunAudioThread() failed to get buffer\n");
 
-        if (numFramesAvailable > 0 && data != NULL)
+        if (numFramesAvailable > 0U && data != NULL)
         {
             audio::AudioSystem::Instance()->Mix(numFramesAvailable, data);
         }
