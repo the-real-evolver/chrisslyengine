@@ -304,7 +304,7 @@ AudioSystem::Mix(unsigned int numSamples, unsigned char* buffer)
                         {
                             if (length >= numSamples)
                             {
-                                sampleBuffer = mode & MODE_CREATESTREAM ? sound->_GetCodec()->FillStreamBuffer(position + numSamples - length, position) : sound->_GetSampleBufferPointer(0U);
+                                sampleBuffer = mode & MODE_CREATESTREAM ? sound->_GetCodec()->FillStreamBuffer(position + numSamples - length, 0U) : sound->_GetSampleBufferPointer(0U);
                                 ce_audio_mix_s16_stereo(bits, numChannels, sampleBuffer, (short*)buffer + (uintptr_t)(length - position), position + numSamples - length, volume, pan);
                                 channel->SetPosition(position + numSamples - length);
                             }

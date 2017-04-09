@@ -152,7 +152,7 @@ WavCodec::InitialiseStream()
     this->bytesToLoadToBackBuffer = this->lengthInBytes < MaxStreamBufferSamples * this->bytesPerSample ? this->lengthInBytes : MaxStreamBufferSamples * this->bytesPerSample;
     this->seekPosition = this->bytesToLoadToBackBuffer;
     FSWrapper::Seek(this->streamFileHandle, this->riffWavHeaderSize, Begin);
-    FSWrapper::Read(this->streamFileHandle, this->streamBuffers[0], this->bytesToLoadToBackBuffer);
+    FSWrapper::Read(this->streamFileHandle, this->streamBuffers[0U], this->bytesToLoadToBackBuffer);
     this->currentStreamBufferLength = this->bytesToLoadToBackBuffer;
     this->backBufferFilled = false;
 }
@@ -181,31 +181,6 @@ WavCodec::FillStreamBackBuffer()
         this->bytesToLoadToBackBuffer = bytesToLoadThisFrame;
         this->backBufferFilled = true;
     }
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-void*
-WavCodec::FillStreamBuffer(unsigned int numSamples, unsigned int position)
-{
-    unsigned int desiredSeekPosition = position * this->bytesPerSample;
-    if (desiredSeekPosition < this->lengthInBytes)
-    {
-        if (this->seekPosition != desiredSeekPosition)
-        {
-            FSWrapper::Seek(this->streamFileHandle, desiredSeekPosition + this->riffWavHeaderSize, Begin);
-            this->seekPosition = desiredSeekPosition;
-        }
-        unsigned int bytesToLoad = numSamples * this->bytesPerSample;
-        if ((this->seekPosition + bytesToLoad) > this->lengthInBytes)
-        {
-            bytesToLoad = this->lengthInBytes - seekPosition;
-        }
-        FSWrapper::Read(this->streamFileHandle, streamBuffers[0], bytesToLoad);
-        this->seekPosition += bytesToLoad;
-    }
-    return streamBuffers[0];
 }
 
 //------------------------------------------------------------------------------
@@ -248,6 +223,31 @@ bool
 WavCodec::EndOfStream() const
 {
     return this->endOfStream;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void*
+WavCodec::FillStreamBuffer(unsigned int numSamples, unsigned int position)
+{
+    unsigned int desiredSeekPosition = position * this->bytesPerSample;
+    if (desiredSeekPosition < this->lengthInBytes)
+    {
+        if (this->seekPosition != desiredSeekPosition)
+        {
+            FSWrapper::Seek(this->streamFileHandle, desiredSeekPosition + this->riffWavHeaderSize, Begin);
+            this->seekPosition = desiredSeekPosition;
+        }
+        unsigned int bytesToLoad = numSamples * this->bytesPerSample;
+        if ((this->seekPosition + bytesToLoad) > this->lengthInBytes)
+        {
+            bytesToLoad = this->lengthInBytes - seekPosition;
+        }
+        FSWrapper::Read(this->streamFileHandle, streamBuffers[0U], bytesToLoad);
+        this->seekPosition += bytesToLoad;
+    }
+    return streamBuffers[0U];
 }
 
 } // namespace audio

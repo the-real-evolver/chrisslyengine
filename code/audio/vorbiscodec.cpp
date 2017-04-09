@@ -83,18 +83,6 @@ VorbisCodec::FillStreamBackBuffer()
 //------------------------------------------------------------------------------
 /**
 */
-void*
-VorbisCodec::FillStreamBuffer(unsigned int numSamples, unsigned int position)
-{
-    CE_UNREFERENCED_PARAMETER(numSamples);
-    CE_UNREFERENCED_PARAMETER(position);
-
-    return NULL;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
 void
 VorbisCodec::SwapStreamBuffers()
 {
@@ -126,6 +114,18 @@ bool
 VorbisCodec::EndOfStream() const
 {
     return false;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void*
+VorbisCodec::FillStreamBuffer(unsigned int numSamples, unsigned int position)
+{
+    CE_UNREFERENCED_PARAMETER(numSamples);
+    CE_UNREFERENCED_PARAMETER(position);
+
+    return NULL;
 }
 
 } // namespace audio
