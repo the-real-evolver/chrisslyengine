@@ -199,6 +199,7 @@
     <ClInclude Include="..\..\code\core\chrisslymath.h" />
     <ClInclude Include="..\..\code\core\chrisslymemory.h" />
     <ClInclude Include="..\..\code\core\chrisslymutex.h" />
+    <ClInclude Include="..\..\code\core\chrisslyplatform.h" />
     <ClInclude Include="..\..\code\core\chrisslystring.h" />
     <ClInclude Include="..\..\code\core\debug.h" />
     <ClInclude Include="..\..\code\core\dynamicarray.h" />

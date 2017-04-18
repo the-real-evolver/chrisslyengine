@@ -3,6 +3,7 @@
 //  (C) 2012 Christian Bleicher
 //------------------------------------------------------------------------------
 #include "chrisslymemory.h"
+#include "chrisslyplatform.h"
 
 //------------------------------------------------------------------------------
 /**
@@ -10,9 +11,9 @@
 void
 ce_memory_fill_interleaved(void const* src0, void const* src1, void* dst, unsigned short stride, unsigned int dst_len)
 {
-    char* ptr_dst = (char*)dst;
-    char const* ptr_src0 = (char const*)src0;
-    char const* ptr_src1 = (char const*)src1;
+    char* _ChrisslyRestrict ptr_dst = (char*)dst;
+    char const* _ChrisslyRestrict ptr_src0 = (char const*)src0;
+    char const* _ChrisslyRestrict ptr_src1 = (char const*)src1;
     unsigned int double_stride = stride << 1U;
 
     unsigned int i;

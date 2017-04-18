@@ -1,3 +1,5 @@
+#ifndef DEBUG_H_
+#define DEBUG_H_
 //------------------------------------------------------------------------------
 /**
     @file core/debug.h
@@ -34,3 +36,5 @@
 #endif
 
 #define CE_UNREFERENCED_PARAMETER(P) (P)
+
+#endif

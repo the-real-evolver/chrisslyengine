@@ -4,6 +4,7 @@
 //------------------------------------------------------------------------------
 #include "mixer.h"
 #include "debug.h"
+#include "chrisslyplatform.h"
 #include "chrisslymath.h"
 
 #define CLAMP_SAMPLE(sample) {if (sample > 32767) {sample = 32767;} else if (sample < -32767) {sample = -32767;}}
@@ -12,7 +13,7 @@
 /**
 */
 static void
-mix_s16_stereo_s16(int num_channels, short* buffer_to_mix, short* buffer, unsigned int num_samples, float volume_left, float volume_right)
+mix_s16_stereo_s16(int num_channels, short* _ChrisslyRestrict buffer_to_mix, short* _ChrisslyRestrict buffer, unsigned int num_samples, float volume_left, float volume_right)
 {
     int sample;
 
@@ -40,7 +41,7 @@ mix_s16_stereo_s16(int num_channels, short* buffer_to_mix, short* buffer, unsign
 /**
 */
 static void
-mix_s16_stereo_u8(int num_channels, unsigned char* buffer_to_mix, short* buffer, unsigned int num_samples, float volume_left, float volume_right)
+mix_s16_stereo_u8(int num_channels, unsigned char* _ChrisslyRestrict buffer_to_mix, short* _ChrisslyRestrict buffer, unsigned int num_samples, float volume_left, float volume_right)
 {
     int sample;
 

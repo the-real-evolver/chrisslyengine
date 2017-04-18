@@ -441,5 +441,8 @@
     <ClInclude Include="..\..\code\audio\dsp\mixer.h">
       <Filter>audio\dsp</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\code\core\chrisslyplatform.h">
+      <Filter>core</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
