@@ -25,6 +25,8 @@ public:
     static inline float Sin(float fValue);
     /// returns the cosine of the given value
     static inline float Cos(float fValue);
+    /// returns the tangent of the given value (measured in radians)
+    static inline float Tan(float fValue);
     /// returns the arc tangent of the given value
     static inline float ATan(float fValue);
     /// returns the principal value of the arc tangent of [y, x] in radians
@@ -64,13 +66,22 @@ StandardMath::Sin(float fValue)
     return sinf(fValue);
 }
 
- //------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 */
 inline float
 StandardMath::Cos(float fValue)
 {
     return cosf(fValue);
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline float
+StandardMath::Tan(float fValue)
+{
+    return tanf(fValue);
 }
 
 //------------------------------------------------------------------------------

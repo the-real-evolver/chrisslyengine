@@ -137,6 +137,7 @@
     <ClCompile Include="..\..\code\core\chrisslystring.cpp" />
     <ClCompile Include="..\..\code\core\matrix3.cpp" />
     <ClCompile Include="..\..\code\core\matrix4.cpp" />
+    <ClCompile Include="..\..\code\core\plane.cpp" />
     <ClCompile Include="..\..\code\core\quaternion.cpp" />
     <ClCompile Include="..\..\code\core\timer.cpp" />
     <ClCompile Include="..\..\code\core\vector3.cpp" />
@@ -211,6 +212,7 @@
     <ClInclude Include="..\..\code\core\matrix3.h" />
     <ClInclude Include="..\..\code\core\matrix4.h" />
     <ClInclude Include="..\..\code\core\memoryallocatorconfig.h" />
+    <ClInclude Include="..\..\code\core\plane.h" />
     <ClInclude Include="..\..\code\core\quaternion.h" />
     <ClInclude Include="..\..\code\core\standard\standardmath.h" />
     <ClInclude Include="..\..\code\core\timer.h" />

@@ -350,6 +350,19 @@ SceneManager::_RenderScene(Camera* camera, Viewport* vp)
             // for all attached entities
             Entity* entity = sceneNode->GetAttachedObject((unsigned short)entityIndex);
 
+            // apply frustum culling
+            // for correct results with non-uniform scaled scenenodes we have
+            // to take the maximum value of the three vector elements of the
+            // scaling vector as scale factor for the sphere radius
+            const Vector3& nodeScale = sceneNode->GetScale();
+            float maxScale = nodeScale.x;
+            if (nodeScale.y > maxScale) {maxScale = nodeScale.y;}
+            if (nodeScale.z > maxScale) {maxScale = nodeScale.z;}
+            if (!camera->IsVisible(sceneNode->_GetDerivedPosition(), entity->GetMesh()->GetBoundingSphereRadius() * maxScale))
+            {
+                continue;
+            }
+
             if (this->IsShadowTechniqueInUse() && this->illuminationStage == IRS_RENDER_TO_TEXTURE && !entity->GetCastShadows())
             {
                 continue;

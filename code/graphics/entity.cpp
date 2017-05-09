@@ -86,6 +86,15 @@ Entity::~Entity()
 //------------------------------------------------------------------------------
 /**
 */
+const Mesh* const
+Entity::GetMesh() const
+{
+    return this->mesh;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
 SubEntity*
 Entity::GetSubEntity(unsigned int index) const
 {

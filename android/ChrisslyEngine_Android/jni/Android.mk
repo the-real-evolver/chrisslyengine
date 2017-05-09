@@ -17,7 +17,8 @@ LOCAL_CFLAGS := -Werror -D__ANDROID__ -D__DEBUG__
 LOCAL_C_INCLUDES += $(CE_INCLUDES) $(CE_INCLUDES)/core $(CE_INCLUDES)/graphics $(CE_INCLUDES)/audio $(CE_INCLUDES)/thirdparty/stb
 
 LOCAL_SRC_FILES := $(CE_SRC_FILES)/core/android/androiddebug.cpp $(CE_SRC_FILES)/core/android/androidfswrapper.cpp \
-                   $(CE_SRC_FILES)/core/vector3.cpp $(CE_SRC_FILES)/core/matrix3.cpp $(CE_SRC_FILES)/core/matrix4.cpp $(CE_SRC_FILES)/core/quaternion.cpp $(CE_SRC_FILES)/core/chrisslymemory.cpp $(CE_SRC_FILES)/core/chrisslystring.cpp $(CE_SRC_FILES)/core/timer.cpp \
+                   $(CE_SRC_FILES)/core/vector3.cpp $(CE_SRC_FILES)/core/matrix3.cpp $(CE_SRC_FILES)/core/matrix4.cpp $(CE_SRC_FILES)/core/quaternion.cpp $(CE_SRC_FILES)/core/plane.cpp \
+                   $(CE_SRC_FILES)/core/chrisslymemory.cpp $(CE_SRC_FILES)/core/chrisslystring.cpp $(CE_SRC_FILES)/core/timer.cpp \
                    $(CE_SRC_FILES)/graphics/texturebase.cpp $(CE_SRC_FILES)/graphics/textureunitstate.cpp $(CE_SRC_FILES)/graphics/texturemanager.cpp \
                    $(CE_SRC_FILES)/graphics/pass.cpp $(CE_SRC_FILES)/graphics/material.cpp $(CE_SRC_FILES)/graphics/materialmanager.cpp $(CE_SRC_FILES)/graphics/materialparser.cpp \
                    $(CE_SRC_FILES)/graphics/graphicssystem.cpp \

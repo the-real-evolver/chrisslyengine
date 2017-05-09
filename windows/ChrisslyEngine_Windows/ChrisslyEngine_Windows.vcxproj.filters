@@ -155,6 +155,9 @@
     <ClCompile Include="..\..\code\audio\dsp\mixer.cpp">
       <Filter>audio\dsp</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\code\core\plane.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="core">
@@ -442,6 +445,9 @@
       <Filter>audio\dsp</Filter>
     </ClInclude>
     <ClInclude Include="..\..\code\core\chrisslyplatform.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\core\plane.h">
       <Filter>core</Filter>
     </ClInclude>
   </ItemGroup>

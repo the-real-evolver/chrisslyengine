@@ -27,6 +27,8 @@ public:
     static inline float Sin(float fValue);
     /// returns the cosine of the given value
     static inline float Cos(float fValue);
+    /// returns the tangent of the given value (measured in radians)
+    static inline float Tan(float fValue);
     /// returns the arc tangent of the given value
     static inline float ATan(float fValue);
     /// returns the principal value of the arc tangent of [y, x] in radians
@@ -66,13 +68,22 @@ PSPMath::Sin(float fValue)
     return pspFpuSin(fValue);
 }
 
- //------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 */
 inline float
 PSPMath::Cos(float fValue)
 {
     return pspFpuCos(fValue);
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline float
+PSPMath::Tan(float fValue)
+{
+    return tanf(fValue);
 }
 
 //------------------------------------------------------------------------------
@@ -90,7 +101,7 @@ PSPMath::ATan(float fValue)
 inline float
 PSPMath::ATan2(float y, float x)
 {
-    return atan2(y, x);
+    return atan2f(y, x);
 }
 
 //------------------------------------------------------------------------------

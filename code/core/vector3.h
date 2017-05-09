@@ -28,6 +28,8 @@ public:
     /// vector multiplication (component product)
     Vector3 operator * (const Vector3& rhs) const;
     /// vector scalar multiplication
+    Vector3 operator * (const float fScalar);
+    /// vector scalar multiplication
     Vector3& operator *= (const float fScalar);
     /// vector addition
     Vector3 operator + (const Vector3& rkVector) const;
@@ -78,7 +80,7 @@ public:
     */
     void Normalise();
     /// calculates the dot (scalar) product of this vector with another
-    float DotProduct(const Vector3& vec);
+    float DotProduct(const Vector3& vec) const;
     /// returns the length (magnitude) of the vector
     float Length() const;
 

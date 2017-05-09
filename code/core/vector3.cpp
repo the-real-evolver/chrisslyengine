@@ -14,7 +14,10 @@ namespace core
 //------------------------------------------------------------------------------
 /**
 */
-Vector3::Vector3() : x(0.0f), y(0.0f), z(0.0f)
+Vector3::Vector3() :
+    x(0.0f),
+    y(0.0f),
+    z(0.0f)
 {
 
 }
@@ -61,6 +64,20 @@ Vector3::operator * (const Vector3& rhs) const
         this->x * rhs.x,
         this->y * rhs.y,
         this->z * rhs.z
+    );
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+Vector3
+Vector3::operator * (const float fScalar)
+{
+    return Vector3
+    (
+        this->x * fScalar,
+        this->y * fScalar,
+        this->z * fScalar
     );
 }
 
@@ -188,7 +205,7 @@ Vector3::Normalise()
 /**
 */
 float
-Vector3::DotProduct(const Vector3& vec)
+Vector3::DotProduct(const Vector3& vec) const
 {
     return this->x * vec.x + this->y * vec.y + this->z * vec.z;
 }

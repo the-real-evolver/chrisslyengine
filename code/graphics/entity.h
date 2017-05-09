@@ -25,6 +25,8 @@ class Entity
 public:
     /// destructor
     ~Entity();
+    /// gets the Mesh that this Entity is based on
+    const Mesh* const GetMesh() const;
     /// gets a pointer to a SubEntity, ie a part of an Entity
     SubEntity* GetSubEntity(unsigned int index) const;
     /// retrieves the number of SubEntity objects making up this entity

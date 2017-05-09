@@ -24,7 +24,11 @@ Camera::Camera() :
     farDist(1000.0f),
     nearDist(0.1f),
     aspect(1.7777f),
-    projMatrixRS(Matrix4::ZERO)
+    projMatrixRS(Matrix4::ZERO),
+    nearHeight(0.0f),
+    nearWidth(0.0f),
+    farHeight(0.0f),
+    farWidth(0.0f)
 {
 
 }
@@ -300,6 +304,35 @@ Camera::GetProjectionMatrixRS() const
 //------------------------------------------------------------------------------
 /**
 */
+bool
+Camera::IsVisible(const Vector3& center, float radius) const
+{
+    if (this->recalcFrustum)
+    {
+        this->UpdateFrustum();
+    }
+    if (this->recalcView)
+    {
+        this->UpdateView();
+    }
+
+    float distance = 0.0f;
+    unsigned int i;
+    for (i = 0; i < FRUSTUM_PLANE_COUNT; ++i)
+    {
+        distance = this->frustumPlanes[i].Distance(center);
+        if (distance < -radius)
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
 void
 Camera::_RenderScene(Viewport* vp)
 {
@@ -345,6 +378,34 @@ Camera::UpdateView() const
     this->viewMatrix[1][3] = trans.y;
     this->viewMatrix[2][3] = trans.z;
 
+    // update frustum planes
+    Vector3 xAxis = this->orientation * Vector3(1.0f, 0.0f, 0.0f);
+    xAxis.Normalise();
+    Vector3 yAxis = this->orientation * Vector3(0.0f, 1.0f, 0.0f);
+    yAxis.Normalise();
+    Vector3 zAxis = this->orientation * Vector3(0.0f, 0.0f, 1.0f);
+    zAxis.Normalise();
+
+    Vector3 nearCenter = this->position - zAxis * this->nearDist;
+    Vector3 farCenter = this->position - zAxis * this->farDist;
+
+    Vector3 nearTopLeft = nearCenter + yAxis * this->nearHeight - xAxis * this->nearWidth;
+    Vector3 nearTopRight = nearCenter + yAxis * this->nearHeight + xAxis * this->nearWidth;
+    Vector3 nearBottomLeft = nearCenter - yAxis * this->nearHeight - xAxis * this->nearWidth;
+    Vector3 nearBottomRight = nearCenter - yAxis * this->nearHeight + xAxis * this->nearWidth;
+
+    Vector3 farTopLeft = farCenter + yAxis * this->farHeight - xAxis * this->farWidth;
+    Vector3 farTopRight = farCenter + yAxis * this->farHeight + xAxis * this->farWidth;
+    Vector3 farBottomLeft = farCenter - yAxis * this->farHeight - xAxis * this->farWidth;
+    Vector3 farBottomRight = farCenter - yAxis * this->farHeight + xAxis * this->farWidth;
+
+    this->frustumPlanes[FRUSTUM_PLANE_TOP].FromPoints(nearTopRight, nearTopLeft, farTopLeft);
+    this->frustumPlanes[FRUSTUM_PLANE_BOTTOM].FromPoints(nearBottomLeft, nearBottomRight, farBottomRight);
+    this->frustumPlanes[FRUSTUM_PLANE_LEFT].FromPoints(nearTopLeft, nearBottomLeft, farBottomLeft);
+    this->frustumPlanes[FRUSTUM_PLANE_RIGHT].FromPoints(nearBottomRight, nearTopRight, farBottomRight);
+    this->frustumPlanes[FRUSTUM_PLANE_NEAR].FromPoints(nearTopLeft, nearTopRight, nearBottomRight);
+    this->frustumPlanes[FRUSTUM_PLANE_FAR].FromPoints(farTopRight, farTopLeft, farBottomLeft);
+
     this->recalcView = false;
 }
 
@@ -354,8 +415,9 @@ Camera::UpdateView() const
 void
 Camera::UpdateFrustum() const
 {
-    // 0.5f * 3.141593f / 180.0f = 0.0087266f
-    float f = 1.0f / Math::ATan(this->FOVy * 0.0087266f);
+    static const float DegreeToRadianHalf = 3.141593f / 180.0f * 0.5f;
+
+    float f = 1.0f / Math::ATan(this->FOVy * DegreeToRadianHalf);
 
     this->projMatrixRS[0][0] = f / this->aspect;
     this->projMatrixRS[1][0] = 0.0f;
@@ -376,6 +438,12 @@ Camera::UpdateFrustum() const
     this->projMatrixRS[1][3] = 0.0f;
     this->projMatrixRS[2][3] = (2.0f * this->farDist * this->nearDist) / (this->nearDist - this->farDist);
     this->projMatrixRS[3][3] = 0.0f;
+
+    float tangent = Math::Tan(this->FOVy * DegreeToRadianHalf);
+    this->nearHeight = this->nearDist * tangent;
+    this->nearWidth = this->nearHeight * this->aspect;
+    this->farHeight = this->farDist * tangent;
+    this->farWidth = this->farHeight * this->aspect;
 
     this->recalcFrustum = false;
 }

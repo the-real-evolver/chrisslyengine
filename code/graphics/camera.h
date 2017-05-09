@@ -10,6 +10,7 @@
 #include "quaternion.h"
 #include "vector3.h"
 #include "matrix4.h"
+#include "plane.h"
 
 //------------------------------------------------------------------------------
 namespace chrissly
@@ -73,10 +74,24 @@ public:
     const core::Matrix4& GetViewMatrix() const;
     /// gets the projection matrix for this frustum adjusted for the rendersystem
     const core::Matrix4& GetProjectionMatrixRS() const;
+    /// tests whether a sphere with the given center and radius is visible in the cameras frustum
+    bool IsVisible(const core::Vector3& center, float radius) const;
     /// tells the Camera to contact the SceneManager to render from it's viewpoint
     void _RenderScene(Viewport* vp);
 
 private:
+    /// frustum clipping planes enumeration
+    enum FrustumPlane
+    {
+        FRUSTUM_PLANE_NEAR = 0,
+        FRUSTUM_PLANE_FAR,
+        FRUSTUM_PLANE_LEFT,
+        FRUSTUM_PLANE_RIGHT,
+        FRUSTUM_PLANE_TOP,
+        FRUSTUM_PLANE_BOTTOM,
+        FRUSTUM_PLANE_COUNT
+    };
+
     /// implementation of updateView (called if out of date)
     void UpdateView() const;
     /// implementation of updateFrustum (called if out of date) 
@@ -101,6 +116,10 @@ private:
     float aspect;
     /// pre-calced projection matrix for the psp rendersystem
     mutable core::Matrix4 projMatrixRS;
+    /// frustum clipping planes
+    mutable core::Plane frustumPlanes[FRUSTUM_PLANE_COUNT];
+    /// near and far plane dimensions
+    mutable float nearHeight, nearWidth, farHeight, farWidth;
 };
 
 } // namespace graphics
