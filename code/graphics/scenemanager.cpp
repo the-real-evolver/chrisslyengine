@@ -294,7 +294,7 @@ SceneManager::SetShadowTechnique(ShadowTechnique technique)
             this->shadowTextureProjScaleTrans[0][3] = 0.5f;
             this->shadowTextureProjScaleTrans[1][3] = 0.5f;
 
-            this->shadowProjection = this->shadowTextureProjScaleTrans * (this->shadowCamera->GetProjectionMatrixRS() * this->shadowCamera->GetViewMatrix());
+            this->shadowProjection = this->shadowTextureProjScaleTrans * (this->shadowCamera->GetProjectionMatrix() * this->shadowCamera->GetViewMatrix());
 
             this->shadowTextureConfigDirty = false;
         }
@@ -351,14 +351,9 @@ SceneManager::_RenderScene(Camera* camera, Viewport* vp)
             Entity* entity = sceneNode->GetAttachedObject((unsigned short)entityIndex);
 
             // apply frustum culling
-            // for correct results with non-uniform scaled scenenodes we have
-            // to take the maximum value of the three vector elements of the
-            // scaling vector as scale factor for the sphere radius
-            const Vector3& nodeScale = sceneNode->GetScale();
-            float maxScale = nodeScale.x;
-            if (nodeScale.y > maxScale) {maxScale = nodeScale.y;}
-            if (nodeScale.z > maxScale) {maxScale = nodeScale.z;}
-            if (!camera->IsVisible(sceneNode->_GetDerivedPosition(), entity->GetMesh()->GetBoundingSphereRadius() * maxScale))
+            // for correct results with non-uniform scaled scenenodes we have to take the maximum value
+            // of the three vector elements of the scaling vector as scale factor for the sphere radius
+            if (!camera->IsVisible(sceneNode->_GetDerivedPosition(), entity->GetMesh()->GetBoundingSphereRadius() * sceneNode->GetScale().GetMax()))
             {
                 continue;
             }
@@ -431,7 +426,7 @@ SceneManager::_RenderScene(Camera* camera, Viewport* vp)
     this->destRenderSystem->_SetRenderTarget(vp->GetTarget());
     this->destRenderSystem->_SetViewport(vp);
 
-    this->destRenderSystem->_SetProjectionMatrix(camera->GetProjectionMatrixRS());
+    this->destRenderSystem->_SetProjectionMatrix(camera->GetProjectionMatrix());
     this->destRenderSystem->_SetViewMatrix(camera->GetViewMatrix());
 
     this->destRenderSystem->_UseLights(&this->lights);
@@ -489,7 +484,7 @@ SceneManager::PrepareShadowTextures()
             {
                 this->shadowCamera->SetPosition(light->GetPosition());
                 this->shadowCamera->SetDirection(light->GetDirection());
-                this->shadowProjection = this->shadowTextureProjScaleTrans * (this->shadowCamera->GetProjectionMatrixRS() * this->shadowCamera->GetViewMatrix());
+                this->shadowProjection = this->shadowTextureProjScaleTrans * (this->shadowCamera->GetProjectionMatrix() * this->shadowCamera->GetViewMatrix());
                 break;
             }
             it = it->next;

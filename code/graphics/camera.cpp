@@ -24,7 +24,7 @@ Camera::Camera() :
     farDist(1000.0f),
     nearDist(0.1f),
     aspect(1.7777f),
-    projMatrixRS(Matrix4::ZERO),
+    projMatrix(Matrix4::ZERO),
     nearHeight(0.0f),
     nearWidth(0.0f),
     farHeight(0.0f),
@@ -98,7 +98,7 @@ Camera::GetOrientation() const
 void
 Camera::SetDirection(const Vector3& direction)
 {
-    Vector3 yawFixedAxis(0.0f, 1.0f, 0.0f);
+    Vector3 yawFixedAxis = Vector3::UNIT_POSITIVE_Y;
     Vector3 zAxis = direction;
     zAxis *= -1.0f;
     zAxis.Normalise();
@@ -115,7 +115,7 @@ Camera::SetDirection(const Vector3& direction)
 Vector3
 Camera::GetDirection() const
 {
-    return this->orientation * Vector3(0.0f, 0.0f, -1.0f);
+    return this->orientation * Vector3::UNIT_NEGATIVE_Z;
 }
 
 //------------------------------------------------------------------------------
@@ -124,7 +124,7 @@ Camera::GetDirection() const
 Vector3
 Camera::GetUp() const
 {
-    return this->orientation * Vector3(0.0f, 1.0f, 0.0f);
+    return this->orientation * Vector3::UNIT_POSITIVE_Y;
 }
 
 //------------------------------------------------------------------------------
@@ -146,7 +146,7 @@ void
 Camera::Roll(float angle)
 {
     // rotate around local Z axis
-    Vector3 zAxis = this->orientation * Vector3(0.0f, 0.0f, 1.0f);
+    Vector3 zAxis = this->orientation * Vector3::UNIT_POSITIVE_Z;
     this->Rotate(zAxis, angle);
 }
 
@@ -157,7 +157,7 @@ void
 Camera::Pitch(float angle)
 {
     // rotate around local X axis
-    Vector3 xAxis = this->orientation * Vector3(1.0f, 0.0f, 0.0f);
+    Vector3 xAxis = this->orientation * Vector3::UNIT_POSITIVE_X;
     this->Rotate(xAxis, angle);
 }
 
@@ -168,7 +168,7 @@ void
 Camera::Yaw(float angle)
 {
     // rotate around local y axis
-    Vector3 yAxis = this->orientation * Vector3(0.0f, 1.0f, 0.0f);
+    Vector3 yAxis = this->orientation * Vector3::UNIT_POSITIVE_Y;
     this->Rotate(yAxis, angle);
 }
 
@@ -201,7 +201,7 @@ Camera::Rotate(const Quaternion& q)
 /**
 */
 void
-Camera::SetFOVy(const float fovy)
+Camera::SetFOVy(float fovy)
 {
     this->FOVy = fovy;
     this->recalcFrustum = true;
@@ -291,14 +291,14 @@ Camera::GetViewMatrix() const
 /**
 */
 const Matrix4&
-Camera::GetProjectionMatrixRS() const
+Camera::GetProjectionMatrix() const
 {
     if (this->recalcFrustum)
     {
         this->UpdateFrustum();
     }
 
-    return this->projMatrixRS;
+    return this->projMatrix;
 }
 
 //------------------------------------------------------------------------------
@@ -379,11 +379,11 @@ Camera::UpdateView() const
     this->viewMatrix[2][3] = trans.z;
 
     // update frustum planes
-    Vector3 xAxis = this->orientation * Vector3(1.0f, 0.0f, 0.0f);
+    Vector3 xAxis = this->orientation * Vector3::UNIT_POSITIVE_X;
     xAxis.Normalise();
-    Vector3 yAxis = this->orientation * Vector3(0.0f, 1.0f, 0.0f);
+    Vector3 yAxis = this->orientation * Vector3::UNIT_POSITIVE_Y;
     yAxis.Normalise();
-    Vector3 zAxis = this->orientation * Vector3(0.0f, 0.0f, 1.0f);
+    Vector3 zAxis = this->orientation * Vector3::UNIT_POSITIVE_Z;
     zAxis.Normalise();
 
     Vector3 nearCenter = this->position - zAxis * this->nearDist;
@@ -417,29 +417,30 @@ Camera::UpdateFrustum() const
 {
     static const float DegreeToRadianHalf = 3.141593f / 180.0f * 0.5f;
 
-    float f = 1.0f / Math::ATan(this->FOVy * DegreeToRadianHalf);
+    float fovy = this->FOVy * DegreeToRadianHalf;
+    float f = 1.0f / Math::ATan(fovy);
 
-    this->projMatrixRS[0][0] = f / this->aspect;
-    this->projMatrixRS[1][0] = 0.0f;
-    this->projMatrixRS[2][0] = 0.0f;
-    this->projMatrixRS[3][0] = 0.0f;
+    this->projMatrix[0][0] = f / this->aspect;
+    this->projMatrix[1][0] = 0.0f;
+    this->projMatrix[2][0] = 0.0f;
+    this->projMatrix[3][0] = 0.0f;
 
-    this->projMatrixRS[0][1] = 0.0f;
-    this->projMatrixRS[1][1] = f;
-    this->projMatrixRS[2][1] = 0.0f;
-    this->projMatrixRS[3][1] = 0.0f;
+    this->projMatrix[0][1] = 0.0f;
+    this->projMatrix[1][1] = f;
+    this->projMatrix[2][1] = 0.0f;
+    this->projMatrix[3][1] = 0.0f;
 
-    this->projMatrixRS[0][2] = 0.0f;
-    this->projMatrixRS[1][2] = 0.0f;
-    this->projMatrixRS[2][2] = (this->farDist + this->nearDist) / (this->nearDist - this->farDist);
-    this->projMatrixRS[3][2] = -1.0f;
+    this->projMatrix[0][2] = 0.0f;
+    this->projMatrix[1][2] = 0.0f;
+    this->projMatrix[2][2] = (this->farDist + this->nearDist) / (this->nearDist - this->farDist);
+    this->projMatrix[3][2] = -1.0f;
 
-    this->projMatrixRS[0][3] = 0.0f;
-    this->projMatrixRS[1][3] = 0.0f;
-    this->projMatrixRS[2][3] = (2.0f * this->farDist * this->nearDist) / (this->nearDist - this->farDist);
-    this->projMatrixRS[3][3] = 0.0f;
+    this->projMatrix[0][3] = 0.0f;
+    this->projMatrix[1][3] = 0.0f;
+    this->projMatrix[2][3] = (2.0f * this->farDist * this->nearDist) / (this->nearDist - this->farDist);
+    this->projMatrix[3][3] = 0.0f;
 
-    float tangent = Math::Tan(this->FOVy * DegreeToRadianHalf);
+    float tangent = Math::Tan(fovy);
     this->nearHeight = this->nearDist * tangent;
     this->nearWidth = this->nearHeight * this->aspect;
     this->farHeight = this->farDist * tangent;

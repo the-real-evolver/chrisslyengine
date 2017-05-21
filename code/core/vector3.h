@@ -83,10 +83,21 @@ public:
     float DotProduct(const Vector3& vec) const;
     /// returns the length (magnitude) of the vector
     float Length() const;
+    /// get the maximum value of the vector's components
+    float GetMax() const;
 
     float x;
     float y;
     float z;
+
+    static const Vector3 ZERO;
+    static const Vector3 UNIT_POSITIVE_X;
+    static const Vector3 UNIT_POSITIVE_Y;
+    static const Vector3 UNIT_POSITIVE_Z;
+    static const Vector3 UNIT_NEGATIVE_X;
+    static const Vector3 UNIT_NEGATIVE_Y;
+    static const Vector3 UNIT_NEGATIVE_Z;
+    static const Vector3 UNIFORM_SCALE;
 };
 
 } // namespace core

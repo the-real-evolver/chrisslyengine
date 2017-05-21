@@ -20,7 +20,7 @@ class Matrix4
 public:
     /** default constructor
         @note
-            It does <b>NOT</b> initialize the matrix for efficiency.
+            It does <b>NOT</b> initialise the matrix for efficiency.
     */
     Matrix4();
     /// constructor with values
@@ -42,7 +42,7 @@ public:
     float* operator[] (size_t iRow) const;
     /// identity matrix
     static const Matrix4 IDENTITY;
-    /// zero initialized matrix
+    /// zero initialised matrix
     static const Matrix4 ZERO;
 
 private:

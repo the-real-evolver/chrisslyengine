@@ -55,7 +55,7 @@ public:
     /// rotate the camera around an arbitrary axis using a Quaternion
     void Rotate(const core::Quaternion& q);
     /// sets the Y-dimension Field Of View (FOV) of the frustum
-    void SetFOVy(const float fovy);
+    void SetFOVy(float fovy);
     /// retrieves the frustums Y-dimension Field Of View (FOV)
     float GetFOVy() const;
     /// sets the position of the near clipping plane
@@ -72,9 +72,9 @@ public:
     float GetAspectRatio() const;
     /// gets the view matrix for this frustum. Mainly for use by engine internally
     const core::Matrix4& GetViewMatrix() const;
-    /// gets the projection matrix for this frustum adjusted for the rendersystem
-    const core::Matrix4& GetProjectionMatrixRS() const;
-    /// tests whether a sphere with the given center and radius is visible in the cameras frustum
+    /// gets the projection matrix for this frustum
+    const core::Matrix4& GetProjectionMatrix() const;
+    /// tests whether a sphere with the given center and radius is visible in the camera frustum
     bool IsVisible(const core::Vector3& center, float radius) const;
     /// tells the Camera to contact the SceneManager to render from it's viewpoint
     void _RenderScene(Viewport* vp);
@@ -114,8 +114,8 @@ private:
     float nearDist;
     /// x/y viewport ratio - default 1.7777
     float aspect;
-    /// pre-calced projection matrix for the psp rendersystem
-    mutable core::Matrix4 projMatrixRS;
+    /// pre-calced projection matrix
+    mutable core::Matrix4 projMatrix;
     /// frustum clipping planes
     mutable core::Plane frustumPlanes[FRUSTUM_PLANE_COUNT];
     /// near and far plane dimensions

@@ -11,6 +11,15 @@ namespace chrissly
 namespace core
 {
 
+const Vector3 Vector3::ZERO(0.0f, 0.0f, 0.0f);
+const Vector3 Vector3::UNIT_POSITIVE_X(1.0f, 0.0f, 0.0f);
+const Vector3 Vector3::UNIT_POSITIVE_Y(0.0f, 1.0f, 0.0f);
+const Vector3 Vector3::UNIT_POSITIVE_Z(0.0f, 0.0f, 1.0f);
+const Vector3 Vector3::UNIT_NEGATIVE_X(-1.0f, 0.0f, 0.0f);
+const Vector3 Vector3::UNIT_NEGATIVE_Y(0.0f, -1.0f, 0.0f);
+const Vector3 Vector3::UNIT_NEGATIVE_Z(0.0f, 0.0f, -1.0f);
+const Vector3 Vector3::UNIFORM_SCALE(1.0f, 1.0f, 1.0f);
+
 //------------------------------------------------------------------------------
 /**
 */
@@ -217,6 +226,17 @@ float
 Vector3::Length() const
 {
     return Math::Sqrt(this->x * this->x + this->y * this->y + this->z * this->z);
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+float
+Vector3::GetMax() const
+{
+    float max = this->x > this->y ? this->x : this->y;
+    if (this->z > max) {return this->z;}
+    return max;
 }
 
 } // namespace core

@@ -18,8 +18,8 @@ using namespace chrissly::core;
 SceneNode::SceneNode() :
     parent(NULL),
     children(NULL),
-    scale(Vector3(1.0f, 1.0f, 1.0f)),
-    derivedScale(Vector3(1.0f, 1.0f, 1.0f)),
+    scale(Vector3::UNIFORM_SCALE),
+    derivedScale(Vector3::UNIFORM_SCALE),
     cachedTransform(Matrix4::IDENTITY),
     cachedTransformOutOfDate(true)
 {
@@ -241,7 +241,7 @@ SceneNode::_GetDerivedScale() const
 void
 SceneNode::Roll(float angle)
 {
-    this->Rotate(Vector3(0.0f, 0.0f, 1.0f), angle);
+    this->Rotate(Vector3::UNIT_POSITIVE_Z, angle);
 }
 
 //------------------------------------------------------------------------------
@@ -250,7 +250,7 @@ SceneNode::Roll(float angle)
 void
 SceneNode::Pitch(float angle)
 {
-    this->Rotate(Vector3(1.0f, 0.0f, 0.0f), angle);
+    this->Rotate(Vector3::UNIT_POSITIVE_X, angle);
 }
 
 //------------------------------------------------------------------------------
@@ -259,7 +259,7 @@ SceneNode::Pitch(float angle)
 void
 SceneNode::Yaw(float angle)
 {
-    this->Rotate(Vector3(0.0f, 1.0f, 0.0f), angle);
+    this->Rotate(Vector3::UNIT_POSITIVE_Y, angle);
 }
 
 //------------------------------------------------------------------------------
