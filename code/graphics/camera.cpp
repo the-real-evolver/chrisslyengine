@@ -98,11 +98,10 @@ Camera::GetOrientation() const
 void
 Camera::SetDirection(const Vector3& direction)
 {
-    Vector3 yawFixedAxis = Vector3::UNIT_POSITIVE_Y;
     Vector3 zAxis = direction;
     zAxis *= -1.0f;
     zAxis.Normalise();
-    Vector3 xAxis = yawFixedAxis.CrossProduct(zAxis);
+    Vector3 xAxis = Vector3::UNIT_POSITIVE_Y.CrossProduct(zAxis);
     xAxis.Normalise();
     Vector3 yAxis = zAxis.CrossProduct(xAxis);
     yAxis.Normalise();
@@ -316,12 +315,10 @@ Camera::IsVisible(const Vector3& center, float radius) const
         this->UpdateView();
     }
 
-    float distance = 0.0f;
     unsigned int i;
     for (i = 0; i < FRUSTUM_PLANE_COUNT; ++i)
     {
-        distance = this->frustumPlanes[i].Distance(center);
-        if (distance < -radius)
+        if (this->frustumPlanes[i].Distance(center) < -radius)
         {
             return false;
         }
@@ -418,6 +415,7 @@ Camera::UpdateFrustum() const
     static const float DegreeToRadianHalf = 3.141593f / 180.0f * 0.5f;
 
     float fovy = this->FOVy * DegreeToRadianHalf;
+
     float f = 1.0f / Math::ATan(fovy);
 
     this->projMatrix[0][0] = f / this->aspect;

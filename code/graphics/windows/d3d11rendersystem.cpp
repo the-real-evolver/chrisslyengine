@@ -59,7 +59,7 @@ D3D11RenderSystem::_Initialise(void* customParams)
         NULL,                       /* __in     IDXGIAdapter *pAdapter  (use NULL for the first adapter)    */
         D3D_DRIVER_TYPE_HARDWARE,   /* __in     D3D_DRIVER_TYPE DriverType                                  */
         NULL,                       /* __in     HMODULE Software                                            */
-        0,                          /* __in     UINT Flags                                                  */
+        0U,                         /* __in     UINT Flags                                                  */
         featureLevels,              /* __in     const D3D_FEATURE_LEVEL *pFeatureLevels                     */
         _countof(featureLevels),    /* __in     UINT FeatureLevels                                          */
         D3D11_SDK_VERSION,          /* __in     UINT SDKVersion                                             */
@@ -119,7 +119,7 @@ D3D11RenderSystem::_Initialise(void* customParams)
     this->currentSamplerState.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
     this->currentSamplerState.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
     this->currentSamplerState.MipLODBias = 0.0f;
-    this->currentSamplerState.MaxAnisotropy = 1;
+    this->currentSamplerState.MaxAnisotropy = 1U;
     this->currentSamplerState.ComparisonFunc = D3D11_COMPARISON_NEVER;
     this->currentSamplerState.BorderColor[0] = 1.0f;
     this->currentSamplerState.BorderColor[1] = 1.0f;
@@ -139,10 +139,10 @@ D3D11RenderSystem::_Initialise(void* customParams)
     /* create default input layout */
     D3D11_INPUT_ELEMENT_DESC inputDesc[] =
     {
-        {"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-        {"COLOR",    0, DXGI_FORMAT_R8G8B8A8_UNORM,  0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-        {"NORMAL",   0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-        {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0}
+        {"TEXCOORD", 0U, DXGI_FORMAT_R32G32_FLOAT,    0U, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0U},
+        {"COLOR",    0U, DXGI_FORMAT_R8G8B8A8_UNORM,  0U, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0U},
+        {"NORMAL",   0U, DXGI_FORMAT_R32G32B32_FLOAT, 0U, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0U},
+        {"POSITION", 0U, DXGI_FORMAT_R32G32B32_FLOAT, 0U, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0U}
     };
     result = this->device->CreateInputLayout(
         inputDesc, _countof(inputDesc),
@@ -155,14 +155,14 @@ D3D11RenderSystem::_Initialise(void* customParams)
     /* create default input layout for morph animation */
     D3D11_INPUT_ELEMENT_DESC inputDescMorphAnim[] =
     {
-        {"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-        {"COLOR",    0, DXGI_FORMAT_R8G8B8A8_UNORM,  0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-        {"NORMAL",   0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-        {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-        {"TEXCOORD", 1, DXGI_FORMAT_R32G32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-        {"COLOR",    1, DXGI_FORMAT_R8G8B8A8_UNORM,  0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-        {"NORMAL",   1, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-        {"POSITION", 1, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0}
+        {"TEXCOORD", 0U, DXGI_FORMAT_R32G32_FLOAT,    0U, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0U},
+        {"COLOR",    0U, DXGI_FORMAT_R8G8B8A8_UNORM,  0U, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0U},
+        {"NORMAL",   0U, DXGI_FORMAT_R32G32B32_FLOAT, 0U, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0U},
+        {"POSITION", 0U, DXGI_FORMAT_R32G32B32_FLOAT, 0U, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0U},
+        {"TEXCOORD", 1U, DXGI_FORMAT_R32G32_FLOAT,    0U, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0U},
+        {"COLOR",    1U, DXGI_FORMAT_R8G8B8A8_UNORM,  0U, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0U},
+        {"NORMAL",   1U, DXGI_FORMAT_R32G32B32_FLOAT, 0U, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0U},
+        {"POSITION", 1U, DXGI_FORMAT_R32G32B32_FLOAT, 0U, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0U}
     };
     result = this->device->CreateInputLayout(
         inputDescMorphAnim, _countof(inputDescMorphAnim),
@@ -240,7 +240,7 @@ D3D11RenderSystem::_SetRenderTarget(graphics::RenderTarget* target)
         renderTargetView = renderWindow->GetRenderTargetView();
         depthStencilView = renderWindow->GetDepthStencilView();
     }
-    this->context->OMSetRenderTargets(1, &renderTargetView, depthStencilView);
+    this->context->OMSetRenderTargets(1U, &renderTargetView, depthStencilView);
 }
 
 //------------------------------------------------------------------------------
@@ -356,9 +356,9 @@ D3D11RenderSystem::_Render(graphics::SubEntity* renderable)
     }
     this->currentGpuProgram->UpdatePerObjectConstantBuffers();
     ID3D11Buffer* d3d11Buffer = vertexBuffer->GetD3D11Buffer();
-    UINT stride = vertexBuffer->GetBytesPerVertex(), offset = 0;
-    this->context->IASetVertexBuffers(0, 1, &d3d11Buffer, &stride, &offset);
-    this->context->Draw(vertexBuffer->GetNumVertices(), 0);
+    UINT stride = vertexBuffer->GetBytesPerVertex(), offset = 0U;
+    this->context->IASetVertexBuffers(0U, 1U, &d3d11Buffer, &stride, &offset);
+    this->context->Draw(vertexBuffer->GetNumVertices(), 0U);
 }
 
 //------------------------------------------------------------------------------
@@ -405,7 +405,7 @@ D3D11RenderSystem::_SetPass(graphics::Pass* pass)
     this->currentDepthStencilState.DepthEnable = pass->GetDepthCheckEnabled();
     this->currentDepthStencilState.DepthWriteMask = pass->GetDepthWriteEnabled() ? D3D11_DEPTH_WRITE_MASK_ALL : D3D11_DEPTH_WRITE_MASK_ZERO;
     ID3D11DepthStencilState* depthStencilState = this->stateCache.GetDepthStencilState(this->currentDepthStencilState);
-    this->context->OMSetDepthStencilState(depthStencilState, 1);
+    this->context->OMSetDepthStencilState(depthStencilState, 1U);
 
     /* culling mode */
     switch (pass->GetCullingMode())
@@ -425,17 +425,17 @@ D3D11RenderSystem::_SetPass(graphics::Pass* pass)
 
     /* texture unit parameters */
     unsigned short textureUnitState;
-    for (textureUnitState = 0; textureUnitState < pass->GetNumTextureUnitStates(); ++textureUnitState)
+    for (textureUnitState = 0U; textureUnitState < pass->GetNumTextureUnitStates(); ++textureUnitState)
     {
         graphics::TextureUnitState* tus = pass->GetTextureUnitState(textureUnitState);
         ID3D11ShaderResourceView* shaderResourceView = tus->GetTexture()->GetShaderResourceView();
-        this->context->PSSetShaderResources(textureUnitState, 1, &shaderResourceView);
+        this->context->PSSetShaderResources(textureUnitState, 1U, &shaderResourceView);
 
         this->currentSamplerState.Filter = D3D11Mappings::Get(tus->GetTextureFiltering(graphics::FT_MIN), tus->GetTextureFiltering(graphics::FT_MAG), tus->GetTextureFiltering(graphics::FT_MIP));
         this->currentSamplerState.AddressU = D3D11Mappings::Get(tus->GetTextureAddressingMode().u);
         this->currentSamplerState.AddressV = D3D11Mappings::Get(tus->GetTextureAddressingMode().v);
         ID3D11SamplerState* samplerState = this->stateCache.GetSamplerState(this->currentSamplerState);
-        this->context->PSSetSamplers(textureUnitState, 1, &samplerState);
+        this->context->PSSetSamplers(textureUnitState, 1U, &samplerState);
     }
 
     /* set gpu program to use */
@@ -466,7 +466,7 @@ D3D11RenderSystem::_SetPass(graphics::Pass* pass)
 
         graphics::GpuProgramParameters* params = this->currentGpuProgram->GetDefaultParameters();
 
-        if (pass->GetNumTextureUnitStates() > 0)
+        if (pass->GetNumTextureUnitStates() > 0U)
         {
             graphics::TextureUnitState* tus = pass->GetTextureUnitState(0);
             params->SetNamedConstant("uMod", tus->GetTextureUScroll());
@@ -491,6 +491,11 @@ D3D11RenderSystem::_SetPass(graphics::Pass* pass)
             core::Matrix4 invViewMat = this->viewMatrix.Inverse();
             core::Vector3 cameraPosition(invViewMat[0][3], invViewMat[1][3], invViewMat[2][3]);
             params->SetNamedConstant("cameraPosition", cameraPosition);
+            float shininess = pass->GetShininess() > 0.0f ? pass->GetShininess() : 1.0f;
+            this->defaultLightShaderParams[0][2][3] = shininess;
+            this->defaultLightShaderParams[1][2][3] = shininess;
+            this->defaultLightShaderParams[2][2][3] = shininess;
+            this->defaultLightShaderParams[3][2][3] = shininess;
             params->SetNamedConstant("lightParams", this->defaultLightShaderParams, MaxLights);
         }
 
@@ -509,7 +514,7 @@ D3D11RenderSystem::_UseLights(ce_hash_table* lights)
 {
     unsigned int lightIndex = 0U;
     unsigned int i;
-    for (i = 0; i < lights->bucket_count; ++i)
+    for (i = 0U; i < lights->bucket_count; ++i)
     {
         ce_linked_list* it = ce_hash_table_begin(lights, i);
         while (it != NULL)

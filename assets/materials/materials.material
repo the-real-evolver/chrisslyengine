@@ -25,6 +25,7 @@ material opaque_material
     pass
     {
         lighting on
+        specular 1.0 1.0 1.0 1.0 24.0
         fog_override true 1.0 0.5 0.0 0.0 50.0
         texture_unit
         {
@@ -39,6 +40,7 @@ material transparent_material
     pass
     {
         lighting on
+        specular 1.0 1.0 1.0 1.0 24.0
         fog_override true 1.0 0.5 0.0 0.0 50.0
         scene_blend src_alpha one_minus_src_alpha
         cull_hardware none
