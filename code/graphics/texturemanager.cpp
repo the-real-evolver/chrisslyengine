@@ -23,7 +23,7 @@ TextureManager* TextureManager::Singleton = NULL;
 TextureManager::TextureManager()
 {
     Singleton = this;
-    ce_hash_table_init(&this->resources, 4);
+    ce_hash_table_init(&this->resources, 4U);
 }
 
 //------------------------------------------------------------------------------
@@ -57,11 +57,11 @@ TextureManager::Load(const char* name)
     unsigned char numMipmaps = 0U;
     unsigned char swizzled = 0U;
 
-    FSWrapper::Read(fd, &format, 1);
-    FSWrapper::Read(fd, &width, 2);
-    FSWrapper::Read(fd, &height, 2);
-    FSWrapper::Read(fd, &numMipmaps, 1);
-    FSWrapper::Read(fd, &swizzled, 1);
+    FSWrapper::Read(fd, &format, 1U);
+    FSWrapper::Read(fd, &width, 2U);
+    FSWrapper::Read(fd, &height, 2U);
+    FSWrapper::Read(fd, &numMipmaps, 1U);
+    FSWrapper::Read(fd, &swizzled, 1U);
 
     void* textureBuffer = CE_MALLOC_ALIGN(CE_CACHE_LINE_SIZE, fileSize - headerSizeBytes);
     FSWrapper::Read(fd, textureBuffer, fileSize - headerSizeBytes);
@@ -88,7 +88,7 @@ void
 TextureManager::RemoveAll()
 {
     unsigned int i;
-    for (i = 0; i < this->resources.bucket_count; ++i)
+    for (i = 0U; i < this->resources.bucket_count; ++i)
     {
         ce_linked_list* it = ce_hash_table_begin(&this->resources, i);
         while (it != NULL)

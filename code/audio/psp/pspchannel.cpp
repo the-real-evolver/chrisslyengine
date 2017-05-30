@@ -20,9 +20,9 @@ PSPChannel::PSPChannel() :
 {
     uintptr_t addr = (uintptr_t)this;
 
-    char str[32];
-    snprintf(str, 32, "audioChannelThread%u", addr);
-    this->threadId = sceKernelCreateThread(str, PSPAudioRenderer::ChannelThread, 0x12, 0x10000, 0, NULL);
+    char str[32U];
+    snprintf(str, 32U, "audioChannelThread%u", addr);
+    this->threadId = sceKernelCreateThread(str, PSPAudioRenderer::ChannelThread, 0x12, 0x10000, 0U, NULL);
     CE_ASSERT(this->threadId >= 0, "PSPChannel::PSPChannel(): sceKernelCreateThread() failed: %08x\n", this->threadId);
 
     int error = sceKernelStartThread(this->threadId, sizeof(uintptr_t), &addr);

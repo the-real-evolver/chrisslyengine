@@ -16,7 +16,7 @@ namespace graphics
 Material::Material() :
     loaded(false)
 {
-    ce_dynamic_array_init(&this->passes, 1);
+    ce_dynamic_array_init(&this->passes, 1U);
 }
 
 //------------------------------------------------------------------------------
@@ -64,7 +64,7 @@ void
 Material::RemoveAllPasses()
 {
     unsigned int i;
-    for (i = 0; i < this->passes.size; ++i)
+    for (i = 0U; i < this->passes.size; ++i)
     {
         CE_DELETE (Pass*)ce_dynamic_array_get(&this->passes, i);
     }
@@ -81,7 +81,7 @@ Material::Load()
     if (!this->loaded)
     {
         unsigned int i;
-        for (i = 0; i < this->passes.size; ++i)
+        for (i = 0U; i < this->passes.size; ++i)
         {
             ((Pass*)ce_dynamic_array_get(&this->passes, i))->_Load();
         }

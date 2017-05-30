@@ -17,7 +17,7 @@ namespace chrissly
 PSPRenderSystem* PSPRenderSystem::Singleton = NULL;
 
 /// the GE store the commands for processing in this array
-static unsigned int __attribute__((aligned(16))) DisplayList[262144];
+static unsigned int __attribute__((aligned(16U))) DisplayList[262144U];
 
 static const int MaxLights = 4;
 
@@ -103,7 +103,7 @@ PSPRenderSystem::_SetViewport(graphics::Viewport* vp)
 
     if (vp->GetClearEveryFrame())
     {
-        sceGuClearDepth(0);
+        sceGuClearDepth(0U);
         sceGuClearColor(vp->GetBackgroundColour());
         sceGuClear(PSPMappings::Get((graphics::FrameBufferType)vp->GetClearBuffers()));
     }
@@ -242,9 +242,9 @@ PSPRenderSystem::_SetPass(graphics::Pass* pass)
     }
 
     // texture unit parameters
-    if (pass->GetNumTextureUnitStates() > 0)
+    if (pass->GetNumTextureUnitStates() > 0U)
     {
-        graphics::TextureUnitState* tus = pass->GetTextureUnitState(0);
+        graphics::TextureUnitState* tus = pass->GetTextureUnitState(0U);
         graphics::Texture* texture = tus->GetTexture();
 
         sceGuEnable(GU_TEXTURE_2D);
@@ -260,7 +260,7 @@ PSPRenderSystem::_SetPass(graphics::Pass* pass)
         sceGuTexFunc(PSPMappings::Get(lbo), PSPMappings::Get(lbt));
 
         sceGuTexWrap(PSPMappings::Get(tus->GetTextureAddressingMode().u), PSPMappings::Get(tus->GetTextureAddressingMode().v));
-        sceGuTexMapMode(PSPMappings::Get(tus->GetTextureMappingMode()), 0, 0);
+        sceGuTexMapMode(PSPMappings::Get(tus->GetTextureMappingMode()), 0U, 0U);
         sceGuTexProjMapMode(PSPMappings::Get(tus->GetTextureProjectionMappingMode()));
 
         int numMipmaps = texture->GetNumMipmaps();
@@ -319,7 +319,7 @@ PSPRenderSystem::_UseLights(ce_hash_table* lights)
     unsigned int diffuse, specular;
 
     unsigned int i;
-    for (i = 0; i < lights->bucket_count && lightIndex < MaxLights; ++i)
+    for (i = 0U; i < lights->bucket_count && lightIndex < MaxLights; ++i)
     {
         ce_linked_list* it = ce_hash_table_begin(lights, i);
         while (it != NULL && lightIndex < MaxLights)

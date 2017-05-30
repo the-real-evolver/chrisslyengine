@@ -20,7 +20,7 @@ class GLES2Mappings
 {
 public:
     /// convert matrix to OpenGl ES style
-    static void MakeGLMatrix(GLfloat gl_matrix[16], const core::Matrix4& m);
+    static void MakeGLMatrix(GLfloat gl_matrix[16U], const core::Matrix4& m);
     /// return a OpenGL ES equivalent for a SceneBlendOperation value
     static GLenum Get(graphics::SceneBlendOperation op);
     /// return a OpenGL ES equivalent for a SceneBlendFactor value

@@ -35,14 +35,14 @@ SceneManager::SceneManager() :
 {
     Singleton = this;
 
-    ce_hash_table_init(&this->cameras, 2);
-    ce_hash_table_init(&this->lights, 4);
-    ce_dynamic_array_init(&this->entities, 256);
-    ce_dynamic_array_init(&this->sceneNodes, 256);
+    ce_hash_table_init(&this->cameras, 2U);
+    ce_hash_table_init(&this->lights, 4U);
+    ce_dynamic_array_init(&this->entities, 256U);
+    ce_dynamic_array_init(&this->sceneNodes, 256U);
 
-    this->renderQueueOpaque.Initialise(128);
-    this->renderQueueTransparent.Initialise(64);
-    this->renderQueueShadowReceiver.Initialise(64);
+    this->renderQueueOpaque.Initialise(128U);
+    this->renderQueueTransparent.Initialise(64U);
+    this->renderQueueShadowReceiver.Initialise(64U);
 
     this->destRenderSystem = GraphicsSystem::Instance()->GetRenderSystem();
 }
@@ -99,7 +99,7 @@ void
 SceneManager::DestroyAllCameras()
 {
     unsigned int i;
-    for (i = 0; i < this->cameras.bucket_count; ++i)
+    for (i = 0U; i < this->cameras.bucket_count; ++i)
     {
         ce_linked_list* it = ce_hash_table_begin(&this->cameras, i);
         while (it != NULL)
@@ -141,7 +141,7 @@ void
 SceneManager::DestroyAllLights()
 {
     unsigned int i;
-    for (i = 0; i < this->lights.bucket_count; ++i)
+    for (i = 0U; i < this->lights.bucket_count; ++i)
     {
         ce_linked_list* it = ce_hash_table_begin(&this->lights, i);
         while (it != NULL)
@@ -206,13 +206,13 @@ SceneManager::ClearScene()
     this->GetRootSceneNode()->RemoveAllChildren();
 
     unsigned int i;
-    for (i = 0; i < this->sceneNodes.size; ++i)
+    for (i = 0U; i < this->sceneNodes.size; ++i)
     {
         CE_DELETE (SceneNode*)ce_dynamic_array_get(&this->sceneNodes, i);
     }
     ce_dynamic_array_delete(&this->sceneNodes);
 
-    for (i = 0; i < this->entities.size; ++i)
+    for (i = 0U; i < this->entities.size; ++i)
     {
         CE_DELETE(Entity*)ce_dynamic_array_get(&this->entities, i);
     }
@@ -255,9 +255,9 @@ SceneManager::SetShadowTechnique(ShadowTechnique technique)
             this->shadowCamera->SetAspectRatio(1.0f);
 
             this->shadowRenderTexture = CE_NEW RenderTexture();
-            this->shadowRttPass = CE_NEW Pass(0);
+            this->shadowRttPass = CE_NEW Pass(0U);
             this->shadowRttPass->SetDepthCheckEnabled(false);
-            this->shadowPass = CE_NEW Pass(0);
+            this->shadowPass = CE_NEW Pass(0U);
             TextureUnitState* tus = this->shadowPass->CreateTextureUnitState();
             tus->SetTextureAddressingMode(TextureUnitState::TAM_CLAMP, TextureUnitState::TAM_CLAMP);
 
@@ -339,13 +339,13 @@ SceneManager::_RenderScene(Camera* camera, Viewport* vp)
 
     // fill renderqueues
     unsigned int sceneNodeIndex;
-    for (sceneNodeIndex = 0; sceneNodeIndex < this->sceneNodes.size; ++sceneNodeIndex)
+    for (sceneNodeIndex = 0U; sceneNodeIndex < this->sceneNodes.size; ++sceneNodeIndex)
     {
         // for all scenenodes
         SceneNode* sceneNode = (SceneNode*)ce_dynamic_array_get(&this->sceneNodes, sceneNodeIndex);
 
         unsigned int entityIndex;
-        for (entityIndex = 0; entityIndex < sceneNode->NumAttachedObjects(); ++entityIndex)
+        for (entityIndex = 0U; entityIndex < sceneNode->NumAttachedObjects(); ++entityIndex)
         {
             // for all attached entities
             Entity* entity = sceneNode->GetAttachedObject((unsigned short)entityIndex);
@@ -370,7 +370,7 @@ SceneManager::_RenderScene(Camera* camera, Viewport* vp)
             }
 
             unsigned int subEntityIndex;
-            for (subEntityIndex = 0; subEntityIndex < entity->GetNumSubEntities(); ++subEntityIndex)
+            for (subEntityIndex = 0U; subEntityIndex < entity->GetNumSubEntities(); ++subEntityIndex)
             {
                 // for all subentities
                 SubEntity* subEntity = entity->GetSubEntity(subEntityIndex);
@@ -394,7 +394,7 @@ SceneManager::_RenderScene(Camera* camera, Viewport* vp)
                 }
 
                 unsigned int passIndex;
-                for (passIndex = 0; passIndex < material->GetNumPasses(); ++passIndex)
+                for (passIndex = 0U; passIndex < material->GetNumPasses(); ++passIndex)
                 {
                     // for all passes
                     Pass* pass = material->GetPass((unsigned short)passIndex);
@@ -474,7 +474,7 @@ SceneManager::PrepareShadowTextures()
     this->illuminationStage = IRS_RENDER_TO_TEXTURE;
 
     unsigned int i;
-    for (i = 0; i < this->lights.bucket_count; ++i)
+    for (i = 0U; i < this->lights.bucket_count; ++i)
     {
         ce_linked_list* it = ce_hash_table_begin(&this->lights, i);
         while (it != NULL)
@@ -506,7 +506,7 @@ SceneManager::_RenderQueueGroupObjects(QueuedRenderableCollection* queue)
 
     unsigned short numRenderablePasses = queue->GetNumRenderablePasses();
     unsigned short i;
-    for (i = 0; i < numRenderablePasses; ++i)
+    for (i = 0U; i < numRenderablePasses; ++i)
     {
         RenderablePass* renderablePass = queue->GetRenderablePass(i);
 
@@ -540,7 +540,7 @@ SceneManager::_RenderTextureShadowReceiverQueueGroupObjects(QueuedRenderableColl
 
     unsigned short numRenderablePasses = queue->GetNumRenderablePasses();
     unsigned short i;
-    for (i = 0; i < numRenderablePasses; ++i)
+    for (i = 0U; i < numRenderablePasses; ++i)
     {
         SubEntity* renderable = queue->GetRenderablePass(i)->renderable;
 

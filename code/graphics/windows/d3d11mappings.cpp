@@ -197,24 +197,24 @@ D3D11Mappings::Get(const D3D11_SHADER_TYPE_DESC& typeDesc)
         case D3D_SVT_INT:
             switch (typeDesc.Columns)
             {
-                case 1: return graphics::GCT_INT1;
+                case 1U: return graphics::GCT_INT1;
             }
             break;
 
         case D3D_SVT_FLOAT:
             switch (typeDesc.Rows)
             {
-                case 1:
+                case 1U:
                     switch (typeDesc.Columns)
                     {
-                        case 1: return graphics::GCT_FLOAT1;
-                        case 3: return graphics::GCT_FLOAT3;
-                        case 4: return graphics::GCT_FLOAT4;
+                        case 1U: return graphics::GCT_FLOAT1;
+                        case 3U: return graphics::GCT_FLOAT3;
+                        case 4U: return graphics::GCT_FLOAT4;
                     }
-                case 4:
+                case 4U:
                     switch (typeDesc.Columns)
                     {
-                        case 4: return graphics::GCT_MATRIX_4X4;
+                        case 4U: return graphics::GCT_MATRIX_4X4;
                     }
             }
             break;

@@ -316,7 +316,7 @@ Camera::IsVisible(const Vector3& center, float radius) const
     }
 
     unsigned int i;
-    for (i = 0; i < FRUSTUM_PLANE_COUNT; ++i)
+    for (i = 0U; i < FRUSTUM_PLANE_COUNT; ++i)
     {
         if (this->frustumPlanes[i].Distance(center) < -radius)
         {

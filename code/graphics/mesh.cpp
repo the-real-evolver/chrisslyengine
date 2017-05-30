@@ -19,8 +19,8 @@ using namespace chrissly::core;
 Mesh::Mesh() :
     boundingRadius(0.0f)
 {
-    ce_dynamic_array_init(&this->subMeshes, 1);
-    ce_hash_table_init(&this->animations, 0);
+    ce_dynamic_array_init(&this->subMeshes, 1U);
+    ce_hash_table_init(&this->animations, 0U);
 }
 
 //------------------------------------------------------------------------------
@@ -31,7 +31,7 @@ Mesh::~Mesh()
     this->RemoveAllAnimations();
 
     unsigned int i;
-    for (i = 0; i < this->subMeshes.size; ++i)
+    for (i = 0U; i < this->subMeshes.size; ++i)
     {
         CE_DELETE (SubMesh*)ce_dynamic_array_get(&this->subMeshes, i);
     }
@@ -98,7 +98,7 @@ void
 Mesh::RemoveAllAnimations()
 {
     unsigned int i;
-    for (i = 0; i < this->animations.bucket_count; ++i)
+    for (i = 0U; i < this->animations.bucket_count; ++i)
     {
         ce_linked_list* it = ce_hash_table_begin(&this->animations, i);
         while (it != NULL)
@@ -127,7 +127,7 @@ void
 Mesh::_InitAnimationState(ce_hash_table* animSet)
 {
     unsigned int i;
-    for (i = 0; i < this->animations.bucket_count; ++i)
+    for (i = 0U; i < this->animations.bucket_count; ++i)
     {
         ce_linked_list* it = ce_hash_table_begin(&this->animations, i);
         while (it != NULL)

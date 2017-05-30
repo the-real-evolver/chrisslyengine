@@ -48,7 +48,7 @@ ce_hash_function(const char* key, size_t key_length)
     // hashfunction: djb2
     unsigned int hash = 5381U;
     unsigned int i;
-    for (i = 0; i < key_length; ++i)
+    for (i = 0U; i < key_length; ++i)
     {
         hash = ((hash << 5U) + hash) + *key++;
     }
@@ -69,13 +69,13 @@ ce_hash_table_init(ce_hash_table* table, unsigned int initial_size)
 
     ce_dynamic_array_init(&table->buckets, initial_size);
     table->bucket_count = initial_size;
-    table->size = 0;
+    table->size = 0U;
 
     unsigned int i;
-    for (i = 0; i < initial_size; ++i)
+    for (i = 0U; i < initial_size; ++i)
     {
         ce_bucket* bucket = (ce_bucket*)CE_MALLOC(sizeof(ce_bucket));
-        bucket->size = 0;
+        bucket->size = 0U;
         bucket->list = NULL;
         ce_dynamic_array_set(&table->buckets, i, bucket);
     }
@@ -93,7 +93,7 @@ ce_hash_table_clear(ce_hash_table* table)
     }
 
     unsigned int i;
-    for (i = 0; i < table->bucket_count; ++i)
+    for (i = 0U; i < table->bucket_count; ++i)
     {
         ce_bucket* bucket = (ce_bucket*)ce_dynamic_array_get(&table->buckets, i);
         ce_linked_list* it = bucket->list;
@@ -110,8 +110,8 @@ ce_hash_table_clear(ce_hash_table* table)
     }
 
     ce_dynamic_array_delete(&table->buckets);
-    table->bucket_count = 0;
-    table->size = 0;
+    table->bucket_count = 0U;
+    table->size = 0U;
 }
 
 //------------------------------------------------------------------------------
@@ -125,14 +125,14 @@ ce_hash_table_insert(ce_hash_table* table, const char* key, size_t key_length, v
         return;
     }
 
-    if (0 == table->bucket_count)
+    if (0U == table->bucket_count)
     {
-        ce_hash_table_init(table, 1);
+        ce_hash_table_init(table, 1U);
     }
 
     if (table->size == table->bucket_count)
     {
-        ce_hash_table_resize(table, table->bucket_count * 2);
+        ce_hash_table_resize(table, table->bucket_count * 2U);
     }
 
     ce_key_value_pair* kvp = (ce_key_value_pair*)CE_MALLOC(sizeof(ce_key_value_pair));
@@ -159,7 +159,7 @@ ce_hash_table_find(ce_hash_table* table, const char* key, size_t key_length)
         return NULL;
     }
 
-    if (0 == table->bucket_count)
+    if (0U == table->bucket_count)
     {
         return NULL;
     }
@@ -201,7 +201,7 @@ ce_hash_table_resize(ce_hash_table* table, unsigned int new_size)
     ce_hash_table_init(&new_table, new_size);
 
     unsigned int i;
-    for (i = 0; i < table->bucket_count; ++i)
+    for (i = 0U; i < table->bucket_count; ++i)
     {
         ce_linked_list* it = ((ce_bucket*)ce_dynamic_array_get(&table->buckets, i))->list;
         while (it != NULL)

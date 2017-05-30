@@ -37,7 +37,7 @@ ce_dynamic_array_init(ce_dynamic_array* v, unsigned int initial_size)
         return NULL;
     }
 
-    v->data = initial_size > 0 ? (void**)CE_CALLOC(initial_size, sizeof(void*)) : NULL;
+    v->data = initial_size > 0U ? (void**)CE_CALLOC(initial_size, sizeof(void*)) : NULL;
     v->capacity = initial_size;
     v->size = 0;
 
@@ -63,8 +63,8 @@ ce_dynamic_array_delete(ce_dynamic_array* v)
         v->data = NULL;
     }
 
-    v->capacity = 0;
-    v->size = 0;
+    v->capacity = 0U;
+    v->size = 0U;
 }
 
 //------------------------------------------------------------------------------
@@ -109,7 +109,7 @@ ce_dynamic_array_set(ce_dynamic_array* v, unsigned int index, void* item)
     if (index >= v->capacity)
     {
         // resize the array, making sure it is bigger than index.
-        unsigned int new_size = (v->capacity * 2 > index ? v->capacity * 2: index + 1);
+        unsigned int new_size = (v->capacity * 2U > index ? v->capacity * 2U : index + 1U);
 
         void** temp = (void**)CE_REALLOC(v->data, sizeof(void*) * new_size);
 

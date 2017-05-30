@@ -13,7 +13,7 @@ namespace chrissly
 /**
 */
 void
-GLES2Mappings::MakeGLMatrix(GLfloat gl_matrix[16], const core::Matrix4& m)
+GLES2Mappings::MakeGLMatrix(GLfloat gl_matrix[16U], const core::Matrix4& m)
 {
     gl_matrix[0]  = m[0][0]; gl_matrix[1]  = m[1][0]; gl_matrix[2]  = m[2][0]; gl_matrix[3]  = m[3][0];
     gl_matrix[4]  = m[0][1]; gl_matrix[5]  = m[1][1]; gl_matrix[6]  = m[2][1]; gl_matrix[7]  = m[3][1];
@@ -38,7 +38,7 @@ GLES2Mappings::Get(graphics::SceneBlendOperation op)
         default: CE_ASSERT(false, "GLES2Mappings::Get(): illegal SceneBlendOperation '%i'\n", op);
     }
 
-    return 0;
+    return 0U;
 }
 
 //------------------------------------------------------------------------------
@@ -63,7 +63,7 @@ GLES2Mappings::Get(graphics::SceneBlendFactor sbf)
         default: CE_ASSERT(false, "GLES2Mappings::Get(): illegal SceneBlendFactor '%i'\n", sbf);
     }
 
-    return 0;
+    return 0U;
 }
 
 //------------------------------------------------------------------------------
@@ -164,7 +164,7 @@ GLES2Mappings::Get(graphics::PixelFormat pf)
         default: CE_ASSERT(false, "GLES2Mappings::Get(): illegal or not supported PixelFormat '%i'\n", pf);
     }
 
-    return 0;
+    return 0U;
 }
 
 //------------------------------------------------------------------------------
@@ -218,7 +218,7 @@ GLES2Mappings::IsCompressed(graphics::PixelFormat pf)
         default: CE_ASSERT(false, "GLES2Mappings::IsCompressed(): illegal or not supported PixelFormat '%i'\n", pf);
     }
 
-    return 0;
+    return false;
 }
 
 //------------------------------------------------------------------------------
@@ -243,7 +243,7 @@ GLES2Mappings::GetImageSize(graphics::PixelFormat pf, GLsizei width, GLsizei hei
 GLbitfield
 GLES2Mappings::Get(graphics::FrameBufferType fbt)
 {
-    GLbitfield clearBits = 0;
+    GLbitfield clearBits = 0U;
 
     if (fbt & graphics::FBT_COLOUR)  {clearBits |= GL_COLOR_BUFFER_BIT;}
     if (fbt & graphics::FBT_DEPTH)   {clearBits |= GL_DEPTH_BUFFER_BIT;}

@@ -119,7 +119,7 @@ WinAPIFSWrapper::Get(core::AccessMode mode)
         default: CE_ASSERT(false, "FSWrapper::Get(): illegal AccessMode '%i'\n", mode);
     }
 
-    return 0;
+    return 0U;
 }
 
 //------------------------------------------------------------------------------
@@ -136,7 +136,7 @@ WinAPIFSWrapper::Get(core::SeekOrigin origin)
         default: CE_ASSERT(false, "FSWrapper::Get(): illegal SeekOrigin '%i'\n", origin);
     }
 
-    return 0;
+    return 0U;
 }
 
 } // namespace chrissly

@@ -19,7 +19,7 @@ RenderTarget::RenderTarget() :
     format(PF_UNKNOWN),
     frameTime(0.0)
 {
-    ce_dynamic_array_init(&this->viewports, 1);
+    ce_dynamic_array_init(&this->viewports, 1U);
     this->timer.Start();
 }
 
@@ -38,7 +38,7 @@ void
 RenderTarget::Update()
 {
     unsigned int i;
-    for (i = 0; i < this->viewports.size; ++i)
+    for (i = 0U; i < this->viewports.size; ++i)
     {
         ((Viewport*)ce_dynamic_array_get(&this->viewports, i))->Update();
     }
@@ -84,7 +84,7 @@ void
 RenderTarget::RemoveAllViewports()
 {
     unsigned int i;
-    for (i = 0; i < this->viewports.size; ++i)
+    for (i = 0U; i < this->viewports.size; ++i)
     {
         CE_DELETE (Viewport*)ce_dynamic_array_get(&this->viewports, i);
     }
@@ -143,7 +143,7 @@ RenderTarget::GetFrameTime() const
 unsigned int
 RenderTarget::GetType() const
 {
-    return 0;
+    return 0U;
 }
 
 } // namespace graphics

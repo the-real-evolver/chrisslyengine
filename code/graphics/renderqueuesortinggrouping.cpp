@@ -13,7 +13,7 @@ namespace graphics
 /**
 */
 QueuedRenderableCollection::QueuedRenderableCollection() :
-    numRenderablePasses(0)
+    numRenderablePasses(0U)
 {
 
 }
@@ -35,13 +35,13 @@ QueuedRenderableCollection::Initialise(unsigned short capacity)
     ce_dynamic_array_init(&this->renderablePasses, capacity);
 
     unsigned int i;
-    for (i = 0; i < this->renderablePasses.capacity; ++i)
+    for (i = 0U; i < this->renderablePasses.capacity; ++i)
     {
         RenderablePass* renderablePass = CE_NEW RenderablePass(NULL, NULL);
         ce_dynamic_array_set(&this->renderablePasses, i, renderablePass);
     }
 
-    this->numRenderablePasses = 0;
+    this->numRenderablePasses = 0U;
 }
 
  //------------------------------------------------------------------------------
@@ -51,14 +51,14 @@ void
 QueuedRenderableCollection::Destroy()
 {
     unsigned int i;
-    for (i = 0; i < this->renderablePasses.capacity; ++i)
+    for (i = 0U; i < this->renderablePasses.capacity; ++i)
     {
         CE_DELETE (RenderablePass*)ce_dynamic_array_get(&this->renderablePasses, i);
     }
 
     ce_dynamic_array_delete(&this->renderablePasses);
 
-    this->numRenderablePasses = 0;
+    this->numRenderablePasses = 0U;
 }
 
 //------------------------------------------------------------------------------
@@ -67,7 +67,7 @@ QueuedRenderableCollection::Destroy()
 void
 QueuedRenderableCollection::Clear()
 {
-    this->numRenderablePasses = 0;
+    this->numRenderablePasses = 0U;
 }
 
 //------------------------------------------------------------------------------

@@ -18,7 +18,7 @@ namespace core
 */
 String::String() :
     data(NULL),
-    size(0)
+    size(0U)
 {
 
 }
@@ -101,10 +101,10 @@ String::Set(const char* ptr, unsigned int length)
 {
     this->Delete();
 
-    if (length > 0)
+    if (length > 0U)
     {
-        this->data = (char*)CE_MALLOC(length + 1);
-        CE_ASSERT(this->data != NULL, "String::Set(): failed to allocate '%i' bytes", length + 1);
+        this->data = (char*)CE_MALLOC(length + 1U);
+        CE_ASSERT(this->data != NULL, "String::Set(): failed to allocate '%i' bytes", length + 1U);
         strncpy(this->data, ptr, length);
         this->data[length] = '\0';
         this->size = length;
@@ -121,7 +121,7 @@ String::Delete()
     {
         CE_FREE(this->data);
         this->data = NULL;
-        this->size = 0;
+        this->size = 0U;
     }
 }
 

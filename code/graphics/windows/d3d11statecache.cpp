@@ -14,10 +14,10 @@ namespace chrissly
 */
 D3D11StateCache::D3D11StateCache()
 {
-    ce_hash_table_init(&this->rasterizerStates, 2);
-    ce_hash_table_init(&this->depthStencilStates, 2);
-    ce_hash_table_init(&this->blendStates, 2);
-    ce_hash_table_init(&this->samplerStates, 2);
+    ce_hash_table_init(&this->rasterizerStates, 2U);
+    ce_hash_table_init(&this->depthStencilStates, 2U);
+    ce_hash_table_init(&this->blendStates, 2U);
+    ce_hash_table_init(&this->samplerStates, 2U);
 }
 
 //------------------------------------------------------------------------------
@@ -128,7 +128,7 @@ D3D11StateCache::Invalidate()
 {
     unsigned int i;
 
-    for (i = 0; i < this->rasterizerStates.bucket_count; ++i)
+    for (i = 0U; i < this->rasterizerStates.bucket_count; ++i)
     {
         ce_linked_list* it = ce_hash_table_begin(&this->rasterizerStates, i);
         while (it != NULL)
@@ -140,7 +140,7 @@ D3D11StateCache::Invalidate()
     }
     ce_hash_table_clear(&this->rasterizerStates);
 
-    for (i = 0; i < this->depthStencilStates.bucket_count; ++i)
+    for (i = 0U; i < this->depthStencilStates.bucket_count; ++i)
     {
         ce_linked_list* it = ce_hash_table_begin(&this->depthStencilStates, i);
         while (it != NULL)
@@ -152,7 +152,7 @@ D3D11StateCache::Invalidate()
     }
     ce_hash_table_clear(&this->depthStencilStates);
 
-    for (i = 0; i < this->blendStates.bucket_count; ++i)
+    for (i = 0U; i < this->blendStates.bucket_count; ++i)
     {
         ce_linked_list* it = ce_hash_table_begin(&this->blendStates, i);
         while (it != NULL)
@@ -164,7 +164,7 @@ D3D11StateCache::Invalidate()
     }
     ce_hash_table_clear(&this->blendStates);
 
-    for (i = 0; i < this->samplerStates.bucket_count; ++i)
+    for (i = 0U; i < this->samplerStates.bucket_count; ++i)
     {
         ce_linked_list* it = ce_hash_table_begin(&this->samplerStates, i);
         while (it != NULL)

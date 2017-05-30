@@ -42,7 +42,7 @@ D3D11GpuProgram::D3D11GpuProgram(const char* source, const char* fileName, const
         vertexShaderFunctionName,           /* __in     LPCSTR pFunctionName                */
         "vs_4_0",                           /* __in     LPCSTR pProfile                     */
         D3D10_SHADER_OPTIMIZATION_LEVEL2,   /* __in     UINT Flags1                         */
-        0,                                  /* __in     UINT Flags2                         */
+        0U,                                 /* __in     UINT Flags2                         */
         NULL,                               /* __in     ID3DX11ThreadPump *pPump            */
         &this->vertexShaderCode,            /* __out    ID3D10Blob **ppShader               */
         &errorBlob,                         /* __out    ID3D10Blob **ppErrorMsgs            */
@@ -74,7 +74,7 @@ D3D11GpuProgram::D3D11GpuProgram(const char* source, const char* fileName, const
         fragmentShaderFunctionName,         /* __in     LPCSTR pFunctionName                */
         "ps_4_0",                           /* __in     LPCSTR pProfile                     */
         D3D10_SHADER_OPTIMIZATION_LEVEL2,   /* __in     UINT Flags1                         */
-        0,                                  /* __in     UINT Flags2                         */
+        0U,                                 /* __in     UINT Flags2                         */
         NULL,                               /* __in     ID3DX11ThreadPump *pPump            */
         &this->fragmentShaderCode,          /* __out    ID3D10Blob **ppShader               */
         &errorBlob,                         /* __out    ID3D10Blob **ppErrorMsgs            */
@@ -108,13 +108,13 @@ D3D11GpuProgram::~D3D11GpuProgram()
     CE_DELETE this->defaultParams;
 
     unsigned int i;
-    for (i = 0; i < this->constantBuffersPerObject.size; ++i)
+    for (i = 0U; i < this->constantBuffersPerObject.size; ++i)
     {
         CE_DELETE (D3D11ConstantBuffer*)ce_dynamic_array_get(&this->constantBuffersPerObject, i);
     }
     ce_dynamic_array_delete(&this->constantBuffersPerObject);
 
-    for (i = 0; i < this->constantBuffersPerPass.size; ++i)
+    for (i = 0U; i < this->constantBuffersPerPass.size; ++i)
     {
         CE_DELETE (D3D11ConstantBuffer*)ce_dynamic_array_get(&this->constantBuffersPerPass, i);
     }
@@ -163,8 +163,8 @@ void
 D3D11GpuProgram::Bind()
 {
     ID3D11DeviceContext* context = D3D11RenderSystem::Instance()->GetContext();
-    context->VSSetShader(this->vertexShader, NULL, 0);
-    context->PSSetShader(this->fragmentShader, NULL, 0);
+    context->VSSetShader(this->vertexShader, NULL, 0U);
+    context->PSSetShader(this->fragmentShader, NULL, 0U);
 }
 
 //------------------------------------------------------------------------------
@@ -174,11 +174,11 @@ void
 D3D11GpuProgram::BindConstantBuffers()
 {
     unsigned int i;
-    for (i = 0; i < this->constantBuffersPerObject.size; ++i)
+    for (i = 0U; i < this->constantBuffersPerObject.size; ++i)
     {
         ((D3D11ConstantBuffer*)ce_dynamic_array_get(&this->constantBuffersPerObject, i))->Bind();
     }
-    for (i = 0; i < this->constantBuffersPerPass.size; ++i)
+    for (i = 0U; i < this->constantBuffersPerPass.size; ++i)
     {
         ((D3D11ConstantBuffer*)ce_dynamic_array_get(&this->constantBuffersPerPass, i))->Bind();
     }
@@ -191,7 +191,7 @@ void
 D3D11GpuProgram::UpdatePerObjectConstantBuffers()
 {
     unsigned int i;
-    for (i = 0; i < this->constantBuffersPerObject.size; ++i)
+    for (i = 0U; i < this->constantBuffersPerObject.size; ++i)
     {
         ((D3D11ConstantBuffer*)ce_dynamic_array_get(&this->constantBuffersPerObject, i))->UpdateConstants();
     }
@@ -204,7 +204,7 @@ void
 D3D11GpuProgram::UpdatePerPassConstantBuffers()
 {
     unsigned int i;
-    for (i = 0; i < this->constantBuffersPerPass.size; ++i)
+    for (i = 0U; i < this->constantBuffersPerPass.size; ++i)
     {
         ((D3D11ConstantBuffer*)ce_dynamic_array_get(&this->constantBuffersPerPass, i))->UpdateConstants();
     }
@@ -220,8 +220,8 @@ D3D11GpuProgram::ExtractConstantDefs()
     this->defaultParams = CE_NEW graphics::GpuProgramParameters;
     this->defaultParams->_SetNamedConstants(this->constantDefs);
 
-    ce_dynamic_array_init(&this->constantBuffersPerObject, 1);
-    ce_dynamic_array_init(&this->constantBuffersPerPass, 1);
+    ce_dynamic_array_init(&this->constantBuffersPerObject, 1U);
+    ce_dynamic_array_init(&this->constantBuffersPerPass, 1U);
 
     ID3D11ShaderReflection* reflector = NULL;
     HRESULT result = D3DReflect(this->fragmentShaderCode->GetBufferPointer(), this->fragmentShaderCode->GetBufferSize(), IID_ID3D11ShaderReflection, (void**)&reflector);
@@ -231,7 +231,7 @@ D3D11GpuProgram::ExtractConstantDefs()
     CE_ASSERT(SUCCEEDED(result), "D3D11GpuProgram::ExtractConstantDefs(): failed to get shader description\n");
 
     UINT bufferIndex;
-    for (bufferIndex = 0; bufferIndex < shaderDesc.ConstantBuffers; ++bufferIndex)
+    for (bufferIndex = 0U; bufferIndex < shaderDesc.ConstantBuffers; ++bufferIndex)
     {
         bool updatePerObject = false;
 
@@ -245,7 +245,7 @@ D3D11GpuProgram::ExtractConstantDefs()
         D3D11ConstantBuffer* constantBuffer = CE_NEW D3D11ConstantBuffer(bufferDesc.Size, bufferIndex, bufferDesc.Variables);
 
         UINT constantIndex;
-        for (constantIndex = 0; constantIndex < bufferDesc.Variables; ++constantIndex)
+        for (constantIndex = 0U; constantIndex < bufferDesc.Variables; ++constantIndex)
         {
             ID3D11ShaderReflectionVariable* reflectionVariable = reflectionBuffer->GetVariableByIndex(constantIndex);
             CE_ASSERT(reflectionVariable != NULL, "D3D11GpuProgram::ExtractConstantDefs(): failed to get variable by index\n");
@@ -264,7 +264,7 @@ D3D11GpuProgram::ExtractConstantDefs()
             variable->constType = D3D11Mappings::Get(typeDesc);
             variable->location = variableDesc.StartOffset;
             variable->buffer = CE_MALLOC(variableDesc.Size);
-            if (typeDesc.Elements > 0)
+            if (typeDesc.Elements > 0U)
             {
                 variable->size = variableDesc.Size / typeDesc.Elements;
                 variable->arraySize = typeDesc.Elements;
@@ -272,7 +272,7 @@ D3D11GpuProgram::ExtractConstantDefs()
             else
             {
                 variable->size = variableDesc.Size;
-                variable->arraySize = 1;
+                variable->arraySize = 1U;
             }
 
             ce_dynamic_array_push_back(&constantBuffer->constants, variable);

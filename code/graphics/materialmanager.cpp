@@ -20,7 +20,7 @@ MaterialManager* MaterialManager::Singleton = NULL;
 MaterialManager::MaterialManager()
 {
     Singleton = this;
-    ce_hash_table_init(&this->resources, 4);
+    ce_hash_table_init(&this->resources, 4U);
 }
 
 //------------------------------------------------------------------------------
@@ -85,7 +85,7 @@ void
 MaterialManager::RemoveAll()
 {
     unsigned int i;
-    for (i = 0; i < this->resources.bucket_count; ++i)
+    for (i = 0U; i < this->resources.bucket_count; ++i)
     {
         ce_linked_list* it = ce_hash_table_begin(&this->resources, i);
         while (it != NULL)

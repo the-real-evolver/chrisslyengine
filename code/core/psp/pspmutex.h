@@ -38,9 +38,9 @@ private:
 inline
 PSPMutex::PSPMutex()
 {
-    char str[16];
-    snprintf(str, 16, "Mutex%u", (uintptr_t)this);
-    this->semaphoreId = sceKernelCreateSema(str, 0, 1, 1, NULL);
+    char str[16U];
+    snprintf(str, 16U, "Mutex%u", (uintptr_t)this);
+    this->semaphoreId = sceKernelCreateSema(str, 0U, 1, 1, NULL);
     CE_ASSERT(this->semaphoreId >= 0, "PSPMutex::PSPMutex(): sceKernelCreateSema() failed: %08x\n", this->semaphoreId);
 }
 
@@ -60,7 +60,7 @@ PSPMutex::~PSPMutex()
 inline void
 PSPMutex::Lock() const
 {
-    int error = sceKernelWaitSema(this->semaphoreId, 1, 0);
+    int error = sceKernelWaitSema(this->semaphoreId, 1, NULL);
     CE_ASSERT(error >= 0, "PSPMutex::Lock(): sceKernelWaitSema() failed: %08x\n", error);
 }
 

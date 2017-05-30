@@ -30,7 +30,7 @@ HardwareVertexBufferBase::HardwareVertexBufferBase(unsigned int numVertices, uns
     usage(usage),
     useShadowBuffer(useShadowBuffer)
 {
-    if (numVertices > 0)
+    if (numVertices > 0U)
     {
         this->vertexBuffer = CE_MALLOC_ALIGN(CE_CACHE_LINE_SIZE, numVertices * bytesPerVertex);
         CE_ASSERT(this->vertexBuffer != NULL, "HardwareVertexBufferBase::HardwareVertexBufferBase(): failed to allocate '%i' bytes\n", numVertices * bytesPerVertex);

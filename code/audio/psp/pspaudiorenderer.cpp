@@ -189,7 +189,7 @@ PSPAudioRenderer::ChannelThread(SceSize args, void* argp)
         if (paused)
         {
             syncLock.Unlock();
-            sceKernelDelayThread(10000);
+            sceKernelDelayThread(10000U);
             continue;
         }
 
@@ -275,7 +275,7 @@ PSPAudioRenderer::ChannelThread(SceSize args, void* argp)
                         samplecount = NumOutputSamples;
                     }
                     sceAudioSetChannelDataLen(index, PSP_AUDIO_SAMPLE_ALIGN(samplecount));
-                    channel->SetPosition(0);
+                    channel->SetPosition(0U);
 
                     syncLock.Unlock();
                 }
@@ -293,7 +293,7 @@ PSPAudioRenderer::ChannelThread(SceSize args, void* argp)
         else
         {
             syncLock.Unlock();
-            sceKernelDelayThread(10000);
+            sceKernelDelayThread(10000U);
         }
     }
 

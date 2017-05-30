@@ -45,9 +45,9 @@ SLESChannel::SetupAudioPlayer(SLEngineItf engineInterface, SLObjectItf outputMix
     audioSink.pFormat  = NULL;
 
     SLDataSource audioSource = this->currentSound->GetAudioSource();
-    const SLInterfaceID  ids[3] = {SL_IID_BUFFERQUEUE, SL_IID_VOLUME, SL_IID_EFFECTSEND};
-    const SLboolean required[3] = {SL_BOOLEAN_TRUE, SL_BOOLEAN_TRUE, SL_BOOLEAN_TRUE};
-    SLresult result = (*engineInterface)->CreateAudioPlayer(engineInterface, &this->player, &audioSource, &audioSink, 3, ids, required);
+    const SLInterfaceID  ids[3U] = {SL_IID_BUFFERQUEUE, SL_IID_VOLUME, SL_IID_EFFECTSEND};
+    const SLboolean required[3U] = {SL_BOOLEAN_TRUE, SL_BOOLEAN_TRUE, SL_BOOLEAN_TRUE};
+    SLresult result = (*engineInterface)->CreateAudioPlayer(engineInterface, &this->player, &audioSource, &audioSink, 3U, ids, required);
     CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESChannel::SetupAudioPlayer(): failed to create audio player\n");
     result = (*player)->Realize(player, SL_BOOLEAN_FALSE);
     CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESChannel::SetupAudioPlayer(): failed to realize audio player\n");

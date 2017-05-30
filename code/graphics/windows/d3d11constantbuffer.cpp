@@ -31,7 +31,7 @@ D3D11ConstantBuffer::D3D11ConstantBuffer(UINT byteWidth, UINT slot, unsigned int
     desc.Usage = D3D11_USAGE_DYNAMIC;
     desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
     desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-    desc.MiscFlags = 0;
+    desc.MiscFlags = 0U;
     desc.ByteWidth = byteWidth;
 #if __DEBUG__
     HRESULT result =
@@ -60,8 +60,8 @@ void
 D3D11ConstantBuffer::Bind()
 {
     ID3D11DeviceContext* context = D3D11RenderSystem::Instance()->GetContext();
-    context->VSSetConstantBuffers(this->slot, 1, &this->buffer);
-    context->PSSetConstantBuffers(this->slot, 1, &this->buffer);
+    context->VSSetConstantBuffers(this->slot, 1U, &this->buffer);
+    context->PSSetConstantBuffers(this->slot, 1U, &this->buffer);
 }
 
 //------------------------------------------------------------------------------
@@ -73,16 +73,16 @@ D3D11ConstantBuffer::UpdateConstants()
     D3D11_MAPPED_SUBRESOURCE mappedResource;
     ZeroMemory(&mappedResource, sizeof(mappedResource));
     ID3D11DeviceContext* context = D3D11RenderSystem::Instance()->GetContext();
-    context->Map(this->buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+    context->Map(this->buffer, 0U, D3D11_MAP_WRITE_DISCARD, 0U, &mappedResource);
 
     unsigned int i;
-    for (i = 0; i < this->constants.size; ++i)
+    for (i = 0U; i < this->constants.size; ++i)
     {
         graphics::GpuConstantDefinition* variable = (graphics::GpuConstantDefinition*)ce_dynamic_array_get(&this->constants, i);
         memcpy((void*)((UINT_PTR)mappedResource.pData + (UINT_PTR)variable->location), variable->buffer, variable->size * variable->arraySize);
     }
 
-    context->Unmap(this->buffer, 0);
+    context->Unmap(this->buffer, 0U);
 }
 
 } // namespace chrissly

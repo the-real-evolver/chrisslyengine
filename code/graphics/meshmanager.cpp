@@ -25,7 +25,7 @@ MeshManager* MeshManager::Singleton = NULL;
 MeshManager::MeshManager()
 {
     Singleton = this;
-    ce_hash_table_init(&this->resources, 4);
+    ce_hash_table_init(&this->resources, 4U);
 }
 
 //------------------------------------------------------------------------------
@@ -64,26 +64,26 @@ MeshManager::Load(const char* filename)
 
     FileHandle fd = FSWrapper::Open(filename, ReadAccess, Random, 0777);
 
-    while (FSWrapper::Read(fd, &currentChunk, 1) > 0)
+    while (FSWrapper::Read(fd, &currentChunk, 1U) > 0)
     {
         switch (currentChunk)
         {
             case M_SUBMESH:
                 {
                     // read material name
-                    FSWrapper::Read(fd, &materialNameLength, 1);
+                    FSWrapper::Read(fd, &materialNameLength, 1U);
                     CE_ASSERT(materialNameLength <= 256U, "MeshManager::Load(): material name too long (limit is 256 characters)\n");
                     FSWrapper::Read(fd, &stringBuffer, materialNameLength);
                     materialName.Set(stringBuffer, materialNameLength);
 
                     // read vertex count
-                    FSWrapper::Read(fd, &vertexCount, 4);
+                    FSWrapper::Read(fd, &vertexCount, 4U);
 
                     // create the vertexbuffer
                     vertexBuffer = CE_NEW HardwareVertexBuffer(vertexCount, bytesPerVertex, HBU_STATIC, false);
 
                     // read vertex buffer
-                    if (vertexCount > 0)
+                    if (vertexCount > 0U)
                     {
                         void* buffer = vertexBuffer->Map();
                         FSWrapper::Read(fd, buffer, vertexCount * bytesPerVertex);
@@ -100,7 +100,7 @@ MeshManager::Load(const char* filename)
                 {
                     // read bounding radius
                     float boundingRadius;
-                    FSWrapper::Read(fd, &boundingRadius, 4);
+                    FSWrapper::Read(fd, &boundingRadius, 4U);
                     mesh->boundingRadius = boundingRadius;
                 }
                 break;
@@ -108,7 +108,7 @@ MeshManager::Load(const char* filename)
                 {
                     // read animation length
                     float animLength;
-                    FSWrapper::Read(fd, &animLength, 4);
+                    FSWrapper::Read(fd, &animLength, 4U);
                     animation = mesh->CreateAnimation("default", animLength);
                 }
                 break;
@@ -117,7 +117,7 @@ MeshManager::Load(const char* filename)
                     // read animation track
                     CE_ASSERT(animation != NULL, "MeshManager::Load(): can't create VertexAnimationTrack without Animation\n");
                     unsigned char handle = 0U;
-                    FSWrapper::Read(fd, &handle, 1);
+                    FSWrapper::Read(fd, &handle, 1U);
                     animationTrack = animation->CreateVertexTrack(handle);
                 }
                 break;
@@ -125,10 +125,10 @@ MeshManager::Load(const char* filename)
                 {
                     // read key time
                     float keyTime;
-                    FSWrapper::Read(fd, &keyTime, 4);
+                    FSWrapper::Read(fd, &keyTime, 4U);
 
                     // read vertex count
-                    FSWrapper::Read(fd, &vertexCount, 4);
+                    FSWrapper::Read(fd, &vertexCount, 4U);
 
                     // create the vertexbuffer
                     vertexBuffer = CE_NEW HardwareVertexBuffer(vertexCount, bytesPerVertex, HBU_STATIC, true);

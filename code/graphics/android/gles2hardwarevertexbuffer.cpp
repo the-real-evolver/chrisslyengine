@@ -21,7 +21,7 @@ GLES2HardwareVertexBuffer::GLES2HardwareVertexBuffer()
 */
 GLES2HardwareVertexBuffer::GLES2HardwareVertexBuffer(unsigned int numVertices, unsigned int bytesPerVertex, graphics::Usage usage, bool useShadowBuffer) :
     HardwareVertexBufferBase(numVertices, bytesPerVertex, usage, useShadowBuffer),
-    bufferName(0)
+    bufferName(0U)
 {
     if (graphics::HBU_STATIC == this->usage && !this->useShadowBuffer)
     {

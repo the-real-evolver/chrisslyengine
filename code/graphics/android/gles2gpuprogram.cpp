@@ -192,19 +192,19 @@ GLES2GpuProgram::ExtractConstantDefs()
                     break;
                 case GL_FLOAT_VEC3:
                     uniform->constType = graphics::GCT_FLOAT3;
-                    uniform->size = sizeof(float) * 3;
+                    uniform->size = sizeof(float) * 3U;
                     uniform->arraySize = arraySize;
                     uniform->buffer = CE_MALLOC(uniform->size * arraySize);
                    break;
                 case GL_FLOAT_VEC4:
                     uniform->constType = graphics::GCT_FLOAT4;
-                    uniform->size = sizeof(float) * 4;
+                    uniform->size = sizeof(float) * 4U;
                     uniform->arraySize = arraySize;
                     uniform->buffer = CE_MALLOC(uniform->size * arraySize);
                    break;
                 case GL_FLOAT_MAT4:
                     uniform->constType = graphics::GCT_MATRIX_4X4;
-                    uniform->size = sizeof(float) * 16;
+                    uniform->size = sizeof(float) * 16U;
                     uniform->arraySize = arraySize;
                     uniform->buffer = CE_MALLOC_ALIGN(CE_CACHE_LINE_SIZE, uniform->size * arraySize);
                     break;
@@ -236,7 +236,7 @@ GLuint
 GLES2GpuProgram::CreateShaderFromString(GLenum shaderType, const char* source)
 {
     GLuint shader = glCreateShader(shaderType);
-    if (shader != 0)
+    if (shader != 0U)
     {
         glShaderSource(shader, 1, &source, NULL);
         glCompileShader(shader);
@@ -256,7 +256,7 @@ GLES2GpuProgram::CreateShaderFromString(GLenum shaderType, const char* source)
                     CE_FREE(buf);
                 }
                 glDeleteShader(shader);
-                shader = 0;
+                shader = 0U;
             }
         }
     }
@@ -270,13 +270,13 @@ GLES2GpuProgram::CreateShaderFromString(GLenum shaderType, const char* source)
 GLuint
 GLES2GpuProgram::CreateProgram(GLuint vertexShader, GLuint fragmentShader)
 {
-    if (0 == vertexShader || 0 == fragmentShader)
+    if (0U == vertexShader || 0U == fragmentShader)
     {
-        return 0;
+        return 0U;
     }
 
     GLuint program = glCreateProgram();
-    if (program != 0)
+    if (program != 0U)
     {
         glAttachShader(program, vertexShader);
         CE_GL_ERROR_CHECK("glAttachShader");
@@ -300,7 +300,7 @@ GLES2GpuProgram::CreateProgram(GLuint vertexShader, GLuint fragmentShader)
                 }
             }
             glDeleteProgram(program);
-            program = 0;
+            program = 0U;
         }
     }
 

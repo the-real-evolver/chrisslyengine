@@ -17,10 +17,10 @@
 #define CE_DELETE delete
 
 #if __WINDOWS__
-#define CE_MALLOC(bytes) _aligned_malloc(bytes, 2)
+#define CE_MALLOC(bytes) _aligned_malloc(bytes, 2U)
 #define CE_MALLOC_ALIGN(align, bytes) _aligned_malloc(bytes, align)
-#define CE_CALLOC(num, size) _aligned_malloc(num * size, 2)
-#define CE_REALLOC(ptr, size) _aligned_realloc(ptr, size, 2)
+#define CE_CALLOC(num, size) _aligned_malloc(num * size, 2U)
+#define CE_REALLOC(ptr, size) _aligned_realloc(ptr, size, 2U)
 #define CE_FREE(ptr) _aligned_free(ptr)
 #else
 #define CE_MALLOC(bytes) malloc(bytes)

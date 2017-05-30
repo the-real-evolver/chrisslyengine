@@ -24,7 +24,7 @@ GraphicsSystem::GraphicsSystem() :
     this->textureManager = CE_NEW TextureManager();
     this->materialManager = CE_NEW MaterialManager();
     this->sceneManager = CE_NEW SceneManager();
-    ce_dynamic_array_init(&this->renderTargets, 1);
+    ce_dynamic_array_init(&this->renderTargets, 1U);
 }
 
 //------------------------------------------------------------------------------
@@ -35,7 +35,7 @@ GraphicsSystem::~GraphicsSystem()
     Singleton = NULL;
 
     unsigned int i;
-    for (i = 0; i < this->renderTargets.size; ++i)
+    for (i = 0U; i < this->renderTargets.size; ++i)
     {
         CE_DELETE (RenderTarget*)ce_dynamic_array_get(&this->renderTargets, i);
     }
@@ -80,7 +80,7 @@ GraphicsSystem::RenderOneFrame()
 {
     // update all rendertargets
     unsigned int index;
-    for (index = 0; index < this->renderTargets.size; ++index)
+    for (index = 0U; index < this->renderTargets.size; ++index)
     {
         RenderTarget* rt = (RenderTarget*)ce_dynamic_array_get(&this->renderTargets, index);
         rt->Update();

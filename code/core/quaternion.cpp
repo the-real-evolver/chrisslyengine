@@ -13,7 +13,11 @@ namespace core
 //------------------------------------------------------------------------------
 /**
 */
-Quaternion::Quaternion() : w(1.0f), x(0.0f), y(0.0f), z(0.0f)
+Quaternion::Quaternion() :
+    w(1.0f),
+    x(0.0f),
+    y(0.0f),
+    z(0.0f)
 {
 
 }
@@ -70,14 +74,14 @@ Quaternion::FromRotationMatrix(const Matrix3& rot)
     else
     {
         static unsigned int NextIndex[3] = {1, 2, 0};
-        unsigned int i = 0;
+        unsigned int i = 0U;
         if (rot[1][1] > rot[0][0])
         {
-            i = 1;
+            i = 1U;
         }
         if (rot[2][2] > rot[i][i])
         {
-            i = 2;
+            i = 2U;
         }
         unsigned int j = NextIndex[i];
         unsigned int k = NextIndex[j];

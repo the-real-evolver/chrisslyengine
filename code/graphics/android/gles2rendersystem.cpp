@@ -220,26 +220,26 @@ GLES2RenderSystem::_Render(graphics::SubEntity* renderable)
         graphics::HardwareVertexBuffer* vertexBuffer = renderable->_GetHardwareVertexAnimVertexData()->vertexBuffer;
         unsigned char* buffer = (unsigned char*)vertexBuffer->Map();
 
-        GLint vertexTexCoordHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_TEXTURE_COORDINATES);
+        GLuint vertexTexCoordHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_TEXTURE_COORDINATES);
         glVertexAttribPointer(vertexTexCoordHandle, 2, GL_FLOAT, GL_FALSE, 72, buffer);
         CE_GL_ERROR_CHECK("glVertexAttribPointer");
         glEnableVertexAttribArray(vertexTexCoordHandle);
         CE_GL_ERROR_CHECK("glEnableVertexAttribArray");
 
-        GLint vertexNormalHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_NORMAL);
-        glVertexAttribPointer(vertexNormalHandle, 3, GL_FLOAT, GL_FALSE, 72, buffer + 12);
+        GLuint vertexNormalHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_NORMAL);
+        glVertexAttribPointer(vertexNormalHandle, 3, GL_FLOAT, GL_FALSE, 72, buffer + 12U);
         CE_GL_ERROR_CHECK("glVertexAttribPointer");
         glEnableVertexAttribArray(vertexNormalHandle);
         CE_GL_ERROR_CHECK("glEnableVertexAttribArray");
 
-        GLint vertexPositionHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_POSITION);
-        glVertexAttribPointer(vertexPositionHandle, 3, GL_FLOAT, GL_FALSE, 72, buffer + 24);
+        GLuint vertexPositionHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_POSITION);
+        glVertexAttribPointer(vertexPositionHandle, 3, GL_FLOAT, GL_FALSE, 72, buffer + 24U);
         CE_GL_ERROR_CHECK("glVertexAttribPointer");
         glEnableVertexAttribArray(vertexPositionHandle);
         CE_GL_ERROR_CHECK("glEnableVertexAttribArray");
 
-        GLint vertexPositionMorphTargetHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_POSITION_MORPH_TARGET);
-        glVertexAttribPointer(vertexPositionMorphTargetHandle, 3, GL_FLOAT, GL_FALSE, 72, buffer + 60);
+        GLuint vertexPositionMorphTargetHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_POSITION_MORPH_TARGET);
+        glVertexAttribPointer(vertexPositionMorphTargetHandle, 3, GL_FLOAT, GL_FALSE, 72, buffer + 60U);
         CE_GL_ERROR_CHECK("glVertexAttribPointer");
         glEnableVertexAttribArray(vertexPositionMorphTargetHandle);
         CE_GL_ERROR_CHECK("glEnableVertexAttribArray");
@@ -254,20 +254,20 @@ GLES2RenderSystem::_Render(graphics::SubEntity* renderable)
         glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer->GetName());
         CE_GL_ERROR_CHECK("glBindBuffer");
 
-        GLint vertexTexCoordHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_TEXTURE_COORDINATES);
-        glVertexAttribPointer(vertexTexCoordHandle, 2, GL_FLOAT, GL_FALSE, 36, (void*)0);
+        GLuint vertexTexCoordHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_TEXTURE_COORDINATES);
+        glVertexAttribPointer(vertexTexCoordHandle, 2, GL_FLOAT, GL_FALSE, 36, (void*)0U);
         CE_GL_ERROR_CHECK("glVertexAttribPointer: texturecoords");
         glEnableVertexAttribArray(vertexTexCoordHandle);
         CE_GL_ERROR_CHECK("glEnableVertexAttribArray: texturecoords");
 
-        GLint vertexNormalHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_NORMAL);
-        glVertexAttribPointer(vertexNormalHandle, 3, GL_FLOAT, GL_FALSE, 36, (void*)12);
+        GLuint vertexNormalHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_NORMAL);
+        glVertexAttribPointer(vertexNormalHandle, 3, GL_FLOAT, GL_FALSE, 36, (void*)12U);
         CE_GL_ERROR_CHECK("glVertexAttribPointer: normal");
         glEnableVertexAttribArray(vertexNormalHandle);
         CE_GL_ERROR_CHECK("glEnableVertexAttribArray: normal");
 
-        GLint vertexPositionHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_POSITION);
-        glVertexAttribPointer(vertexPositionHandle, 3, GL_FLOAT, GL_FALSE, 36, (void*)24);
+        GLuint vertexPositionHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_POSITION);
+        glVertexAttribPointer(vertexPositionHandle, 3, GL_FLOAT, GL_FALSE, 36, (void*)24U);
         CE_GL_ERROR_CHECK("glVertexAttribPointer: position");
         glEnableVertexAttribArray(vertexPositionHandle);
         CE_GL_ERROR_CHECK("glEnableVertexAttribArray: position");
@@ -397,9 +397,9 @@ GLES2RenderSystem::_SetPass(graphics::Pass* pass)
 
         graphics::GpuProgramParameters* params = this->currentGpuProgram->GetDefaultParameters();
 
-        if (pass->GetNumTextureUnitStates() > 0)
+        if (pass->GetNumTextureUnitStates() > 0U)
         {
-            graphics::TextureUnitState* tus = pass->GetTextureUnitState(0);
+            graphics::TextureUnitState* tus = pass->GetTextureUnitState(0U);
             params->SetNamedConstant("uMod", tus->GetTextureUScroll());
             params->SetNamedConstant("vMod", tus->GetTextureVScroll());
             params->SetNamedConstant("uScale", tus->GetTextureUScale());
@@ -432,7 +432,7 @@ GLES2RenderSystem::_SetPass(graphics::Pass* pass)
     // apply shader parameters
     graphics::GpuNamedConstants* constantDefs = this->currentGpuProgram->GetConstantDefinitions();
     unsigned int i;
-    for (i = 0; i < constantDefs->map.bucket_count; ++i)
+    for (i = 0U; i < constantDefs->map.bucket_count; ++i)
     {
         ce_linked_list* it = ce_hash_table_begin(&constantDefs->map, i);
         while (it != NULL)
@@ -473,7 +473,7 @@ GLES2RenderSystem::_UseLights(ce_hash_table* lights)
 {
     unsigned int lightIndex = 0U;
     unsigned int i;
-    for (i = 0; i < lights->bucket_count && lightIndex < MaxLights; ++i)
+    for (i = 0U; i < lights->bucket_count && lightIndex < MaxLights; ++i)
     {
         ce_linked_list* it = ce_hash_table_begin(lights, i);
         while (it != NULL && lightIndex < MaxLights)

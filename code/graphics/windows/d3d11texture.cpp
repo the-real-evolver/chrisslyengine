@@ -45,14 +45,14 @@ D3D11Texture::CreateInternalResources()
     ZeroMemory(&desc, sizeof(desc));
     desc.Width = (UINT)this->width;
     desc.Height = (UINT)this->height;
-    desc.MipLevels = 1;
-    desc.ArraySize = 1;
+    desc.MipLevels = 1U;
+    desc.ArraySize = 1U;
     desc.Format = D3D11Mappings::Get(this->format);
-    desc.SampleDesc.Count = 1;
+    desc.SampleDesc.Count = 1U;
     desc.Usage = D3D11_USAGE_DEFAULT;
     desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-    desc.CPUAccessFlags = 0;
-    desc.MiscFlags = 0;
+    desc.CPUAccessFlags = 0U;
+    desc.MiscFlags = 0U;
 
     D3D11_SUBRESOURCE_DATA data;
     ZeroMemory(&data, sizeof(data));

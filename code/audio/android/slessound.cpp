@@ -32,45 +32,45 @@ SLESSound::_CreateInternalResources()
 {
     // setup the format of the content in the buffer queue
     this->pcm.formatType    = SL_DATAFORMAT_PCM;
-    this->pcm.containerSize = 16;
+    this->pcm.containerSize = 16U;
     this->pcm.endianness    = SL_BYTEORDER_LITTLEENDIAN;
     this->pcm.numChannels   = this->numChannels;
     switch (this->sampleRate)
     {
-        case 8000:
+        case 8000U:
             this->pcm.samplesPerSec = SL_SAMPLINGRATE_8;
             break;
-        case 11025:
+        case 11025U:
             this->pcm.samplesPerSec = SL_SAMPLINGRATE_11_025;
             break;
-        case 12000:
+        case 12000U:
             this->pcm.samplesPerSec = SL_SAMPLINGRATE_12;
             break;
-        case 16000:
+        case 16000U:
             this->pcm.samplesPerSec = SL_SAMPLINGRATE_16;
             break;
-        case 22050:
+        case 22050U:
             this->pcm.samplesPerSec = SL_SAMPLINGRATE_22_05;
             break;
-        case 24000:
+        case 24000U:
             this->pcm.samplesPerSec = SL_SAMPLINGRATE_24;
             break;
-        case 32000:
+        case 32000U:
             this->pcm.samplesPerSec = SL_SAMPLINGRATE_32;
             break;
-        case 44100:
+        case 44100U:
             this->pcm.samplesPerSec = SL_SAMPLINGRATE_44_1;
             break;
-        case 48000:
+        case 48000U:
             this->pcm.samplesPerSec = SL_SAMPLINGRATE_48;
             break;
-        case 64000:
+        case 64000U:
             this->pcm.samplesPerSec = SL_SAMPLINGRATE_64;
             break;
-        case 88200:
+        case 88200U:
             this->pcm.samplesPerSec = SL_SAMPLINGRATE_88_2;
             break;
-        case 192000:
+        case 192000U:
             this->pcm.samplesPerSec = SL_SAMPLINGRATE_192;
             break;
         default:
@@ -101,7 +101,7 @@ SLESSound::_CreateInternalResources()
 
     // setup the data source structure for the buffer queue
     this->bufferQueue.locatorType = SL_DATALOCATOR_ANDROIDSIMPLEBUFFERQUEUE;
-    this->bufferQueue.numBuffers  = 2;
+    this->bufferQueue.numBuffers  = 2U;
 
     this->audioSource.pFormat  = &this->pcm;
     this->audioSource.pLocator = &this->bufferQueue;

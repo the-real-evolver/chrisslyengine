@@ -78,7 +78,7 @@ void
 VertexAnimationTrack::RemoveAllKeyFrames()
 {
     unsigned int i;
-    for (i = 0; i < this->keyFrames.size; ++i)
+    for (i = 0U; i < this->keyFrames.size; ++i)
     {
         CE_DELETE (VertexMorphKeyFrame*)ce_dynamic_array_get(&this->keyFrames, i);
     }

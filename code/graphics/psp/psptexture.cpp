@@ -23,7 +23,7 @@ PSPTexture::PSPTexture()
 PSPTexture::~PSPTexture()
 {
     unsigned int i;
-    for (i = 0; i < this->mipmapInfos.capacity; ++i)
+    for (i = 0U; i < this->mipmapInfos.capacity; ++i)
     {
         CE_DELETE (MipmapInfo*)ce_dynamic_array_get(&this->mipmapInfos, i);
     }
@@ -44,7 +44,7 @@ PSPTexture::CreateInternalResources()
     int mipmapHeight = this->height;
 
     unsigned int i;
-    for (i = 0; i < this->mipmapInfos.capacity; ++i)
+    for (i = 0U; i < this->mipmapInfos.capacity; ++i)
     {
         mipmapbuffer = (void*)((uintptr_t)mipmapbuffer + PSPHardwareBufferManager::GetMemorySize(mipmapWidth, mipmapHeight, PSPMappings::Get(this->format)));
         mipmapWidth = (unsigned int)mipmapWidth >> 1U;

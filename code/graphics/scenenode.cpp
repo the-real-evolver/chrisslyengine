@@ -23,7 +23,7 @@ SceneNode::SceneNode() :
     cachedTransform(Matrix4::IDENTITY),
     cachedTransformOutOfDate(true)
 {
-    ce_dynamic_array_init(&this->objects, 1);
+    ce_dynamic_array_init(&this->objects, 1U);
 }
 
 //------------------------------------------------------------------------------

@@ -42,7 +42,7 @@ SLESAudioRenderer::~SLESAudioRenderer()
 void
 SLESAudioRenderer::_Initialise(void* customParams)
 {
-    SLresult result = slCreateEngine(&this->engine, 0, NULL, 0, NULL, NULL);
+    SLresult result = slCreateEngine(&this->engine, 0U, NULL, 0U, NULL, NULL);
     CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::_Initialise(): failed to create engine\n");
 
     result = (*this->engine)->Realize(this->engine, SL_BOOLEAN_FALSE);
@@ -51,9 +51,9 @@ SLESAudioRenderer::_Initialise(void* customParams)
     result = (*this->engine)->GetInterface(this->engine, SL_IID_ENGINE, &this->engineInterface);
     CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::_Initialise(): failed to get engine interface\n");
 
-    const SLInterfaceID  ids[1] = {SL_IID_ENVIRONMENTALREVERB};
-    const SLboolean required[1] = {SL_BOOLEAN_TRUE};
-    result = (*this->engineInterface)->CreateOutputMix(this->engineInterface, &this->outputMix, 1, ids, required);
+    const SLInterfaceID  ids[1U] = {SL_IID_ENVIRONMENTALREVERB};
+    const SLboolean required[1U] = {SL_BOOLEAN_TRUE};
+    result = (*this->engineInterface)->CreateOutputMix(this->engineInterface, &this->outputMix, 1U, ids, required);
     CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::_Initialise(): failed to create outputmix\n");
 
     result = (*this->outputMix)->Realize(this->outputMix, SL_BOOLEAN_FALSE);
@@ -145,7 +145,7 @@ SLESAudioRenderer::StartChannel(audio::Channel* channel)
     }
     else
     {
-        result = (*bufferQueueInterface)->Enqueue(bufferQueueInterface, sound->_GetSampleBufferPointer(0), length * numChannels * ((unsigned int)bits >> 3U));
+        result = (*bufferQueueInterface)->Enqueue(bufferQueueInterface, sound->_GetSampleBufferPointer(0U), length * numChannels * ((unsigned int)bits >> 3U));
     }
     CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::StartChannel(): failed to enqueue buffer\n");
 
@@ -293,7 +293,7 @@ SLESAudioRenderer::BufferQueueCallback(SLAndroidSimpleBufferQueueItf bufferQueue
             int numChannels, bits;
             sound->GetFormat(NULL, NULL, &numChannels, &bits);
 
-            result = (*bufferQueueInterface)->Enqueue(bufferQueueInterface, sound->_GetSampleBufferPointer(0), length * numChannels * ((unsigned int)bits >> 3U));
+            result = (*bufferQueueInterface)->Enqueue(bufferQueueInterface, sound->_GetSampleBufferPointer(0U), length * numChannels * ((unsigned int)bits >> 3U));
             CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::BufferQueueCallback(): failed to enqueue buffer\n");
         }
         else

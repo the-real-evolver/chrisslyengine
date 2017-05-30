@@ -19,7 +19,7 @@ ce_memory_fill_interleaved(void const* src0, void const* src1, void* dst, unsign
     unsigned int i;
     while (dst_len)
     {
-        for (i = 0; i < stride; ++i)
+        for (i = 0U; i < stride; ++i)
         {
             *ptr_dst = *ptr_src0++;
             *(ptr_dst + stride) = *ptr_src1++;

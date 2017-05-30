@@ -72,14 +72,14 @@ WASAPIAudioRenderer::_Initialise(void* customParams)
     result = this->audioClient->GetMixFormat(&format);
     CE_ASSERT(SUCCEEDED(result), "WASAPIAudioRenderer::_Initialise() failed to get mix format\n");
     format->wFormatTag = WAVE_FORMAT_PCM;
-    format->nChannels = 2;
-    format->wBitsPerSample = 16;
-    format->nBlockAlign = 4;
+    format->nChannels = 2U;
+    format->wBitsPerSample = 16U;
+    format->nBlockAlign = 4U;
     format->nAvgBytesPerSec = format->nSamplesPerSec * format->nBlockAlign;
-    format->cbSize = 0;
+    format->cbSize = 0U;
 
     REFERENCE_TIME hnsRequestedDuration = (REFERENCE_TIME)((double)RequestedBufferSizeInSamples / (double)format->nSamplesPerSec * (double)ReftimesPerSec);
-    result = this->audioClient->Initialize(AUDCLNT_SHAREMODE_SHARED, 0, hnsRequestedDuration, 0, format, NULL);
+    result = this->audioClient->Initialize(AUDCLNT_SHAREMODE_SHARED, 0U, hnsRequestedDuration, 0, format, NULL);
     CE_ASSERT(SUCCEEDED(result), "WASAPIAudioRenderer::_Initialise() failed to initialize audio client\n");
 
     result = this->audioClient->GetBufferSize(&this->bufferFrameCount);
@@ -137,7 +137,7 @@ WASAPIAudioRenderer::StartAudioProcessing()
 {
     this->running = true;
 
-    this->thread = CreateThread(NULL, 0, ThreadProc, (LPVOID)this, 0, NULL);
+    this->thread = CreateThread(NULL, 0U, ThreadProc, (LPVOID)this, 0U, NULL);
     CE_ASSERT(this->thread != 0, "WASAPIAudioRenderer::StartAudioProcessing(): failed to create audio thread\n");
 #if __DEBUG__
     BOOL success =
@@ -223,7 +223,7 @@ WASAPIAudioRenderer::RunAudioThread()
     HRESULT result;
     UINT32 numFramesPadding = 0U, numFramesAvailable = 0U;
     BYTE* data = NULL;
-    DWORD flags = 0;
+    DWORD flags = 0U;
 
     while (this->running)
     {

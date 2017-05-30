@@ -9,7 +9,7 @@
 namespace chrissly
 {
 
-uintptr_t PSPHardwareBufferManager::StaticOffset = 0;
+uintptr_t PSPHardwareBufferManager::StaticOffset = 0U;
 
 //------------------------------------------------------------------------------
 /**
@@ -29,14 +29,14 @@ PSPHardwareBufferManager::GetMemorySize(unsigned int width, unsigned int height,
         case GU_PSM_5551:
         case GU_PSM_4444:
         case GU_PSM_T16:
-            return 2 * width * height;
+            return 2U * width * height;
 
         case GU_PSM_8888:
         case GU_PSM_T32:
-            return 4 * width * height;
+            return 4U * width * height;
 
         default:
-            return 0;
+            return 0U;
     }
 }
 

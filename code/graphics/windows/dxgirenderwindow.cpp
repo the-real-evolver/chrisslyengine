@@ -85,7 +85,7 @@ DXGIRenderWindow::Create()
     CE_ASSERT(id != 0, "DXGIRenderWindow::Create(): failed to register class\n");
 
     DWORD style = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_VISIBLE;
-    DWORD exStyle = 0;
+    DWORD exStyle = 0U;
     RECT rect = {0, 0, WindowWidth, WindowHeight};
     AdjustWindowRectEx(&rect, style, FALSE, exStyle);
 
@@ -120,13 +120,13 @@ DXGIRenderWindow::Create()
     ZeroMemory(&sd, sizeof(sd));
     sd.BufferDesc.Width = WindowWidth;
     sd.BufferDesc.Height = WindowHeight;
-    sd.BufferDesc.RefreshRate.Numerator = 60;
-    sd.BufferDesc.RefreshRate.Denominator = 1;
+    sd.BufferDesc.RefreshRate.Numerator = 60U;
+    sd.BufferDesc.RefreshRate.Denominator = 1U;
     sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-    sd.SampleDesc.Count = 1;
-    sd.SampleDesc.Quality = 0;
+    sd.SampleDesc.Count = 1U;
+    sd.SampleDesc.Quality = 0U;
     sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-    sd.BufferCount = 1;
+    sd.BufferCount = 1U;
     sd.OutputWindow = this->hwnd;
     sd.Windowed = TRUE;
 
@@ -143,7 +143,7 @@ DXGIRenderWindow::Create()
 
     /* get buffer of the swapchain and create its render target view */
     ID3D11Texture2D* backBuffer = NULL;
-    result = this->swapChain->GetBuffer(0, __uuidof(*backBuffer), (void**)&backBuffer);
+    result = this->swapChain->GetBuffer(0U, __uuidof(*backBuffer), (void**)&backBuffer);
     CE_ASSERT(SUCCEEDED(result), "DXGIRenderWindow::Create(): failed to get buffer of the swapchain\n");
     result = this->device->CreateRenderTargetView(backBuffer, NULL, &this->renderTargetView);
     CE_ASSERT(SUCCEEDED(result), "DXGIRenderWindow::Create(): failed to create rendertarget view\n");
@@ -154,15 +154,15 @@ DXGIRenderWindow::Create()
     ZeroMemory(&depthBufferDesc, sizeof(depthBufferDesc));
     depthBufferDesc.Width = WindowWidth;
     depthBufferDesc.Height = WindowHeight;
-    depthBufferDesc.MipLevels = 1;
-    depthBufferDesc.ArraySize = 1;
+    depthBufferDesc.MipLevels = 1U;
+    depthBufferDesc.ArraySize = 1U;
     depthBufferDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-    depthBufferDesc.SampleDesc.Count = 1;
-    depthBufferDesc.SampleDesc.Quality = 0;
+    depthBufferDesc.SampleDesc.Count = 1U;
+    depthBufferDesc.SampleDesc.Quality = 0U;
     depthBufferDesc.Usage = D3D11_USAGE_DEFAULT;
     depthBufferDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-    depthBufferDesc.CPUAccessFlags = 0;
-    depthBufferDesc.MiscFlags = 0;
+    depthBufferDesc.CPUAccessFlags = 0U;
+    depthBufferDesc.MiscFlags = 0U;
     result = this->device->CreateTexture2D(&depthBufferDesc, NULL, &this->depthStencilBuffer);
     CE_ASSERT(SUCCEEDED(result), "DXGIRenderWindow::Create(): failed to create depth stencil buffer\n");
 
@@ -170,7 +170,7 @@ DXGIRenderWindow::Create()
     ZeroMemory(&depthStencilViewDesc, sizeof(depthStencilViewDesc));
     depthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
     depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-    depthStencilViewDesc.Texture2D.MipSlice = 0;
+    depthStencilViewDesc.Texture2D.MipSlice = 0U;
     result = this->device->CreateDepthStencilView(this->depthStencilBuffer, &depthStencilViewDesc, &this->depthStencilView);
     CE_ASSERT(SUCCEEDED(result), "DXGIRenderWindow::Create(): failed to create depth stencil view\n");
 
@@ -189,7 +189,7 @@ DXGIRenderWindow::SwapBuffers()
 #if __DEBUG__
     HRESULT result =
 #endif
-    this->swapChain->Present(1, 0);
+    this->swapChain->Present(1U, 0U);
     CE_ASSERT(SUCCEEDED(result), "DXGIRenderWindow::SwapBuffers(): failed to present swapchain\n");
 }
 

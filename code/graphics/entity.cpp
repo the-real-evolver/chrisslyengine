@@ -22,7 +22,7 @@ Entity::Entity(Mesh* mesh) :
     castShadows(false),
     receivesShadows(false)
 {
-    ce_hash_table_init(&this->animationStates, 0);
+    ce_hash_table_init(&this->animationStates, 0U);
 
     this->BuildSubEntities();
 
@@ -31,7 +31,7 @@ Entity::Entity(Mesh* mesh) :
         this->mesh->_InitAnimationState(&this->animationStates);
 
         unsigned int i;
-        for (i = 0; i < this->animationStates.bucket_count; ++i)
+        for (i = 0U; i < this->animationStates.bucket_count; ++i)
         {
             ce_linked_list* it = ce_hash_table_begin(&this->animationStates, i);
             while (it != NULL)
@@ -40,14 +40,14 @@ Entity::Entity(Mesh* mesh) :
                 Animation* anim = this->mesh->GetAnimation(state->GetAnimationName());
 
                 unsigned short trackIndex;
-                for (trackIndex = 0; trackIndex < anim->GetNumVertexTracks(); ++trackIndex)
+                for (trackIndex = 0U; trackIndex < anim->GetNumVertexTracks(); ++trackIndex)
                 {
                     VertexAnimationTrack* vertexTrack = anim->GetVertexTrack(trackIndex);
                     SubEntity* subEntity = this->GetSubEntity(vertexTrack->GetHandle());
                     CE_ASSERT(subEntity != NULL, "Entity::Entity(): subEntity not valid\n");
                     VertexData* subMeshVertexData = subEntity->GetSubMesh()->vertexData;
                     HardwareVertexBuffer* vertexBuffer = CE_NEW HardwareVertexBuffer(subMeshVertexData->vertexBuffer->GetNumVertices(),
-                                                                                    2 * subMeshVertexData->vertexBuffer->GetBytesPerVertex(), HBU_DYNAMIC, false);
+                                                                                    2U * subMeshVertexData->vertexBuffer->GetBytesPerVertex(), HBU_DYNAMIC, false);
                     subEntity->hardwareVertexAnimVertexData = CE_NEW VertexData(vertexBuffer);
                 }
 
@@ -63,14 +63,14 @@ Entity::Entity(Mesh* mesh) :
 Entity::~Entity()
 {
     unsigned int i;
-    for (i = 0; i < this->subEntities.capacity; ++i)
+    for (i = 0U; i < this->subEntities.capacity; ++i)
     {
         CE_DELETE (SubEntity*)ce_dynamic_array_get(&this->subEntities, i);
     }
 
     ce_dynamic_array_delete(&this->subEntities);
 
-    for (i = 0; i < this->animationStates.bucket_count; ++i)
+    for (i = 0U; i < this->animationStates.bucket_count; ++i)
     {
         ce_linked_list* it = ce_hash_table_begin(&this->animationStates, i);
         while (it != NULL)
@@ -181,7 +181,7 @@ Entity::UpdateAnimation()
 {
     // loop trough all animstates, update enabled ones
     unsigned int i;
-    for (i = 0; i < this->animationStates.bucket_count; ++i)
+    for (i = 0U; i < this->animationStates.bucket_count; ++i)
     {
         ce_linked_list* it = ce_hash_table_begin(&this->animationStates, i);
         while (it != NULL)
@@ -206,7 +206,7 @@ Entity::BuildSubEntities()
     ce_dynamic_array_init(&this->subEntities, this->mesh->GetNumSubMeshes());
 
     unsigned int i;
-    for (i = 0; i < this->subEntities.capacity; ++i)
+    for (i = 0U; i < this->subEntities.capacity; ++i)
     {
         SubMesh* subMesh = this->mesh->GetSubMesh((unsigned short)i);
         SubEntity* subEntity = CE_NEW SubEntity(this, subMesh);

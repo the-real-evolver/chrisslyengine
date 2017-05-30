@@ -36,7 +36,7 @@ Pass::Pass(unsigned short index) :
     fogEnd(1.0f),
     gpuProgram(NULL)
 {
-    ce_dynamic_array_init(&this->textureUnitStates, 1);
+    ce_dynamic_array_init(&this->textureUnitStates, 1U);
 }
 
 //------------------------------------------------------------------------------
@@ -412,7 +412,7 @@ void
 Pass::RemoveAllTextureUnitStates()
 {
     unsigned int i;
-    for (i = 0; i < this->textureUnitStates.size; ++i)
+    for (i = 0U; i < this->textureUnitStates.size; ++i)
     {
         CE_DELETE (TextureUnitState*)ce_dynamic_array_get(&this->textureUnitStates, i);
     }
@@ -454,7 +454,7 @@ void
 Pass::_Load()
 {
     unsigned int i;
-    for (i = 0; i < this->textureUnitStates.size; ++i)
+    for (i = 0U; i < this->textureUnitStates.size; ++i)
     {
         ((TextureUnitState*)ce_dynamic_array_get(&this->textureUnitStates, i))->_Load();
     }

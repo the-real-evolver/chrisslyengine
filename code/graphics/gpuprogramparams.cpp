@@ -17,7 +17,7 @@ using namespace chrissly::core;
 */
 GpuNamedConstants::GpuNamedConstants()
 {
-    ce_hash_table_init(&this->map, 4);
+    ce_hash_table_init(&this->map, 4U);
 }
 
 //------------------------------------------------------------------------------
@@ -26,7 +26,7 @@ GpuNamedConstants::GpuNamedConstants()
 GpuNamedConstants::~GpuNamedConstants()
 {
     unsigned int i;
-    for (i = 0; i < this->map.bucket_count; ++i)
+    for (i = 0U; i < this->map.bucket_count; ++i)
     {
         ce_linked_list* it = ce_hash_table_begin(&this->map, i);
         while (it != NULL)
@@ -49,7 +49,7 @@ GpuProgramParameters::GpuProgramParameters() :
     constantDefs(NULL)
 {
     unsigned int i;
-    for (i = 0; i < ACT_COUNT; ++i)
+    for (i = 0U; i < ACT_COUNT; ++i)
     {
         this->autoConstants[i] = NULL;
     }

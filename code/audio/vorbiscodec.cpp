@@ -104,7 +104,7 @@ VorbisCodec::GetStreamBufferPointer() const
 unsigned int
 VorbisCodec::GetStreamBufferLength() const
 {
-    return 0;
+    return 0U;
 }
 
 //------------------------------------------------------------------------------
