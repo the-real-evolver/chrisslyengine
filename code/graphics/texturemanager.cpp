@@ -72,7 +72,7 @@ TextureManager::Load(const char* name)
     texture->SetWidth(width);
     texture->SetHeight(height);
     texture->SetNumMipmaps(numMipmaps);
-    texture->SetSwizzleEnabled(1 == swizzled ? true : false);
+    texture->SetSwizzleEnabled(1U == swizzled);
     texture->SetBuffer(textureBuffer);
     texture->CreateInternalResources();
 

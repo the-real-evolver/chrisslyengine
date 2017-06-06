@@ -303,24 +303,24 @@ SceneNode::_GetFullTransform() const
         this->derivedOrientation.ToRotationMatrix(rot3x3);
 
         // set up final matrix with scale, rotation and translation
-        this->cachedTransform[0][0] = this->derivedScale.x * rot3x3[0][0];
-        this->cachedTransform[0][1] = this->derivedScale.y * rot3x3[0][1];
-        this->cachedTransform[0][2] = this->derivedScale.z * rot3x3[0][2];
-        this->cachedTransform[0][3] = this->derivedPosition.x;
-        this->cachedTransform[1][0] = this->derivedScale.x * rot3x3[1][0];
-        this->cachedTransform[1][1] = this->derivedScale.y * rot3x3[1][1];
-        this->cachedTransform[1][2] = this->derivedScale.z * rot3x3[1][2];
-        this->cachedTransform[1][3] = this->derivedPosition.y;
-        this->cachedTransform[2][0] = this->derivedScale.x * rot3x3[2][0];
-        this->cachedTransform[2][1] = this->derivedScale.y * rot3x3[2][1];
-        this->cachedTransform[2][2] = this->derivedScale.z * rot3x3[2][2];
-        this->cachedTransform[2][3] = this->derivedPosition.z;
+        this->cachedTransform[0U][0U] = this->derivedScale.x * rot3x3[0U][0U];
+        this->cachedTransform[0U][1U] = this->derivedScale.y * rot3x3[0U][1U];
+        this->cachedTransform[0U][2U] = this->derivedScale.z * rot3x3[0U][2U];
+        this->cachedTransform[0U][3U] = this->derivedPosition.x;
+        this->cachedTransform[1U][0U] = this->derivedScale.x * rot3x3[1U][0U];
+        this->cachedTransform[1U][1U] = this->derivedScale.y * rot3x3[1U][1U];
+        this->cachedTransform[1U][2U] = this->derivedScale.z * rot3x3[1U][2U];
+        this->cachedTransform[1U][3U] = this->derivedPosition.y;
+        this->cachedTransform[2U][0U] = this->derivedScale.x * rot3x3[2U][0U];
+        this->cachedTransform[2U][1U] = this->derivedScale.y * rot3x3[2U][1U];
+        this->cachedTransform[2U][2U] = this->derivedScale.z * rot3x3[2U][2U];
+        this->cachedTransform[2U][3U] = this->derivedPosition.z;
 
         // no projection term
-        this->cachedTransform[3][0] = 0.0f;
-        this->cachedTransform[3][1] = 0.0f;
-        this->cachedTransform[3][2] = 0.0f;
-        this->cachedTransform[3][3] = 1.0f;
+        this->cachedTransform[3U][0U] = 0.0f;
+        this->cachedTransform[3U][1U] = 0.0f;
+        this->cachedTransform[3U][2U] = 0.0f;
+        this->cachedTransform[3U][3U] = 1.0f;
 
         this->cachedTransformOutOfDate = false;
     }

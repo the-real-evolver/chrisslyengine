@@ -361,19 +361,19 @@ Camera::UpdateView() const
 
     // make final matrix
     // fills upper 3x3
-    this->viewMatrix[0][0] = rotT[0][0];
-    this->viewMatrix[0][1] = rotT[0][1];
-    this->viewMatrix[0][2] = rotT[0][2];
-    this->viewMatrix[1][0] = rotT[1][0];
-    this->viewMatrix[1][1] = rotT[1][1];
-    this->viewMatrix[1][2] = rotT[1][2];
-    this->viewMatrix[2][0] = rotT[2][0];
-    this->viewMatrix[2][1] = rotT[2][1];
-    this->viewMatrix[2][2] = rotT[2][2];
+    this->viewMatrix[0U][0U] = rotT[0U][0U];
+    this->viewMatrix[0U][1U] = rotT[0U][1U];
+    this->viewMatrix[0U][2U] = rotT[0U][2U];
+    this->viewMatrix[1U][0U] = rotT[1U][0U];
+    this->viewMatrix[1U][1U] = rotT[1U][1U];
+    this->viewMatrix[1U][2U] = rotT[1U][2U];
+    this->viewMatrix[2U][0U] = rotT[2U][0U];
+    this->viewMatrix[2U][1U] = rotT[2U][1U];
+    this->viewMatrix[2U][2U] = rotT[2U][2U];
 
-    this->viewMatrix[0][3] = trans.x;
-    this->viewMatrix[1][3] = trans.y;
-    this->viewMatrix[2][3] = trans.z;
+    this->viewMatrix[0U][3U] = trans.x;
+    this->viewMatrix[1U][3U] = trans.y;
+    this->viewMatrix[2U][3U] = trans.z;
 
     // update frustum planes
     Vector3 xAxis = this->orientation * Vector3::UNIT_POSITIVE_X;
@@ -418,25 +418,25 @@ Camera::UpdateFrustum() const
 
     float f = 1.0f / Math::ATan(fovy);
 
-    this->projMatrix[0][0] = f / this->aspect;
-    this->projMatrix[1][0] = 0.0f;
-    this->projMatrix[2][0] = 0.0f;
-    this->projMatrix[3][0] = 0.0f;
+    this->projMatrix[0U][0U] = f / this->aspect;
+    this->projMatrix[1U][0U] = 0.0f;
+    this->projMatrix[2U][0U] = 0.0f;
+    this->projMatrix[3U][0U] = 0.0f;
 
-    this->projMatrix[0][1] = 0.0f;
-    this->projMatrix[1][1] = f;
-    this->projMatrix[2][1] = 0.0f;
-    this->projMatrix[3][1] = 0.0f;
+    this->projMatrix[0U][1U] = 0.0f;
+    this->projMatrix[1U][1U] = f;
+    this->projMatrix[2U][1U] = 0.0f;
+    this->projMatrix[3U][1U] = 0.0f;
 
-    this->projMatrix[0][2] = 0.0f;
-    this->projMatrix[1][2] = 0.0f;
-    this->projMatrix[2][2] = (this->farDist + this->nearDist) / (this->nearDist - this->farDist);
-    this->projMatrix[3][2] = -1.0f;
+    this->projMatrix[0U][2U] = 0.0f;
+    this->projMatrix[1U][2U] = 0.0f;
+    this->projMatrix[2U][2U] = (this->farDist + this->nearDist) / (this->nearDist - this->farDist);
+    this->projMatrix[3U][2U] = -1.0f;
 
-    this->projMatrix[0][3] = 0.0f;
-    this->projMatrix[1][3] = 0.0f;
-    this->projMatrix[2][3] = (2.0f * this->farDist * this->nearDist) / (this->nearDist - this->farDist);
-    this->projMatrix[3][3] = 0.0f;
+    this->projMatrix[0U][3U] = 0.0f;
+    this->projMatrix[1U][3U] = 0.0f;
+    this->projMatrix[2U][3U] = (2.0f * this->farDist * this->nearDist) / (this->nearDist - this->farDist);
+    this->projMatrix[3U][3U] = 0.0f;
 
     float tangent = Math::Tan(fovy);
     this->nearHeight = this->nearDist * tangent;

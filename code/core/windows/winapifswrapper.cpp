@@ -43,7 +43,7 @@ WinAPIFSWrapper::Close(core::FileHandle fileHandle)
     BOOL result =
 #endif
     CloseHandle(fileHandle.handle);
-    CE_ASSERT(result != 0, "FSWrapper::Close(): failed to close file '%p'\n", fileHandle.handle);
+    CE_ASSERT(result != FALSE, "FSWrapper::Close(): failed to close file '%p'\n", fileHandle.handle);
 }
 
 //------------------------------------------------------------------------------
@@ -58,7 +58,7 @@ WinAPIFSWrapper::GetFileSize(core::FileHandle fileHandle)
     BOOL result =
 #endif
     GetFileSizeEx(fileHandle.handle, &fileSize);
-    CE_ASSERT(result != 0, "FSWrapper::GetFileSize(): failed to get filesize of file '%p'\n", fileHandle.handle);
+    CE_ASSERT(result != FALSE, "FSWrapper::GetFileSize(): failed to get filesize of file '%p'\n", fileHandle.handle);
 
     return (unsigned int)fileSize.QuadPart;
 }
@@ -81,7 +81,7 @@ WinAPIFSWrapper::Read(core::FileHandle fileHandle, void* buf, unsigned int numBy
         &bytesRead,         /* _Out_opt_    LPDWORD lpNumberOfBytesRead */
         NULL                /* _Inout_opt_  LPOVERLAPPED lpOverlapped   */
     );
-    CE_ASSERT(result != 0, "FSWrapper::Read(): failed to read from file '%p'\n", fileHandle.handle);
+    CE_ASSERT(result != FALSE, "FSWrapper::Read(): failed to read from file '%p'\n", fileHandle.handle);
 
     return (int)bytesRead;
 }

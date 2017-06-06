@@ -103,14 +103,14 @@ D3D11RenderSystem::_Initialise(void* customParams)
     ZeroMemory(&this->currentBlendState, sizeof(this->currentBlendState));
     this->currentBlendState.AlphaToCoverageEnable = FALSE;
     this->currentBlendState.IndependentBlendEnable = FALSE;
-    this->currentBlendState.RenderTarget[0].BlendEnable = TRUE;
-    this->currentBlendState.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
-    this->currentBlendState.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
-    this->currentBlendState.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
-    this->currentBlendState.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ZERO;
-    this->currentBlendState.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
-    this->currentBlendState.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-    this->currentBlendState.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+    this->currentBlendState.RenderTarget[0U].BlendEnable = TRUE;
+    this->currentBlendState.RenderTarget[0U].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+    this->currentBlendState.RenderTarget[0U].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+    this->currentBlendState.RenderTarget[0U].BlendOp = D3D11_BLEND_OP_ADD;
+    this->currentBlendState.RenderTarget[0U].SrcBlendAlpha = D3D11_BLEND_ZERO;
+    this->currentBlendState.RenderTarget[0U].DestBlendAlpha = D3D11_BLEND_ZERO;
+    this->currentBlendState.RenderTarget[0U].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+    this->currentBlendState.RenderTarget[0U].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 
     /* initialise sampler state */
     ZeroMemory(&this->currentSamplerState, sizeof(this->currentSamplerState));
@@ -121,10 +121,10 @@ D3D11RenderSystem::_Initialise(void* customParams)
     this->currentSamplerState.MipLODBias = 0.0f;
     this->currentSamplerState.MaxAnisotropy = 1U;
     this->currentSamplerState.ComparisonFunc = D3D11_COMPARISON_NEVER;
-    this->currentSamplerState.BorderColor[0] = 1.0f;
-    this->currentSamplerState.BorderColor[1] = 1.0f;
-    this->currentSamplerState.BorderColor[2] = 1.0f;
-    this->currentSamplerState.BorderColor[3] = 1.0f;
+    this->currentSamplerState.BorderColor[0U] = 1.0f;
+    this->currentSamplerState.BorderColor[1U] = 1.0f;
+    this->currentSamplerState.BorderColor[2U] = 1.0f;
+    this->currentSamplerState.BorderColor[3U] = 1.0f;
     this->currentSamplerState.MinLOD = -FLT_MAX;
     this->currentSamplerState.MaxLOD = FLT_MAX;
 
@@ -270,10 +270,10 @@ D3D11RenderSystem::_SetViewport(graphics::Viewport* vp)
     {
         return;
     }
-    FLOAT clearColour[4] = {0.0f, 0.0f, 0.0f, 0.0f};
-    D3D11Mappings::Get(vp->GetBackgroundColour(), clearColour[0], clearColour[1], clearColour[2], clearColour[3]);
+    FLOAT clearColour[4U] = {0.0f, 0.0f, 0.0f, 0.0f};
+    D3D11Mappings::Get(vp->GetBackgroundColour(), clearColour[0U], clearColour[1U], clearColour[2U], clearColour[3U]);
     this->context->ClearRenderTargetView(renderTargetView, clearColour);
-    this->context->ClearDepthStencilView(depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+    this->context->ClearDepthStencilView(depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0U);
 }
 
 //------------------------------------------------------------------------------
@@ -294,10 +294,10 @@ D3D11RenderSystem::_SetViewMatrix(const core::Matrix4& m)
     this->viewMatrix = m;
 
     /* right-handed to left-handed conversion */
-    this->viewMatrix[2][0] = -this->viewMatrix[2][0];
-    this->viewMatrix[2][1] = -this->viewMatrix[2][1];
-    this->viewMatrix[2][2] = -this->viewMatrix[2][2];
-    this->viewMatrix[2][3] = -this->viewMatrix[2][3];
+    this->viewMatrix[2U][0U] = -this->viewMatrix[2U][0U];
+    this->viewMatrix[2U][1U] = -this->viewMatrix[2U][1U];
+    this->viewMatrix[2U][2U] = -this->viewMatrix[2U][2U];
+    this->viewMatrix[2U][3U] = -this->viewMatrix[2U][3U];
 }
 
 //------------------------------------------------------------------------------
@@ -309,16 +309,16 @@ D3D11RenderSystem::_SetProjectionMatrix(const core::Matrix4& m)
     this->projectionMatrix = m;
 
     /* convert depth range from [-1, +1] to [0, 1] */
-    this->projectionMatrix[2][0] = (this->projectionMatrix[2][0] + this->projectionMatrix[3][0]) * 0.5f;
-    this->projectionMatrix[2][1] = (this->projectionMatrix[2][1] + this->projectionMatrix[3][1]) * 0.5f;
-    this->projectionMatrix[2][2] = (this->projectionMatrix[2][2] + this->projectionMatrix[3][2]) * 0.5f;
-    this->projectionMatrix[2][3] = (this->projectionMatrix[2][3] + this->projectionMatrix[3][3]) * 0.5f;
+    this->projectionMatrix[2U][0U] = (this->projectionMatrix[2U][0U] + this->projectionMatrix[3U][0U]) * 0.5f;
+    this->projectionMatrix[2U][1U] = (this->projectionMatrix[2U][1U] + this->projectionMatrix[3U][1U]) * 0.5f;
+    this->projectionMatrix[2U][2U] = (this->projectionMatrix[2U][2U] + this->projectionMatrix[3U][2U]) * 0.5f;
+    this->projectionMatrix[2U][3U] = (this->projectionMatrix[2U][3U] + this->projectionMatrix[3U][3U]) * 0.5f;
 
     /* right-handed to left-handed conversion */
-    this->projectionMatrix[0][2] = -this->projectionMatrix[0][2];
-    this->projectionMatrix[1][2] = -this->projectionMatrix[1][2];
-    this->projectionMatrix[2][2] = -this->projectionMatrix[2][2];
-    this->projectionMatrix[3][2] = -this->projectionMatrix[3][2];
+    this->projectionMatrix[0U][2U] = -this->projectionMatrix[0U][2U];
+    this->projectionMatrix[1U][2U] = -this->projectionMatrix[1U][2U];
+    this->projectionMatrix[2U][2U] = -this->projectionMatrix[2U][2U];
+    this->projectionMatrix[3U][2U] = -this->projectionMatrix[3U][2U];
 }
 
 //------------------------------------------------------------------------------
@@ -388,17 +388,17 @@ D3D11RenderSystem::_SetPass(graphics::Pass* pass)
     /* scene blending parameters */
     if (pass->GetSceneBlendingEnabled())
     {
-        this->currentBlendState.RenderTarget[0].BlendEnable = TRUE;
-        this->currentBlendState.RenderTarget[0].SrcBlend = D3D11Mappings::Get(pass->GetSourceBlendFactor());
-        this->currentBlendState.RenderTarget[0].DestBlend = D3D11Mappings::Get(pass->GetDestBlendFactor());
-        this->currentBlendState.RenderTarget[0].BlendOp = D3D11Mappings::Get(pass->GetSceneBlendingOperation());
+        this->currentBlendState.RenderTarget[0U].BlendEnable = TRUE;
+        this->currentBlendState.RenderTarget[0U].SrcBlend = D3D11Mappings::Get(pass->GetSourceBlendFactor());
+        this->currentBlendState.RenderTarget[0U].DestBlend = D3D11Mappings::Get(pass->GetDestBlendFactor());
+        this->currentBlendState.RenderTarget[0U].BlendOp = D3D11Mappings::Get(pass->GetSceneBlendingOperation());
     }
     else
     {
-        this->currentBlendState.RenderTarget[0].BlendEnable = FALSE;
+        this->currentBlendState.RenderTarget[0U].BlendEnable = FALSE;
     }
     ID3D11BlendState* blendState = this->stateCache.GetBlendState(this->currentBlendState);
-    float blendFactor[4] = {0.0f, 0.0f, 0.0f, 0.0f};
+    float blendFactor[4U] = {0.0f, 0.0f, 0.0f, 0.0f};
     this->context->OMSetBlendState(blendState, blendFactor, 0xffffffff);
 
     /* depth check and depth write */
@@ -468,7 +468,7 @@ D3D11RenderSystem::_SetPass(graphics::Pass* pass)
 
         if (pass->GetNumTextureUnitStates() > 0U)
         {
-            graphics::TextureUnitState* tus = pass->GetTextureUnitState(0);
+            graphics::TextureUnitState* tus = pass->GetTextureUnitState(0U);
             params->SetNamedConstant("uMod", tus->GetTextureUScroll());
             params->SetNamedConstant("vMod", tus->GetTextureVScroll());
             params->SetNamedConstant("uScale", tus->GetTextureUScale());
@@ -489,13 +489,13 @@ D3D11RenderSystem::_SetPass(graphics::Pass* pass)
         if (lit)
         {
             core::Matrix4 invViewMat = this->viewMatrix.Inverse();
-            core::Vector3 cameraPosition(invViewMat[0][3], invViewMat[1][3], invViewMat[2][3]);
+            core::Vector3 cameraPosition(invViewMat[0U][3U], invViewMat[1U][3U], invViewMat[2U][3U]);
             params->SetNamedConstant("cameraPosition", cameraPosition);
             float shininess = pass->GetShininess() > 0.0f ? pass->GetShininess() : 1.0f;
-            this->defaultLightShaderParams[0][2][3] = shininess;
-            this->defaultLightShaderParams[1][2][3] = shininess;
-            this->defaultLightShaderParams[2][2][3] = shininess;
-            this->defaultLightShaderParams[3][2][3] = shininess;
+            this->defaultLightShaderParams[0U][2U][3U] = shininess;
+            this->defaultLightShaderParams[1U][2U][3U] = shininess;
+            this->defaultLightShaderParams[2U][2U][3U] = shininess;
+            this->defaultLightShaderParams[3U][2U][3U] = shininess;
             params->SetNamedConstant("lightParams", this->defaultLightShaderParams, MaxLights);
         }
 
@@ -522,20 +522,20 @@ D3D11RenderSystem::_UseLights(ce_hash_table* lights)
             graphics::Light* light = (graphics::Light*)((ce_key_value_pair*)it->data)->value;
 
             const core::Vector3& position = light->GetPosition();
-            this->defaultLightShaderParams[lightIndex][0][0] = position.x;
-            this->defaultLightShaderParams[lightIndex][0][1] = position.y;
-            this->defaultLightShaderParams[lightIndex][0][2] = position.z;
+            this->defaultLightShaderParams[lightIndex][0U][0U] = position.x;
+            this->defaultLightShaderParams[lightIndex][0U][1U] = position.y;
+            this->defaultLightShaderParams[lightIndex][0U][2U] = position.z;
 
             float red, green, blue, alpha;
             D3D11Mappings::Get(light->GetDiffuseColour(), red, green, blue, alpha);
-            this->defaultLightShaderParams[lightIndex][1][0] = red;
-            this->defaultLightShaderParams[lightIndex][1][1] = green;
-            this->defaultLightShaderParams[lightIndex][1][2] = blue;
+            this->defaultLightShaderParams[lightIndex][1U][0U] = red;
+            this->defaultLightShaderParams[lightIndex][1U][1U] = green;
+            this->defaultLightShaderParams[lightIndex][1U][2U] = blue;
 
             D3D11Mappings::Get(light->GetSpecularColour(), red, green, blue, alpha);
-            this->defaultLightShaderParams[lightIndex][2][0] = red;
-            this->defaultLightShaderParams[lightIndex][2][1] = green;
-            this->defaultLightShaderParams[lightIndex][2][2] = blue;
+            this->defaultLightShaderParams[lightIndex][2U][0U] = red;
+            this->defaultLightShaderParams[lightIndex][2U][1U] = green;
+            this->defaultLightShaderParams[lightIndex][2U][2U] = blue;
 
             ++lightIndex;
             it = it->next;

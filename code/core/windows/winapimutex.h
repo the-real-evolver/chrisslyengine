@@ -53,7 +53,7 @@ WinAPIMutex::~WinAPIMutex()
     BOOL result =
 #endif
     CloseHandle(this->mutex);
-    CE_ASSERT(result != 0, "WinAPIMutex::~WinAPIMutex(): failed to close handle '%p'\n", this->mutex);
+    CE_ASSERT(result != FALSE, "WinAPIMutex::~WinAPIMutex(): failed to close handle '%p'\n", this->mutex);
 }
 
 //------------------------------------------------------------------------------
@@ -79,7 +79,7 @@ WinAPIMutex::Unlock() const
     BOOL result =
 #endif
     ReleaseMutex(this->mutex);
-    CE_ASSERT(result != 0, "WinAPIMutex::Unlock(): failed to unlock mutex '%p'\n", this->mutex);
+    CE_ASSERT(result != FALSE, "WinAPIMutex::Unlock(): failed to unlock mutex '%p'\n", this->mutex);
 }
 
 } // namespace chrissly

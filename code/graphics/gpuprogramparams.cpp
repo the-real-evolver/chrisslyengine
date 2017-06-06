@@ -138,7 +138,7 @@ GpuProgramParameters::SetNamedConstant(const char* name, const Matrix4& m)
     GpuConstantDefinition* def = (GpuConstantDefinition*)ce_hash_table_find(&this->constantDefs->map, name, strlen(name));
     if (def != NULL)
     {
-        memcpy(def->buffer, m[0], def->size);
+        memcpy(def->buffer, m[0U], def->size);
     }
 }
 
@@ -167,7 +167,7 @@ GpuProgramParameters::SetAutoConstant(AutoConstantType autoType, const Matrix4& 
     if (def != NULL)
     {
         CE_ASSERT(GCT_MATRIX_4X4 == def->constType, "GpuProgramParameters::SetAutoConstant(): auto constant '%u' is not of type 'Matrix4'\n", autoType);
-        memcpy(def->buffer, m[0], def->size);
+        memcpy(def->buffer, m[0U], def->size);
     }
 }
 

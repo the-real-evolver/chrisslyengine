@@ -33,7 +33,7 @@ public:
     Matrix3 Transpose() const;
 
 private:
-    float m[3][3];
+    float m[3U][3U];
 };
 
 } // namespace core

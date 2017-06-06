@@ -176,7 +176,7 @@ WavCodec::FillStreamBackBuffer()
             bytesToLoadThisFrame = this->lengthInBytes - this->seekPosition;
         }
 
-        FSWrapper::Read(this->streamFileHandle, this->streamBuffers[this->currentStreamBufferIndex ^ 1], bytesToLoadThisFrame);
+        FSWrapper::Read(this->streamFileHandle, this->streamBuffers[this->currentStreamBufferIndex ^ 1U], bytesToLoadThisFrame);
         this->seekPosition += bytesToLoadThisFrame;
         this->bytesToLoadToBackBuffer = bytesToLoadThisFrame;
         this->backBufferFilled = true;
@@ -244,10 +244,10 @@ WavCodec::FillStreamBuffer(unsigned int numSamples, unsigned int position)
         {
             bytesToLoad = this->lengthInBytes - seekPosition;
         }
-        FSWrapper::Read(this->streamFileHandle, streamBuffers[0U], bytesToLoad);
+        FSWrapper::Read(this->streamFileHandle, this->streamBuffers[0U], bytesToLoad);
         this->seekPosition += bytesToLoad;
     }
-    return streamBuffers[0U];
+    return this->streamBuffers[0U];
 }
 
 } // namespace audio

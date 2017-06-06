@@ -36,7 +36,7 @@ namespace core
 struct FileHandle
 {
     /// default constructor
-    FileHandle() : handle(0) {};
+    FileHandle() : handle(NULL) {};
 
     AAsset* handle;
 };

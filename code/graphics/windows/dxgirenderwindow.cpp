@@ -82,7 +82,7 @@ DXGIRenderWindow::Create()
     ATOM id =
 #endif
     RegisterClassEx(&wndClass);
-    CE_ASSERT(id != 0, "DXGIRenderWindow::Create(): failed to register class\n");
+    CE_ASSERT(id != 0U, "DXGIRenderWindow::Create(): failed to register class\n");
 
     DWORD style = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_VISIBLE;
     DWORD exStyle = 0U;
@@ -101,7 +101,7 @@ DXGIRenderWindow::Create()
         NULL,                   /* _In_opt_ HWND hWndParent         */
         NULL,                   /* _In_opt_ HMENU hMenu             */
         this->instance,         /* _In_opt_ HINSTANCE hInstance     */
-        0                       /* _In_opt_ LPVOID lpParam          */
+        NULL                    /* _In_opt_ LPVOID lpParam          */
     );
     CE_ASSERT(this->hwnd != NULL, "DXGIRenderWindow::Create(): failed to create window\n");
 

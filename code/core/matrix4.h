@@ -46,7 +46,7 @@ public:
     static const Matrix4 ZERO;
 
 private:
-    float m[4][4];
+    float m[4U][4U];
 };
 
 } // namespace core

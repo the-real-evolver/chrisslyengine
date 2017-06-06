@@ -289,10 +289,10 @@ SceneManager::SetShadowTechnique(ShadowTechnique technique)
             tus->SetTexture(this->shadowTexture);
 
             this->shadowTextureProjScaleTrans = Matrix4::IDENTITY;
-            this->shadowTextureProjScaleTrans[0][0] = 0.5f;
-            this->shadowTextureProjScaleTrans[1][1] = -0.5f;
-            this->shadowTextureProjScaleTrans[0][3] = 0.5f;
-            this->shadowTextureProjScaleTrans[1][3] = 0.5f;
+            this->shadowTextureProjScaleTrans[0U][0U] = 0.5f;
+            this->shadowTextureProjScaleTrans[1U][1U] = -0.5f;
+            this->shadowTextureProjScaleTrans[0U][3U] = 0.5f;
+            this->shadowTextureProjScaleTrans[1U][3U] = 0.5f;
 
             this->shadowProjection = this->shadowTextureProjScaleTrans * (this->shadowCamera->GetProjectionMatrix() * this->shadowCamera->GetViewMatrix());
 

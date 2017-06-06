@@ -59,7 +59,7 @@ Quaternion::~Quaternion()
 void
 Quaternion::FromRotationMatrix(const Matrix3& rot)
 {
-    float trace = rot[0][0] + rot[1][1] + rot[2][2];
+    float trace = rot[0U][0U] + rot[1U][1U] + rot[2U][2U];
     float root;
 
     if (trace > 0.0f)
@@ -67,26 +67,26 @@ Quaternion::FromRotationMatrix(const Matrix3& rot)
         root = Math::Sqrt(trace + 1.0f);
         this->w = 0.5f * root;
         root = 0.5f / root;
-        this->x = (rot[2][1] - rot[1][2]) * root;
-        this->y = (rot[0][2] - rot[2][0]) * root;
-        this->z = (rot[1][0] - rot[0][1]) * root;
+        this->x = (rot[2U][1U] - rot[1U][2U]) * root;
+        this->y = (rot[0U][2U] - rot[2U][0U]) * root;
+        this->z = (rot[1U][0U] - rot[0U][1U]) * root;
     }
     else
     {
-        static unsigned int NextIndex[3] = {1, 2, 0};
+        static unsigned int NextIndex[3U] = {1U, 2U, 0U};
         unsigned int i = 0U;
-        if (rot[1][1] > rot[0][0])
+        if (rot[1U][1U] > rot[0U][0U])
         {
             i = 1U;
         }
-        if (rot[2][2] > rot[i][i])
+        if (rot[2U][2U] > rot[i][i])
         {
             i = 2U;
         }
         unsigned int j = NextIndex[i];
         unsigned int k = NextIndex[j];
         root = Math::Sqrt(rot[i][i] - rot[j][j] - rot[k][k] + 1.0f);
-        float* quatAxis[3] = {&this->x, &this->y, &this->z};
+        float* quatAxis[3U] = {&this->x, &this->y, &this->z};
         *quatAxis[i] = 0.5f * root;
         root = 0.5f / root;
         this->w = (rot[k][j] - rot[j][k]) * root;
@@ -114,15 +114,15 @@ Quaternion::ToRotationMatrix(Matrix3& kRot) const
     float fTyz = fTz * this->y;
     float fTzz = fTz * this->z;
 
-    kRot[0][0] = 1.0f - (fTyy + fTzz);
-    kRot[0][1] = fTxy - fTwz;
-    kRot[0][2] = fTxz + fTwy;
-    kRot[1][0] = fTxy + fTwz;
-    kRot[1][1] = 1.0f - (fTxx + fTzz);
-    kRot[1][2] = fTyz - fTwx;
-    kRot[2][0] = fTxz - fTwy;
-    kRot[2][1] = fTyz + fTwx;
-    kRot[2][2] = 1.0f - (fTxx + fTyy);
+    kRot[0U][0U] = 1.0f - (fTyy + fTzz);
+    kRot[0U][1U] = fTxy - fTwz;
+    kRot[0U][2U] = fTxz + fTwy;
+    kRot[1U][0U] = fTxy + fTwz;
+    kRot[1U][1U] = 1.0f - (fTxx + fTzz);
+    kRot[1U][2U] = fTyz - fTwx;
+    kRot[2U][0U] = fTxz - fTwy;
+    kRot[2U][1U] = fTyz + fTwx;
+    kRot[2U][2U] = 1.0f - (fTxx + fTyy);
 }
 
 //------------------------------------------------------------------------------
@@ -133,17 +133,17 @@ Quaternion::FromAxes(const Vector3& xAxis, const Vector3& yAxis, const Vector3& 
 {
     Matrix3 rot;
 
-    rot[0][0] = xAxis.x;
-    rot[1][0] = xAxis.y;
-    rot[2][0] = xAxis.z;
+    rot[0U][0U] = xAxis.x;
+    rot[1U][0U] = xAxis.y;
+    rot[2U][0U] = xAxis.z;
 
-    rot[0][1] = yAxis.x;
-    rot[1][1] = yAxis.y;
-    rot[2][1] = yAxis.z;
+    rot[0U][1U] = yAxis.x;
+    rot[1U][1U] = yAxis.y;
+    rot[2U][1U] = yAxis.z;
 
-    rot[0][2] = zAxis.x;
-    rot[1][2] = zAxis.y;
-    rot[2][2] = zAxis.z;
+    rot[0U][2U] = zAxis.x;
+    rot[1U][2U] = zAxis.y;
+    rot[2U][2U] = zAxis.z;
 
     this->FromRotationMatrix(rot);
 }

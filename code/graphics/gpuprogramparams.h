@@ -49,7 +49,7 @@ namespace graphics
     struct GpuConstantDefinition
     {
         /// constructor
-        GpuConstantDefinition() : constType(GCT_UNKNOWN), location(-1), buffer(NULL), size(0), arraySize(0) {}
+        GpuConstantDefinition() : constType(GCT_UNKNOWN), location(-1), buffer(NULL), size(0U), arraySize(0U) {}
         /// data type
         GpuConstantType constType;
         /// uniform location

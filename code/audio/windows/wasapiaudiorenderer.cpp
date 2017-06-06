@@ -22,7 +22,7 @@ ThreadProc(_In_ LPVOID lpParameter)
 {
     WASAPIAudioRenderer* renderer = (WASAPIAudioRenderer*)lpParameter;
     renderer->RunAudioThread();
-    return 0;
+    return 0U;
 }
 
 //------------------------------------------------------------------------------
@@ -30,7 +30,7 @@ ThreadProc(_In_ LPVOID lpParameter)
 */
 WASAPIAudioRenderer::WASAPIAudioRenderer() :
     running(false),
-    thread(0),
+    thread(NULL),
     enumerator(NULL),
     device(NULL),
     audioClient(NULL),
@@ -138,12 +138,12 @@ WASAPIAudioRenderer::StartAudioProcessing()
     this->running = true;
 
     this->thread = CreateThread(NULL, 0U, ThreadProc, (LPVOID)this, 0U, NULL);
-    CE_ASSERT(this->thread != 0, "WASAPIAudioRenderer::StartAudioProcessing(): failed to create audio thread\n");
+    CE_ASSERT(this->thread != NULL, "WASAPIAudioRenderer::StartAudioProcessing(): failed to create audio thread\n");
 #if __DEBUG__
     BOOL success =
 #endif
     SetThreadPriority(this->thread, THREAD_PRIORITY_HIGHEST);
-    CE_ASSERT(success != 0, "WASAPIAudioRenderer::StartAudioProcessing(): failed to set thread priority\n");
+    CE_ASSERT(success != FALSE, "WASAPIAudioRenderer::StartAudioProcessing(): failed to set thread priority\n");
 }
 
 //------------------------------------------------------------------------------
@@ -163,7 +163,7 @@ WASAPIAudioRenderer::StopAudioProcessing()
     BOOL result =
 #endif
     CloseHandle(this->thread);
-    CE_ASSERT(result != 0, "WASAPIAudioRenderer::StopAudioProcessing(): failed to close thread handle '%p'\n", this->thread);
+    CE_ASSERT(result != FALSE, "WASAPIAudioRenderer::StopAudioProcessing(): failed to close thread handle '%p'\n", this->thread);
 }
 
 //------------------------------------------------------------------------------

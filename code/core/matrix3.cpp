@@ -42,9 +42,9 @@ Matrix3::operator - () const
 {
     Matrix3 kNeg;
 
-    kNeg[0][0] = -this->m[0][0]; kNeg[0][1] = -this->m[0][1]; kNeg[0][2] = -this->m[0][2];
-    kNeg[1][0] = -this->m[1][0]; kNeg[1][1] = -this->m[1][1]; kNeg[1][2] = -this->m[1][2];
-    kNeg[2][0] = -this->m[2][0]; kNeg[2][1] = -this->m[2][1]; kNeg[2][2] = -this->m[2][2];
+    kNeg[0U][0U] = -this->m[0U][0U]; kNeg[0U][1U] = -this->m[0U][1U]; kNeg[0U][2U] = -this->m[0U][2U];
+    kNeg[1U][0U] = -this->m[1U][0U]; kNeg[1U][1U] = -this->m[1U][1U]; kNeg[1U][2U] = -this->m[1U][2U];
+    kNeg[2U][0U] = -this->m[2U][0U]; kNeg[2U][1U] = -this->m[2U][1U]; kNeg[2U][2U] = -this->m[2U][2U];
 
     return kNeg;
 }
@@ -58,9 +58,9 @@ Matrix3::operator * (const Vector3& rkPoint) const
 {
     Vector3 kProd;
 
-    kProd[0] = this->m[0][0] * rkPoint[0] + this->m[0][1] * rkPoint[1] + this->m[0][2] * rkPoint[2];
-    kProd[1] = this->m[1][0] * rkPoint[0] + this->m[1][1] * rkPoint[1] + this->m[1][2] * rkPoint[2];
-    kProd[2] = this->m[2][0] * rkPoint[0] + this->m[2][1] * rkPoint[1] + this->m[2][2] * rkPoint[2];
+    kProd[0U] = this->m[0U][0U] * rkPoint[0U] + this->m[0U][1U] * rkPoint[1U] + this->m[0U][2U] * rkPoint[2U];
+    kProd[1U] = this->m[1U][0U] * rkPoint[0U] + this->m[1U][1U] * rkPoint[1U] + this->m[1U][2U] * rkPoint[2U];
+    kProd[2U] = this->m[2U][0U] * rkPoint[0U] + this->m[2U][1U] * rkPoint[1U] + this->m[2U][2U] * rkPoint[2U];
 
     return kProd;
 }
@@ -73,15 +73,15 @@ Matrix3::Transpose() const
 {
     Matrix3 kTranspose;
 
-    kTranspose[0][0] = this->m[0][0];
-    kTranspose[0][1] = this->m[1][0];
-    kTranspose[0][2] = this->m[2][0];
-    kTranspose[1][0] = this->m[0][1];
-    kTranspose[1][1] = this->m[1][1];
-    kTranspose[1][2] = this->m[2][1];
-    kTranspose[2][0] = this->m[0][2];
-    kTranspose[2][1] = this->m[1][2];
-    kTranspose[2][2] = this->m[2][2];
+    kTranspose[0U][0U] = this->m[0U][0U];
+    kTranspose[0U][1U] = this->m[1U][0U];
+    kTranspose[0U][2U] = this->m[2U][0U];
+    kTranspose[1U][0U] = this->m[0U][1U];
+    kTranspose[1U][1U] = this->m[1U][1U];
+    kTranspose[1U][2U] = this->m[2U][1U];
+    kTranspose[2U][0U] = this->m[0U][2U];
+    kTranspose[2U][1U] = this->m[1U][2U];
+    kTranspose[2U][2U] = this->m[2U][2U];
 
     return kTranspose;
 }

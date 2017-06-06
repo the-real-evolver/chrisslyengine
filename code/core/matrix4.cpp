@@ -35,22 +35,22 @@ Matrix4::Matrix4(float m00, float m01, float m02, float m03,
                     float m20, float m21, float m22, float m23,
                     float m30, float m31, float m32, float m33)
 {
-    this->m[0][0] = m00;
-    this->m[0][1] = m01;
-    this->m[0][2] = m02;
-    this->m[0][3] = m03;
-    this->m[1][0] = m10;
-    this->m[1][1] = m11;
-    this->m[1][2] = m12;
-    this->m[1][3] = m13;
-    this->m[2][0] = m20;
-    this->m[2][1] = m21;
-    this->m[2][2] = m22;
-    this->m[2][3] = m23;
-    this->m[3][0] = m30;
-    this->m[3][1] = m31;
-    this->m[3][2] = m32;
-    this->m[3][3] = m33;
+    this->m[0U][0U] = m00;
+    this->m[0U][1U] = m01;
+    this->m[0U][2U] = m02;
+    this->m[0U][3U] = m03;
+    this->m[1U][0U] = m10;
+    this->m[1U][1U] = m11;
+    this->m[1U][2U] = m12;
+    this->m[1U][3U] = m13;
+    this->m[2U][0U] = m20;
+    this->m[2U][1U] = m21;
+    this->m[2U][2U] = m22;
+    this->m[2U][3U] = m23;
+    this->m[3U][0U] = m30;
+    this->m[3U][1U] = m31;
+    this->m[3U][2U] = m32;
+    this->m[3U][3U] = m33;
 }
 
 //------------------------------------------------------------------------------
@@ -69,10 +69,10 @@ Matrix4::Inverse() const
 {
     // calcualte inverse using cramer's rule and the adjugate
 
-    float m00 = this->m[0][0], m01 = this->m[0][1], m02 = this->m[0][2], m03 = this->m[0][3];
-    float m10 = this->m[1][0], m11 = this->m[1][1], m12 = this->m[1][2], m13 = this->m[1][3];
-    float m20 = this->m[2][0], m21 = this->m[2][1], m22 = this->m[2][2], m23 = this->m[2][3];
-    float m30 = this->m[3][0], m31 = this->m[3][1], m32 = this->m[3][2], m33 = this->m[3][3];
+    float m00 = this->m[0U][0U], m01 = this->m[0U][1U], m02 = this->m[0U][2U], m03 = this->m[0U][3U];
+    float m10 = this->m[1U][0U], m11 = this->m[1U][1U], m12 = this->m[1U][2U], m13 = this->m[1U][3U];
+    float m20 = this->m[2U][0U], m21 = this->m[2U][1U], m22 = this->m[2U][2U], m23 = this->m[2U][3U];
+    float m30 = this->m[3U][0U], m31 = this->m[3U][1U], m32 = this->m[3U][2U], m33 = this->m[3U][3U];
 
     float v0 = m20 * m31 - m21 * m30;
     float v1 = m20 * m32 - m22 * m30;
@@ -136,25 +136,25 @@ Matrix4
 Matrix4::Concatenate(const Matrix4& m2) const
 {
     Matrix4 r;
-    r.m[0][0] = this->m[0][0] * m2.m[0][0] + this->m[0][1] * m2.m[1][0] + this->m[0][2] * m2.m[2][0] + this->m[0][3] * m2.m[3][0];
-    r.m[0][1] = this->m[0][0] * m2.m[0][1] + this->m[0][1] * m2.m[1][1] + this->m[0][2] * m2.m[2][1] + this->m[0][3] * m2.m[3][1];
-    r.m[0][2] = this->m[0][0] * m2.m[0][2] + this->m[0][1] * m2.m[1][2] + this->m[0][2] * m2.m[2][2] + this->m[0][3] * m2.m[3][2];
-    r.m[0][3] = this->m[0][0] * m2.m[0][3] + this->m[0][1] * m2.m[1][3] + this->m[0][2] * m2.m[2][3] + this->m[0][3] * m2.m[3][3];
+    r.m[0U][0U] = this->m[0U][0U] * m2.m[0U][0U] + this->m[0U][1U] * m2.m[1U][0U] + this->m[0U][2U] * m2.m[2U][0U] + this->m[0U][3U] * m2.m[3U][0U];
+    r.m[0U][1U] = this->m[0U][0U] * m2.m[0U][1U] + this->m[0U][1U] * m2.m[1U][1U] + this->m[0U][2U] * m2.m[2U][1U] + this->m[0U][3U] * m2.m[3U][1U];
+    r.m[0U][2U] = this->m[0U][0U] * m2.m[0U][2U] + this->m[0U][1U] * m2.m[1U][2U] + this->m[0U][2U] * m2.m[2U][2U] + this->m[0U][3U] * m2.m[3U][2U];
+    r.m[0U][3U] = this->m[0U][0U] * m2.m[0U][3U] + this->m[0U][1U] * m2.m[1U][3U] + this->m[0U][2U] * m2.m[2U][3U] + this->m[0U][3U] * m2.m[3U][3U];
 
-    r.m[1][0] = this->m[1][0] * m2.m[0][0] + this->m[1][1] * m2.m[1][0] + this->m[1][2] * m2.m[2][0] + this->m[1][3] * m2.m[3][0];
-    r.m[1][1] = this->m[1][0] * m2.m[0][1] + this->m[1][1] * m2.m[1][1] + this->m[1][2] * m2.m[2][1] + this->m[1][3] * m2.m[3][1];
-    r.m[1][2] = this->m[1][0] * m2.m[0][2] + this->m[1][1] * m2.m[1][2] + this->m[1][2] * m2.m[2][2] + this->m[1][3] * m2.m[3][2];
-    r.m[1][3] = this->m[1][0] * m2.m[0][3] + this->m[1][1] * m2.m[1][3] + this->m[1][2] * m2.m[2][3] + this->m[1][3] * m2.m[3][3];
+    r.m[1U][0U] = this->m[1U][0U] * m2.m[0U][0U] + this->m[1U][1U] * m2.m[1U][0U] + this->m[1U][2U] * m2.m[2U][0U] + this->m[1U][3U] * m2.m[3U][0U];
+    r.m[1U][1U] = this->m[1U][0U] * m2.m[0U][1U] + this->m[1U][1U] * m2.m[1U][1U] + this->m[1U][2U] * m2.m[2U][1U] + this->m[1U][3U] * m2.m[3U][1U];
+    r.m[1U][2U] = this->m[1U][0U] * m2.m[0U][2U] + this->m[1U][1U] * m2.m[1U][2U] + this->m[1U][2U] * m2.m[2U][2U] + this->m[1U][3U] * m2.m[3U][2U];
+    r.m[1U][3U] = this->m[1U][0U] * m2.m[0U][3U] + this->m[1U][1U] * m2.m[1U][3U] + this->m[1U][2U] * m2.m[2U][3U] + this->m[1U][3U] * m2.m[3U][3U];
 
-    r.m[2][0] = this->m[2][0] * m2.m[0][0] + this->m[2][1] * m2.m[1][0] + this->m[2][2] * m2.m[2][0] + this->m[2][3] * m2.m[3][0];
-    r.m[2][1] = this->m[2][0] * m2.m[0][1] + this->m[2][1] * m2.m[1][1] + this->m[2][2] * m2.m[2][1] + this->m[2][3] * m2.m[3][1];
-    r.m[2][2] = this->m[2][0] * m2.m[0][2] + this->m[2][1] * m2.m[1][2] + this->m[2][2] * m2.m[2][2] + this->m[2][3] * m2.m[3][2];
-    r.m[2][3] = this->m[2][0] * m2.m[0][3] + this->m[2][1] * m2.m[1][3] + this->m[2][2] * m2.m[2][3] + this->m[2][3] * m2.m[3][3];
+    r.m[2U][0U] = this->m[2U][0U] * m2.m[0U][0U] + this->m[2U][1U] * m2.m[1U][0U] + this->m[2U][2U] * m2.m[2U][0U] + this->m[2U][3U] * m2.m[3U][0U];
+    r.m[2U][1U] = this->m[2U][0U] * m2.m[0U][1U] + this->m[2U][1U] * m2.m[1U][1U] + this->m[2U][2U] * m2.m[2U][1U] + this->m[2U][3U] * m2.m[3U][1U];
+    r.m[2U][2U] = this->m[2U][0U] * m2.m[0U][2U] + this->m[2U][1U] * m2.m[1U][2U] + this->m[2U][2U] * m2.m[2U][2U] + this->m[2U][3U] * m2.m[3U][2U];
+    r.m[2U][3U] = this->m[2U][0U] * m2.m[0U][3U] + this->m[2U][1U] * m2.m[1U][3U] + this->m[2U][2U] * m2.m[2U][3U] + this->m[2U][3U] * m2.m[3U][3U];
 
-    r.m[3][0] = this->m[3][0] * m2.m[0][0] + this->m[3][1] * m2.m[1][0] + this->m[3][2] * m2.m[2][0] + this->m[3][3] * m2.m[3][0];
-    r.m[3][1] = this->m[3][0] * m2.m[0][1] + this->m[3][1] * m2.m[1][1] + this->m[3][2] * m2.m[2][1] + this->m[3][3] * m2.m[3][1];
-    r.m[3][2] = this->m[3][0] * m2.m[0][2] + this->m[3][1] * m2.m[1][2] + this->m[3][2] * m2.m[2][2] + this->m[3][3] * m2.m[3][2];
-    r.m[3][3] = this->m[3][0] * m2.m[0][3] + this->m[3][1] * m2.m[1][3] + this->m[3][2] * m2.m[2][3] + this->m[3][3] * m2.m[3][3];
+    r.m[3U][0U] = this->m[3U][0U] * m2.m[0U][0U] + this->m[3U][1U] * m2.m[1U][0U] + this->m[3U][2U] * m2.m[2U][0U] + this->m[3U][3U] * m2.m[3U][0U];
+    r.m[3U][1U] = this->m[3U][0U] * m2.m[0U][1U] + this->m[3U][1U] * m2.m[1U][1U] + this->m[3U][2U] * m2.m[2U][1U] + this->m[3U][3U] * m2.m[3U][1U];
+    r.m[3U][2U] = this->m[3U][0U] * m2.m[0U][2U] + this->m[3U][1U] * m2.m[1U][2U] + this->m[3U][2U] * m2.m[2U][2U] + this->m[3U][3U] * m2.m[3U][2U];
+    r.m[3U][3U] = this->m[3U][0U] * m2.m[0U][3U] + this->m[3U][1U] * m2.m[1U][3U] + this->m[3U][2U] * m2.m[2U][3U] + this->m[3U][3U] * m2.m[3U][3U];
 
     return r;
 }
@@ -176,11 +176,11 @@ Matrix4::operator * (const Vector3 &v) const
 {
     Vector3 r;
 
-    float fInvW = 1.0f / (this->m[3][0] * v.x + this->m[3][1] * v.y + this->m[3][2] * v.z + this->m[3][3]);
+    float fInvW = 1.0f / (this->m[3U][0U] * v.x + this->m[3U][1U] * v.y + this->m[3U][2U] * v.z + this->m[3U][3U]);
 
-    r.x = (this->m[0][0] * v.x + this->m[0][1] * v.y + this->m[0][2] * v.z + this->m[0][3]) * fInvW;
-    r.y = (this->m[1][0] * v.x + this->m[1][1] * v.y + this->m[1][2] * v.z + this->m[1][3]) * fInvW;
-    r.z = (this->m[2][0] * v.x + this->m[2][1] * v.y + this->m[2][2] * v.z + this->m[2][3]) * fInvW;
+    r.x = (this->m[0U][0U] * v.x + this->m[0U][1U] * v.y + this->m[0U][2U] * v.z + this->m[0U][3U]) * fInvW;
+    r.y = (this->m[1U][0U] * v.x + this->m[1U][1U] * v.y + this->m[1U][2U] * v.z + this->m[1U][3U]) * fInvW;
+    r.z = (this->m[2U][0U] * v.x + this->m[2U][1U] * v.y + this->m[2U][2U] * v.z + this->m[2U][3U]) * fInvW;
 
     return r;
 }

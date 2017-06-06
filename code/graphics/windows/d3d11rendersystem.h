@@ -81,7 +81,7 @@ private:
     static D3D11RenderSystem* Singleton;
 
     unsigned int ambientLight;
-    core::Matrix4 defaultLightShaderParams[4];
+    core::Matrix4 defaultLightShaderParams[4U];
 
     core::Matrix4 worldMatrix;
     core::Matrix4 viewMatrix;
