@@ -22,9 +22,9 @@ public:
     /// destructor
     ~GLES2GpuProgram();
     /// get a reference to the default parameters which are to be used for all uses of this program
-    graphics::GpuProgramParameters* GetDefaultParameters();
+    graphics::GpuProgramParameters* const GetDefaultParameters();
     /// get the full list of named constants
-    graphics::GpuNamedConstants* GetConstantDefinitions() const;
+    graphics::GpuNamedConstants* const GetConstantDefinitions() const;
     /// returns the location of a uniform variable
     GLint GetUniformLocation(graphics::GpuProgramParameters::AutoConstantType acType) const;
     /// get the handle for the program object
@@ -36,11 +36,11 @@ private:
     /// private default constructor
     GLES2GpuProgram();
     /// creates a new parameters object compatible with this program definition
-    graphics::GpuProgramParameters* CreateParameters();
+    graphics::GpuProgramParameters* const CreateParameters();
     /// populate named constants
     void ExtractConstantDefs();
     /// create and compiles a shader from the given string and returns a handle to it
-    GLuint CreateShaderFromString(GLenum shaderType, const char* source);
+    GLuint CreateShaderFromString(GLenum shaderType, const char* const source);
     /// creates a gpu program from the given shader handles
     GLuint CreateProgram(GLuint vertexShader, GLuint fragmentShader);
 

@@ -20,7 +20,7 @@ public:
     /// destructor
     ~GLES2RenderTexture();
     /// creates a rendertexture from the given parameters
-    void Create(int width, int height, graphics::PixelFormat format); 
+    void Create(int width, int height, graphics::PixelFormat format);
     /// does nothing no need for doublebuffering when rendering offline
     void SwapBuffers();
 };

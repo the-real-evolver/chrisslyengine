@@ -36,7 +36,7 @@ PSPHardwareVertexBuffer::~PSPHardwareVertexBuffer()
 //------------------------------------------------------------------------------
 /**
 */
-void*
+void* const
 PSPHardwareVertexBuffer::Map()
 {
     return this->vertexBuffer;

@@ -77,7 +77,7 @@ public:
     /// tests whether a sphere with the given center and radius is visible in the camera frustum
     bool IsVisible(const core::Vector3& center, float radius) const;
     /// tells the Camera to contact the SceneManager to render from it's viewpoint
-    void _RenderScene(Viewport* vp);
+    void _RenderScene(Viewport* const vp);
 
 private:
     /// frustum clipping planes enumeration

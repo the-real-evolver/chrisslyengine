@@ -23,13 +23,13 @@ public:
     ~D3D11StateCache();
 
     /// returns a rasterizer state object for the given description
-    ID3D11RasterizerState* GetRasterizerState(const D3D11_RASTERIZER_DESC& desc);
+    ID3D11RasterizerState* const GetRasterizerState(const D3D11_RASTERIZER_DESC& desc);
     /// returns a depth stencil state object for the given description
-    ID3D11DepthStencilState* GetDepthStencilState(const D3D11_DEPTH_STENCIL_DESC& desc);
+    ID3D11DepthStencilState* const GetDepthStencilState(const D3D11_DEPTH_STENCIL_DESC& desc);
     /// returns a blend state object for the given description
-    ID3D11BlendState* GetBlendState(const D3D11_BLEND_DESC& desc);
+    ID3D11BlendState* const GetBlendState(const D3D11_BLEND_DESC& desc);
     /// returns a sampler state object for the given description
-    ID3D11SamplerState* GetSamplerState(const D3D11_SAMPLER_DESC& desc);
+    ID3D11SamplerState* const GetSamplerState(const D3D11_SAMPLER_DESC& desc);
     /// invalidates/clears the cache
     void Invalidate();
 

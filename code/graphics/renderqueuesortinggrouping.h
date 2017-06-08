@@ -49,11 +49,11 @@ public:
     /// empty the collection
     void Clear();
     /// add a renderable to the collection using a given pass
-    void AddRenderable(SubEntity* rend, Pass* pass);
+    void AddRenderable(SubEntity* const rend, Pass* const pass);
     /// gets the number of renderable pass currently populating the collection
     unsigned short GetNumRenderablePasses() const;
     /// get RenderablePass at given index
-    RenderablePass* GetRenderablePass(unsigned short index) const;
+    RenderablePass* const GetRenderablePass(unsigned short index) const;
 
 private:
     mutable ce_dynamic_array renderablePasses;

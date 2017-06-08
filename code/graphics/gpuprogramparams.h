@@ -101,31 +101,31 @@ namespace graphics
         ~GpuProgramParameters();
 
         /// sets a single value constant floating-point parameter to the program
-        void SetNamedConstant(const char* name, float val);
+        void SetNamedConstant(const char* const name, float val);
         /// sets a single value constant integer parameter to the program
-        void SetNamedConstant(const char* name, int val);
+        void SetNamedConstant(const char* const name, int val);
         /// sets a Vector3 parameter to the program
-        void SetNamedConstant(const char* name, const core::Vector3& vec);
+        void SetNamedConstant(const char* const name, const core::Vector3& vec);
         /// sets a list of Vector3 parameters to the program
-        void SetNamedConstant(const char* name, const core::Vector3* vec, unsigned int numEntries);
+        void SetNamedConstant(const char* const name, const core::Vector3* const vec, unsigned int numEntries);
         /// sets a Quaternion (Vector4) parameter to the program
-        void SetNamedConstant(const char* name, const core::Quaternion& q);
+        void SetNamedConstant(const char* const name, const core::Quaternion& q);
         /// sets a Matrix4 parameter to the program
-        void SetNamedConstant(const char* name, const core::Matrix4& m);
+        void SetNamedConstant(const char* const name, const core::Matrix4& m);
         /// sets a list of Matrix4 parameters to the program
-        void SetNamedConstant(const char* name, const core::Matrix4* m, unsigned int numEntries);
+        void SetNamedConstant(const char* const name, const core::Matrix4* const m, unsigned int numEntries);
         /// sets a single matrix constant which will automatically be updated by the system
         void SetAutoConstant(AutoConstantType autoType, const core::Matrix4& m);
         /// sets a single float constant which will automatically be updated by the system
         void SetAutoConstant(AutoConstantType autoType, float val);
 
         /// internal method for providing a link to a name->definition map for parameters
-        void _SetNamedConstants(GpuNamedConstants* constantMap);
+        void _SetNamedConstants(GpuNamedConstants* const constantMap);
         /// internal method for providing a link to a auto constant definition for parameters
-        void _SetAutoConstant(AutoConstantType autoType, GpuConstantDefinition* def);
+        void _SetAutoConstant(AutoConstantType autoType, GpuConstantDefinition* const def);
 
         /// gets the AutoConstantType enum value if the given string matches an auto type, otherwise returns ACT_COUNT
-        static AutoConstantType AutoConstantTypeFromString(const char* name);
+        static AutoConstantType AutoConstantTypeFromString(const char* const name);
 
     private:
         GpuNamedConstants* constantDefs;

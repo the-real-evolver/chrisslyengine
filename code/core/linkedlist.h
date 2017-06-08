@@ -31,7 +31,7 @@ typedef struct ce_linked_list
     \param data A pointer to the data you want to store.
 */
 inline void
-ce_linked_list_add(ce_linked_list** front, void* data)
+ce_linked_list_add(ce_linked_list** front, void* const data)
 {
     ce_linked_list* node = (ce_linked_list*)CE_MALLOC(sizeof(ce_linked_list));
 
@@ -60,7 +60,7 @@ ce_linked_list_add(ce_linked_list** front, void* data)
     \param node The node you want to remove.
 */
 inline void
-ce_linked_list_remove(ce_linked_list* node)
+ce_linked_list_remove(ce_linked_list* const node)
 {
     if (NULL == node)
     {

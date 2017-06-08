@@ -44,7 +44,7 @@ VertexAnimationTrack::GetHandle() const
 //------------------------------------------------------------------------------
 /**
 */
-VertexMorphKeyFrame*
+VertexMorphKeyFrame* const
 VertexAnimationTrack::CreateVertexMorphKeyFrame(float timePos)
 {
     VertexMorphKeyFrame* vertexMorphKeyFrame = CE_NEW VertexMorphKeyFrame(timePos);
@@ -65,7 +65,7 @@ VertexAnimationTrack::GetNumKeyFrames() const
 //------------------------------------------------------------------------------
 /**
 */
-VertexMorphKeyFrame*
+VertexMorphKeyFrame* const
 VertexAnimationTrack::GetVertexMorphKeyFrame(unsigned short index) const
 {
     return (VertexMorphKeyFrame*)ce_dynamic_array_get(&this->keyFrames, index);
@@ -90,7 +90,7 @@ VertexAnimationTrack::RemoveAllKeyFrames()
 /**
 */
 void
-VertexAnimationTrack::ApplyToVertexData(VertexData* data, int timeIndex)
+VertexAnimationTrack::ApplyToVertexData(VertexData* const data, int timeIndex)
 {
     if (this->currentTimeIndex != timeIndex)
     {

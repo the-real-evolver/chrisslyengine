@@ -49,8 +49,8 @@ D3D11RenderSystem::~D3D11RenderSystem()
 //------------------------------------------------------------------------------
 /**
 */
-graphics::RenderWindow*
-D3D11RenderSystem::_Initialise(void* customParams)
+graphics::RenderWindow* const
+D3D11RenderSystem::_Initialise(void* const customParams)
 {
     /* create device */
     D3D_FEATURE_LEVEL featureLevels[] = {D3D_FEATURE_LEVEL_10_1};
@@ -230,7 +230,7 @@ D3D11RenderSystem::Shutdown()
 /**
 */
 void
-D3D11RenderSystem::_SetRenderTarget(graphics::RenderTarget* target)
+D3D11RenderSystem::_SetRenderTarget(graphics::RenderTarget* const target)
 {
     ID3D11RenderTargetView* renderTargetView = NULL;
     ID3D11DepthStencilView* depthStencilView = NULL;
@@ -247,7 +247,7 @@ D3D11RenderSystem::_SetRenderTarget(graphics::RenderTarget* target)
 /**
 */
 void
-D3D11RenderSystem::_SetViewport(graphics::Viewport* vp)
+D3D11RenderSystem::_SetViewport(graphics::Viewport* const vp)
 {
     this->viewPort.TopLeftX = (FLOAT)vp->GetActualLeft();
     this->viewPort.TopLeftY = (FLOAT)vp->GetActualTop();
@@ -255,7 +255,7 @@ D3D11RenderSystem::_SetViewport(graphics::Viewport* vp)
     this->viewPort.Height = (FLOAT)vp->GetActualHeight();
     this->viewPort.MinDepth = 0.0f;
     this->viewPort.MaxDepth = 1.0f;
-    this->context->RSSetViewports(1, &this->viewPort);
+    this->context->RSSetViewports(1U, &this->viewPort);
 
     ID3D11RenderTargetView* renderTargetView = NULL;
     ID3D11DepthStencilView* depthStencilView = NULL;
@@ -334,7 +334,7 @@ D3D11RenderSystem::_SetTextureMatrix(const core::Matrix4& m)
 /**
 */
 void
-D3D11RenderSystem::_Render(graphics::SubEntity* renderable)
+D3D11RenderSystem::_Render(graphics::SubEntity* const renderable)
 {
     /* update auto constants */
     graphics::GpuProgramParameters* params = this->currentGpuProgram->GetDefaultParameters();
@@ -383,7 +383,7 @@ D3D11RenderSystem::_EndFrame()
 /**
 */
 void
-D3D11RenderSystem::_SetPass(graphics::Pass* pass)
+D3D11RenderSystem::_SetPass(graphics::Pass* const pass)
 {
     /* scene blending parameters */
     if (pass->GetSceneBlendingEnabled())
@@ -510,7 +510,7 @@ D3D11RenderSystem::_SetPass(graphics::Pass* pass)
 /**
 */
 void
-D3D11RenderSystem::_UseLights(ce_hash_table* lights)
+D3D11RenderSystem::_UseLights(ce_hash_table* const lights)
 {
     unsigned int lightIndex = 0U;
     unsigned int i;
@@ -560,7 +560,7 @@ D3D11RenderSystem::SetAmbientLight(unsigned int colour)
 //------------------------------------------------------------------------------
 /**
 */
-D3D11GpuProgram*
+D3D11GpuProgram* const
 D3D11RenderSystem::GetDefaultMorphAnimationGpuProgram() const
 {
     CE_ASSERT(this->defaultGpuProgramMorphAnim != NULL, "D3D11RenderSystem::GetDefaultMorphAnimatioGpuProgram(): gpu program not valid\n");
@@ -570,7 +570,7 @@ D3D11RenderSystem::GetDefaultMorphAnimationGpuProgram() const
 //------------------------------------------------------------------------------
 /**
 */
-ID3D11Device*
+ID3D11Device* const
 D3D11RenderSystem::GetDevice() const
 {
     CE_ASSERT(this->device != NULL, "D3D11RenderSystem::GetDevice(): d3d11 device not valid\n");
@@ -580,7 +580,7 @@ D3D11RenderSystem::GetDevice() const
 //------------------------------------------------------------------------------
 /**
 */
-ID3D11DeviceContext*
+ID3D11DeviceContext* const
 D3D11RenderSystem::GetContext() const
 {
     CE_ASSERT(this->context != NULL, "D3D11RenderSystem::GetContext(): d3d11 device context not valid\n");

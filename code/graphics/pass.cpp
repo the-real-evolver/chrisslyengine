@@ -378,7 +378,7 @@ Pass::GetFogEnd() const
 //------------------------------------------------------------------------------
 /**
 */
-TextureUnitState*
+TextureUnitState* const
 Pass::CreateTextureUnitState()
 {
     TextureUnitState* textureUnitState = CE_NEW TextureUnitState();
@@ -390,7 +390,7 @@ Pass::CreateTextureUnitState()
 //------------------------------------------------------------------------------
 /**
 */
-TextureUnitState*
+TextureUnitState* const
 Pass::GetTextureUnitState(unsigned short i) const
 {
     return (TextureUnitState*)ce_dynamic_array_get(&this->textureUnitStates, i);
@@ -441,7 +441,7 @@ Pass::SetGpuProgram(GpuProgram* program)
 //------------------------------------------------------------------------------
 /**
 */
-GpuProgram*
+GpuProgram* const
 Pass::GetGpuProgram() const
 {
     return this->gpuProgram;

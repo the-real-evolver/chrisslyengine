@@ -18,7 +18,7 @@ class DXGIRenderWindow : public graphics::RenderTarget
 {
 public:
     /// constructor with instance handle and device
-    DXGIRenderWindow(HINSTANCE inst, ID3D11Device* dev);
+    DXGIRenderWindow(HINSTANCE inst, ID3D11Device* const dev);
     /// destructor
     ~DXGIRenderWindow();
     /// creates & displays the new window
@@ -29,9 +29,9 @@ public:
     unsigned int GetType() const;
 
     /// gets a pointer to the rendertarget view of the swapchain's buffer
-    ID3D11RenderTargetView* GetRenderTargetView() const;
+    ID3D11RenderTargetView* const GetRenderTargetView() const;
     /// gets a pointer to the depth stencil view
-    ID3D11DepthStencilView* GetDepthStencilView() const;
+    ID3D11DepthStencilView* const GetDepthStencilView() const;
 
     /// callback function that processes messages sent to the window
     static LRESULT WINAPI WindowCallback(HWND wnd, UINT msg, WPARAM wParam, LPARAM lParam);

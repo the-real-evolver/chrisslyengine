@@ -45,7 +45,7 @@ MaterialManager::Initialise()
 /**
 */
 void
-MaterialManager::ParseScript(const char* name)
+MaterialManager::ParseScript(const char* const name)
 {
     this->parser.ParseScript(name);
 }
@@ -53,8 +53,8 @@ MaterialManager::ParseScript(const char* name)
 //------------------------------------------------------------------------------
 /**
 */
-Material*
-MaterialManager::CreateOrRetrieve(const char* name)
+Material* const
+MaterialManager::CreateOrRetrieve(const char* const name)
 {
     Material* material = (Material*)ce_hash_table_find(&this->resources, name, strlen(name));
     if (material != NULL)
@@ -72,8 +72,8 @@ MaterialManager::CreateOrRetrieve(const char* name)
 //------------------------------------------------------------------------------
 /**
 */
-Material*
-MaterialManager::GetByName(const char* name)
+Material* const
+MaterialManager::GetByName(const char* const name)
 {
     return (Material*)ce_hash_table_find(&this->resources, name, strlen(name));
 }

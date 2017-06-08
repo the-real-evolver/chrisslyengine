@@ -53,8 +53,8 @@ GraphicsSystem::~GraphicsSystem()
 //------------------------------------------------------------------------------
 /**
 */
-RenderWindow*
-GraphicsSystem::Initialise(void* customParams)
+RenderWindow* const
+GraphicsSystem::Initialise(void* const customParams)
 {
     this->autoWindow = this->activeRenderer->_Initialise(customParams);
 
@@ -66,8 +66,8 @@ GraphicsSystem::Initialise(void* customParams)
 //------------------------------------------------------------------------------
 /**
 */
-RenderWindow*
-GraphicsSystem::GetAutoCreatedWindow()
+RenderWindow* const
+GraphicsSystem::GetAutoCreatedWindow() const
 {
     return this->autoWindow;
 }
@@ -91,8 +91,8 @@ GraphicsSystem::RenderOneFrame()
 //------------------------------------------------------------------------------
 /**
 */
-RenderSystem*
-GraphicsSystem::GetRenderSystem()
+RenderSystem* const
+GraphicsSystem::GetRenderSystem() const
 {
     return this->activeRenderer;
 }

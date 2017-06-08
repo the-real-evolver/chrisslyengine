@@ -44,7 +44,7 @@ AudioSystem::~AudioSystem()
 /**
 */
 Result
-AudioSystem::Initialise(void* customParams)
+AudioSystem::Initialise(void* const customParams)
 {
     this->activeRenderer->_Initialise(customParams);
 
@@ -105,7 +105,7 @@ AudioSystem::Release()
 /**
 */
 Result
-AudioSystem::CreateSound(const char* name, Mode mode, Sound** sound)
+AudioSystem::CreateSound(const char* const name, Mode mode, Sound** sound)
 {
     Sound* snd = NULL;
     unsigned int i;
@@ -153,7 +153,7 @@ AudioSystem::CreateSound(const char* name, Mode mode, Sound** sound)
 /**
 */
 Result
-AudioSystem::PlaySound(int channelid, Sound* sound, bool paused, Channel** channel)
+AudioSystem::PlaySound(int channelid, Sound* const sound, bool paused, Channel** channel)
 {
     Channel* chn = NULL;
     unsigned int i;
@@ -242,7 +242,7 @@ AudioSystem::Update()
 /**
 */
 Result
-AudioSystem::Set3DListenerAttributes(const Vector3* pos, const Vector3* forward, const Vector3* up)
+AudioSystem::Set3DListenerAttributes(const Vector3* const pos, const Vector3* const forward, const Vector3* const up)
 {
     if (pos != NULL)
     {
@@ -264,7 +264,7 @@ AudioSystem::Set3DListenerAttributes(const Vector3* pos, const Vector3* forward,
 /**
 */
 void
-AudioSystem::Mix(unsigned int numSamples, unsigned char* buffer)
+AudioSystem::Mix(unsigned int numSamples, unsigned char* const buffer)
 {
     memset(buffer, 0, numSamples << 2U);
     unsigned int i;
@@ -331,7 +331,7 @@ AudioSystem::Mix(unsigned int numSamples, unsigned char* buffer)
 //------------------------------------------------------------------------------
 /**
 */
-AudioRenderer*
+AudioRenderer* const
 AudioSystem::_GetAudioRenderer() const
 {
     return this->activeRenderer;

@@ -30,7 +30,7 @@ Material::~Material()
 //------------------------------------------------------------------------------
 /**
 */
-Pass*
+Pass* const
 Material::CreatePass()
 {
     Pass* pass = CE_NEW Pass((unsigned short)this->passes.size);
@@ -42,7 +42,7 @@ Material::CreatePass()
 //------------------------------------------------------------------------------
 /**
 */
-Pass*
+Pass* const
 Material::GetPass(unsigned short index) const
 {
     return (Pass*)ce_dynamic_array_get(&this->passes, index);

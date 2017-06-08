@@ -42,7 +42,7 @@ Mesh::~Mesh()
 //------------------------------------------------------------------------------
 /**
 */
-SubMesh*
+SubMesh* const
 Mesh::CreateSubMesh()
 {
     SubMesh* subMesh = CE_NEW SubMesh();
@@ -63,7 +63,7 @@ Mesh::GetNumSubMeshes() const
 //------------------------------------------------------------------------------
 /**
 */
-SubMesh*
+SubMesh* const
 Mesh::GetSubMesh(unsigned short index) const
 {
     return (SubMesh*)ce_dynamic_array_get(&this->subMeshes, index);
@@ -72,7 +72,7 @@ Mesh::GetSubMesh(unsigned short index) const
 //------------------------------------------------------------------------------
 /**
 */
-Animation*
+Animation* const
 Mesh::CreateAnimation(const char* name, float length)
 {
     Animation* animation = CE_NEW Animation(name, length);
@@ -85,7 +85,7 @@ Mesh::CreateAnimation(const char* name, float length)
 //------------------------------------------------------------------------------
 /**
 */
-Animation*
+Animation* const
 Mesh::GetAnimation(const char* name)
 {
     return (Animation*)ce_hash_table_find(&this->animations, name, strlen(name));
@@ -124,7 +124,7 @@ Mesh::HasVertexAnimation() const
 /**
 */
 void
-Mesh::_InitAnimationState(ce_hash_table* animSet)
+Mesh::_InitAnimationState(ce_hash_table* const animSet)
 {
     unsigned int i;
     for (i = 0U; i < this->animations.bucket_count; ++i)

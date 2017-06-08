@@ -23,7 +23,7 @@ public:
     /// destructor
     ~MaterialParser();
     /// parse material script and create the material
-    void ParseScript(const char* name);
+    void ParseScript(const char* const name);
 
 private:
     /// defines the state of the parser
@@ -46,9 +46,9 @@ private:
     /// gets the uint rgb colour value
     unsigned int GetRGBAValue(float red, float green, float blue, float alpha) const;
     /// gets the blend factor enum value from the parsed string
-    SceneBlendFactor GetSceneBlendFactorFromString(const char* blendFactor) const;
+    SceneBlendFactor GetSceneBlendFactorFromString(const char* const blendFactor) const;
     /// gets the filter option enum value from the parsed string
-    FilterOptions GetFilterOptionsFromString(const char* filterOption) const;
+    FilterOptions GetFilterOptionsFromString(const char* const filterOption) const;
 
     ParserState parserState;
     stb_lexer lexer;

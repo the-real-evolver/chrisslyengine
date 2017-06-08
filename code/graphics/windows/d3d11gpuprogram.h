@@ -18,13 +18,13 @@ class D3D11GpuProgram
 {
 public:
     /// construct from source
-    D3D11GpuProgram(const char* source, const char* fileName, const char* vertexShaderFunctionName, const char* fragmentShaderFunctionName);
+    D3D11GpuProgram(const char* const source, const char* const fileName, const char* const vertexShaderFunctionName, const char* const fragmentShaderFunctionName);
     /// destructor
     ~D3D11GpuProgram();
     /// get a reference to the default parameters which are to be used for all uses of this program
-    graphics::GpuProgramParameters* GetDefaultParameters() const;
+    graphics::GpuProgramParameters* const GetDefaultParameters() const;
     /// get the full list of named constants
-    graphics::GpuNamedConstants* GetConstantDefinitions() const;
+    graphics::GpuNamedConstants* const GetConstantDefinitions() const;
     /// sets the vertex and fragment shader to the device
     void Bind();
     /// set the constant buffers used by the vertex shader pipeline stage
@@ -35,7 +35,7 @@ public:
     void UpdatePerPassConstantBuffers();
 
     /// gets a pointer to the vertex shader code
-    ID3D10Blob* GetVertexShaderCode() const;
+    ID3D10Blob* const GetVertexShaderCode() const;
 
 private:
     /// private default constructor

@@ -52,7 +52,7 @@ WavCodec::~WavCodec()
 /**
 */
 void
-WavCodec::SetupSound(const char* filename, Mode mode, void** sampleBuffer, unsigned int& length, AudioFormat& format, SoundType& type, int& channels, int& bits, unsigned int& sampleRate)
+WavCodec::SetupSound(const char* const filename, Mode mode, void** sampleBuffer, unsigned int& length, AudioFormat& format, SoundType& type, int& channels, int& bits, unsigned int& sampleRate)
 {
     FileHandle fd = FSWrapper::Open(filename, ReadAccess, (mode & MODE_CREATESTREAM) ? Streaming : Random, 0777);
 
@@ -201,7 +201,7 @@ WavCodec::SwapStreamBuffers()
 //------------------------------------------------------------------------------
 /**
 */
-void*
+void* const
 WavCodec::GetStreamBufferPointer() const
 {
     return this->streamBuffers[this->currentStreamBufferIndex];
@@ -228,7 +228,7 @@ WavCodec::EndOfStream() const
 //------------------------------------------------------------------------------
 /**
 */
-void*
+void* const
 WavCodec::FillStreamBuffer(unsigned int numSamples, unsigned int position)
 {
     unsigned int desiredSeekPosition = position * this->bytesPerSample;
@@ -244,10 +244,11 @@ WavCodec::FillStreamBuffer(unsigned int numSamples, unsigned int position)
         {
             bytesToLoad = this->lengthInBytes - seekPosition;
         }
-        FSWrapper::Read(this->streamFileHandle, this->streamBuffers[0U], bytesToLoad);
+        this->currentStreamBufferIndex ^= 1U;
+        FSWrapper::Read(this->streamFileHandle, this->streamBuffers[this->currentStreamBufferIndex], bytesToLoad);
         this->seekPosition += bytesToLoad;
     }
-    return this->streamBuffers[0U];
+    return this->streamBuffers[this->currentStreamBufferIndex];
 }
 
 } // namespace audio

@@ -24,16 +24,16 @@ public:
     /// destructor
     virtual ~SoundBase();
     /// retrieves the length of the sound
-    Result GetLength(unsigned int* length);
+    Result GetLength(unsigned int* const length);
     /// returns format information about the sound
-    Result GetFormat(SoundType* type, AudioFormat* format, int* channels, int* bits);
+    Result GetFormat(SoundType* const type, AudioFormat* const format, int* const channels, int* const bits);
     /// retrieves the mode bits set by the codec and the user when opening the sound
-    Result GetMode(Mode* modeflags);
+    Result GetMode(Mode* const modeflags);
     /// requests release
     Result Release();
 
     /// initialize sound object
-    void _Setup(const char* filename, Mode modeflags, Codec* codec);
+    void _Setup(const char* const filename, Mode modeflags, Codec* const codec);
     /// internal method that frees a sound object
     void _Release();
     /// returns if the sound is setup
@@ -45,7 +45,7 @@ public:
     /// get pointer to the sample at the given position
     void* _GetSampleBufferPointer(unsigned int position) const;
     /// get pointer to the attached codec
-    Codec* _GetCodec() const;
+    Codec* const  _GetCodec() const;
     /// create internal sound resources
     virtual void _CreateInternalResources();
 

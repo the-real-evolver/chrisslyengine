@@ -19,7 +19,7 @@ class TextureManager
 {
 public:
     /// get pointer to the singleton
-    static TextureManager* Instance()
+    static TextureManager* const Instance()
     {
         return Singleton;
     }
@@ -29,7 +29,7 @@ public:
     /// destructor
     ~TextureManager();
     /// loads a texture from a file
-    Texture* Load(const char* name);
+    Texture* const Load(const char* const name);
     /// removes all resources
     void RemoveAll();
 

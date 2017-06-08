@@ -40,7 +40,7 @@ SLESAudioRenderer::~SLESAudioRenderer()
 /**
 */
 void
-SLESAudioRenderer::_Initialise(void* customParams)
+SLESAudioRenderer::_Initialise(void* const customParams)
 {
     SLresult result = slCreateEngine(&this->engine, 0U, NULL, 0U, NULL, NULL);
     CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::_Initialise(): failed to create engine\n");
@@ -116,7 +116,7 @@ SLESAudioRenderer::GetNumHardwareChannels() const
 /**
 */
 void
-SLESAudioRenderer::StartChannel(audio::Channel* channel)
+SLESAudioRenderer::StartChannel(audio::Channel* const channel)
 {
     channel->SetupAudioPlayer(this->engineInterface, this->outputMix);
 
@@ -161,7 +161,7 @@ SLESAudioRenderer::StartChannel(audio::Channel* channel)
 /**
 */
 void
-SLESAudioRenderer::UpdateChannel(audio::Channel* channel)
+SLESAudioRenderer::UpdateChannel(audio::Channel* const channel)
 {
     audio::Mode mode;
     channel->GetMode(&mode);
@@ -233,7 +233,7 @@ SLESAudioRenderer::UpdateChannel(audio::Channel* channel)
 /**
 */
 void
-SLESAudioRenderer::ReleaseChannel(audio::Channel* channel)
+SLESAudioRenderer::ReleaseChannel(audio::Channel* const channel)
 {
     channel->Release();
     channel->_SetIsPlaying(false);

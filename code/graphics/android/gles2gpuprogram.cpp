@@ -88,7 +88,7 @@ GLES2GpuProgram::~GLES2GpuProgram()
 //------------------------------------------------------------------------------
 /**
 */
-graphics::GpuProgramParameters*
+graphics::GpuProgramParameters* const
 GLES2GpuProgram::GetDefaultParameters()
 {
     if (NULL == this->defaultParams)
@@ -102,7 +102,7 @@ GLES2GpuProgram::GetDefaultParameters()
 //------------------------------------------------------------------------------
 /**
 */
-graphics::GpuNamedConstants*
+graphics::GpuNamedConstants* const
 GLES2GpuProgram::GetConstantDefinitions() const
 {
     return this->constantDefs;
@@ -138,7 +138,7 @@ GLES2GpuProgram::GetAttributeLocation(graphics::VertexElementSemantic semantic) 
 //------------------------------------------------------------------------------
 /**
 */
-graphics::GpuProgramParameters*
+graphics::GpuProgramParameters* const
 GLES2GpuProgram::CreateParameters()
 {
     graphics::GpuProgramParameters* ret = CE_NEW graphics::GpuProgramParameters;

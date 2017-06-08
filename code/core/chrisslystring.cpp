@@ -34,7 +34,7 @@ String::String(const String& rhs)
 //------------------------------------------------------------------------------
 /**
 */
-String::String(const char* cStr)
+String::String(const char* const cStr)
 {
     this->Set(cStr);
 }
@@ -60,7 +60,7 @@ String::operator=(const String& rhs)
 /**
 */
 void
-String::operator=(const char* cStr)
+String::operator=(const char* const cStr)
 {
     this->Set(cStr);
 }
@@ -77,7 +77,7 @@ String::Size()
 //------------------------------------------------------------------------------
 /**
 */
-const char*
+const char* const
 String::C_Str() const
 {
     return this->data;
@@ -87,7 +87,7 @@ String::C_Str() const
 /**
 */
 void
-String::Set(const char* ptr)
+String::Set(const char* const ptr)
 {
     size_t length = strlen(ptr);
     this->Set(ptr, length);
@@ -97,7 +97,7 @@ String::Set(const char* ptr)
 /**
 */
 void
-String::Set(const char* ptr, unsigned int length)
+String::Set(const char* const ptr, unsigned int length)
 {
     this->Delete();
 

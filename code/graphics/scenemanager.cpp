@@ -73,8 +73,8 @@ SceneManager::~SceneManager()
 //------------------------------------------------------------------------------
 /**
 */
-Camera*
-SceneManager::CreateCamera(const char* name)
+Camera* const
+SceneManager::CreateCamera(const char* const name)
 {
     Camera* camera = CE_NEW Camera();
 
@@ -86,8 +86,8 @@ SceneManager::CreateCamera(const char* name)
 //------------------------------------------------------------------------------
 /**
 */
-Camera*
-SceneManager::GetCamera(const char* name) const
+Camera* const
+SceneManager::GetCamera(const char* const name) const
 {
     return (Camera*)ce_hash_table_find(&this->cameras, name, strlen(name));
 }
@@ -115,8 +115,8 @@ SceneManager::DestroyAllCameras()
 //------------------------------------------------------------------------------
 /**
 */
-Light*
-SceneManager::CreateLight(const char* name)
+Light* const
+SceneManager::CreateLight(const char* const name)
 {
     Light* light = CE_NEW Light();
 
@@ -128,8 +128,8 @@ SceneManager::CreateLight(const char* name)
 //------------------------------------------------------------------------------
 /**
 */
-Light*
-SceneManager::GetLight(const char* name) const
+Light* const
+SceneManager::GetLight(const char* const name) const
 {
     return (Light*)ce_hash_table_find(&this->lights, name, strlen(name));
 }
@@ -157,8 +157,8 @@ SceneManager::DestroyAllLights()
 //------------------------------------------------------------------------------
 /**
 */
-Entity*
-SceneManager::CreateEntity(const char* meshName)
+Entity* const
+SceneManager::CreateEntity(const char* const meshName)
 {
     Entity* entity = CE_NEW Entity(MeshManager::Instance()->Load(meshName));
 
@@ -170,7 +170,7 @@ SceneManager::CreateEntity(const char* meshName)
 //------------------------------------------------------------------------------
 /**
 */
-SceneNode*
+SceneNode* const
 SceneManager::CreateSceneNode()
 {
     SceneNode* sceneNode = CE_NEW SceneNode();
@@ -184,7 +184,7 @@ SceneManager::CreateSceneNode()
 //------------------------------------------------------------------------------
 /**
 */
-SceneNode*
+SceneNode* const
 SceneManager::GetRootSceneNode()
 {
     if (NULL == this->sceneRoot)
@@ -323,7 +323,7 @@ SceneManager::IsShadowTechniqueInUse() const
 /**
 */
 void
-SceneManager::_RenderScene(Camera* camera, Viewport* vp)
+SceneManager::_RenderScene(Camera* const camera, Viewport* const vp)
 {
     if (this->illuminationStage != IRS_RENDER_TO_TEXTURE)
     {
@@ -453,7 +453,7 @@ SceneManager::_RenderScene(Camera* camera, Viewport* vp)
 /**
 */
 void
-SceneManager::_SetPass(Pass* pass)
+SceneManager::_SetPass(Pass* const pass)
 {
     this->destRenderSystem->_SetPass(pass);
 }
@@ -500,7 +500,7 @@ SceneManager::PrepareShadowTextures()
 /**
 */
 void
-SceneManager::_RenderQueueGroupObjects(QueuedRenderableCollection* queue)
+SceneManager::_RenderQueueGroupObjects(QueuedRenderableCollection* const queue)
 {
     Pass* lastPass = NULL;
 
@@ -534,7 +534,7 @@ SceneManager::_RenderQueueGroupObjects(QueuedRenderableCollection* queue)
 /**
 */
 void
-SceneManager::_RenderTextureShadowReceiverQueueGroupObjects(QueuedRenderableCollection* queue)
+SceneManager::_RenderTextureShadowReceiverQueueGroupObjects(QueuedRenderableCollection* const queue)
 {
     this->destRenderSystem->_SetPass(this->shadowPass);
 

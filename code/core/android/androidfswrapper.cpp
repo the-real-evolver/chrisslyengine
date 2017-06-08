@@ -15,7 +15,7 @@ AAssetManager* AndroidFSWrapper::AssetManager = NULL;
 /**
 */
 core::FileHandle
-AndroidFSWrapper::Open(const char* fileName, core::AccessMode flags, core::AccessPattern pattern, int mode)
+AndroidFSWrapper::Open(const char* const fileName, core::AccessMode flags, core::AccessPattern pattern, int mode)
 {
     core::FileHandle fileHandle;
     fileHandle.handle = AAssetManager_open(AndroidFSWrapper::AssetManager, fileName, AndroidFSWrapper::Get(pattern));
@@ -45,7 +45,7 @@ AndroidFSWrapper::GetFileSize(core::FileHandle fileHandle)
 /**
 */
 int
-AndroidFSWrapper::Read(core::FileHandle fileHandle, void* buf, unsigned int numBytes)
+AndroidFSWrapper::Read(core::FileHandle fileHandle, void* const buf, unsigned int numBytes)
 {
     int result = AAsset_read(fileHandle.handle, buf, (size_t)numBytes);
     CE_ASSERT(result >= 0, "FSWrapper::Read(): can't read from file '%i'\n", fileHandle.handle);
@@ -66,7 +66,7 @@ AndroidFSWrapper::Seek(core::FileHandle fileHandle, int offset, core::SeekOrigin
 /**
 */
 void
-AndroidFSWrapper::_Initialise(AAssetManager* assetManager)
+AndroidFSWrapper::_Initialise(AAssetManager* const assetManager)
 {
     AndroidFSWrapper::AssetManager = assetManager;
     CE_LOG("AndroidFSWrapper::_Initialise\n");

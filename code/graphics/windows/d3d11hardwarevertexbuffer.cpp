@@ -56,7 +56,7 @@ D3D11HardwareVertexBuffer::~D3D11HardwareVertexBuffer()
 //------------------------------------------------------------------------------
 /**
 */
-void*
+void* const
 D3D11HardwareVertexBuffer::Map()
 {
     if (graphics::HBU_STATIC == this->usage)
@@ -110,7 +110,7 @@ D3D11HardwareVertexBuffer::Unmap()
 //------------------------------------------------------------------------------
 /**
 */
-ID3D11Buffer*
+ID3D11Buffer* const
 D3D11HardwareVertexBuffer::GetD3D11Buffer() const
 {
     return this->d3d11Buffer;

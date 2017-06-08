@@ -20,17 +20,17 @@ class AndroidFSWrapper
 {
 public:
     /// open a file
-    static core::FileHandle Open(const char* fileName, core::AccessMode flags, core::AccessPattern pattern, int mode);
+    static core::FileHandle Open(const char* const fileName, core::AccessMode flags, core::AccessPattern pattern, int mode);
     /// close a file
     static void Close(core::FileHandle fileHandle);
     /// get size of a file in bytes
     static unsigned int GetFileSize(core::FileHandle fileHandle);
     /// read from a file
-    static int Read(core::FileHandle fileHandle, void* buf, unsigned int numBytes);
+    static int Read(core::FileHandle fileHandle, void* const buf, unsigned int numBytes);
     /// seek in a file
     static void Seek(core::FileHandle fileHandle, int offset, core::SeekOrigin whence);
     /// initialise the filesystem
-    static void _Initialise(AAssetManager* assetManager);
+    static void _Initialise(AAssetManager* const assetManager);
 
 private:
     /// return a Posix equivalent for a SeekOrigin value

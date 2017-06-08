@@ -40,9 +40,9 @@ public:
     void SetNumMipmaps(int num);
 
     /// set the hardware pixel buffer to use
-    void SetBuffer(void* buffer);
+    void SetBuffer(void* const buffer);
     /// return hardware pixel buffer for a surface
-    const void* GetBuffer() const;
+    const void* const GetBuffer() const;
 
     /// enable to swizzle texture read
     void SetSwizzleEnabled(bool enabled);

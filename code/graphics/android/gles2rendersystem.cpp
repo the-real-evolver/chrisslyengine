@@ -53,8 +53,8 @@ GLES2RenderSystem::~GLES2RenderSystem()
 //------------------------------------------------------------------------------
 /**
 */
-graphics::RenderWindow*
-GLES2RenderSystem::_Initialise(void* customParams)
+graphics::RenderWindow* const
+GLES2RenderSystem::_Initialise(void* const customParams)
 {
     graphics::RenderWindow* renderWindow = CE_NEW graphics::RenderWindow(customParams);
     renderWindow->Create();
@@ -114,7 +114,7 @@ GLES2RenderSystem::Shutdown()
 /**
 */
 void
-GLES2RenderSystem::_SetRenderTarget(graphics::RenderTarget* target)
+GLES2RenderSystem::_SetRenderTarget(graphics::RenderTarget* const target)
 {
 
 }
@@ -123,7 +123,7 @@ GLES2RenderSystem::_SetRenderTarget(graphics::RenderTarget* target)
 /**
 */
 void
-GLES2RenderSystem::_SetViewport(graphics::Viewport* vp)
+GLES2RenderSystem::_SetViewport(graphics::Viewport* const vp)
 {
     int width = vp->GetActualWidth();
     int height = vp->GetActualHeight();
@@ -208,7 +208,7 @@ GLES2RenderSystem::SetMatrices()
 /**
 */
 void
-GLES2RenderSystem::_Render(graphics::SubEntity* renderable)
+GLES2RenderSystem::_Render(graphics::SubEntity* const renderable)
 {
     this->SetMatrices();
 
@@ -302,7 +302,7 @@ GLES2RenderSystem::_EndFrame()
 /**
 */
 void
-GLES2RenderSystem::_SetPass(graphics::Pass* pass)
+GLES2RenderSystem::_SetPass(graphics::Pass* const pass)
 {
     // scene blending parameters
     if (pass->GetSceneBlendingEnabled())
@@ -469,7 +469,7 @@ GLES2RenderSystem::_SetPass(graphics::Pass* pass)
 /**
 */
 void
-GLES2RenderSystem::_UseLights(ce_hash_table* lights)
+GLES2RenderSystem::_UseLights(ce_hash_table* const lights)
 {
     unsigned int lightIndex = 0U;
     unsigned int i;
@@ -519,7 +519,7 @@ GLES2RenderSystem::SetAmbientLight(unsigned int colour)
 //------------------------------------------------------------------------------
 /**
 */
-const core::Matrix4*
+const core::Matrix4* const
 GLES2RenderSystem::GetDefaultLightShaderParams() const
 {
     return this->defaultLightShaderParams;

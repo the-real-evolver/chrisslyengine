@@ -77,7 +77,7 @@ SceneNode::_Update()
 //------------------------------------------------------------------------------
 /**
 */
-SceneNode*
+SceneNode* const
 SceneNode::CreateChildSceneNode()
 {
     SceneNode* sceneNode = SceneManager::Instance()->CreateSceneNode();
@@ -91,7 +91,7 @@ SceneNode::CreateChildSceneNode()
 //------------------------------------------------------------------------------
 /**
 */
-SceneNode*
+SceneNode* const
 SceneNode::GetParentSceneNode() const
 {
     return this->parent;
@@ -332,7 +332,7 @@ SceneNode::_GetFullTransform() const
 /**
 */
 void
-SceneNode::AttachObject(Entity* obj)
+SceneNode::AttachObject(Entity* const obj)
 {
     ce_dynamic_array_push_back(&this->objects, obj);
 
@@ -351,7 +351,7 @@ SceneNode::NumAttachedObjects() const
 //------------------------------------------------------------------------------
 /**
 */
-Entity*
+Entity* const
 SceneNode::GetAttachedObject(unsigned short index) const
 {
     return (Entity*)ce_dynamic_array_get(&this->objects, index);
@@ -370,7 +370,7 @@ SceneNode::DetachAllObjects()
 /**
 */
 void
-SceneNode::SetParent(SceneNode* p)
+SceneNode::SetParent(SceneNode* const p)
 {
     this->parent = p;
     this->cachedTransformOutOfDate = true;

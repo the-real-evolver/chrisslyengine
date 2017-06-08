@@ -35,7 +35,7 @@ VorbisCodec::~VorbisCodec()
 /**
 */
 void
-VorbisCodec::SetupSound(const char* filename, Mode mode, void** sampleBuffer, unsigned int& length, AudioFormat& format, SoundType& type, int& channels, int& bits, unsigned int& sampleRate)
+VorbisCodec::SetupSound(const char* const filename, Mode mode, void** sampleBuffer, unsigned int& length, AudioFormat& format, SoundType& type, int& channels, int& bits, unsigned int& sampleRate)
 {
     FileHandle fd = FSWrapper::Open(filename, ReadAccess, Buffer, 0777);
 
@@ -92,7 +92,7 @@ VorbisCodec::SwapStreamBuffers()
 //------------------------------------------------------------------------------
 /**
 */
-void*
+void* const
 VorbisCodec::GetStreamBufferPointer() const
 {
     return NULL;
@@ -119,7 +119,7 @@ VorbisCodec::EndOfStream() const
 //------------------------------------------------------------------------------
 /**
 */
-void*
+void* const
 VorbisCodec::FillStreamBuffer(unsigned int numSamples, unsigned int position)
 {
     CE_UNREFERENCED_PARAMETER(numSamples);

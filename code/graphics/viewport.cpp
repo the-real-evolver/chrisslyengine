@@ -51,7 +51,7 @@ Viewport::Update()
 //------------------------------------------------------------------------------
 /**
 */
-RenderTarget*
+RenderTarget* const
 Viewport::GetTarget() const
 {
     return this->target;

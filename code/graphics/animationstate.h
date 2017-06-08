@@ -18,7 +18,7 @@ class AnimationState
 {
 public:
     /// constructor
-    AnimationState(const char* animName, float length, bool enabled = false);
+    AnimationState(const char* const animName, float length, bool enabled = false);
     /// destructor
     ~AnimationState();
 
@@ -44,7 +44,7 @@ public:
     /// gets whether or not this animation loops
     bool GetLoop() const;
     /// gets the name of the animation to which this state applies
-    const char* GetAnimationName() const;
+    const char* const GetAnimationName() const;
     /// gets the time position for this animation
     float GetTimePosition() const;
     /// sets the total length of this animation (may be shorter than whole animation)

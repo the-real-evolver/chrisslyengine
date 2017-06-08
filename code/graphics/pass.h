@@ -195,9 +195,9 @@ public:
     float GetFogEnd() const;
 
     /// inserts a new TextureUnitState object into the Pass
-    TextureUnitState* CreateTextureUnitState();
+    TextureUnitState* const CreateTextureUnitState();
     /// retrieves a pointer to a texture unit state so it may be modified
-    TextureUnitState* GetTextureUnitState(unsigned short i) const;
+    TextureUnitState* const GetTextureUnitState(unsigned short i) const;
     /// returns the number of texture unit settings
     unsigned short GetNumTextureUnitStates() const;
     /// Removes all texture unit settings
@@ -206,9 +206,9 @@ public:
     /// returns true if this pass is programmable i.e. includes a gpu program
     bool IsProgrammable() const;
     /// sets the gpu program to use
-    void SetGpuProgram(GpuProgram* program);
+    void SetGpuProgram(GpuProgram* const program);
     /// gets the gpu program used by this pass
-    GpuProgram* GetGpuProgram() const;
+    GpuProgram* const GetGpuProgram() const;
 
     /// internal method for loading this pass
     void _Load();

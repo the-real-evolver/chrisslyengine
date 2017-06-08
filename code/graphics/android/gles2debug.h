@@ -16,6 +16,6 @@
 #define CE_PRINT_GL_STRING(name, s) ce_print_gl_string(name, s);
 
 /// print value of the error flag the recent function call returned
-void ce_check_gl_error(const char* op);
+void ce_check_gl_error(const char* const op);
 /// print some aspect of the current GL connection
-void ce_print_gl_string(const char* name, GLenum s);
+void ce_print_gl_string(const char* const name, GLenum s);

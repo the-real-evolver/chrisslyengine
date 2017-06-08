@@ -69,7 +69,7 @@ mix_s16_stereo_u8(int num_channels, unsigned char* _ChrisslyRestrict buffer_to_m
 /**
 */
 void
-ce_audio_calculate_stereo_channel_volumes(ce_audio_panning_mode mode, float volume, float pan, float* volume_left, float* volume_right)
+ce_audio_calculate_stereo_channel_volumes(ce_audio_panning_mode mode, float volume, float pan, float* const volume_left, float* const volume_right)
 {
     switch (mode)
     {
@@ -99,7 +99,7 @@ ce_audio_calculate_stereo_channel_volumes(ce_audio_panning_mode mode, float volu
 /**
 */
 void
-ce_audio_mix_s16_stereo(int bits, int num_channels, void* buffer_to_mix, short* buffer, unsigned int num_samples, float volume, float pan)
+ce_audio_mix_s16_stereo(int bits, int num_channels, void* const buffer_to_mix, short* const buffer, unsigned int num_samples, float volume, float pan)
 {
     float volume_left, volume_right;
     ce_audio_calculate_stereo_channel_volumes(2 == num_channels ? PAN_STEREO : PAN_CONSTANTPOWER, volume, pan, &volume_left, &volume_right);

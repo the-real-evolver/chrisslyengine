@@ -47,18 +47,18 @@ public:
     /**
         @param timePos the time from which this KeyFrame will apply
     */
-    VertexMorphKeyFrame* CreateVertexMorphKeyFrame(float timePos);
+    VertexMorphKeyFrame* const CreateVertexMorphKeyFrame(float timePos);
     /// returns the number of keyframes in this animation
     unsigned short GetNumKeyFrames() const;
     /// returns the morph KeyFrame at the specified index
-    VertexMorphKeyFrame* GetVertexMorphKeyFrame(unsigned short index) const;
+    VertexMorphKeyFrame* const GetVertexMorphKeyFrame(unsigned short index) const;
     /// removes all the KeyFrames from this track
     void RemoveAllKeyFrames();
     /// applies an animation track to the designated target
     /**
         @param timeIndex the time position in the animation to apply
     */
-    void ApplyToVertexData(VertexData* data, int timeIndex);
+    void ApplyToVertexData(VertexData* const data, int timeIndex);
 
 private:
     unsigned char handle;

@@ -52,7 +52,7 @@ WASAPIAudioRenderer::~WASAPIAudioRenderer()
 /**
 */
 void
-WASAPIAudioRenderer::_Initialise(void* customParams)
+WASAPIAudioRenderer::_Initialise(void* const customParams)
 {
     CE_UNREFERENCED_PARAMETER(customParams);
 
@@ -179,7 +179,7 @@ WASAPIAudioRenderer::GetNumHardwareChannels() const
 /**
 */
 void
-WASAPIAudioRenderer::StartChannel(audio::Channel* channel)
+WASAPIAudioRenderer::StartChannel(audio::Channel* const channel)
 {
     this->syncLock.Lock();
     audio::Sound* sound;
@@ -194,7 +194,7 @@ WASAPIAudioRenderer::StartChannel(audio::Channel* channel)
 /**
 */
 void
-WASAPIAudioRenderer::UpdateChannel(audio::Channel* channel)
+WASAPIAudioRenderer::UpdateChannel(audio::Channel* const channel)
 {
     CE_UNREFERENCED_PARAMETER(channel);
 }
@@ -203,7 +203,7 @@ WASAPIAudioRenderer::UpdateChannel(audio::Channel* channel)
 /**
 */
 void
-WASAPIAudioRenderer::ReleaseChannel(audio::Channel* channel)
+WASAPIAudioRenderer::ReleaseChannel(audio::Channel* const channel)
 {
     this->syncLock.Lock();
     channel->_SetIsPlaying(false);

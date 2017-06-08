@@ -12,7 +12,7 @@
 /**
 */
 void
-ce_windows_assert(bool cond, const char* exp, const char* file, int line, const char* msg, ...)
+ce_windows_assert(bool cond, const char* const exp, const char* const file, int line, const char* const msg, ...)
 {
     if (!cond)
     {
@@ -30,7 +30,7 @@ ce_windows_assert(bool cond, const char* exp, const char* file, int line, const 
 /**
 */
 void
-ce_windows_log(const char* msg, ...)
+ce_windows_log(const char* const msg, ...)
 {
     char output[256U];
     va_list args;

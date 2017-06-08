@@ -112,7 +112,7 @@ TextureBase::SetNumMipmaps(int num)
 /**
 */
 void
-TextureBase::SetBuffer(void* buffer)
+TextureBase::SetBuffer(void* const buffer)
 {
     this->textureBuffer = buffer;
 }
@@ -120,7 +120,7 @@ TextureBase::SetBuffer(void* buffer)
 //------------------------------------------------------------------------------
 /**
 */
-const void*
+const void* const
 TextureBase::GetBuffer() const
 {
     return this->textureBuffer;

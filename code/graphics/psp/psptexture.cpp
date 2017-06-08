@@ -62,8 +62,8 @@ PSPTexture::CreateInternalResources()
 //------------------------------------------------------------------------------
 /**
 */
-PSPTexture::MipmapInfo*
-PSPTexture::GetMipmapInfo(int level)
+PSPTexture::MipmapInfo* const
+PSPTexture::GetMipmapInfo(int level) const
 {
     return (MipmapInfo*)ce_dynamic_array_get(&this->mipmapInfos, level - 1);
 }

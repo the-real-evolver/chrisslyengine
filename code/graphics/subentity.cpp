@@ -64,7 +64,7 @@ SubEntity::SetMaterial(Material* material)
 //------------------------------------------------------------------------------
 /**
 */
-Material*
+Material* const
 SubEntity::GetMaterial() const
 {
     return this->pMaterial;
@@ -91,7 +91,7 @@ SubEntity::IsVisible() const
 //------------------------------------------------------------------------------
 /**
 */
-SubMesh*
+SubMesh* const
 SubEntity::GetSubMesh() const
 {
     return this->subMesh;
@@ -100,7 +100,7 @@ SubEntity::GetSubMesh() const
 //------------------------------------------------------------------------------
 /**
 */
-VertexData*
+VertexData* const
 SubEntity::_GetHardwareVertexAnimVertexData() const
 {
     return this->hardwareVertexAnimVertexData;

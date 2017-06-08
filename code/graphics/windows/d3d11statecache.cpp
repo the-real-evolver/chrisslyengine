@@ -31,7 +31,7 @@ D3D11StateCache::~D3D11StateCache()
 //------------------------------------------------------------------------------
 /**
 */
-ID3D11RasterizerState*
+ID3D11RasterizerState* const
 D3D11StateCache::GetRasterizerState(const D3D11_RASTERIZER_DESC& desc)
 {
     ID3D11RasterizerState* state = (ID3D11RasterizerState*)ce_hash_table_find(&this->rasterizerStates, (const char*)&desc, sizeof(desc));
@@ -54,7 +54,7 @@ D3D11StateCache::GetRasterizerState(const D3D11_RASTERIZER_DESC& desc)
 //------------------------------------------------------------------------------
 /**
 */
-ID3D11DepthStencilState*
+ID3D11DepthStencilState* const
 D3D11StateCache::GetDepthStencilState(const D3D11_DEPTH_STENCIL_DESC& desc)
 {
     ID3D11DepthStencilState* state = (ID3D11DepthStencilState*)ce_hash_table_find(&this->depthStencilStates, (const char*)&desc, sizeof(desc));
@@ -77,7 +77,7 @@ D3D11StateCache::GetDepthStencilState(const D3D11_DEPTH_STENCIL_DESC& desc)
 //------------------------------------------------------------------------------
 /**
 */
-ID3D11BlendState*
+ID3D11BlendState* const
 D3D11StateCache::GetBlendState(const D3D11_BLEND_DESC& desc)
 {
     ID3D11BlendState* state = (ID3D11BlendState*)ce_hash_table_find(&this->blendStates, (const char*)&desc, sizeof(desc));
@@ -100,7 +100,7 @@ D3D11StateCache::GetBlendState(const D3D11_BLEND_DESC& desc)
 //------------------------------------------------------------------------------
 /**
 */
-ID3D11SamplerState*
+ID3D11SamplerState* const
 D3D11StateCache::GetSamplerState(const D3D11_SAMPLER_DESC& desc)
 {
     ID3D11SamplerState* state = (ID3D11SamplerState*)ce_hash_table_find(&this->samplerStates, (const char*)&desc, sizeof(desc));

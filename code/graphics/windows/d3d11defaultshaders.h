@@ -10,7 +10,7 @@
 //------------------------------------------------------------------------------
 /**
 */
-const char* DefaultGpuProgram =
+const char* const DefaultGpuProgram =
     "Texture2D texture0 : register(t0);\n"
     "SamplerState samplerLinear : register(s0);\n"
     "cbuffer AutoConstantBuffer : register(b0)\n"
@@ -51,7 +51,7 @@ const char* DefaultGpuProgram =
 //------------------------------------------------------------------------------
 /**
 */
-const char* DefaultGpuProgramFog =
+const char* const DefaultGpuProgramFog =
     "Texture2D texture0 : register(t0);\n"
     "SamplerState samplerLinear : register(s0);\n"
     "cbuffer AutoConstantBuffer : register(b0)\n"
@@ -108,7 +108,7 @@ const char* DefaultGpuProgramFog =
 //------------------------------------------------------------------------------
 /**
 */
-const char* DefaultGpuProgramLit =
+const char* const DefaultGpuProgramLit =
     "Texture2D texture0 : register(t0);\n"
     "SamplerState samplerLinear : register(s0);\n"
     "cbuffer AutoConstantBuffer : register(b0)\n"
@@ -168,7 +168,7 @@ const char* DefaultGpuProgramLit =
 //------------------------------------------------------------------------------
 /**
 */
-const char* DefaultGpuProgramLitFog =
+const char* const DefaultGpuProgramLitFog =
     "Texture2D texture0 : register(t0);\n"
     "SamplerState samplerLinear : register(s0);\n"
     "cbuffer AutoConstantBuffer : register(b0)\n"
@@ -243,7 +243,7 @@ const char* DefaultGpuProgramLitFog =
 //------------------------------------------------------------------------------
 /**
 */
-const char* DefaultGpuProgramMorphAnim =
+const char* const DefaultGpuProgramMorphAnim =
     "Texture2D texture0 : register(t0);\n"
     "SamplerState samplerLinear : register(s0);\n"
     "cbuffer AutoConstantBuffer : register(b0)\n"

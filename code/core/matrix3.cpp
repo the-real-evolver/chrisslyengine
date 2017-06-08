@@ -28,7 +28,7 @@ Matrix3::~Matrix3()
 //------------------------------------------------------------------------------
 /**
 */
-float*
+float* const
 Matrix3::operator[] (size_t iRow) const
 {
     return (float*)m[iRow];

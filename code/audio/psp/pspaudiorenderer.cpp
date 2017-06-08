@@ -38,7 +38,7 @@ PSPAudioRenderer::~PSPAudioRenderer()
 /**
 */
 void
-PSPAudioRenderer::_Initialise(void* customParams)
+PSPAudioRenderer::_Initialise(void* const customParams)
 {
 
 }
@@ -83,19 +83,18 @@ PSPAudioRenderer::GetNumHardwareChannels() const
 /**
 */
 void
-PSPAudioRenderer::StartChannel(audio::Channel* channel)
+PSPAudioRenderer::StartChannel(audio::Channel* const channel)
 {
     const core::Mutex& syncLock = channel->_GetSyncLock();
     syncLock.Lock();
 
-    int index;
+    int index, numChannels;
     channel->GetIndex(&index);
     audio::Sound* sound;
     channel->GetCurrentSound(&sound);
+    sound->GetFormat(NULL, NULL, &numChannels, NULL);
     unsigned int length;
     sound->GetLength(&length);
-    int numChannels, bits;
-    sound->GetFormat(NULL, NULL, &numChannels, &bits);
     audio::Mode mode;
     channel->GetMode(&mode);
 
@@ -112,19 +111,8 @@ PSPAudioRenderer::StartChannel(audio::Channel* channel)
             CE_ASSERT(false, "PSPAudioRenderer::StartChannel(): %i channel audio output not supported\n", numChannels);
     }
 
-    unsigned int samplecount = 0U;
-    if (mode & audio::MODE_CREATESTREAM)
-    {
-        audio::Codec* codec = sound->_GetCodec();
-        codec->InitialiseStream();
-        samplecount = codec->GetStreamBufferLength() / (numChannels * ((unsigned int)bits >> 3U));
-    }
-    else
-    {
-        samplecount = NumOutputSamples;
-    }
+    index = sceAudioChReserve(index, PSP_AUDIO_SAMPLE_ALIGN(NumOutputSamples), format);
 
-    index = sceAudioChReserve(index, PSP_AUDIO_SAMPLE_ALIGN(samplecount), format);
     channel->_SetIndex(index);
     if (index != audio::Channel::CHANNEL_FREE)
     {
@@ -139,7 +127,7 @@ PSPAudioRenderer::StartChannel(audio::Channel* channel)
 /**
 */
 void
-PSPAudioRenderer::UpdateChannel(audio::Channel* channel)
+PSPAudioRenderer::UpdateChannel(audio::Channel* const channel)
 {
 
 }
@@ -148,7 +136,7 @@ PSPAudioRenderer::UpdateChannel(audio::Channel* channel)
 /**
 */
 void
-PSPAudioRenderer::ReleaseChannel(audio::Channel* channel)
+PSPAudioRenderer::ReleaseChannel(audio::Channel* const channel)
 {
     const core::Mutex& syncLock = channel->_GetSyncLock();
     syncLock.Lock();
@@ -184,7 +172,7 @@ PSPAudioRenderer::ChannelThread(SceSize args, void* argp)
             sound->_DecrementUseCount();
         }
 
-        bool paused;
+        bool paused, isPlaying;
         channel->GetPaused(&paused);
         if (paused)
         {
@@ -193,48 +181,30 @@ PSPAudioRenderer::ChannelThread(SceSize args, void* argp)
             continue;
         }
 
-        bool isPlaying;
         channel->IsPlaying(&isPlaying);
         if (isPlaying)
         {
-            unsigned int length;
+            unsigned int length, position;
             sound->GetLength(&length);
-            unsigned int position;
             channel->GetPosition(&position);
             audio::Mode mode;
             channel->GetMode(&mode);
-            int numChannels, bits;
-            sound->GetFormat(NULL, NULL, &numChannels, &bits);
-            audio::Codec* codec = sound->_GetCodec();
-            unsigned int samplecount = 0U;
+            int numChannels;
+            sound->GetFormat(NULL, NULL, &numChannels, NULL);
 
             int samplesRemaining = length - position;
             if (samplesRemaining > 0)
             {
-                if (mode & audio::MODE_CREATESTREAM)
+                unsigned int sampleCount = NumOutputSamples;
+                if ((unsigned int)samplesRemaining <= sampleCount)
                 {
-                    // dont swap buffers on the first frame
-                    if (position > 0)
-                    {
-                        codec->FillStreamBackBuffer();
-                        codec->SwapStreamBuffers();
-                    }
-                    samplecount = codec->GetStreamBufferLength() / (numChannels * ((unsigned int)bits >> 3U));
+                    sampleCount = PSP_AUDIO_SAMPLE_ALIGN(samplesRemaining);
+                    sceAudioSetChannelDataLen(index, sampleCount > PSP_AUDIO_SAMPLE_MIN ? sampleCount - PSP_AUDIO_SAMPLE_MIN : 0);
                 }
-                else
-                {
-                    samplecount = NumOutputSamples;
-                }
-                if ((unsigned int)samplesRemaining <= samplecount)
-                {
-                    samplecount = PSP_AUDIO_SAMPLE_ALIGN(samplesRemaining);
-                    sceAudioSetChannelDataLen(index, samplecount > PSP_AUDIO_SAMPLE_MIN ? samplecount - PSP_AUDIO_SAMPLE_MIN : 0);
-                }
-                channel->SetPosition(position + samplecount);
+                channel->SetPosition(position + sampleCount);
 
-                float volume;
+                float volume, pan;
                 channel->GetVolume(&volume);
-                float pan;
                 channel->GetPan(&pan);
                 float leftVolume, rightVolume;
                 if (mode & audio::MODE_3D)
@@ -250,31 +220,17 @@ PSPAudioRenderer::ChannelThread(SceSize args, void* argp)
                     ce_audio_calculate_stereo_channel_volumes(PAN_STEREO, volume, pan, &leftVolume, &rightVolume);
                 }
 
+                void* sampleBuffer = mode & audio::MODE_CREATESTREAM ? sound->_GetCodec()->FillStreamBuffer(sampleCount, position) : sound->_GetSampleBufferPointer(position);
+
                 syncLock.Unlock();
 
-                if (mode & audio::MODE_CREATESTREAM)
-                {
-                    sceAudioOutputPannedBlocking(index, (int)((float)PSP_AUDIO_VOLUME_MAX * leftVolume), (int)((float)PSP_AUDIO_VOLUME_MAX * rightVolume), codec->GetStreamBufferPointer());
-                }
-                else
-                {
-                    sceAudioOutputPannedBlocking(index, (int)((float)PSP_AUDIO_VOLUME_MAX * leftVolume), (int)((float)PSP_AUDIO_VOLUME_MAX * rightVolume), sound->_GetSampleBufferPointer(position));
-                }
+                sceAudioOutputPannedBlocking(index, (int)((float)PSP_AUDIO_VOLUME_MAX * leftVolume), (int)((float)PSP_AUDIO_VOLUME_MAX * rightVolume), sampleBuffer);
             }
             else
             {
                 if (mode & audio::MODE_LOOP_NORMAL)
                 {
-                    if (mode & audio::MODE_CREATESTREAM)
-                    {
-                        codec->InitialiseStream();
-                        samplecount = codec->GetStreamBufferLength() / (numChannels * ((unsigned int)bits >> 3U));
-                    }
-                    else
-                    {
-                        samplecount = NumOutputSamples;
-                    }
-                    sceAudioSetChannelDataLen(index, PSP_AUDIO_SAMPLE_ALIGN(samplecount));
+                    sceAudioSetChannelDataLen(index, PSP_AUDIO_SAMPLE_ALIGN(NumOutputSamples));
                     channel->SetPosition(0U);
 
                     syncLock.Unlock();

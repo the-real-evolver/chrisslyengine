@@ -24,7 +24,7 @@ DXGIRenderWindow::DXGIRenderWindow()
 //------------------------------------------------------------------------------
 /**
 */
-DXGIRenderWindow::DXGIRenderWindow(HINSTANCE inst, ID3D11Device* dev) :
+DXGIRenderWindow::DXGIRenderWindow(HINSTANCE inst, ID3D11Device* const dev) :
     instance(inst),
     hwnd(NULL),
     device(dev),
@@ -205,7 +205,7 @@ DXGIRenderWindow::GetType() const
 //------------------------------------------------------------------------------
 /**
 */
-ID3D11RenderTargetView*
+ID3D11RenderTargetView* const
 DXGIRenderWindow::GetRenderTargetView() const
 {
     return this->renderTargetView;
@@ -214,7 +214,7 @@ DXGIRenderWindow::GetRenderTargetView() const
 //------------------------------------------------------------------------------
 /**
 */
-ID3D11DepthStencilView*
+ID3D11DepthStencilView* const
 DXGIRenderWindow::GetDepthStencilView() const
 {
     return this->depthStencilView;

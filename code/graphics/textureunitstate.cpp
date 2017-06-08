@@ -208,7 +208,7 @@ TextureUnitState::GetTextureProjectionMappingMode() const
 /**
 */
 void
-TextureUnitState::SetTextureName(const char* name)
+TextureUnitState::SetTextureName(const char* const name)
 {
     this->textureName = name;
 }
@@ -234,7 +234,7 @@ TextureUnitState::SetTexture(Texture* tex)
 //------------------------------------------------------------------------------
 /**
 */
-Texture*
+Texture* const
 TextureUnitState::GetTexture() const
 {
     return this->texture;

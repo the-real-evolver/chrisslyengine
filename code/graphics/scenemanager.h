@@ -38,7 +38,7 @@ public:
     };
 
     /// get pointer to the singleton
-    static SceneManager* Instance()
+    static SceneManager* const Instance()
     {
         return Singleton;
     }
@@ -48,16 +48,16 @@ public:
     /// destructor
     ~SceneManager();
     /// creates a camera to be managed by this scene manager
-    Camera* CreateCamera(const char* name);
+    Camera* const CreateCamera(const char* const name);
      /// retrieves a pointer to the camera
-    Camera* GetCamera(const char* name) const;
+    Camera* const GetCamera(const char* const name) const;
      /// removes (and destroys) all cameras from the scene
     void DestroyAllCameras();
 
     /// creates a named light for use in the scene
-    Light* CreateLight(const char* name);
+    Light* const CreateLight(const char* const name);
     /// returns a pointer to the named Light which has previously been added to the scene
-    Light* GetLight(const char* name) const;
+    Light* const GetLight(const char* const name) const;
     /// removes and destroys all lights in the scene
     void DestroyAllLights();
 
@@ -67,7 +67,7 @@ public:
         meshName The name of the Mesh it is to be based on (e.g. 'knot.mesh'). The
         mesh will be loaded if it is not already.
     */
-    Entity* CreateEntity(const char* meshName);
+    Entity* const CreateEntity(const char* const meshName);
 
     /// creates an instance of a SceneNode
     /**
@@ -86,7 +86,7 @@ public:
             If you wish to create a node with a specific name, call the alternative method
             which takes a name parameter.
     */
-    SceneNode* CreateSceneNode();
+    SceneNode* const CreateSceneNode();
     /// gets the SceneNode at the root of the scene hierarchy
     /**
         @remarks
@@ -97,7 +97,7 @@ public:
             However, in all cases there is only ever one root node of
             the hierarchy, and this method returns a pointer to it.
     */
-    SceneNode* GetRootSceneNode();
+    SceneNode* const GetRootSceneNode();
 
     /// empties the entire scene, inluding all SceneNodes, Entities, Lights etc.
     /** 
@@ -128,9 +128,9 @@ public:
     /// is there any shadowing technique in use?
     bool IsShadowTechniqueInUse() const;
     /// prompts the class to send its contents to the renderer
-    void _RenderScene(Camera* camera, Viewport* vp);
+    void _RenderScene(Camera* const camera, Viewport* const vp);
     /// internal method for setting up the renderstate for a rendering pass
-    void _SetPass(Pass* pass);
+    void _SetPass(Pass* const pass);
     /// indicates to the SceneManager whether it should suppress changing the RenderSystem states when rendering objects
     /**
         @note
@@ -145,9 +145,9 @@ private:
     /// method for preparing shadow textures ready for use in a regular render
     void PrepareShadowTextures();
     /// render the objects in a given queue group 
-    void _RenderQueueGroupObjects(QueuedRenderableCollection* queue);
+    void _RenderQueueGroupObjects(QueuedRenderableCollection* const queue);
     /// render a group rendering only shadow receivers
-    void _RenderTextureShadowReceiverQueueGroupObjects(QueuedRenderableCollection* queue);
+    void _RenderTextureShadowReceiverQueueGroupObjects(QueuedRenderableCollection* const queue);
 
     static SceneManager* Singleton;
 

@@ -26,22 +26,22 @@ public:
     /// destructor
     ~Mesh();
     /// creates a new SubMesh
-    SubMesh* CreateSubMesh();
+    SubMesh* const CreateSubMesh();
     /// gets the number of sub meshes which comprise this mesh
     unsigned short GetNumSubMeshes() const;
     /// gets a pointer to the submesh indicated by the index
-    SubMesh* GetSubMesh(unsigned short index) const;
+    SubMesh* const GetSubMesh(unsigned short index) const;
 
     /// creates a new Animation object for vertex animating this mesh
-    Animation* CreateAnimation(const char* name, float length);
+    Animation* const CreateAnimation(const char* const name, float length);
     /// returns the named vertex Animation object
-    Animation* GetAnimation(const char* name);
+    Animation* const GetAnimation(const char* const name);
     /// removes all morph Animations from this mesh
     void RemoveAllAnimations();
     /// returns whether or not this mesh has some kind of vertex animation
     bool HasVertexAnimation() const;
     /// initialise an animation set suitable for use with this mesh
-    void _InitAnimationState(ce_hash_table* animSet);
+    void _InitAnimationState(ce_hash_table* const animSet);
 
     /// gets the radius of the bounding sphere surrounding this mesh
     float GetBoundingSphereRadius() const;

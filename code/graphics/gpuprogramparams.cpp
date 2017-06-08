@@ -67,7 +67,7 @@ GpuProgramParameters::~GpuProgramParameters()
 /**
 */
 void
-GpuProgramParameters::SetNamedConstant(const char* name, float val)
+GpuProgramParameters::SetNamedConstant(const char* const name, float val)
 {
     GpuConstantDefinition* def = (GpuConstantDefinition*)ce_hash_table_find(&this->constantDefs->map, name, strlen(name));
     if (def != NULL)
@@ -80,7 +80,7 @@ GpuProgramParameters::SetNamedConstant(const char* name, float val)
 /**
 */
 void
-GpuProgramParameters::SetNamedConstant(const char* name, int val)
+GpuProgramParameters::SetNamedConstant(const char* const name, int val)
 {
     GpuConstantDefinition* def = (GpuConstantDefinition*)ce_hash_table_find(&this->constantDefs->map, name, strlen(name));
     if (def != NULL)
@@ -93,7 +93,7 @@ GpuProgramParameters::SetNamedConstant(const char* name, int val)
 /**
 */
 void
-GpuProgramParameters::SetNamedConstant(const char* name, const Vector3& vec)
+GpuProgramParameters::SetNamedConstant(const char* const name, const Vector3& vec)
 {
     GpuConstantDefinition* def = (GpuConstantDefinition*)ce_hash_table_find(&this->constantDefs->map, name, strlen(name));
     if (def != NULL)
@@ -106,7 +106,7 @@ GpuProgramParameters::SetNamedConstant(const char* name, const Vector3& vec)
 /**
 */
 void
-GpuProgramParameters::SetNamedConstant(const char* name, const Vector3* vec, unsigned int numEntries)
+GpuProgramParameters::SetNamedConstant(const char* const name, const Vector3* const vec, unsigned int numEntries)
 {
     GpuConstantDefinition* def = (GpuConstantDefinition*)ce_hash_table_find(&this->constantDefs->map, name, strlen(name));
     if (def != NULL)
@@ -120,7 +120,7 @@ GpuProgramParameters::SetNamedConstant(const char* name, const Vector3* vec, uns
 /**
 */
 void
-GpuProgramParameters::SetNamedConstant(const char* name, const Quaternion& q)
+GpuProgramParameters::SetNamedConstant(const char* const name, const Quaternion& q)
 {
     GpuConstantDefinition* def = (GpuConstantDefinition*)ce_hash_table_find(&this->constantDefs->map, name, strlen(name));
     if (def != NULL)
@@ -133,7 +133,7 @@ GpuProgramParameters::SetNamedConstant(const char* name, const Quaternion& q)
 /**
 */
 void
-GpuProgramParameters::SetNamedConstant(const char* name, const Matrix4& m)
+GpuProgramParameters::SetNamedConstant(const char* const name, const Matrix4& m)
 {
     GpuConstantDefinition* def = (GpuConstantDefinition*)ce_hash_table_find(&this->constantDefs->map, name, strlen(name));
     if (def != NULL)
@@ -146,7 +146,7 @@ GpuProgramParameters::SetNamedConstant(const char* name, const Matrix4& m)
 /**
 */
 void
-GpuProgramParameters::SetNamedConstant(const char* name, const Matrix4* m, unsigned int numEntries)
+GpuProgramParameters::SetNamedConstant(const char* const name, const Matrix4* const m, unsigned int numEntries)
 {
     GpuConstantDefinition* def = (GpuConstantDefinition*)ce_hash_table_find(&this->constantDefs->map, name, strlen(name));
     if (def != NULL)
@@ -190,7 +190,7 @@ GpuProgramParameters::SetAutoConstant(AutoConstantType autoType, float val)
 /**
 */
 void
-GpuProgramParameters::_SetNamedConstants(GpuNamedConstants* constantMap)
+GpuProgramParameters::_SetNamedConstants(GpuNamedConstants* const constantMap)
 {
     this->constantDefs = constantMap;
 }
@@ -199,7 +199,7 @@ GpuProgramParameters::_SetNamedConstants(GpuNamedConstants* constantMap)
 /**
 */
 void
-GpuProgramParameters::_SetAutoConstant(AutoConstantType autoType, GpuConstantDefinition* def)
+GpuProgramParameters::_SetAutoConstant(AutoConstantType autoType, GpuConstantDefinition* const def)
 {
     CE_ASSERT(autoType >= ACT_WORLD_MATRIX && autoType < ACT_COUNT, "GpuProgramParameters::_SetAutoConstant(): invalid AutoConstantType value '%u'\n", autoType);
     this->autoConstants[autoType] = def;
@@ -209,7 +209,7 @@ GpuProgramParameters::_SetAutoConstant(AutoConstantType autoType, GpuConstantDef
 /**
 */
 GpuProgramParameters::AutoConstantType
-GpuProgramParameters::AutoConstantTypeFromString(const char* name)
+GpuProgramParameters::AutoConstantTypeFromString(const char* const name)
 {
     if (0 == strcmp(name, "worldMatrix"))           {return ACT_WORLD_MATRIX;}
     if (0 == strcmp(name, "viewMatrix"))            {return ACT_VIEW_MATRIX;}

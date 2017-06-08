@@ -34,9 +34,9 @@ public:
     */
     void _Update();
     /// creates an unnamed new SceneNode as a child of this node
-    SceneNode* CreateChildSceneNode();
+    SceneNode* const CreateChildSceneNode();
     /// gets the parent of this scenenode
-    SceneNode* GetParentSceneNode() const;
+    SceneNode* const GetParentSceneNode() const;
     /// removes all child Nodes attached to this node
     /** 
         Does not delete the nodes, just detaches them from
@@ -120,7 +120,7 @@ public:
         Scene objects can include Entity objects, Camera objects, Light objects, 
         ParticleSystem objects etc. Anything that subclasses from MovableObject.
     */
-    void AttachObject(Entity* obj);
+    void AttachObject(Entity* const obj);
     /// reports the number of objects attached to this node
     unsigned short NumAttachedObjects() const;
     /// retrieves a pointer to an attached object
@@ -129,7 +129,7 @@ public:
         Retrieves by index, see alternate version to retrieve by name. The index
         of an object may change as other objects are added / removed.
     */
-    Entity* GetAttachedObject(unsigned short index) const;
+    Entity* const GetAttachedObject(unsigned short index) const;
     /// detaches all objects attached to this node
     void DetachAllObjects();
 
@@ -137,7 +137,7 @@ private:
     /// constructor, only to be called by the creator SceneManager
     SceneNode();
     /// only available internally - notification of parent.
-    void SetParent(SceneNode* p);
+    void SetParent(SceneNode* const p);
 
     /// pointer to parent node
     SceneNode* parent;

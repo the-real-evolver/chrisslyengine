@@ -17,7 +17,7 @@ class PSPAudioRenderer
 {
 public:
     /// get pointer to the singleton
-    static PSPAudioRenderer* Instance()
+    static PSPAudioRenderer* const Instance()
     {
         return Singleton;
     }
@@ -27,7 +27,7 @@ public:
     /// destructor
     ~PSPAudioRenderer();
     /// start up the renderer
-    void _Initialise(void* customParams);
+    void _Initialise(void* const customParams);
     /// shutdown the renderer and cleanup resources
     void Shutdown();
     /// starts calling the softwaremixer and sends mixed buffer to the output
@@ -37,11 +37,11 @@ public:
     /// gets the number of hardware channels
     unsigned short GetNumHardwareChannels() const;
     /// start playback on the given channel
-    void StartChannel(audio::Channel* channel);
+    void StartChannel(audio::Channel* const channel);
     /// update playback on the given channel
-    void UpdateChannel(audio::Channel* channel);
+    void UpdateChannel(audio::Channel* const channel);
     /// release the given channel
-    void ReleaseChannel(audio::Channel* channel);
+    void ReleaseChannel(audio::Channel* const channel);
 
     /// channel thread
     static int ChannelThread(SceSize args, void* argp);

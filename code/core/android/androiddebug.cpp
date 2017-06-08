@@ -10,7 +10,7 @@
 /**
 */
 void
-ce_android_assert(bool cond, const char* exp, const char* file, int line, const char* msg, ...)
+ce_android_assert(bool cond, const char* const exp, const char* const file, int line, const char* const msg, ...)
 {
     if (!cond)
     {

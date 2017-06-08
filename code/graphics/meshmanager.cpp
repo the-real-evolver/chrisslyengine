@@ -40,8 +40,8 @@ MeshManager::~MeshManager()
 //------------------------------------------------------------------------------
 /**
 */
-Mesh*
-MeshManager::Load(const char* filename)
+Mesh* const
+MeshManager::Load(const char* const filename)
 {
     Mesh* mesh = (Mesh*)ce_hash_table_find(&this->resources, filename, strlen(filename));
     if (mesh != NULL)

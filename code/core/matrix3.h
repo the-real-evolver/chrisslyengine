@@ -24,7 +24,7 @@ public:
     /// destructor
     ~Matrix3();
     /// member access, allows use of construct mat[r][c]
-    float* operator[] (size_t iRow) const;
+    float* const operator[] (size_t iRow) const;
     /// negation operator
     Matrix3 operator - () const;
     /// matrix * vector [3x3 * 3x1 = 3x1]

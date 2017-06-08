@@ -45,7 +45,7 @@ GLES2HardwareVertexBuffer::~GLES2HardwareVertexBuffer()
 //------------------------------------------------------------------------------
 /**
 */
-void*
+void* const
 GLES2HardwareVertexBuffer::Map()
 {
     return this->vertexBuffer;

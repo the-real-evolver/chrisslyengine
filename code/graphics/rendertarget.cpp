@@ -50,8 +50,8 @@ RenderTarget::Update()
 //------------------------------------------------------------------------------
 /**
 */
-Viewport*
-RenderTarget::AddViewport(Camera *cam, int left, int top, int w, int h)
+Viewport* const
+RenderTarget::AddViewport(Camera* const cam, int left, int top, int w, int h)
 {
     Viewport* viewport = CE_NEW Viewport(cam, this, left, top, w, h);
     ce_dynamic_array_push_back(&this->viewports, viewport);
@@ -71,7 +71,7 @@ RenderTarget::GetNumViewports() const
 //------------------------------------------------------------------------------
 /**
 */
-Viewport*
+Viewport* const
 RenderTarget::GetViewport(unsigned short index) const
 {
     return (Viewport*)ce_dynamic_array_get(&this->viewports, index);
@@ -122,7 +122,7 @@ RenderTarget::GetFormat() const
 //------------------------------------------------------------------------------
 /**
 */
-void*
+void* const
 RenderTarget::GetBuffer() const
 {
     return this->buffer;

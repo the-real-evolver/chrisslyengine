@@ -19,7 +19,7 @@ class MeshManager
 {
 public:
     /// get pointer to the singleton
-    static MeshManager* Instance()
+    static MeshManager* const Instance()
     {
         return Singleton;
     }
@@ -29,7 +29,7 @@ public:
     /// destructor
     ~MeshManager();
     /// loads a mesh from a file, making it immediately available for use
-    Mesh* Load(const char* filename);
+    Mesh* const Load(const char* const filename);
     /// removes all resources
     void RemoveAll();
 

@@ -44,7 +44,7 @@ MaterialParser::~MaterialParser()
 /**
 */
 void
-MaterialParser::ParseScript(const char* name)
+MaterialParser::ParseScript(const char* const name)
 {
     FileHandle fd = FSWrapper::Open(name, ReadAccess, Buffer, 0777);
     unsigned int fileSize = FSWrapper::GetFileSize(fd);
@@ -407,7 +407,7 @@ MaterialParser::GetRGBAValue(float red, float green, float blue, float alpha) co
 /**
 */
 SceneBlendFactor
-MaterialParser::GetSceneBlendFactorFromString(const char* blendFactor) const
+MaterialParser::GetSceneBlendFactorFromString(const char* const blendFactor) const
 {
     if (0 == strcmp(blendFactor, "one"))                    {return SBF_ONE;}
     if (0 == strcmp(blendFactor, "zero"))                   {return SBF_ZERO;}
@@ -428,7 +428,7 @@ MaterialParser::GetSceneBlendFactorFromString(const char* blendFactor) const
 /**
 */
 FilterOptions
-MaterialParser::GetFilterOptionsFromString(const char* filterOption) const
+MaterialParser::GetFilterOptionsFromString(const char* const filterOption) const
 {
     if (0 == strcmp(filterOption, "none"))      {return FO_NONE;}
     if (0 == strcmp(filterOption, "point"))     {return FO_POINT;}

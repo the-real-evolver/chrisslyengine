@@ -6,4 +6,4 @@
 */
 
 /// display assertion message in the debugger and assert if cond is false
-void ce_android_assert(bool cond, const char* exp, const char* file, int line, const char* msg, ...);
+void ce_android_assert(bool cond, const char* const exp, const char* const file, int line, const char* const msg, ...);

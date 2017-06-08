@@ -37,7 +37,7 @@ struct ce_key_value_pair
 };
 
 /// forward declaration
-static void ce_hash_table_resize(ce_hash_table* table, unsigned int new_size);
+static void ce_hash_table_resize(ce_hash_table* const table, unsigned int new_size);
 
 //------------------------------------------------------------------------------
 /**
@@ -60,7 +60,7 @@ ce_hash_function(const char* key, size_t key_length)
 /**
 */
 inline void
-ce_hash_table_init(ce_hash_table* table, unsigned int initial_size)
+ce_hash_table_init(ce_hash_table* const table, unsigned int initial_size)
 {
     if (NULL == table)
     {
@@ -85,7 +85,7 @@ ce_hash_table_init(ce_hash_table* table, unsigned int initial_size)
 /**
 */
 inline void
-ce_hash_table_clear(ce_hash_table* table)
+ce_hash_table_clear(ce_hash_table* const table)
 {
     if (NULL == table)
     {
@@ -118,7 +118,7 @@ ce_hash_table_clear(ce_hash_table* table)
 /**
 */
 inline void
-ce_hash_table_insert(ce_hash_table* table, const char* key, size_t key_length, void* value)
+ce_hash_table_insert(ce_hash_table* const table, const char* const key, size_t key_length, void* const value)
 {
     if (NULL == table)
     {
@@ -152,7 +152,7 @@ ce_hash_table_insert(ce_hash_table* table, const char* key, size_t key_length, v
 /**
 */
 inline void*
-ce_hash_table_find(ce_hash_table* table, const char* key, size_t key_length)
+ce_hash_table_find(ce_hash_table* const table, const char* const key, size_t key_length)
 {
     if (NULL == table)
     {
@@ -181,7 +181,7 @@ ce_hash_table_find(ce_hash_table* table, const char* key, size_t key_length)
 /**
 */
 inline ce_linked_list*
-ce_hash_table_begin(ce_hash_table* table, unsigned int index)
+ce_hash_table_begin(ce_hash_table* const table, unsigned int index)
 {
     if (NULL == table)
     {
@@ -195,7 +195,7 @@ ce_hash_table_begin(ce_hash_table* table, unsigned int index)
 /**
 */
 static void
-ce_hash_table_resize(ce_hash_table* table, unsigned int new_size)
+ce_hash_table_resize(ce_hash_table* const table, unsigned int new_size)
 {
     ce_hash_table new_table;
     ce_hash_table_init(&new_table, new_size);

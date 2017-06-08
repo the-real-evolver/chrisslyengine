@@ -28,11 +28,11 @@ public:
     /// gets the Mesh that this Entity is based on
     const Mesh* const GetMesh() const;
     /// gets a pointer to a SubEntity, ie a part of an Entity
-    SubEntity* GetSubEntity(unsigned int index) const;
+    SubEntity* const GetSubEntity(unsigned int index) const;
     /// retrieves the number of SubEntity objects making up this entity
     unsigned int GetNumSubEntities() const;
     /// internal method called to notify the object that it has been attached to a node
-    void _NotifyAttached(SceneNode* parent);
+    void _NotifyAttached(SceneNode* const parent);
     /// sets whether or not this object will cast shadows
     /**
         @remarks
@@ -56,7 +56,7 @@ public:
         current state of each animation available to the entity. The AnimationState objects are
         initialised from the Mesh object.
     */
-    AnimationState* GetAnimationState(const char* name) const;
+    AnimationState* const GetAnimationState(const char* const name) const;
     /// perform all the updates required for an animated entity
     void UpdateAnimation();
 

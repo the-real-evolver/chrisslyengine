@@ -17,7 +17,7 @@ using namespace chrissly::core;
 //------------------------------------------------------------------------------
 /**
 */
-Animation::Animation(const char* name, float length) :
+Animation::Animation(const char* const name, float length) :
     length(length)
 {
     this->name = name;
@@ -35,7 +35,7 @@ Animation::~Animation()
 //------------------------------------------------------------------------------
 /**
 */
-const char*
+const char* const
 Animation::GetName() const
 {
     return this->name.C_Str();
@@ -53,7 +53,7 @@ Animation::GetLength() const
 //------------------------------------------------------------------------------
 /**
 */
-VertexAnimationTrack*
+VertexAnimationTrack* const
 Animation::CreateVertexTrack(unsigned char handle)
 {
     VertexAnimationTrack* vertexAnimationTrack = CE_NEW VertexAnimationTrack(handle);
@@ -74,7 +74,7 @@ Animation::GetNumVertexTracks() const
 //------------------------------------------------------------------------------
 /**
 */
-VertexAnimationTrack*
+VertexAnimationTrack* const
 Animation::GetVertexTrack(unsigned short index) const
 {
     return (VertexAnimationTrack*)ce_dynamic_array_get(&this->vertexTracks, index);
@@ -99,7 +99,7 @@ Animation::DestroyAllVertexTracks()
 /**
 */
 void
-Animation::Apply(Entity* entity, float timePos)
+Animation::Apply(Entity* const entity, float timePos)
 {
     if (timePos > this->length && this->length > 0.0f)
     {

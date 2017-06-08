@@ -61,7 +61,7 @@ ChannelBase::Stop()
 /**
 */
 Result
-ChannelBase::IsPlaying(bool* isplaying)
+ChannelBase::IsPlaying(bool* const isplaying)
 {
     *isplaying = this->isPlaying;
     return OK;
@@ -84,7 +84,7 @@ ChannelBase::SetPaused(bool pause)
 /**
 */
 Result
-ChannelBase::GetPaused(bool* pause)
+ChannelBase::GetPaused(bool* const pause)
 {
     *pause = this->paused;
     return OK;
@@ -118,7 +118,7 @@ ChannelBase::SetVolume(float vol)
 /**
 */
 Result
-ChannelBase::GetVolume(float* vol)
+ChannelBase::GetVolume(float* const vol)
 {
     *vol = this->volume;
     return OK;
@@ -176,7 +176,7 @@ ChannelBase::SetPan(float pan)
 /**
 */
 Result
-ChannelBase::GetPan(float* pan)
+ChannelBase::GetPan(float* const pan)
 {
     *pan = this->panning;
     return OK;
@@ -222,7 +222,7 @@ ChannelBase::SetMode(Mode modeflags)
 /**
 */
 Result
-ChannelBase::GetMode(Mode* modeflags)
+ChannelBase::GetMode(Mode* const modeflags)
 {
     *modeflags = this->mode;
     return OK;
@@ -242,7 +242,7 @@ ChannelBase::SetPosition(unsigned int position)
 /**
 */
 Result
-ChannelBase::GetPosition(unsigned int* position)
+ChannelBase::GetPosition(unsigned int* const position)
 {
     *position = this->samplePosition;
     return OK;
@@ -252,7 +252,7 @@ ChannelBase::GetPosition(unsigned int* position)
 /**
 */
 Result
-ChannelBase::Set3DAttributes(const Vector3* position)
+ChannelBase::Set3DAttributes(const Vector3* const position)
 {
     if (position != NULL)
     {
@@ -265,7 +265,7 @@ ChannelBase::Set3DAttributes(const Vector3* position)
 /**
 */
 Result
-ChannelBase::Get3DAttributes(Vector3* position)
+ChannelBase::Get3DAttributes(Vector3* const position)
 {
     if (position != NULL)
     {
@@ -291,7 +291,7 @@ ChannelBase::Set3DMinMaxDistance(float mindistance, float maxdistance)
 /**
 */
 Result
-ChannelBase::Get3DMinMaxDistance(float* mindistance, float* maxdistance)
+ChannelBase::Get3DMinMaxDistance(float* const mindistance, float* const maxdistance)
 {
     if (mindistance != NULL)
     {
@@ -318,7 +318,7 @@ ChannelBase::GetCurrentSound(Sound** sound)
 /**
 */
 Result
-ChannelBase::GetIndex(int* idx)
+ChannelBase::GetIndex(int* const idx)
 {
     *idx = this->index;
     return OK;
@@ -328,7 +328,7 @@ ChannelBase::GetIndex(int* idx)
 /**
 */
 void
-ChannelBase::_AttachSound(Sound* sound)
+ChannelBase::_AttachSound(Sound* const sound)
 {
     sound->GetMode(&this->mode);
     this->currentSound = sound;

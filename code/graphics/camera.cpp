@@ -331,7 +331,7 @@ Camera::IsVisible(const Vector3& center, float radius) const
 /**
 */
 void
-Camera::_RenderScene(Viewport* vp)
+Camera::_RenderScene(Viewport* const vp)
 {
     SceneManager::Instance()->_RenderScene(this, vp);
 }

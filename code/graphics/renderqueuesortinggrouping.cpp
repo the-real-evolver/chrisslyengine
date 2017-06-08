@@ -74,7 +74,7 @@ QueuedRenderableCollection::Clear()
 /**
 */
 void
-QueuedRenderableCollection::AddRenderable(SubEntity* rend, Pass* pass)
+QueuedRenderableCollection::AddRenderable(SubEntity* const rend, Pass* const pass)
 {
     RenderablePass* renderablePass = (RenderablePass*)ce_dynamic_array_get(&this->renderablePasses, this->numRenderablePasses);
     renderablePass->renderable = rend;
@@ -95,7 +95,7 @@ QueuedRenderableCollection::GetNumRenderablePasses() const
 //------------------------------------------------------------------------------
 /**
 */
-RenderablePass*
+RenderablePass* const
 QueuedRenderableCollection::GetRenderablePass(unsigned short index) const
 {
     return (RenderablePass*)ce_dynamic_array_get(&this->renderablePasses, index);

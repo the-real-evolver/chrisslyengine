@@ -47,8 +47,8 @@ PSPRenderSystem::~PSPRenderSystem()
 //------------------------------------------------------------------------------
 /**
 */
-graphics::RenderWindow*
-PSPRenderSystem::_Initialise(void* customParams)
+graphics::RenderWindow* const
+PSPRenderSystem::_Initialise(void* const customParams)
 {
     sceGuInit();
 
@@ -81,7 +81,7 @@ PSPRenderSystem::Shutdown()
 /**
 */
 void
-PSPRenderSystem::_SetRenderTarget(graphics::RenderTarget* target)
+PSPRenderSystem::_SetRenderTarget(graphics::RenderTarget* const target)
 {
     sceGuDrawBufferList(PSPMappings::Get(target->GetFormat()), target->GetBuffer(), target->GetWidth());
 }
@@ -90,7 +90,7 @@ PSPRenderSystem::_SetRenderTarget(graphics::RenderTarget* target)
 /**
 */
 void
-PSPRenderSystem::_SetViewport(graphics::Viewport* vp)
+PSPRenderSystem::_SetViewport(graphics::Viewport* const vp)
 {
     int width = vp->GetActualWidth();
     int height = vp->GetActualHeight();
@@ -153,7 +153,7 @@ PSPRenderSystem::_SetTextureMatrix(const core::Matrix4& xform)
 /**
 */
 void
-PSPRenderSystem::_Render(graphics::SubEntity* renderable)
+PSPRenderSystem::_Render(graphics::SubEntity* const renderable)
 {
     if (graphics::VAT_MORPH == renderable->GetSubMesh()->GetVertexAnimationType())
     {
@@ -200,7 +200,7 @@ PSPRenderSystem::_EndFrame()
 /**
 */
 void
-PSPRenderSystem::_SetPass(graphics::Pass* pass)
+PSPRenderSystem::_SetPass(graphics::Pass* const pass)
 {
     // scene blending parameters
     if (pass->GetSceneBlendingEnabled())
@@ -312,7 +312,7 @@ PSPRenderSystem::_SetPass(graphics::Pass* pass)
 /**
 */
 void
-PSPRenderSystem::_UseLights(ce_hash_table* lights)
+PSPRenderSystem::_UseLights(ce_hash_table* const lights)
 {
     int lightIndex = 0;
     int components;
@@ -384,7 +384,7 @@ PSPRenderSystem::SetAmbientLight(unsigned int colour)
 //------------------------------------------------------------------------------
 /**
 */
-void*
+void* const
 PSPRenderSystem::GetDisplayList() const
 {
     return (void*)DisplayList;

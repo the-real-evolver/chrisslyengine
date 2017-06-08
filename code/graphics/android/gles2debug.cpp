@@ -9,7 +9,7 @@
 /**
 */
 void
-ce_check_gl_error(const char* op)
+ce_check_gl_error(const char* const op)
 {
     GLint error;
     for (error = glGetError(); error; error = glGetError())
@@ -22,7 +22,7 @@ ce_check_gl_error(const char* op)
 /**
 */
 void
-ce_print_gl_string(const char* name, GLenum s)
+ce_print_gl_string(const char* const name, GLenum s)
 {
     const char* v = (const char*)glGetString(s);
     CE_LOG("GL %s = %s\n", name, v);

@@ -44,7 +44,7 @@ SoundBase::~SoundBase()
 /**
 */
 Result
-SoundBase::GetLength(unsigned int* length)
+SoundBase::GetLength(unsigned int* const length)
 {
     *length = this->lengthInSamples;
     return OK;
@@ -54,7 +54,7 @@ SoundBase::GetLength(unsigned int* length)
 /**
 */
 Result
-SoundBase::GetFormat(SoundType* type, AudioFormat* format, int* channels, int* bits)
+SoundBase::GetFormat(SoundType* const type, AudioFormat* const format, int* const channels, int* const bits)
 {
     if (type != NULL)
     {
@@ -79,7 +79,7 @@ SoundBase::GetFormat(SoundType* type, AudioFormat* format, int* channels, int* b
 /**
 */
 Result
-SoundBase::GetMode(Mode* modeflags)
+SoundBase::GetMode(Mode* const modeflags)
 {
     *modeflags = this->mode;
     return OK;
@@ -111,7 +111,7 @@ SoundBase::Release()
 /**
 */
 void
-SoundBase::_Setup(const char* filename, Mode modeflags, Codec* codec)
+SoundBase::_Setup(const char* const filename, Mode modeflags, Codec* const codec)
 {
     this->mode = modeflags;
     this->audioCodec = codec;
@@ -223,7 +223,7 @@ SoundBase::_GetSampleBufferPointer(unsigned int position) const
 //------------------------------------------------------------------------------
 /**
 */
-Codec*
+Codec* const
 SoundBase::_GetCodec() const
 {
     return this->audioCodec;

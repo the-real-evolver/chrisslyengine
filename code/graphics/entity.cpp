@@ -95,7 +95,7 @@ Entity::GetMesh() const
 //------------------------------------------------------------------------------
 /**
 */
-SubEntity*
+SubEntity* const
 Entity::GetSubEntity(unsigned int index) const
 {
     return (SubEntity*)ce_dynamic_array_get(&this->subEntities, index);
@@ -114,7 +114,7 @@ Entity::GetNumSubEntities() const
 /**
 */
 void
-Entity::_NotifyAttached(SceneNode* parent)
+Entity::_NotifyAttached(SceneNode* const parent)
 {
     this->parentNode = parent;
 }
@@ -167,7 +167,7 @@ Entity::HasVertexAnimation() const
 //------------------------------------------------------------------------------
 /**
 */
-AnimationState*
+AnimationState* const
 Entity::GetAnimationState(const char* name) const
 {
     return (AnimationState*)ce_hash_table_find(&this->animationStates, name, strlen(name));

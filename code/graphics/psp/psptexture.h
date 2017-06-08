@@ -30,7 +30,7 @@ public:
     /// create mipmap infos
     void CreateInternalResources();
     /// get mipmap info of the given level
-    MipmapInfo* GetMipmapInfo(int level);
+    MipmapInfo* const GetMipmapInfo(int level) const;
 
 private:
     mutable ce_dynamic_array mipmapInfos;

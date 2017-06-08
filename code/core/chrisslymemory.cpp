@@ -9,7 +9,7 @@
 /**
 */
 void
-ce_memory_fill_interleaved(void const* src0, void const* src1, void* dst, unsigned short stride, unsigned int dst_len)
+ce_memory_fill_interleaved(void const* const src0, void const* const src1, void* const dst, unsigned short stride, unsigned int dst_len)
 {
     char* _ChrisslyRestrict ptr_dst = (char*)dst;
     char const* _ChrisslyRestrict ptr_src0 = (char const*)src0;

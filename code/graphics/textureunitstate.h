@@ -137,14 +137,14 @@ public:
     TextureProjectionMappingMode GetTextureProjectionMappingMode() const;
 
     /// set the name of the texture to use
-    void SetTextureName(const char* name);
+    void SetTextureName(const char* const name);
     /// gets the name of the texture to use
     const core::String& GetTextureName() const;
 
     /// set texture to use
-    void SetTexture(Texture* tex);
+    void SetTexture(Texture* const tex);
     /// get the used texture
-    Texture* GetTexture() const;
+    Texture* const GetTexture() const;
 
     /// internal method for loading this object as part of Material::load
     void _Load();

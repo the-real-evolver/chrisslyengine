@@ -13,7 +13,7 @@ namespace chrissly
 /**
 */
 core::FileHandle
-WinAPIFSWrapper::Open(const char* fileName, core::AccessMode flags, core::AccessPattern pattern, int mode)
+WinAPIFSWrapper::Open(const char* const fileName, core::AccessMode flags, core::AccessPattern pattern, int mode)
 {
     CE_UNREFERENCED_PARAMETER(pattern);
     CE_UNREFERENCED_PARAMETER(mode);
@@ -67,7 +67,7 @@ WinAPIFSWrapper::GetFileSize(core::FileHandle fileHandle)
 /**
 */
 int
-WinAPIFSWrapper::Read(core::FileHandle fileHandle, void* buf, unsigned int numBytes)
+WinAPIFSWrapper::Read(core::FileHandle fileHandle, void* const buf, unsigned int numBytes)
 {
     DWORD bytesRead;
 

@@ -26,17 +26,17 @@ public:
     /// sets the name of the material to be used
     void SetMaterialName(const core::String& matName);
     /// sets a Material to be used
-    void SetMaterial(Material* material);
+    void SetMaterial(Material* const material);
     /// retrieves a pointer to the material this renderable object uses
-    Material* GetMaterial() const;
+    Material* const GetMaterial() const;
     /// tells this SubEntity whether to be visible or not
     void SetVisible(bool vis);
     /// returns whether or not this SubEntity is supposed to be visible 
     bool IsVisible() const;
     /// accessor method to read mesh data 
-    SubMesh* GetSubMesh() const;
+    SubMesh* const GetSubMesh() const;
     /// advanced method to get the hardware morph vertex information
-    VertexData* _GetHardwareVertexAnimVertexData() const;
+    VertexData* const _GetHardwareVertexAnimVertexData() const;
     /// set vertex morph weight value
     void SetMorphWeight(float weight);
     /// get vertex morph weight value

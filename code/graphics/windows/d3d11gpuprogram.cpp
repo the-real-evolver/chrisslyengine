@@ -23,7 +23,7 @@ D3D11GpuProgram::D3D11GpuProgram()
 //------------------------------------------------------------------------------
 /**
 */
-D3D11GpuProgram::D3D11GpuProgram(const char* source, const char* fileName, const char* vertexShaderFunctionName, const char* fragmentShaderFunctionName) :
+D3D11GpuProgram::D3D11GpuProgram(const char* const source, const char* const fileName, const char* const vertexShaderFunctionName, const char* const fragmentShaderFunctionName) :
     defaultParams(NULL),
     constantDefs(NULL),
     vertexShaderCode(NULL),
@@ -141,7 +141,7 @@ D3D11GpuProgram::~D3D11GpuProgram()
 //------------------------------------------------------------------------------
 /**
 */
-graphics::GpuProgramParameters*
+graphics::GpuProgramParameters* const
 D3D11GpuProgram::GetDefaultParameters() const
 {
     return this->defaultParams;
@@ -150,7 +150,7 @@ D3D11GpuProgram::GetDefaultParameters() const
 //------------------------------------------------------------------------------
 /**
 */
-graphics::GpuNamedConstants*
+graphics::GpuNamedConstants* const
 D3D11GpuProgram::GetConstantDefinitions() const
 {
     return this->constantDefs;
@@ -315,7 +315,7 @@ D3D11GpuProgram::ExtractConstantDefs()
 //------------------------------------------------------------------------------
 /**
 */
-ID3D10Blob*
+ID3D10Blob* const
 D3D11GpuProgram::GetVertexShaderCode() const
 {
     return this->vertexShaderCode;

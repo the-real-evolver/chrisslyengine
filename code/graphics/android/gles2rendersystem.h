@@ -30,17 +30,17 @@ public:
     ~GLES2RenderSystem();
 
     /// start up the renderer
-    graphics::RenderWindow* _Initialise(void* customParams);
+    graphics::RenderWindow* const _Initialise(void* const customParams);
     /// shutdown the renderer and cleanup resources
     void Shutdown();
     /// set current render target to target, enabling its device context if needed
-    void _SetRenderTarget(graphics::RenderTarget* target);
+    void _SetRenderTarget(graphics::RenderTarget* const target);
     /**
         Sets the provided viewport as the active one for future
         rendering operations. This viewport is aware of it's own
         camera and render target.
     */
-    void _SetViewport(graphics::Viewport* vp);
+    void _SetViewport(graphics::Viewport* const vp);
     /// sets the world transform matrix
     void _SetWorldMatrix(const core::Matrix4& m);
     /// sets the view transform matrix
@@ -56,20 +56,20 @@ public:
         applications, since the SceneManager and various support
         classes will be responsible for calling this method.
     */
-    void _Render(graphics::SubEntity* renderable);
+    void _Render(graphics::SubEntity* const renderable);
     /// start of rendering on a single viewport
     void _BeginFrame();
     /// ends rendering of a frame to the current viewport
     void _EndFrame();
     /// method for setting up the renderstate for a rendering pass
-    void _SetPass(graphics::Pass* pass);
+    void _SetPass(graphics::Pass* const pass);
     /// tells the rendersystem to use the attached set of lights (and no others)
-    void _UseLights(ce_hash_table* lights);
+    void _UseLights(ce_hash_table* const lights);
     /// sets the colour & strength of the ambient (global directionless) light in the world
     void SetAmbientLight(unsigned int colour);
 
     /// gets the default light shader parameters (useful if a custom shader wants to use the default lighting)
-    const core::Matrix4* GetDefaultLightShaderParams() const;
+    const core::Matrix4* const GetDefaultLightShaderParams() const;
 
 private:
     /// copy constructor

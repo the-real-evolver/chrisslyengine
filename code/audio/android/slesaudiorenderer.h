@@ -19,7 +19,7 @@ class SLESAudioRenderer
 {
 public:
     /// get pointer to the singleton
-    static SLESAudioRenderer* Instance()
+    static SLESAudioRenderer* const Instance()
     {
         return Singleton;
     }
@@ -29,7 +29,7 @@ public:
     /// destructor
     ~SLESAudioRenderer();
     /// start up the renderer
-    void _Initialise(void* customParams);
+    void _Initialise(void* const customParams);
     /// shutdown the renderer and cleanup resources
     void Shutdown();
     /// starts calling the softwaremixer and sends mixed buffer to the output
@@ -39,11 +39,11 @@ public:
     /// gets the number of hardware channels
     unsigned short GetNumHardwareChannels() const;
     /// start playback on the given channel
-    void StartChannel(audio::Channel* channel);
+    void StartChannel(audio::Channel* const channel);
     /// update playback on the given channel
-    void UpdateChannel(audio::Channel* channel);
+    void UpdateChannel(audio::Channel* const channel);
     /// release the given channel
-    void ReleaseChannel(audio::Channel* channel);
+    void ReleaseChannel(audio::Channel* const channel);
 
     /// this callback handler is called every time a buffer finishes playing
     static void BufferQueueCallback(SLAndroidSimpleBufferQueueItf bufferQueueInterface, void* context);

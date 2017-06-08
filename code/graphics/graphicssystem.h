@@ -24,7 +24,7 @@ class GraphicsSystem
 {
 public:
     /// get pointer to the singleton
-    static GraphicsSystem* Instance()
+    static GraphicsSystem* const Instance()
     {
         return Singleton;
     }
@@ -34,13 +34,13 @@ public:
     /// destructor
     ~GraphicsSystem();
     /// initialise graphicssystem
-    RenderWindow* Initialise(void* customParams = NULL);
+    RenderWindow* const Initialise(void* const customParams = NULL);
     /// retrieves a pointer to the window that was created automatically
-    RenderWindow* GetAutoCreatedWindow();
+    RenderWindow* const GetAutoCreatedWindow() const;
     /// render one frame
     void RenderOneFrame();
     /// retrieve a pointer to the currently selected render system
-    RenderSystem* GetRenderSystem();
+    RenderSystem* const GetRenderSystem() const;
 
 private:
     /// copy constructor
