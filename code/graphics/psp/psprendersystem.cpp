@@ -315,8 +315,6 @@ void
 PSPRenderSystem::_UseLights(ce_hash_table* const lights)
 {
     int lightIndex = 0;
-    int components;
-    unsigned int diffuse, specular;
 
     unsigned int i;
     for (i = 0U; i < lights->bucket_count && lightIndex < MaxLights; ++i)
@@ -326,7 +324,9 @@ PSPRenderSystem::_UseLights(ce_hash_table* const lights)
         {
             graphics::Light* light = (graphics::Light*)((ce_key_value_pair*)it->data)->value;
 
-            if (graphics::Light::LT_DIRECTIONAL != light->GetType())
+            graphics::Light::LightTypes type = light->GetType();
+
+            if (graphics::Light::LT_DIRECTIONAL != type)
             {
                 const core::Vector3& position = light->GetPosition();
                 this->lightPos.x = position.x;
@@ -334,30 +334,34 @@ PSPRenderSystem::_UseLights(ce_hash_table* const lights)
                 this->lightPos.z = position.z;
             }
 
-            if (graphics::Light::LT_SPOTLIGHT == light->GetType())
+            if (graphics::Light::LT_POINT != type)
             {
                 const core::Vector3& direction = light->GetDirection();
                 this->lightDir.x = -direction.x;
                 this->lightDir.y = -direction.y;
                 this->lightDir.z = -direction.z;
+            }
+
+            if (graphics::Light::LT_SPOTLIGHT == type)
+            {
                 sceGuLightSpot(lightIndex, &this->lightDir, light->GetSpotlightFalloff(), light->GetSpotlightOuterAngle());
             }
 
-            components = 0;
-            diffuse = light->GetDiffuseColour();
+            int components = 0;
+            unsigned int diffuse = light->GetDiffuseColour();
             if (diffuse > 0x00000000)
             {
                 components |= GU_DIFFUSE;
                 sceGuLightColor(lightIndex, GU_DIFFUSE, diffuse);
             }
-            specular = light->GetSpecularColour();
+            unsigned int specular = light->GetSpecularColour();
             if (specular > 0x00000000)
             {
                 components |= GU_SPECULAR;
                 sceGuLightColor(lightIndex, GU_SPECULAR, specular);
             }
 
-            sceGuLight(lightIndex, PSPMappings::Get(light->GetType()), components, &this->lightPos);
+            sceGuLight(lightIndex, PSPMappings::Get(type), components, graphics::Light::LT_DIRECTIONAL == type ? &this->lightDir : &this->lightPos);
             sceGuLightAtt(lightIndex, light->GetAttenuationConstant(), light->GetAttenuationLinear(), light->GetAttenuationQuadric());
             sceGuEnable(GU_LIGHT0 + lightIndex);
             ++lightIndex;

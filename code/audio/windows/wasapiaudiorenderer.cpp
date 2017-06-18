@@ -80,7 +80,7 @@ WASAPIAudioRenderer::_Initialise(void* const customParams)
 
     REFERENCE_TIME hnsRequestedDuration = (REFERENCE_TIME)((double)RequestedBufferSizeInSamples / (double)format->nSamplesPerSec * (double)ReftimesPerSec);
     result = this->audioClient->Initialize(AUDCLNT_SHAREMODE_SHARED, 0U, hnsRequestedDuration, 0, format, NULL);
-    CE_ASSERT(SUCCEEDED(result), "WASAPIAudioRenderer::_Initialise() failed to initialize audio client\n");
+    CE_ASSERT(SUCCEEDED(result), "WASAPIAudioRenderer::_Initialise() failed to initialise audio client\n");
 
     result = this->audioClient->GetBufferSize(&this->bufferFrameCount);
     CE_ASSERT(SUCCEEDED(result), "WASAPIAudioRenderer::_Initialise() failed to get buffer size\n");

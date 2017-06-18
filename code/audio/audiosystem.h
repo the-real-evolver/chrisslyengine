@@ -32,7 +32,7 @@ public:
     AudioSystem();
     /// destructor
     ~AudioSystem();
-    /// initializes the system object, and the sound device. This has to be called at the start of the user's program
+    /// initialises the system object, and the sound device. This has to be called at the start of the user's program
     Result Initialise(void* const customParams = NULL);
     /// closes and frees a system object and its resources
     Result Release();

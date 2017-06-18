@@ -24,8 +24,8 @@ typedef struct ce_dynamic_array
 
 //------------------------------------------------------------------------------
 /**
-    \brief Initializes an array with the supplied initial size
-    \param v the array to initialize
+    \brief Initialises an array with the supplied initial size
+    \param v the array to initialise
     \param initialSize the initial size to allocate
     \return a pointer to the data, or NULL on error.
 */

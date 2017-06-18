@@ -98,7 +98,7 @@ MeshManager::Load(const char* const filename)
             case M_MESH_BOUNDS:
                 {
                     // read bounding radius
-                    float boundingRadius;
+                    float boundingRadius = 0.0f;
                     FSWrapper::Read(fd, &boundingRadius, 4U);
                     mesh->boundingRadius = boundingRadius;
                 }
@@ -106,14 +106,14 @@ MeshManager::Load(const char* const filename)
             case M_ANIMATION:
                 {
                     // read animation length
-                    float animLength;
+                    float animLength = 0.0f;
                     FSWrapper::Read(fd, &animLength, 4U);
                     animation = mesh->CreateAnimation("default", animLength);
                 }
                 break;
             case M_ANIMATION_TRACK:
                 {
-                    // read animation track
+                    // read animation track handle
                     CE_ASSERT(animation != NULL, "MeshManager::Load(): can't create VertexAnimationTrack without Animation\n");
                     unsigned char handle = 0U;
                     FSWrapper::Read(fd, &handle, 1U);

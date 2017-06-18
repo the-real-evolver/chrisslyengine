@@ -49,7 +49,7 @@ MaterialParser::ParseScript(const char* const name)
     FileHandle fd = FSWrapper::Open(name, ReadAccess, Buffer, 0777);
     unsigned int fileSize = FSWrapper::GetFileSize(fd);
     void* fileBuffer = CE_MALLOC_ALIGN(CE_CACHE_LINE_SIZE, fileSize);
-    CE_ASSERT(this->textBuffer != NULL, "MaterialParser::ParseScript(): failed to allocate '%i' bytes\n", fileSize);
+    CE_ASSERT(fileBuffer != NULL, "MaterialParser::ParseScript(): failed to allocate '%i' bytes\n", fileSize);
     FSWrapper::Read(fd, fileBuffer, fileSize);
     FSWrapper::Close(fd);
 

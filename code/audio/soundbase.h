@@ -32,7 +32,7 @@ public:
     /// requests release
     Result Release();
 
-    /// initialize sound object
+    /// initialise sound object
     void _Setup(const char* const filename, Mode modeflags, Codec* const codec);
     /// internal method that frees a sound object
     void _Release();

@@ -88,15 +88,10 @@ PSPAudioRenderer::StartChannel(audio::Channel* const channel)
     const core::Mutex& syncLock = channel->_GetSyncLock();
     syncLock.Lock();
 
-    int index, numChannels;
-    channel->GetIndex(&index);
     audio::Sound* sound;
     channel->GetCurrentSound(&sound);
+    int index, numChannels;
     sound->GetFormat(NULL, NULL, &numChannels, NULL);
-    unsigned int length;
-    sound->GetLength(&length);
-    audio::Mode mode;
-    channel->GetMode(&mode);
 
     PspAudioFormats format = PSP_AUDIO_FORMAT_MONO;
     switch (numChannels)
@@ -111,8 +106,8 @@ PSPAudioRenderer::StartChannel(audio::Channel* const channel)
             CE_ASSERT(false, "PSPAudioRenderer::StartChannel(): %i channel audio output not supported\n", numChannels);
     }
 
+    channel->GetIndex(&index);
     index = sceAudioChReserve(index, PSP_AUDIO_SAMPLE_ALIGN(NumOutputSamples), format);
-
     channel->_SetIndex(index);
     if (index != audio::Channel::CHANNEL_FREE)
     {

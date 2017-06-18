@@ -180,8 +180,11 @@ SoundBase::_DecrementUseCount()
 {
     this->releaseSyncLock.Lock();
 
-    CE_ASSERT(this->useCount > 0U, "SoundBase::_DecrementUseCout(): useCount already zero\n");
-    --this->useCount;
+    if (this->useCount > 0U)
+    {
+        --this->useCount;
+    }
+
     if (this->requestRelease && 0U == this->useCount)
     {
         this->_Release();

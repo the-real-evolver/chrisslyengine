@@ -33,7 +33,7 @@ public:
     ChannelBase();
     /// destructor
     virtual ~ChannelBase();
-    /// stops the channel from playing. Makes it available for re-use by the priority system
+    /// stops the channel from playing, makes it available for re-use
     Result Stop();
     /// returns the playing state for the current channel
     Result IsPlaying(bool* const isplaying);
@@ -49,7 +49,7 @@ public:
     Result SetPressureLevel(float decibel);
     /// sets a channels pan position linearly (a left/right pan level, from -1.0 to 1.0 inclusive. -1.0 = Full left, 0.0 = center, 1.0 = full right. Default = 0.0)
     Result SetPan(float pan);
-    /// Returns the pan position of the channel
+    /// returns the pan position of the channel
     Result GetPan(float* pan);
     /// changes some attributes for a channel based on the mode passed in
     Result SetMode(Mode modeflags);
