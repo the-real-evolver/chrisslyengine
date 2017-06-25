@@ -6,6 +6,7 @@
 #include "d3d11mappings.h"
 #include "d3d11defaultshaders.h"
 #include "light.h"
+#include "common.h"
 #include "debug.h"
 
 namespace chrissly
@@ -257,23 +258,31 @@ D3D11RenderSystem::_SetViewport(graphics::Viewport* const vp)
     this->viewPort.MaxDepth = 1.0f;
     this->context->RSSetViewports(1U, &this->viewPort);
 
-    ID3D11RenderTargetView* renderTargetView = NULL;
-    ID3D11DepthStencilView* depthStencilView = NULL;
-    graphics::RenderTarget* target = vp->GetTarget();
-    if ('DXGW' == target->GetType())
+    if (vp->GetClearEveryFrame())
     {
-        DXGIRenderWindow* renderWindow = (DXGIRenderWindow*)target;
-        renderTargetView = renderWindow->GetRenderTargetView();
-        depthStencilView = renderWindow->GetDepthStencilView();
+        ID3D11RenderTargetView* renderTargetView = NULL;
+        ID3D11DepthStencilView* depthStencilView = NULL;
+        graphics::RenderTarget* target = vp->GetTarget();
+        if ('DXGW' == target->GetType())
+        {
+            DXGIRenderWindow* renderWindow = (DXGIRenderWindow*)target;
+            renderTargetView = renderWindow->GetRenderTargetView();
+            depthStencilView = renderWindow->GetDepthStencilView();
+        }
+        else
+        {
+            return;
+        }
+
+        FLOAT clearColour[4U] = {0.0f, 0.0f, 0.0f, 0.0f};
+        D3D11Mappings::Get(vp->GetBackgroundColour(), clearColour[0U], clearColour[1U], clearColour[2U], clearColour[3U]);
+        unsigned int clearFlags = vp->GetClearBuffers();
+        if (clearFlags & graphics::FBT_COLOUR)
+        {
+            this->context->ClearRenderTargetView(renderTargetView, clearColour);
+        }
+        this->context->ClearDepthStencilView(depthStencilView, D3D11Mappings::Get(clearFlags), 1.0f, 0U);
     }
-    else
-    {
-        return;
-    }
-    FLOAT clearColour[4U] = {0.0f, 0.0f, 0.0f, 0.0f};
-    D3D11Mappings::Get(vp->GetBackgroundColour(), clearColour[0U], clearColour[1U], clearColour[2U], clearColour[3U]);
-    this->context->ClearRenderTargetView(renderTargetView, clearColour);
-    this->context->ClearDepthStencilView(depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0U);
 }
 
 //------------------------------------------------------------------------------

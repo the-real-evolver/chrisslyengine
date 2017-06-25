@@ -13,18 +13,18 @@ namespace graphics
 //------------------------------------------------------------------------------
 /**
 */
-Viewport::Viewport(Camera* camera, RenderTarget* target, int left, int top, int width, int height)
+Viewport::Viewport(Camera* const camera, RenderTarget* const target, int left, int top, int width, int height) :
+    camera(camera),
+    target(target),
+    actLeft(left),
+    actTop(top),
+    actWidth(width),
+    actHeight(height),
+    backColour(0xff554433),
+    clearEveryFrame(true),
+    clearBuffers(FBT_COLOUR | FBT_DEPTH)
 {
-    this->camera = camera;
-    this->target = target;
-    this->actLeft = left;
-    this->actTop = top;
-    this->actWidth = width;
-    this->actHeight = height;
 
-    this->clearEveryFrame = true;
-    this->clearBuffers = FBT_COLOUR | FBT_DEPTH;
-    this->backColour = 0xff554433;
 }
 
 //------------------------------------------------------------------------------

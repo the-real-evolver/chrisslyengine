@@ -242,7 +242,7 @@ WavCodec::FillStreamBuffer(unsigned int numSamples, unsigned int position)
         unsigned int bytesToLoad = numSamples * this->bytesPerSample;
         if ((this->seekPosition + bytesToLoad) > this->lengthInBytes)
         {
-            bytesToLoad = this->lengthInBytes - seekPosition;
+            bytesToLoad = this->lengthInBytes - this->seekPosition;
         }
         this->currentStreamBufferIndex ^= 1U;
         FSWrapper::Read(this->streamFileHandle, this->streamBuffers[this->currentStreamBufferIndex], bytesToLoad);

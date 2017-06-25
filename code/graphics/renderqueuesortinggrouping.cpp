@@ -76,11 +76,13 @@ QueuedRenderableCollection::Clear()
 void
 QueuedRenderableCollection::AddRenderable(SubEntity* const rend, Pass* const pass)
 {
-    RenderablePass* renderablePass = (RenderablePass*)ce_dynamic_array_get(&this->renderablePasses, this->numRenderablePasses);
-    renderablePass->renderable = rend;
-    renderablePass->pass = pass;
-
-    ++this->numRenderablePasses;
+    if (this->numRenderablePasses < this->renderablePasses.capacity)
+    {
+        RenderablePass* renderablePass = (RenderablePass*)ce_dynamic_array_get(&this->renderablePasses, this->numRenderablePasses);
+        renderablePass->renderable = rend;
+        renderablePass->pass = pass;
+        ++this->numRenderablePasses;
+    }
 }
 
 //------------------------------------------------------------------------------

@@ -203,7 +203,9 @@ SceneManager::ClearScene()
 {
     this->DestroyAllLights();
 
-    this->GetRootSceneNode()->RemoveAllChildren();
+    SceneNode* root = this->GetRootSceneNode();
+    root->RemoveAllChildren();
+    root->DetachAllObjects();
 
     unsigned int i;
     for (i = 0U; i < this->sceneNodes.size; ++i)

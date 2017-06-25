@@ -178,6 +178,7 @@
     <ClCompile Include="..\..\code\graphics\windows\d3d11statecache.cpp" />
     <ClCompile Include="..\..\code\graphics\windows\d3d11texture.cpp" />
     <ClCompile Include="..\..\code\graphics\windows\dxgirenderwindow.cpp" />
+    <ClCompile Include="..\..\code\thirdparty\stb\stb_vorbis.c" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -267,6 +268,7 @@
     <ClInclude Include="..\..\code\graphics\windows\d3d11texture.h" />
     <ClInclude Include="..\..\code\graphics\windows\dxgirenderwindow.h" />
     <ClInclude Include="..\..\code\thirdparty\stb\stb_c_lexer.h" />
+    <ClInclude Include="..\..\code\thirdparty\stb\stb_vorbis.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
