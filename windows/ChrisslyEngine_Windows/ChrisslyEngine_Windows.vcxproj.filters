@@ -158,6 +158,9 @@
     <ClCompile Include="..\..\code\core\plane.cpp">
       <Filter>core</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\code\thirdparty\stb\stb_vorbis.c">
+      <Filter>thirdparty\stb</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="core">
@@ -449,6 +452,9 @@
     </ClInclude>
     <ClInclude Include="..\..\code\core\plane.h">
       <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\thirdparty\stb\stb_vorbis.h">
+      <Filter>thirdparty\stb</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

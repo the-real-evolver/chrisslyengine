@@ -6,7 +6,7 @@
 #include "fswrapper.h"
 #include "memoryallocatorconfig.h"
 #include "debug.h"
-#include "stb_vorbis.c"
+#include <string.h>
 
 namespace chrissly
 {
@@ -15,12 +15,22 @@ namespace audio
 
 using namespace chrissly::core;
 
+static const unsigned int MaxStreamBufferSamples = 2048U;
+
 //------------------------------------------------------------------------------
 /**
 */
-VorbisCodec::VorbisCodec()
+VorbisCodec::VorbisCodec() :
+    lengthInSamples(0U),
+    openedAsStream(false),
+    seekPosition(0U),
+    currentStreamBufferIndex(0U),
+    fileBuffer(NULL),
+    vorbisStream(NULL)
 {
-
+    this->streamBuffers[0U] = NULL;
+    this->streamBuffers[1U] = NULL;
+    memset(&this->vorbisInfo, 0, sizeof(this->vorbisInfo));
 }
 
 //------------------------------------------------------------------------------
@@ -28,7 +38,13 @@ VorbisCodec::VorbisCodec()
 */
 VorbisCodec::~VorbisCodec()
 {
-
+    if (this->openedAsStream)
+    {
+        stb_vorbis_close(this->vorbisStream);
+        CE_FREE(this->fileBuffer);
+        CE_FREE(this->streamBuffers[0U]);
+        CE_FREE(this->streamBuffers[1U]);
+    }
 }
 
 //------------------------------------------------------------------------------
@@ -38,23 +54,32 @@ void
 VorbisCodec::SetupSound(const char* const filename, Mode mode, void** sampleBuffer, unsigned int& length, AudioFormat& format, SoundType& type, int& channels, int& bits, unsigned int& sampleRate)
 {
     FileHandle fd = FSWrapper::Open(filename, ReadAccess, Buffer, 0777);
+    unsigned int fileSize = FSWrapper::GetFileSize(fd);
+    this->fileBuffer = CE_MALLOC_ALIGN(CE_CACHE_LINE_SIZE, fileSize);
+    CE_ASSERT(this->fileBuffer != NULL, "VorbisCodec::SetupSound(): failed to allocate '%i' bytes for file buffer '%s'\n", fileSize, filename);
+    FSWrapper::Read(fd, this->fileBuffer, fileSize);
+    FSWrapper::Close(fd);
 
     if (mode & MODE_CREATESTREAM || mode & MODE_CREATECOMPRESSEDSAMPLE)
     {
-        FSWrapper::Close(fd);
-        CE_ASSERT(false, "VorbisCodec::SetupSound(): vorbis codec does not support streaming\n");
+        this->vorbisStream = stb_vorbis_open_memory((unsigned char*)this->fileBuffer, (int)fileSize, NULL, NULL);
+        CE_ASSERT(this->vorbisStream != NULL, "VorbisCodec::SetupSound(): failed to open vorbis '%s' from memory\n", filename);
+        this->vorbisInfo = stb_vorbis_get_info(this->vorbisStream);
+        this->lengthInSamples = stb_vorbis_stream_length_in_samples(this->vorbisStream);
+        this->openedAsStream = true;
+        this->streamBuffers[0U] = CE_MALLOC_ALIGN(CE_CACHE_LINE_SIZE, MaxStreamBufferSamples * this->vorbisInfo.channels * 2U);
+        this->streamBuffers[1U] = CE_MALLOC_ALIGN(CE_CACHE_LINE_SIZE, MaxStreamBufferSamples * this->vorbisInfo.channels * 2U);
+        length = this->lengthInSamples;
+        channels = this->vorbisInfo.channels;
+        sampleRate = this->vorbisInfo.sample_rate;
+        *sampleBuffer = NULL;
     }
     else
     {
-        unsigned int fileSize = FSWrapper::GetFileSize(fd);
-        void* fileBuffer = CE_MALLOC_ALIGN(CE_CACHE_LINE_SIZE, fileSize);
-        CE_ASSERT(fileBuffer != NULL, "VorbisCodec::SetupSound(): failed to allocate '%i' bytes for samplebuffer\n", fileSize);
-        FSWrapper::Read(fd, fileBuffer, fileSize);
-        FSWrapper::Close(fd);
         int samplingRate;
-        length = stb_vorbis_decode_memory((unsigned char*)fileBuffer, (int)fileSize, &channels, &samplingRate, (short**)sampleBuffer);
+        length = stb_vorbis_decode_memory((unsigned char*)this->fileBuffer, (int)fileSize, &channels, &samplingRate, (short**)sampleBuffer);
         sampleRate = (unsigned int)samplingRate;
-        CE_FREE(fileBuffer);
+        CE_FREE(this->fileBuffer);
     }
 
     format = AUDIO_FORMAT_PCM16;
@@ -122,10 +147,23 @@ VorbisCodec::EndOfStream() const
 void* const
 VorbisCodec::FillStreamBuffer(unsigned int numSamples, unsigned int position)
 {
-    CE_UNREFERENCED_PARAMETER(numSamples);
-    CE_UNREFERENCED_PARAMETER(position);
-
-    return NULL;
+    if (position < this->lengthInSamples)
+    {
+        if (this->seekPosition != position)
+        {
+            stb_vorbis_seek(this->vorbisStream, position);
+            this->seekPosition = position;
+        }
+        unsigned int samplesToLoad = numSamples;
+        if ((this->seekPosition + samplesToLoad) > this->lengthInSamples)
+        {
+            samplesToLoad = this->lengthInSamples - this->seekPosition;
+        }
+        this->currentStreamBufferIndex ^= 1U;
+        stb_vorbis_get_samples_short_interleaved(this->vorbisStream, this->vorbisInfo.channels, (short*)this->streamBuffers[this->currentStreamBufferIndex], this->vorbisInfo.channels * numSamples);
+        this->seekPosition += samplesToLoad;
+    }
+    return this->streamBuffers[this->currentStreamBufferIndex];
 }
 
 } // namespace audio

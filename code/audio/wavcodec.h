@@ -47,7 +47,7 @@ private:
     core::FileHandle streamFileHandle;
     unsigned int seekPosition;
     bool endOfStream;
-    mutable void* streamBuffers[2];
+    mutable void* streamBuffers[2U];
     unsigned char currentStreamBufferIndex;
     unsigned int currentStreamBufferLength;
     unsigned int bytesToLoadToBackBuffer;

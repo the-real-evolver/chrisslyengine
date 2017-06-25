@@ -21,7 +21,7 @@ class Viewport
 {
 public:
     /// constructor with camera
-    Viewport(Camera* camera, RenderTarget* target, int left, int top, int width, int height);
+    Viewport(Camera* const camera, RenderTarget* const target, int left, int top, int width, int height);
     /// destructor
     ~Viewport();
     /// instructs the viewport to updates its contents

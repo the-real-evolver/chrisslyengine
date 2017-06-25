@@ -31,6 +31,8 @@ public:
     static D3D11_TEXTURE_ADDRESS_MODE Get(graphics::TextureUnitState::TextureAddressingMode tam);
     /// return a DXGI equivalent for a PixelFormat value
     static DXGI_FORMAT Get(graphics::PixelFormat pf);
+    /// return a D3D11 equivalent for a FrameBufferType value
+    static UINT Get(unsigned int fbt);
     /// return the distance (in bytes) from the beginning of one line of a texture to the next line
     static UINT GetSysMemPitch(unsigned int width, graphics::PixelFormat pf);
     /// get GpuConstantType from the given d3d11 shader type description

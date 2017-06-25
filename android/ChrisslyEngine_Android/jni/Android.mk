@@ -35,6 +35,7 @@ LOCAL_SRC_FILES := $(CE_SRC_FILES)/core/android/androiddebug.cpp $(CE_SRC_FILES)
                    $(CE_SRC_FILES)/graphics/android/gles2gpuprogram.cpp $(CE_SRC_FILES)/graphics/gpuprogramparams.cpp \
                    $(CE_SRC_FILES)/graphics/android/gles2hardwarevertexbuffer.cpp \
                    $(CE_SRC_FILES)/graphics/android/gles2debug.cpp \
+                   $(CE_SRC_FILES)/thirdparty/stb/stb_vorbis.c \
                    $(CE_SRC_FILES)/audio/wavcodec.cpp $(CE_SRC_FILES)/audio/vorbiscodec.cpp $(CE_SRC_FILES)/audio/soundbase.cpp $(CE_SRC_FILES)/audio/audiosystem.cpp $(CE_SRC_FILES)/audio/channelbase.cpp \
                    $(CE_SRC_FILES)/audio/dsp/mixer.cpp \
                    $(CE_SRC_FILES)/audio/android/slesaudiorenderer.cpp $(CE_SRC_FILES)/audio/android/slessound.cpp $(CE_SRC_FILES)/audio/android/sleschannel.cpp \

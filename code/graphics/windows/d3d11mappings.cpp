@@ -165,6 +165,20 @@ D3D11Mappings::Get(graphics::PixelFormat pf)
 /**
 */
 UINT
+D3D11Mappings::Get(unsigned int fbt)
+{
+    UINT clearFlags = 0U;
+
+    if (fbt & graphics::FBT_DEPTH)      {clearFlags |= D3D11_CLEAR_DEPTH;}
+    if (fbt & graphics::FBT_STENCIL)    {clearFlags |= D3D11_CLEAR_STENCIL;}
+
+    return clearFlags;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+UINT
 D3D11Mappings::GetSysMemPitch(unsigned int width, graphics::PixelFormat pf)
 {
     switch (pf)

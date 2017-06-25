@@ -7,6 +7,7 @@
     (C) 2014 Christian Bleicher
 */
 #include "codec.h"
+#include "stb_vorbis.h"
 
 //------------------------------------------------------------------------------
 namespace chrissly
@@ -37,6 +38,16 @@ public:
     bool EndOfStream() const;
     /// loads the given number of samples at the given position of the stream into the current streambuffer and returns a pointer to it
     void* const FillStreamBuffer(unsigned int numSamples, unsigned int position);
+
+private:
+    unsigned int lengthInSamples;
+    bool openedAsStream;
+    unsigned int seekPosition;
+    mutable void* streamBuffers[2U];
+    unsigned char currentStreamBufferIndex;
+    void* fileBuffer;
+    stb_vorbis* vorbisStream;
+    stb_vorbis_info vorbisInfo;
 };
 
 } // namespace audio
