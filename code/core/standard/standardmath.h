@@ -35,6 +35,8 @@ public:
     static inline float Fmod(float fNumerator, float fDenominator);
     /// rounds the value downward, returning the largest integral value that is not greater than value
     static inline float Floor(float fValue);
+    /// rounds the value upward, returning the smallest integral value that is not less than value
+    static inline float Ceil(float fValue);
     /// computes the absolute value of an integer number
     static inline int Abs(int n);
 };
@@ -118,6 +120,15 @@ inline float
 StandardMath::Floor(float fValue)
 {
     return floorf(fValue);
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline float
+StandardMath::Ceil(float fValue)
+{
+    return ceilf(fValue);
 }
 
 //------------------------------------------------------------------------------

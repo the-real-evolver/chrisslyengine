@@ -161,6 +161,9 @@
     <ClCompile Include="..\..\code\thirdparty\stb\stb_vorbis.c">
       <Filter>thirdparty\stb</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\code\audio\dsp\samplerateconverter.cpp">
+      <Filter>audio\dsp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="core">
@@ -455,6 +458,9 @@
     </ClInclude>
     <ClInclude Include="..\..\code\thirdparty\stb\stb_vorbis.h">
       <Filter>thirdparty\stb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\audio\dsp\samplerateconverter.h">
+      <Filter>audio\dsp</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

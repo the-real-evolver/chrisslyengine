@@ -4,6 +4,7 @@
 //------------------------------------------------------------------------------
 #include "wasapiaudiorenderer.h"
 #include "audiosystem.h"
+#include "dsp/samplerateconverter.h"
 
 namespace chrissly
 {
@@ -35,9 +36,12 @@ WASAPIAudioRenderer::WASAPIAudioRenderer() :
     device(NULL),
     audioClient(NULL),
     renderClient(NULL),
-    bufferFrameCount(0U)
+    bufferFrameCount(0U),
+    resample(false),
+    resampleRatio(1.0f)
 {
     Singleton = this;
+    memset(this->resampleBuffer, 0, sizeof(this->resampleBuffer));
 }
 
 //------------------------------------------------------------------------------
@@ -90,6 +94,12 @@ WASAPIAudioRenderer::_Initialise(void* const customParams)
 
     result = this->audioClient->Start();
     CE_ASSERT(SUCCEEDED(result), "WASAPIAudioRenderer::_Initialise() failed to start audio client\n");
+
+    if (format->nSamplesPerSec != 44100U)
+    {
+        this->resample = true;
+        this->resampleRatio = 44100.0 / (double)format->nSamplesPerSec;
+    }
 
     CoTaskMemFree(format);
 }
@@ -238,7 +248,16 @@ WASAPIAudioRenderer::RunAudioThread()
 
         if (numFramesAvailable > 0U && data != NULL)
         {
-            audio::AudioSystem::Instance()->Mix(numFramesAvailable, data);
+            if (this->resample)
+            {
+                unsigned int numSamplesToMix = (unsigned int)((double)numFramesAvailable * this->resampleRatio);
+                audio::AudioSystem::Instance()->Mix(numSamplesToMix, (unsigned char*)this->resampleBuffer);
+                ce_resample_s16_stereo(this->resampleBuffer, numSamplesToMix, (short*)data, numFramesAvailable);
+            }
+            else
+            {
+                audio::AudioSystem::Instance()->Mix(numFramesAvailable, data);
+            }
         }
 
         result = this->renderClient->ReleaseBuffer(numFramesAvailable, flags);

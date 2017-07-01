@@ -63,6 +63,10 @@ private:
     IAudioClient* audioClient;
     IAudioRenderClient* renderClient;
     UINT32 bufferFrameCount;
+
+    bool resample;
+    double resampleRatio;
+    short resampleBuffer[2048];
 };
 
 } // namespace chrissly

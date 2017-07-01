@@ -160,7 +160,7 @@ VorbisCodec::FillStreamBuffer(unsigned int numSamples, unsigned int position)
             samplesToLoad = this->lengthInSamples - this->seekPosition;
         }
         this->currentStreamBufferIndex ^= 1U;
-        stb_vorbis_get_samples_short_interleaved(this->vorbisStream, this->vorbisInfo.channels, (short*)this->streamBuffers[this->currentStreamBufferIndex], this->vorbisInfo.channels * numSamples);
+        stb_vorbis_get_samples_short_interleaved(this->vorbisStream, this->vorbisInfo.channels, (short*)this->streamBuffers[this->currentStreamBufferIndex], this->vorbisInfo.channels * samplesToLoad);
         this->seekPosition += samplesToLoad;
     }
     return this->streamBuffers[this->currentStreamBufferIndex];
