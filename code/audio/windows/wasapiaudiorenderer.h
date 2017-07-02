@@ -66,7 +66,7 @@ private:
 
     bool resample;
     double resampleRatio;
-    short resampleBuffer[2048];
+    int resampleBuffer[1024U];
 };
 
 } // namespace chrissly

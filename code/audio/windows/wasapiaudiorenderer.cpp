@@ -252,7 +252,7 @@ WASAPIAudioRenderer::RunAudioThread()
             {
                 unsigned int numSamplesToMix = (unsigned int)((double)numFramesAvailable * this->resampleRatio);
                 audio::AudioSystem::Instance()->Mix(numSamplesToMix, (unsigned char*)this->resampleBuffer);
-                ce_resample_s16_stereo(this->resampleBuffer, numSamplesToMix, (short*)data, numFramesAvailable);
+                ce_resample_s16_stereo(this->resampleBuffer, numSamplesToMix, (int*)data, numFramesAvailable);
             }
             else
             {

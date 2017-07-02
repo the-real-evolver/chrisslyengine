@@ -3,9 +3,9 @@
 //  (C) 2017 Christian Bleicher
 //------------------------------------------------------------------------------
 #include "mixer.h"
-#include "debug.h"
 #include "chrisslyplatform.h"
 #include "chrisslymath.h"
+#include "debug.h"
 
 #define CLAMP_SAMPLE(sample) {if (sample > 32767) {sample = 32767;} else if (sample < -32767) {sample = -32767;}}
 
@@ -13,7 +13,7 @@
 /**
 */
 static void
-mix_s16_stereo_s16(int num_channels, short* _ChrisslyRestrict buffer_to_mix, short* _ChrisslyRestrict buffer, unsigned int num_samples, float volume_left, float volume_right)
+mix_s16_stereo_s16(int num_channels, const short* _ChrisslyRestrict buffer_to_mix, short* _ChrisslyRestrict buffer, unsigned int num_samples, float volume_left, float volume_right)
 {
     int sample;
 
@@ -22,8 +22,7 @@ mix_s16_stereo_s16(int num_channels, short* _ChrisslyRestrict buffer_to_mix, sho
     {
         sample = *buffer + (short)((float)(*buffer_to_mix) * volume_left);
         CLAMP_SAMPLE(sample);
-        *buffer = (short)sample;
-        ++buffer;
+        *buffer++ = (short)sample;
         if (2 == num_channels)
         {
             ++buffer_to_mix;
@@ -31,8 +30,7 @@ mix_s16_stereo_s16(int num_channels, short* _ChrisslyRestrict buffer_to_mix, sho
 
         sample = *buffer + (short)((float)(*buffer_to_mix) * volume_right);
         CLAMP_SAMPLE(sample);
-        *buffer = (short)sample;
-        ++buffer;
+        *buffer++ = (short)sample;
         ++buffer_to_mix;
     }
 }
@@ -41,7 +39,7 @@ mix_s16_stereo_s16(int num_channels, short* _ChrisslyRestrict buffer_to_mix, sho
 /**
 */
 static void
-mix_s16_stereo_u8(int num_channels, unsigned char* _ChrisslyRestrict buffer_to_mix, short* _ChrisslyRestrict buffer, unsigned int num_samples, float volume_left, float volume_right)
+mix_s16_stereo_u8(int num_channels, const unsigned char* _ChrisslyRestrict buffer_to_mix, short* _ChrisslyRestrict buffer, unsigned int num_samples, float volume_left, float volume_right)
 {
     int sample;
 
@@ -50,8 +48,7 @@ mix_s16_stereo_u8(int num_channels, unsigned char* _ChrisslyRestrict buffer_to_m
     {
         sample = *buffer + (short)(((float)(*buffer_to_mix) - 127.0f) / 0.0039063f * volume_left);
         CLAMP_SAMPLE(sample);
-        *buffer = (short)sample;
-        ++buffer;
+        *buffer++ = (short)sample;
         if (2 == num_channels)
         {
             ++buffer_to_mix;
@@ -59,8 +56,7 @@ mix_s16_stereo_u8(int num_channels, unsigned char* _ChrisslyRestrict buffer_to_m
 
         sample = *buffer + (short)(((float)(*buffer_to_mix) - 127.0f) / 0.0039063f * volume_right);
         CLAMP_SAMPLE(sample);
-        *buffer = (short)sample;
-        ++buffer;
+        *buffer++ = (short)sample;
         ++buffer_to_mix;
     }
 }
@@ -99,7 +95,7 @@ ce_audio_calculate_stereo_channel_volumes(ce_audio_panning_mode mode, float volu
 /**
 */
 void
-ce_audio_mix_s16_stereo(int bits, int num_channels, void* const buffer_to_mix, short* const buffer, unsigned int num_samples, float volume, float pan)
+ce_audio_mix_s16_stereo(int bits, int num_channels, const void* const buffer_to_mix, short* const buffer, unsigned int num_samples, float volume, float pan)
 {
     float volume_left, volume_right;
     ce_audio_calculate_stereo_channel_volumes(2 == num_channels ? PAN_STEREO : PAN_CONSTANTPOWER, volume, pan, &volume_left, &volume_right);
@@ -112,7 +108,7 @@ ce_audio_mix_s16_stereo(int bits, int num_channels, void* const buffer_to_mix, s
                 {
                     case 1:
                     case 2:
-                        mix_s16_stereo_u8(num_channels, (unsigned char*)buffer_to_mix, buffer, num_samples, volume_left, volume_right);
+                        mix_s16_stereo_u8(num_channels, (const unsigned char*)buffer_to_mix, buffer, num_samples, volume_left, volume_right);
                         break;
                     default:
                         CE_ASSERT(false, "ce_audio_mix_s16_stereo(): mixing '%i' channels not supported\n", num_channels);
@@ -126,7 +122,7 @@ ce_audio_mix_s16_stereo(int bits, int num_channels, void* const buffer_to_mix, s
                 {
                     case 1:
                     case 2:
-                        mix_s16_stereo_s16(num_channels, (short*)buffer_to_mix, buffer, num_samples, volume_left, volume_right);
+                        mix_s16_stereo_s16(num_channels, (const short*)buffer_to_mix, buffer, num_samples, volume_left, volume_right);
                         break;
                     default:
                         CE_ASSERT(false, "ce_audio_mix_s16_stereo(): mixing '%i' channels not supported\n", num_channels);
