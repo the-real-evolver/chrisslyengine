@@ -19,7 +19,6 @@ namespace audio
 
 class ChannelBase
 {
-    friend class AudioSystem;
 public:
     /// special channel index values
     enum ChannelIndex

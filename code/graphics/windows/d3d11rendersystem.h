@@ -18,7 +18,7 @@ class D3D11RenderSystem
 {
 public:
     /// get pointer to the singleton
-    static D3D11RenderSystem* Instance()
+    static D3D11RenderSystem* const Instance()
     {
         return Singleton;
     }

@@ -189,7 +189,7 @@ Matrix4::operator * (const Vector3 &v) const
 /**
 */
 float* const
-Matrix4::operator[] (size_t iRow) const
+Matrix4::operator[] (unsigned int iRow) const
 {
     return (float*)this->m[iRow];
 }

@@ -11,6 +11,6 @@
 #include "chrisslyplatform.h"
 
 /// resample the given signed 16 bit stereo buffer to signed 16 bit stereo output (using nearest neighbor interpolation)
-void ce_resample_s16_stereo(const int* const _ChrisslyRestrict src_buffer, unsigned int num_samples, int* const _ChrisslyRestrict dst_buffer, unsigned int num_resampled);
+void ce_audio_resample_s16_stereo(const int* const _ChrisslyRestrict src_buffer, unsigned int num_samples, int* const _ChrisslyRestrict dst_buffer, unsigned int num_resampled);
 
 #endif

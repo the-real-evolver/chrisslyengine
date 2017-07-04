@@ -39,7 +39,7 @@ public:
     /// transforms the given 3-D vector by the matrix
     Vector3 operator * (const Vector3 &v) const;
     /// member access, allows use of construct mat[r][c]
-    float* const operator[] (size_t iRow) const;
+    float* const operator[] (unsigned int iRow) const;
     /// identity matrix
     static const Matrix4 IDENTITY;
     /// zero initialised matrix

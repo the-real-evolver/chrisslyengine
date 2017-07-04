@@ -38,7 +38,7 @@ PSPAudioRenderer::~PSPAudioRenderer()
 /**
 */
 void
-PSPAudioRenderer::_Initialise(void* const customParams)
+PSPAudioRenderer::Initialise(void* const customParams)
 {
 
 }

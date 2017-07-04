@@ -46,7 +46,7 @@ AudioSystem::~AudioSystem()
 Result
 AudioSystem::Initialise(void* const customParams)
 {
-    this->activeRenderer->_Initialise(customParams);
+    this->activeRenderer->Initialise(customParams);
 
     ce_dynamic_array_init(&this->soundPool, 8U);
     unsigned int i;
@@ -112,7 +112,7 @@ AudioSystem::CreateSound(const char* const name, Mode mode, Sound** sound)
     for (i = 0U; i < this->soundPool.capacity; ++i)
     {
         snd = (Sound*)ce_dynamic_array_get(&this->soundPool, i);
-        if (!snd->_IsRealized())
+        if (!snd->_IsInUse())
         {
             break;
         }

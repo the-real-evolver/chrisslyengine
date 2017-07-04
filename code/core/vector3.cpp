@@ -161,7 +161,7 @@ Vector3::operator -= (const Vector3& rkVector)
 /**
 */
 float&
-Vector3::operator [] (const size_t i)
+Vector3::operator [] (unsigned int i)
 {
     CE_ASSERT(i < 3U, "Vector3::operator[]: invalid index");
 
@@ -172,7 +172,7 @@ Vector3::operator [] (const size_t i)
 /**
 */
 float
-Vector3::operator [] (const size_t i) const
+Vector3::operator [] (unsigned int i) const
 {
     CE_ASSERT(i < 3U, "Vector3::operator[]: invalid index");
 

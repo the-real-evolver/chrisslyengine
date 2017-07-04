@@ -40,9 +40,9 @@ public:
     /// vector subtraction
     Vector3& operator -= (const Vector3& rkVector);
     /// access to the components by index operator
-    float& operator [] (const size_t i);
+    float& operator [] (unsigned int i);
     /// access to the components by index operator
-    float operator [] (const size_t i) const;
+    float operator [] (unsigned int i) const;
     /// calculates the cross-product of 2 vectors, i.e. the vector that lies perpendicular to them both
     /**
         @remarks

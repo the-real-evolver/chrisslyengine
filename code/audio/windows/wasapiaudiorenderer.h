@@ -19,7 +19,7 @@ class WASAPIAudioRenderer
 {
 public:
     /// get pointer to the singleton
-    static WASAPIAudioRenderer* Instance()
+    static WASAPIAudioRenderer* const Instance()
     {
         return Singleton;
     }
@@ -29,7 +29,7 @@ public:
     /// destructor
     ~WASAPIAudioRenderer();
     /// start up the renderer
-    void _Initialise(void* const customParams);
+    void Initialise(void* const customParams);
     /// shutdown the renderer and cleanup resources
     void Shutdown();
     /// starts calling the softwaremixer and sends mixed buffer to the output

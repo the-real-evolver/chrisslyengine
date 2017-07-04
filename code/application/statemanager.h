@@ -18,7 +18,7 @@ class StateManager
 {
 public:
     /// get pointer to the singleton
-    static StateManager* Instance()
+    static StateManager* const Instance()
     {
         return Singleton;
     };

@@ -56,7 +56,7 @@ WASAPIAudioRenderer::~WASAPIAudioRenderer()
 /**
 */
 void
-WASAPIAudioRenderer::_Initialise(void* const customParams)
+WASAPIAudioRenderer::Initialise(void* const customParams)
 {
     CE_UNREFERENCED_PARAMETER(customParams);
 
@@ -252,7 +252,7 @@ WASAPIAudioRenderer::RunAudioThread()
             {
                 unsigned int numSamplesToMix = (unsigned int)((double)numFramesAvailable * this->resampleRatio);
                 audio::AudioSystem::Instance()->Mix(numSamplesToMix, (unsigned char*)this->resampleBuffer);
-                ce_resample_s16_stereo(this->resampleBuffer, numSamplesToMix, (int*)data, numFramesAvailable);
+                ce_audio_resample_s16_stereo(this->resampleBuffer, numSamplesToMix, (int*)data, numFramesAvailable);
             }
             else
             {

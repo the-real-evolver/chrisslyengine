@@ -335,7 +335,7 @@ SceneManager::_RenderScene(Camera* const camera, Viewport* const vp)
         // are we using any shadows at all?
         if (this->IsShadowTechniqueInUse() && !this->suppressRenderStateChanges)
         {
-            this->PrepareShadowTextures();
+            this->_PrepareShadowTextures();
         }
     }
 
@@ -471,7 +471,7 @@ SceneManager::_SuppressRenderStateChanges(bool suppress)
 /**
 */
 void
-SceneManager::PrepareShadowTextures()
+SceneManager::_PrepareShadowTextures()
 {
     this->illuminationStage = IRS_RENDER_TO_TEXTURE;
 

@@ -32,7 +32,7 @@ struct ce_bucket
 struct ce_key_value_pair
 {
     char* key;
-    size_t key_length;
+    unsigned int key_length;
     void* value;
 };
 
@@ -43,7 +43,7 @@ static void ce_hash_table_resize(ce_hash_table* const table, unsigned int new_si
 /**
 */
 static unsigned int
-ce_hash_function(const char* key, size_t key_length)
+ce_hash_function(const char* key, unsigned int key_length)
 {
     // hashfunction: djb2
     unsigned int hash = 5381U;
@@ -118,7 +118,7 @@ ce_hash_table_clear(ce_hash_table* const table)
 /**
 */
 inline void
-ce_hash_table_insert(ce_hash_table* const table, const char* const key, size_t key_length, void* const value)
+ce_hash_table_insert(ce_hash_table* const table, const char* const key, unsigned int key_length, void* const value)
 {
     if (NULL == table)
     {
@@ -152,7 +152,7 @@ ce_hash_table_insert(ce_hash_table* const table, const char* const key, size_t k
 /**
 */
 inline void*
-ce_hash_table_find(ce_hash_table* const table, const char* const key, size_t key_length)
+ce_hash_table_find(ce_hash_table* const table, const char* const key, unsigned int key_length)
 {
     if (NULL == table)
     {

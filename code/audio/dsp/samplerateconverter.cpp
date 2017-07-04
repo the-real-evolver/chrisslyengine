@@ -9,7 +9,7 @@
 /**
 */
 void
-ce_resample_s16_stereo(const int* const _ChrisslyRestrict src_buffer, unsigned int num_samples, int* const _ChrisslyRestrict dst_buffer, unsigned int num_resampled)
+ce_audio_resample_s16_stereo(const int* const _ChrisslyRestrict src_buffer, unsigned int num_samples, int* const _ChrisslyRestrict dst_buffer, unsigned int num_resampled)
 {
     float ratio = (float)num_samples / (float)num_resampled;
     unsigned int i;

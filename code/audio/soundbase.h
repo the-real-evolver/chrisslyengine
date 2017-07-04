@@ -34,10 +34,10 @@ public:
 
     /// initialise sound object
     void _Setup(const char* const filename, Mode modeflags, Codec* const codec);
-    /// internal method that frees a sound object
+    /// internal method that frees the sound object and makes it available for further use
     void _Release();
     /// returns if the sound is setup
-    bool _IsRealized() const;
+    bool _IsInUse() const;
     /// increments the usecount, called when a channel starts playing the sound
     void _IncrementUseCount();
     /// decrements the usecount, called when a channel using the sound was stopped
@@ -45,7 +45,7 @@ public:
     /// get pointer to the sample at the given position
     void* _GetSampleBufferPointer(unsigned int position) const;
     /// get pointer to the attached codec
-    Codec* const  _GetCodec() const;
+    Codec* const _GetCodec() const;
     /// create internal sound resources
     virtual void _CreateInternalResources();
 
@@ -59,7 +59,7 @@ protected:
     unsigned int sampleRate;
     void* sampleBuffer;
     Codec* audioCodec;
-    bool realized;
+    bool inUse;
     bool requestRelease;
     unsigned int useCount;
     core::Mutex releaseSyncLock;

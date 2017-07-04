@@ -51,7 +51,7 @@ String::~String()
 /**
 */
 void
-String::operator=(const String& rhs)
+String::operator = (const String& rhs)
 {
     this->Set(rhs.C_Str());
 }
@@ -60,7 +60,7 @@ String::operator=(const String& rhs)
 /**
 */
 void
-String::operator=(const char* const cStr)
+String::operator = (const char* const cStr)
 {
     this->Set(cStr);
 }
@@ -89,8 +89,7 @@ String::C_Str() const
 void
 String::Set(const char* const ptr)
 {
-    size_t length = strlen(ptr);
-    this->Set(ptr, length);
+    this->Set(ptr, strlen(ptr));
 }
 
 //------------------------------------------------------------------------------
@@ -117,7 +116,7 @@ String::Set(const char* const ptr, unsigned int length)
 void
 String::Delete()
 {
-    if (NULL != this->data)
+    if (this->data != NULL)
     {
         CE_FREE(this->data);
         this->data = NULL;

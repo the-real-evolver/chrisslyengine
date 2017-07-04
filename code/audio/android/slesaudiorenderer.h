@@ -29,7 +29,7 @@ public:
     /// destructor
     ~SLESAudioRenderer();
     /// start up the renderer
-    void _Initialise(void* const customParams);
+    void Initialise(void* const customParams);
     /// shutdown the renderer and cleanup resources
     void Shutdown();
     /// starts calling the softwaremixer and sends mixed buffer to the output

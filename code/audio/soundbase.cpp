@@ -25,7 +25,7 @@ SoundBase::SoundBase() :
     sampleRate(0U),
     sampleBuffer(NULL),
     audioCodec(NULL),
-    realized(false),
+    inUse(false),
     requestRelease(false),
     useCount(0U)
 {
@@ -117,7 +117,7 @@ SoundBase::_Setup(const char* const filename, Mode modeflags, Codec* const codec
     this->audioCodec = codec;
     this->audioCodec->SetupSound(filename, modeflags, &this->sampleBuffer, this->lengthInSamples, this->audioFormat, this->soundType, this->numChannels, this->bitsPerSample, this->sampleRate);
     this->_CreateInternalResources();
-    this->realized = true;
+    this->inUse = true;
 }
 
 //------------------------------------------------------------------------------
@@ -145,7 +145,7 @@ SoundBase::_Release()
         this->audioCodec = NULL;
     }
 
-    this->realized = false;
+    this->inUse = false;
 
     this->requestRelease = false;
 }
@@ -154,9 +154,9 @@ SoundBase::_Release()
 /**
 */
 bool
-SoundBase::_IsRealized() const
+SoundBase::_IsInUse() const
 {
-    return this->realized;
+    return this->inUse;
 }
 
 //------------------------------------------------------------------------------

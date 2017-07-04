@@ -19,7 +19,7 @@ class GLES2RenderSystem
 {
 public:
     /// get pointer to the singleton
-    static GLES2RenderSystem* Instance()
+    static GLES2RenderSystem* const Instance()
     {
         return Singleton;
     }

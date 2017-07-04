@@ -40,7 +40,7 @@ SLESAudioRenderer::~SLESAudioRenderer()
 /**
 */
 void
-SLESAudioRenderer::_Initialise(void* const customParams)
+SLESAudioRenderer::Initialise(void* const customParams)
 {
     SLresult result = slCreateEngine(&this->engine, 0U, NULL, 0U, NULL, NULL);
     CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::_Initialise(): failed to create engine\n");
