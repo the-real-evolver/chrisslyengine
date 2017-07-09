@@ -51,7 +51,7 @@ ChannelBase::Stop()
 {
     if (this->index != CHANNEL_FREE)
     {
-        AudioSystem::Instance()->_GetAudioRenderer()->ReleaseChannel((Channel*)this);
+        AudioSystem::Instance()->GetAudioRenderer()->ReleaseChannel((Channel*)this);
     }
 
     return OK;
@@ -328,16 +328,6 @@ ChannelBase::GetIndex(int* const idx)
 /**
 */
 void
-ChannelBase::_AttachSound(Sound* const sound)
-{
-    sound->GetMode(&this->mode);
-    this->currentSound = sound;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-void
 ChannelBase::_SetIndex(int idx)
 {
     this->index = idx;
@@ -350,17 +340,6 @@ void
 ChannelBase::_SetIsPlaying(bool isplaying)
 {
     this->isPlaying = isplaying;
-}
-
- //------------------------------------------------------------------------------
-/**
-*/
-void
-ChannelBase::_SetAttenuationFactor(float attenuation)
-{
-    this->attenuationFactor = attenuation;
-
-    this->propertiesHaveChanged |= PROPERTY_ATTENUATION;
 }
 
 //------------------------------------------------------------------------------
@@ -390,6 +369,27 @@ const core::Mutex&
 ChannelBase::_GetSyncLock() const
 {
     return this->syncLock;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+ChannelBase::AttachSound(Sound* const sound)
+{
+    sound->GetMode(&this->mode);
+    this->currentSound = sound;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+ChannelBase::SetAttenuationFactor(float attenuation)
+{
+    this->attenuationFactor = attenuation;
+
+    this->propertiesHaveChanged |= PROPERTY_ATTENUATION;
 }
 
 } // namespace audio

@@ -19,6 +19,7 @@ namespace audio
 
 class ChannelBase
 {
+    friend class AudioSystem;
 public:
     /// special channel index values
     enum ChannelIndex
@@ -71,14 +72,10 @@ public:
     /// retrieves the internal channel index for a channel
     Result GetIndex(int* const idx);
 
-    /// set the sound to playback on this channel
-    void _AttachSound(Sound* const sound);
     /// set the internal channel index for a channel
     void _SetIndex(int idx);
     /// set isplaying flag
     void _SetIsPlaying(bool isplaying);
-    /// set the factor the volume will be scaled with internal if the channel is playing in 3d mode
-    void _SetAttenuationFactor(float attenuation);
     /// get the internal factor the volume will be scaled with if the channel is playing in 3d mode
     float _GetAttenuationFactor() const;
     /// retrieve if properties (volume, panning ect.) have changed
@@ -87,6 +84,11 @@ public:
     const core::Mutex& _GetSyncLock() const;
 
 protected:
+    /// set the sound to playback on this channel
+    void AttachSound(Sound* const sound);
+    /// set the factor the volume will be scaled with internal if the channel is playing in 3d mode
+    void SetAttenuationFactor(float attenuation);
+
     bool isPlaying;
     bool paused;
     float volume;

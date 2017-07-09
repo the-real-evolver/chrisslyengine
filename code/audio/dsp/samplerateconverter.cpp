@@ -15,6 +15,6 @@ ce_audio_resample_s16_stereo(const int* const _ChrisslyRestrict src_buffer, unsi
     unsigned int i;
     for (i = 0U; i < num_resampled; ++i)
     {
-        dst_buffer[i] = src_buffer[(unsigned int)chrissly::core::Math::Ceil((float)i * ratio + 0.5f) - 1U];
+        dst_buffer[i] = src_buffer[(unsigned int)chrissly::core::Math::Ceil((float)i * ratio - 0.5f)];
     }
 }

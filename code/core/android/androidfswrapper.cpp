@@ -47,7 +47,7 @@ AndroidFSWrapper::GetFileSize(core::FileHandle fileHandle)
 int
 AndroidFSWrapper::Read(core::FileHandle fileHandle, void* const buf, unsigned int numBytes)
 {
-    int result = AAsset_read(fileHandle.handle, buf, (size_t)numBytes);
+    int result = AAsset_read(fileHandle.handle, buf, numBytes);
     CE_ASSERT(result >= 0, "FSWrapper::Read(): can't read from file '%i'\n", fileHandle.handle);
     return result;
 }

@@ -16,7 +16,7 @@ using namespace chrissly::core;
 //------------------------------------------------------------------------------
 /**
 */
-Entity::Entity(Mesh* mesh) :
+Entity::Entity(Mesh* const mesh) :
     parentNode(NULL),
     mesh(mesh),
     castShadows(false),
@@ -114,15 +114,6 @@ Entity::GetNumSubEntities() const
 /**
 */
 void
-Entity::_NotifyAttached(SceneNode* const parent)
-{
-    this->parentNode = parent;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-void
 Entity::SetCastShadows(bool enabled)
 {
     this->castShadows = enabled;
@@ -195,6 +186,15 @@ Entity::UpdateAnimation()
             it = it->next;
         }
     }
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+Entity::_NotifyAttached(SceneNode* const parent)
+{
+    this->parentNode = parent;
 }
 
 //------------------------------------------------------------------------------

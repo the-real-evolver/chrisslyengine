@@ -43,27 +43,27 @@ void
 SLESAudioRenderer::Initialise(void* const customParams)
 {
     SLresult result = slCreateEngine(&this->engine, 0U, NULL, 0U, NULL, NULL);
-    CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::_Initialise(): failed to create engine\n");
+    CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::Initialise(): failed to create engine\n");
 
     result = (*this->engine)->Realize(this->engine, SL_BOOLEAN_FALSE);
-    CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::_Initialise(): failed to realize engine\n");
+    CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::Initialise(): failed to realize engine\n");
 
     result = (*this->engine)->GetInterface(this->engine, SL_IID_ENGINE, &this->engineInterface);
-    CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::_Initialise(): failed to get engine interface\n");
+    CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::Initialise(): failed to get engine interface\n");
 
     const SLInterfaceID  ids[1U] = {SL_IID_ENVIRONMENTALREVERB};
     const SLboolean required[1U] = {SL_BOOLEAN_TRUE};
     result = (*this->engineInterface)->CreateOutputMix(this->engineInterface, &this->outputMix, 1U, ids, required);
-    CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::_Initialise(): failed to create outputmix\n");
+    CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::Initialise(): failed to create outputmix\n");
 
     result = (*this->outputMix)->Realize(this->outputMix, SL_BOOLEAN_FALSE);
-    CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::_Initialise(): failed to realize outputmix\n");
+    CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::Initialise(): failed to realize outputmix\n");
 
     result = (*this->outputMix)->GetInterface(this->outputMix, SL_IID_ENVIRONMENTALREVERB, &this->outputMixEnvironmentalReverb);
-    CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::_Initialise(): failed to get environmental reverb interface\n");
+    CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::Initialise(): failed to get environmental reverb interface\n");
 
     result = (*this->outputMixEnvironmentalReverb)->SetEnvironmentalReverbProperties(this->outputMixEnvironmentalReverb, &ReverbSettings);
-    CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::_Initialise(): failed to set environmental reverb properties\n");
+    CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::Initialise(): failed to set environmental reverb properties\n");
 }
 
 //------------------------------------------------------------------------------

@@ -38,45 +38,6 @@ SceneNode::~SceneNode()
 //------------------------------------------------------------------------------
 /**
 */
-void
-SceneNode::_Update()
-{
-    if (this->parent)
-    {
-        Quaternion parentOrientation = this->parent->_GetDerivedOrientation();
-        Vector3 parentScale = this->parent->_GetDerivedScale();
-
-        // combine orientation with that of parent
-        this->derivedOrientation = parentOrientation * this->orientation;
-
-        // update scale
-        this->derivedScale = parentScale * this->scale;
-
-        // change position vector based on parent's orientation & scale
-        this->derivedPosition = parentOrientation * (parentScale * this->position);
-
-        // add altered position vector to parents
-        this->derivedPosition += this->parent->_GetDerivedPosition();
-    }
-    else
-    {
-        // root node, no parent
-        this->derivedOrientation = this->orientation;
-        this->derivedPosition = this->position;
-        this->derivedScale = this->scale;
-    }
-
-    ce_linked_list* it = this->children;
-    while (it != NULL)
-    {
-        ((SceneNode*)it->data)->_Update();
-        it = it->next;
-    }
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
 SceneNode* const
 SceneNode::CreateChildSceneNode()
 {
@@ -211,33 +172,6 @@ SceneNode::GetScale() const
 //------------------------------------------------------------------------------
 /**
 */
-const Quaternion&
-SceneNode::_GetDerivedOrientation() const
-{
-    return this->derivedOrientation;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-const Vector3&
-SceneNode::_GetDerivedPosition() const
-{
-    return this->derivedPosition;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-const Vector3&
-SceneNode::_GetDerivedScale() const
-{
-    return this->derivedScale;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
 void
 SceneNode::Roll(float angle)
 {
@@ -289,6 +223,71 @@ SceneNode::Rotate(const Quaternion& q)
 //------------------------------------------------------------------------------
 /**
 */
+void
+SceneNode::AttachObject(Entity* const obj)
+{
+    ce_dynamic_array_push_back(&this->objects, obj);
+
+    obj->_NotifyAttached(this);
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+unsigned short
+SceneNode::NumAttachedObjects() const
+{
+    return (unsigned short)this->objects.size;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+Entity* const
+SceneNode::GetAttachedObject(unsigned short index) const
+{
+    return (Entity*)ce_dynamic_array_get(&this->objects, index);
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+SceneNode::DetachAllObjects()
+{
+    ce_dynamic_array_delete(&this->objects);
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+const Quaternion&
+SceneNode::_GetDerivedOrientation() const
+{
+    return this->derivedOrientation;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+const Vector3&
+SceneNode::_GetDerivedPosition() const
+{
+    return this->derivedPosition;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+const Vector3&
+SceneNode::_GetDerivedScale() const
+{
+    return this->derivedScale;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
 const Matrix4&
 SceneNode::_GetFullTransform() const
 {
@@ -332,38 +331,39 @@ SceneNode::_GetFullTransform() const
 /**
 */
 void
-SceneNode::AttachObject(Entity* const obj)
+SceneNode::_Update()
 {
-    ce_dynamic_array_push_back(&this->objects, obj);
+    if (this->parent)
+    {
+        Quaternion parentOrientation = this->parent->_GetDerivedOrientation();
+        Vector3 parentScale = this->parent->_GetDerivedScale();
 
-    obj->_NotifyAttached(this);
-}
+        // combine orientation with that of parent
+        this->derivedOrientation = parentOrientation * this->orientation;
 
-//------------------------------------------------------------------------------
-/**
-*/
-unsigned short
-SceneNode::NumAttachedObjects() const
-{
-    return (unsigned short)this->objects.size;
-}
+        // update scale
+        this->derivedScale = parentScale * this->scale;
 
-//------------------------------------------------------------------------------
-/**
-*/
-Entity* const
-SceneNode::GetAttachedObject(unsigned short index) const
-{
-    return (Entity*)ce_dynamic_array_get(&this->objects, index);
-}
+        // change position vector based on parent's orientation & scale
+        this->derivedPosition = parentOrientation * (parentScale * this->position);
 
-//------------------------------------------------------------------------------
-/**
-*/
-void
-SceneNode::DetachAllObjects()
-{
-    ce_dynamic_array_delete(&this->objects);
+        // add altered position vector to parents
+        this->derivedPosition += this->parent->_GetDerivedPosition();
+    }
+    else
+    {
+        // root node, no parent
+        this->derivedOrientation = this->orientation;
+        this->derivedPosition = this->position;
+        this->derivedScale = this->scale;
+    }
+
+    ce_linked_list* it = this->children;
+    while (it != NULL)
+    {
+        ((SceneNode*)it->data)->_Update();
+        it = it->next;
+    }
 }
 
 //------------------------------------------------------------------------------

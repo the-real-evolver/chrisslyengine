@@ -31,7 +31,7 @@ public:
     Material* const GetMaterial() const;
     /// tells this SubEntity whether to be visible or not
     void SetVisible(bool vis);
-    /// returns whether or not this SubEntity is supposed to be visible 
+    /// returns whether or not this SubEntity is supposed to be visible
     bool IsVisible() const;
     /// accessor method to read mesh data 
     SubMesh* const GetSubMesh() const;

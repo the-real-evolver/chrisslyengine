@@ -51,7 +51,7 @@ D3D11RenderSystem::~D3D11RenderSystem()
 /**
 */
 graphics::RenderWindow* const
-D3D11RenderSystem::_Initialise(void* const customParams)
+D3D11RenderSystem::Initialise(void* const customParams)
 {
     /* create device */
     D3D_FEATURE_LEVEL featureLevels[] = {D3D_FEATURE_LEVEL_10_1};
@@ -231,7 +231,7 @@ D3D11RenderSystem::Shutdown()
 /**
 */
 void
-D3D11RenderSystem::_SetRenderTarget(graphics::RenderTarget* const target)
+D3D11RenderSystem::SetRenderTarget(graphics::RenderTarget* const target)
 {
     ID3D11RenderTargetView* renderTargetView = NULL;
     ID3D11DepthStencilView* depthStencilView = NULL;
@@ -248,7 +248,7 @@ D3D11RenderSystem::_SetRenderTarget(graphics::RenderTarget* const target)
 /**
 */
 void
-D3D11RenderSystem::_SetViewport(graphics::Viewport* const vp)
+D3D11RenderSystem::SetViewport(graphics::Viewport* const vp)
 {
     this->viewPort.TopLeftX = (FLOAT)vp->GetActualLeft();
     this->viewPort.TopLeftY = (FLOAT)vp->GetActualTop();
@@ -289,7 +289,7 @@ D3D11RenderSystem::_SetViewport(graphics::Viewport* const vp)
 /**
 */
 void
-D3D11RenderSystem::_SetWorldMatrix(const core::Matrix4& m)
+D3D11RenderSystem::SetWorldMatrix(const core::Matrix4& m)
 {
     this->worldMatrix = m;
 }
@@ -298,7 +298,7 @@ D3D11RenderSystem::_SetWorldMatrix(const core::Matrix4& m)
 /**
 */
 void
-D3D11RenderSystem::_SetViewMatrix(const core::Matrix4& m)
+D3D11RenderSystem::SetViewMatrix(const core::Matrix4& m)
 {
     this->viewMatrix = m;
 
@@ -313,7 +313,7 @@ D3D11RenderSystem::_SetViewMatrix(const core::Matrix4& m)
 /**
 */
 void
-D3D11RenderSystem::_SetProjectionMatrix(const core::Matrix4& m)
+D3D11RenderSystem::SetProjectionMatrix(const core::Matrix4& m)
 {
     this->projectionMatrix = m;
 
@@ -334,7 +334,7 @@ D3D11RenderSystem::_SetProjectionMatrix(const core::Matrix4& m)
 /**
 */
 void
-D3D11RenderSystem::_SetTextureMatrix(const core::Matrix4& m)
+D3D11RenderSystem::SetTextureMatrix(const core::Matrix4& m)
 {
     CE_UNREFERENCED_PARAMETER(m);
 }
@@ -343,7 +343,7 @@ D3D11RenderSystem::_SetTextureMatrix(const core::Matrix4& m)
 /**
 */
 void
-D3D11RenderSystem::_Render(graphics::SubEntity* const renderable)
+D3D11RenderSystem::Render(graphics::SubEntity* const renderable)
 {
     /* update auto constants */
     graphics::GpuProgramParameters* params = this->currentGpuProgram->GetDefaultParameters();
@@ -374,7 +374,7 @@ D3D11RenderSystem::_Render(graphics::SubEntity* const renderable)
 /**
 */
 void
-D3D11RenderSystem::_BeginFrame()
+D3D11RenderSystem::BeginFrame()
 {
 
 }
@@ -383,7 +383,7 @@ D3D11RenderSystem::_BeginFrame()
 /**
 */
 void
-D3D11RenderSystem::_EndFrame()
+D3D11RenderSystem::EndFrame()
 {
 
 }
@@ -392,7 +392,7 @@ D3D11RenderSystem::_EndFrame()
 /**
 */
 void
-D3D11RenderSystem::_SetPass(graphics::Pass* const pass)
+D3D11RenderSystem::SetPass(graphics::Pass* const pass)
 {
     /* scene blending parameters */
     if (pass->GetSceneBlendingEnabled())
@@ -519,7 +519,7 @@ D3D11RenderSystem::_SetPass(graphics::Pass* const pass)
 /**
 */
 void
-D3D11RenderSystem::_UseLights(ce_hash_table* const lights)
+D3D11RenderSystem::ProcessLights(ce_hash_table* const lights)
 {
     unsigned int lightIndex = 0U;
     unsigned int i;

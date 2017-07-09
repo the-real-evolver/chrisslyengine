@@ -143,11 +143,11 @@ private:
     /// copy constructor
     SceneManager(const SceneManager&) {};
     /// method for preparing shadow textures ready for use in a regular render
-    void _PrepareShadowTextures();
+    void PrepareShadowTextures();
     /// render the objects in a given queue group 
-    void _RenderQueueGroupObjects(QueuedRenderableCollection* const queue);
+    void RenderQueueGroupObjects(QueuedRenderableCollection* const queue);
     /// render a group rendering only shadow receivers
-    void _RenderTextureShadowReceiverQueueGroupObjects(QueuedRenderableCollection* const queue);
+    void RenderTextureShadowReceiverQueueGroupObjects(QueuedRenderableCollection* const queue);
 
     static SceneManager* Singleton;
 

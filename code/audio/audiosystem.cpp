@@ -112,7 +112,7 @@ AudioSystem::CreateSound(const char* const name, Mode mode, Sound** sound)
     for (i = 0U; i < this->soundPool.capacity; ++i)
     {
         snd = (Sound*)ce_dynamic_array_get(&this->soundPool, i);
-        if (!snd->_IsInUse())
+        if (!snd->IsInUse())
         {
             break;
         }
@@ -142,7 +142,7 @@ AudioSystem::CreateSound(const char* const name, Mode mode, Sound** sound)
         return ERR_PLUGIN_MISSING;
     }
 
-    snd->_Setup(name, mode, codec);
+    snd->Setup(name, mode, codec);
 
     *sound = snd;
 
@@ -178,12 +178,12 @@ AudioSystem::PlaySound(int channelid, Sound* const sound, bool paused, Channel**
         chn->_SetIndex(channelid);
     }
 
-    chn->_AttachSound(sound);
+    chn->AttachSound(sound);
     chn->SetPaused(paused);
     chn->SetPosition(0U);
     chn->SetVolume(1.0f);
     chn->SetPan(0.0f);
-    chn->_SetAttenuationFactor(0.0f);
+    chn->SetAttenuationFactor(0.0f);
 
     this->activeRenderer->StartChannel(chn);
 
@@ -223,11 +223,11 @@ AudioSystem::Update()
                 if (distance >= minDistance && distance <= maxDistance)
                 {
                     channel->SetPan(-Math::Sin(Math::ATan2(distanceVec.DotProduct(sideVec), distanceVec.DotProduct(this->listenerForward))));
-                    channel->_SetAttenuationFactor(1.0f - (distance - minDistance) / (maxDistance - minDistance));
+                    channel->SetAttenuationFactor(1.0f - (distance - minDistance) / (maxDistance - minDistance));
                 }
                 else
                 {
-                    channel->_SetAttenuationFactor(0.0f);
+                    channel->SetAttenuationFactor(0.0f);
                 }
             }
 
@@ -264,7 +264,7 @@ AudioSystem::Set3DListenerAttributes(const Vector3* const pos, const Vector3* co
 /**
 */
 void
-AudioSystem::Mix(unsigned int numSamples, unsigned char* const buffer)
+AudioSystem::_Mix(unsigned int numSamples, unsigned char* const buffer)
 {
     memset(buffer, 0, numSamples << 2U);
     unsigned int i;
@@ -332,7 +332,7 @@ AudioSystem::Mix(unsigned int numSamples, unsigned char* const buffer)
 /**
 */
 AudioRenderer* const
-AudioSystem::_GetAudioRenderer() const
+AudioSystem::GetAudioRenderer() const
 {
     return this->activeRenderer;
 }

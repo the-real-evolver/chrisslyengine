@@ -29,25 +29,25 @@ public:
     ~PSPRenderSystem();
 
     /// start up the renderer
-    graphics::RenderWindow* const _Initialise(void* const customParams);
+    graphics::RenderWindow* const Initialise(void* const customParams);
     /// shutdown the renderer and cleanup resources
     void Shutdown();
     /// set current render target to target, enabling its device context if needed
-    void _SetRenderTarget(graphics::RenderTarget* const target);
+    void SetRenderTarget(graphics::RenderTarget* const target);
     /**
         Sets the provided viewport as the active one for future
         rendering operations. This viewport is aware of it's own
         camera and render target.
     */
-    void _SetViewport(graphics::Viewport* const vp);
+    void SetViewport(graphics::Viewport* const vp);
     /// sets the world transform matrix
-    void _SetWorldMatrix(const core::Matrix4& m);
+    void SetWorldMatrix(const core::Matrix4& m);
     /// sets the view transform matrix
-    void _SetViewMatrix(const core::Matrix4& m);
+    void SetViewMatrix(const core::Matrix4& m);
     /// sets the projection transform matrix
-    void _SetProjectionMatrix(const core::Matrix4& m);
+    void SetProjectionMatrix(const core::Matrix4& m);
     /// sets the texture coordinate transformation matrix for the texture unit
-    void _SetTextureMatrix(const core::Matrix4& xform);
+    void SetTextureMatrix(const core::Matrix4& xform);
     /// render something to the active viewport
     /**
         Low-level rendering interface to perform rendering
@@ -55,16 +55,16 @@ public:
         applications, since the SceneManager and various support
         classes will be responsible for calling this method.
     */
-    void _Render(graphics::SubEntity* const renderable);
+    void Render(graphics::SubEntity* const renderable);
     /// start of rendering on a single viewport
-    void _BeginFrame();
+    void BeginFrame();
     /// ends rendering of a frame to the current viewport
-    void _EndFrame();
+    void EndFrame();
 
     /// method for setting up the renderstate for a rendering pass
-    void _SetPass(graphics::Pass* const pass);
+    void SetPass(graphics::Pass* const pass);
     /// tells the rendersystem to use the attached set of lights (and no others)
-    void _UseLights(ce_hash_table* const lights);
+    void ProcessLights(ce_hash_table* const lights);
     /// sets the colour & strength of the ambient (global directionless) light in the world
     void SetAmbientLight(unsigned int colour);
 

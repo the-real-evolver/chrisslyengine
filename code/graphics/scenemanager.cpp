@@ -335,7 +335,7 @@ SceneManager::_RenderScene(Camera* const camera, Viewport* const vp)
         // are we using any shadows at all?
         if (this->IsShadowTechniqueInUse() && !this->suppressRenderStateChanges)
         {
-            this->_PrepareShadowTextures();
+            this->PrepareShadowTextures();
         }
     }
 
@@ -423,32 +423,32 @@ SceneManager::_RenderScene(Camera* const camera, Viewport* const vp)
     }
 
     // render queues
-    this->destRenderSystem->_BeginFrame();
+    this->destRenderSystem->BeginFrame();
 
-    this->destRenderSystem->_SetRenderTarget(vp->GetTarget());
-    this->destRenderSystem->_SetViewport(vp);
+    this->destRenderSystem->SetRenderTarget(vp->GetTarget());
+    this->destRenderSystem->SetViewport(vp);
 
-    this->destRenderSystem->_SetProjectionMatrix(camera->GetProjectionMatrix());
-    this->destRenderSystem->_SetViewMatrix(camera->GetViewMatrix());
+    this->destRenderSystem->SetProjectionMatrix(camera->GetProjectionMatrix());
+    this->destRenderSystem->SetViewMatrix(camera->GetViewMatrix());
 
-    this->destRenderSystem->_UseLights(&this->lights);
+    this->destRenderSystem->ProcessLights(&this->lights);
 
     if (this->IsShadowTechniqueInUse() && this->illuminationStage == IRS_RENDER_TO_TEXTURE)
     {
-        this->_RenderQueueGroupObjects(&this->renderQueueOpaque);
+        this->RenderQueueGroupObjects(&this->renderQueueOpaque);
     }
     else
     {
-        this->_RenderQueueGroupObjects(&this->renderQueueOpaque);
-        this->_RenderQueueGroupObjects(&this->renderQueueTransparent);
+        this->RenderQueueGroupObjects(&this->renderQueueOpaque);
+        this->RenderQueueGroupObjects(&this->renderQueueTransparent);
 
         if (this->IsShadowTechniqueInUse() && !this->suppressRenderStateChanges)
         {
-            this->_RenderTextureShadowReceiverQueueGroupObjects(&this->renderQueueShadowReceiver);
+            this->RenderTextureShadowReceiverQueueGroupObjects(&this->renderQueueShadowReceiver);
         }
     }
 
-    this->destRenderSystem->_EndFrame();
+    this->destRenderSystem->EndFrame();
 }
 
 //------------------------------------------------------------------------------
@@ -457,7 +457,7 @@ SceneManager::_RenderScene(Camera* const camera, Viewport* const vp)
 void
 SceneManager::_SetPass(Pass* const pass)
 {
-    this->destRenderSystem->_SetPass(pass);
+    this->destRenderSystem->SetPass(pass);
 }
 
 //---------------------------------------------------------------------
@@ -471,7 +471,7 @@ SceneManager::_SuppressRenderStateChanges(bool suppress)
 /**
 */
 void
-SceneManager::_PrepareShadowTextures()
+SceneManager::PrepareShadowTextures()
 {
     this->illuminationStage = IRS_RENDER_TO_TEXTURE;
 
@@ -502,7 +502,7 @@ SceneManager::_PrepareShadowTextures()
 /**
 */
 void
-SceneManager::_RenderQueueGroupObjects(QueuedRenderableCollection* const queue)
+SceneManager::RenderQueueGroupObjects(QueuedRenderableCollection* const queue)
 {
     Pass* lastPass = NULL;
 
@@ -518,15 +518,15 @@ SceneManager::_RenderQueueGroupObjects(QueuedRenderableCollection* const queue)
             Pass* pass = renderablePass->pass;
             if (pass != lastPass)
             {
-                this->destRenderSystem->_SetPass(pass);
+                this->destRenderSystem->SetPass(pass);
             }
             lastPass = pass;
         }
 
         // render entity
         SubEntity* renderable = renderablePass->renderable;
-        this->destRenderSystem->_SetWorldMatrix(renderable->parentEntity->parentNode->_GetFullTransform());
-        this->destRenderSystem->_Render(renderable);
+        this->destRenderSystem->SetWorldMatrix(renderable->parentEntity->parentNode->_GetFullTransform());
+        this->destRenderSystem->Render(renderable);
     }
 
     queue->Clear();
@@ -536,9 +536,9 @@ SceneManager::_RenderQueueGroupObjects(QueuedRenderableCollection* const queue)
 /**
 */
 void
-SceneManager::_RenderTextureShadowReceiverQueueGroupObjects(QueuedRenderableCollection* const queue)
+SceneManager::RenderTextureShadowReceiverQueueGroupObjects(QueuedRenderableCollection* const queue)
 {
-    this->destRenderSystem->_SetPass(this->shadowPass);
+    this->destRenderSystem->SetPass(this->shadowPass);
 
     unsigned short numRenderablePasses = queue->GetNumRenderablePasses();
     unsigned short i;
@@ -546,9 +546,9 @@ SceneManager::_RenderTextureShadowReceiverQueueGroupObjects(QueuedRenderableColl
     {
         SubEntity* renderable = queue->GetRenderablePass(i)->renderable;
 
-        this->destRenderSystem->_SetWorldMatrix(renderable->parentEntity->parentNode->_GetFullTransform());
-        this->destRenderSystem->_SetTextureMatrix(this->shadowProjection * renderable->parentEntity->parentNode->_GetFullTransform());
-        this->destRenderSystem->_Render(renderable);
+        this->destRenderSystem->SetWorldMatrix(renderable->parentEntity->parentNode->_GetFullTransform());
+        this->destRenderSystem->SetTextureMatrix(this->shadowProjection * renderable->parentEntity->parentNode->_GetFullTransform());
+        this->destRenderSystem->Render(renderable);
     }
 
     queue->Clear();

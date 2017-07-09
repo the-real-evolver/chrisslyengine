@@ -54,7 +54,7 @@ GLES2RenderSystem::~GLES2RenderSystem()
 /**
 */
 graphics::RenderWindow* const
-GLES2RenderSystem::_Initialise(void* const customParams)
+GLES2RenderSystem::Initialise(void* const customParams)
 {
     graphics::RenderWindow* renderWindow = CE_NEW graphics::RenderWindow(customParams);
     renderWindow->Create();
@@ -114,7 +114,7 @@ GLES2RenderSystem::Shutdown()
 /**
 */
 void
-GLES2RenderSystem::_SetRenderTarget(graphics::RenderTarget* const target)
+GLES2RenderSystem::SetRenderTarget(graphics::RenderTarget* const target)
 {
 
 }
@@ -123,7 +123,7 @@ GLES2RenderSystem::_SetRenderTarget(graphics::RenderTarget* const target)
 /**
 */
 void
-GLES2RenderSystem::_SetViewport(graphics::Viewport* const vp)
+GLES2RenderSystem::SetViewport(graphics::Viewport* const vp)
 {
     int width = vp->GetActualWidth();
     int height = vp->GetActualHeight();
@@ -152,7 +152,7 @@ GLES2RenderSystem::_SetViewport(graphics::Viewport* const vp)
 /**
 */
 void
-GLES2RenderSystem::_SetWorldMatrix(const core::Matrix4& m)
+GLES2RenderSystem::SetWorldMatrix(const core::Matrix4& m)
 {
     this->worldMatrix = m;
     GLES2Mappings::MakeGLMatrix(this->glWorldMatrix, m);
@@ -162,7 +162,7 @@ GLES2RenderSystem::_SetWorldMatrix(const core::Matrix4& m)
 /**
 */
 void
-GLES2RenderSystem::_SetViewMatrix(const core::Matrix4& m)
+GLES2RenderSystem::SetViewMatrix(const core::Matrix4& m)
 {
     this->viewMatrix = m;
     GLES2Mappings::MakeGLMatrix(this->glViewMatrix, m);
@@ -172,7 +172,7 @@ GLES2RenderSystem::_SetViewMatrix(const core::Matrix4& m)
 /**
 */
 void
-GLES2RenderSystem::_SetProjectionMatrix(const core::Matrix4& m)
+GLES2RenderSystem::SetProjectionMatrix(const core::Matrix4& m)
 {
     this->projectionMatrix = m;
     GLES2Mappings::MakeGLMatrix(this->glProjectionMatrix, m);
@@ -182,7 +182,7 @@ GLES2RenderSystem::_SetProjectionMatrix(const core::Matrix4& m)
 /**
 */
 void
-GLES2RenderSystem::_SetTextureMatrix(const core::Matrix4& xform)
+GLES2RenderSystem::SetTextureMatrix(const core::Matrix4& xform)
 {
     GLES2Mappings::MakeGLMatrix(this->glTextureMatrix, xform);
 }
@@ -208,7 +208,7 @@ GLES2RenderSystem::SetMatrices()
 /**
 */
 void
-GLES2RenderSystem::_Render(graphics::SubEntity* const renderable)
+GLES2RenderSystem::Render(graphics::SubEntity* const renderable)
 {
     this->SetMatrices();
 
@@ -284,7 +284,7 @@ GLES2RenderSystem::_Render(graphics::SubEntity* const renderable)
 /**
 */
 void
-GLES2RenderSystem::_BeginFrame()
+GLES2RenderSystem::BeginFrame()
 {
 
 }
@@ -293,7 +293,7 @@ GLES2RenderSystem::_BeginFrame()
 /**
 */
 void
-GLES2RenderSystem::_EndFrame()
+GLES2RenderSystem::EndFrame()
 {
 
 }
@@ -302,7 +302,7 @@ GLES2RenderSystem::_EndFrame()
 /**
 */
 void
-GLES2RenderSystem::_SetPass(graphics::Pass* const pass)
+GLES2RenderSystem::SetPass(graphics::Pass* const pass)
 {
     // scene blending parameters
     if (pass->GetSceneBlendingEnabled())
@@ -469,7 +469,7 @@ GLES2RenderSystem::_SetPass(graphics::Pass* const pass)
 /**
 */
 void
-GLES2RenderSystem::_UseLights(ce_hash_table* const lights)
+GLES2RenderSystem::ProcessLights(ce_hash_table* const lights)
 {
     unsigned int lightIndex = 0U;
     unsigned int i;

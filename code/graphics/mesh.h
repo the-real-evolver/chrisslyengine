@@ -40,11 +40,11 @@ public:
     void RemoveAllAnimations();
     /// returns whether or not this mesh has some kind of vertex animation
     bool HasVertexAnimation() const;
-    /// initialise an animation set suitable for use with this mesh
-    void _InitAnimationState(ce_hash_table* const animSet);
-
     /// gets the radius of the bounding sphere surrounding this mesh
     float GetBoundingSphereRadius() const;
+
+    /// initialise an animation set suitable for use with this mesh
+    void _InitAnimationState(ce_hash_table* const animSet);
 
 private:
     /// a list of submeshes which make up this mesh

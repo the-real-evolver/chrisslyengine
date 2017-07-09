@@ -31,8 +31,6 @@ public:
     SubEntity* const GetSubEntity(unsigned int index) const;
     /// retrieves the number of SubEntity objects making up this entity
     unsigned int GetNumSubEntities() const;
-    /// internal method called to notify the object that it has been attached to a node
-    void _NotifyAttached(SceneNode* const parent);
     /// sets whether or not this object will cast shadows
     /**
         @remarks
@@ -59,10 +57,12 @@ public:
     AnimationState* const GetAnimationState(const char* const name) const;
     /// perform all the updates required for an animated entity
     void UpdateAnimation();
+    /// internal method called to notify the object that it has been attached to a node
+    void _NotifyAttached(SceneNode* const parent);
 
 private:
     /// private constructor - construct from mesh (the usual constructor used)
-    Entity(Mesh* mesh);
+    Entity(Mesh* const mesh);
     /// builds a list of SubEntities based on the SubMeshes contained in the Mesh
     void BuildSubEntities();
 

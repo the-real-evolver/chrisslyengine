@@ -37,7 +37,7 @@ SoundBase::SoundBase() :
 */
 SoundBase::~SoundBase()
 {
-    this->_Release();
+    this->ReleaseInternal();
 }
 
 //------------------------------------------------------------------------------
@@ -95,7 +95,7 @@ SoundBase::Release()
 
     if (0 == this->useCount)
     {
-        this->_Release();
+        this->ReleaseInternal();
     }
     else
     {
@@ -105,58 +105,6 @@ SoundBase::Release()
     this->releaseSyncLock.Unlock();
 
     return OK;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-void
-SoundBase::_Setup(const char* const filename, Mode modeflags, Codec* const codec)
-{
-    this->mode = modeflags;
-    this->audioCodec = codec;
-    this->audioCodec->SetupSound(filename, modeflags, &this->sampleBuffer, this->lengthInSamples, this->audioFormat, this->soundType, this->numChannels, this->bitsPerSample, this->sampleRate);
-    this->_CreateInternalResources();
-    this->inUse = true;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-void
-SoundBase::_Release()
-{
-    this->mode = MODE_DEFAULT;
-    this->soundType = SOUND_TYPE_UNKNOWN;
-    this->audioFormat = AUDIO_FORMAT_NONE;
-    this->lengthInSamples = 0U;
-    this->numChannels = 0;
-    this->bitsPerSample = 0;
-    this->sampleRate = 0U;
-
-    if (this->sampleBuffer != NULL)
-    {
-        CE_FREE(this->sampleBuffer);
-        this->sampleBuffer = NULL;
-    }
-    if (this->audioCodec != NULL)
-    {
-        CE_DELETE this->audioCodec;
-        this->audioCodec = NULL;
-    }
-
-    this->inUse = false;
-
-    this->requestRelease = false;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-bool
-SoundBase::_IsInUse() const
-{
-    return this->inUse;
 }
 
 //------------------------------------------------------------------------------
@@ -187,7 +135,7 @@ SoundBase::_DecrementUseCount()
 
     if (this->requestRelease && 0U == this->useCount)
     {
-        this->_Release();
+        this->ReleaseInternal();
     }
 
     this->releaseSyncLock.Unlock();
@@ -236,7 +184,59 @@ SoundBase::_GetCodec() const
 /**
 */
 void
-SoundBase::_CreateInternalResources()
+SoundBase::Setup(const char* const filename, Mode modeflags, Codec* const codec)
+{
+    this->mode = modeflags;
+    this->audioCodec = codec;
+    this->audioCodec->SetupSound(filename, modeflags, &this->sampleBuffer, this->lengthInSamples, this->audioFormat, this->soundType, this->numChannels, this->bitsPerSample, this->sampleRate);
+    this->CreateInternalResources();
+    this->inUse = true;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+SoundBase::ReleaseInternal()
+{
+    this->mode = MODE_DEFAULT;
+    this->soundType = SOUND_TYPE_UNKNOWN;
+    this->audioFormat = AUDIO_FORMAT_NONE;
+    this->lengthInSamples = 0U;
+    this->numChannels = 0;
+    this->bitsPerSample = 0;
+    this->sampleRate = 0U;
+
+    if (this->sampleBuffer != NULL)
+    {
+        CE_FREE(this->sampleBuffer);
+        this->sampleBuffer = NULL;
+    }
+    if (this->audioCodec != NULL)
+    {
+        CE_DELETE this->audioCodec;
+        this->audioCodec = NULL;
+    }
+
+    this->inUse = false;
+
+    this->requestRelease = false;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+bool
+SoundBase::IsInUse() const
+{
+    return this->inUse;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+SoundBase::CreateInternalResources()
 {
 
 }

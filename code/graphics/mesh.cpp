@@ -123,6 +123,15 @@ Mesh::HasVertexAnimation() const
 //------------------------------------------------------------------------------
 /**
 */
+float
+Mesh::GetBoundingSphereRadius() const
+{
+    return this->boundingRadius;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
 void
 Mesh::_InitAnimationState(ce_hash_table* const animSet)
 {
@@ -138,15 +147,6 @@ Mesh::_InitAnimationState(ce_hash_table* const animSet)
             it = it->next;
         }
     }
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-float
-Mesh::GetBoundingSphereRadius() const
-{
-    return this->boundingRadius;
 }
 
 } // namespace graphics

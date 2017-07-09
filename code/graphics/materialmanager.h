@@ -29,9 +29,9 @@ public:
     MaterialManager();
     /// destructor
     ~MaterialManager();
-    /// create all materials defined in the material file
+    /// create all materials defined in the default material file
     void Initialise();
-    /// parse material script and create the material
+    /// parse material script and create materials
     void ParseScript(const char* const name);
     /// create a new material, or retrieve an existing one with the same name if it already exists
     Material* const CreateOrRetrieve(const char* const name);

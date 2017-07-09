@@ -48,7 +48,7 @@ PSPRenderSystem::~PSPRenderSystem()
 /**
 */
 graphics::RenderWindow* const
-PSPRenderSystem::_Initialise(void* const customParams)
+PSPRenderSystem::Initialise(void* const customParams)
 {
     sceGuInit();
 
@@ -81,7 +81,7 @@ PSPRenderSystem::Shutdown()
 /**
 */
 void
-PSPRenderSystem::_SetRenderTarget(graphics::RenderTarget* const target)
+PSPRenderSystem::SetRenderTarget(graphics::RenderTarget* const target)
 {
     sceGuDrawBufferList(PSPMappings::Get(target->GetFormat()), target->GetBuffer(), target->GetWidth());
 }
@@ -90,7 +90,7 @@ PSPRenderSystem::_SetRenderTarget(graphics::RenderTarget* const target)
 /**
 */
 void
-PSPRenderSystem::_SetViewport(graphics::Viewport* const vp)
+PSPRenderSystem::SetViewport(graphics::Viewport* const vp)
 {
     int width = vp->GetActualWidth();
     int height = vp->GetActualHeight();
@@ -113,7 +113,7 @@ PSPRenderSystem::_SetViewport(graphics::Viewport* const vp)
 /**
 */
 void
-PSPRenderSystem::_SetWorldMatrix(const core::Matrix4& m)
+PSPRenderSystem::SetWorldMatrix(const core::Matrix4& m)
 {
     this->worldMat = PSPMappings::MakePSPMatrix(m);
     sceGuSetMatrix(GU_MODEL, &this->worldMat);
@@ -123,7 +123,7 @@ PSPRenderSystem::_SetWorldMatrix(const core::Matrix4& m)
 /**
 */
 void
-PSPRenderSystem::_SetViewMatrix(const core::Matrix4& m)
+PSPRenderSystem::SetViewMatrix(const core::Matrix4& m)
 {
     this->viewMat = PSPMappings::MakePSPMatrix(m);
     sceGuSetMatrix(GU_VIEW, &this->viewMat);
@@ -133,7 +133,7 @@ PSPRenderSystem::_SetViewMatrix(const core::Matrix4& m)
 /**
 */
 void
-PSPRenderSystem::_SetProjectionMatrix(const core::Matrix4& m)
+PSPRenderSystem::SetProjectionMatrix(const core::Matrix4& m)
 {
     this->projMat = PSPMappings::MakePSPMatrix(m);
     sceGuSetMatrix(GU_PROJECTION, &this->projMat);
@@ -143,7 +143,7 @@ PSPRenderSystem::_SetProjectionMatrix(const core::Matrix4& m)
 /**
 */
 void
-PSPRenderSystem::_SetTextureMatrix(const core::Matrix4& xform)
+PSPRenderSystem::SetTextureMatrix(const core::Matrix4& xform)
 {
     this->texMat = PSPMappings::MakePSPMatrix(xform);
     sceGuSetMatrix(GU_TEXTURE, &this->texMat);
@@ -153,7 +153,7 @@ PSPRenderSystem::_SetTextureMatrix(const core::Matrix4& xform)
 /**
 */
 void
-PSPRenderSystem::_Render(graphics::SubEntity* const renderable)
+PSPRenderSystem::Render(graphics::SubEntity* const renderable)
 {
     if (graphics::VAT_MORPH == renderable->GetSubMesh()->GetVertexAnimationType())
     {
@@ -181,7 +181,7 @@ PSPRenderSystem::_Render(graphics::SubEntity* const renderable)
 /**
 */
 void
-PSPRenderSystem::_BeginFrame()
+PSPRenderSystem::BeginFrame()
 {
     sceGuStart(GU_DIRECT, DisplayList);
 }
@@ -190,7 +190,7 @@ PSPRenderSystem::_BeginFrame()
 /**
 */
 void
-PSPRenderSystem::_EndFrame()
+PSPRenderSystem::EndFrame()
 {
     sceGuFinish();
     sceGuSync(0, 0);
@@ -200,7 +200,7 @@ PSPRenderSystem::_EndFrame()
 /**
 */
 void
-PSPRenderSystem::_SetPass(graphics::Pass* const pass)
+PSPRenderSystem::SetPass(graphics::Pass* const pass)
 {
     // scene blending parameters
     if (pass->GetSceneBlendingEnabled())
@@ -312,7 +312,7 @@ PSPRenderSystem::_SetPass(graphics::Pass* const pass)
 /**
 */
 void
-PSPRenderSystem::_UseLights(ce_hash_table* const lights)
+PSPRenderSystem::ProcessLights(ce_hash_table* const lights)
 {
     int lightIndex = 0;
 

@@ -56,7 +56,7 @@ GraphicsSystem::~GraphicsSystem()
 RenderWindow* const
 GraphicsSystem::Initialise(void* const customParams)
 {
-    this->autoWindow = this->activeRenderer->_Initialise(customParams);
+    this->autoWindow = this->activeRenderer->Initialise(customParams);
 
     ce_dynamic_array_push_back(&this->renderTargets, this->autoWindow);
 

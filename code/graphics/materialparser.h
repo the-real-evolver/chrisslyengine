@@ -22,7 +22,7 @@ public:
     MaterialParser();
     /// destructor
     ~MaterialParser();
-    /// parse material script and create the material
+    /// parse material script and create materials
     void ParseScript(const char* const name);
 
 private:

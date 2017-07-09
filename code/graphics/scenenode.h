@@ -26,25 +26,17 @@ class SceneNode
 public:
     /// destructor
     ~SceneNode();
-    /// internal method to update the Node
-    /**
-        @note
-            Updates this scene node and any relevant children to incorporate transforms etc.
-            Don't call this yourself unless you are writing a SceneManager implementation.
-    */
-    void _Update();
     /// creates an unnamed new SceneNode as a child of this node
     SceneNode* const CreateChildSceneNode();
     /// gets the parent of this scenenode
     SceneNode* const GetParentSceneNode() const;
     /// removes all child Nodes attached to this node
-    /** 
+    /**
         Does not delete the nodes, just detaches them from
         this parent, potentially to be reattached elsewhere.
-    */ 
+    */
     void RemoveAllChildren();
-    /// returns a quaternion representing the nodes orientation
-    const core::Quaternion& GetOrientation() const;
+
     /// sets the orientation of this node via a quaternion
     /**
     @remarks
@@ -62,6 +54,8 @@ public:
     void SetOrientation(const core::Quaternion& q);
     /// sets the orientation of this node via quaternion parameters
     void SetOrientation(float w, float x, float y, float z);
+    /// returns a quaternion representing the nodes orientation
+    const core::Quaternion& GetOrientation() const;
     /// sets the position of the node relative to it's parent
     void SetPosition(const core::Vector3& pos);
     /// sets the position of the node relative to it's parent
@@ -86,12 +80,6 @@ public:
     void SetScale(float x, float y, float z);
     /// gets the scaling factor of this node
     const core::Vector3 & GetScale() const;
-    /// gets the orientation of the node as derived from all parents
-    const core::Quaternion& _GetDerivedOrientation() const;
-    /// gets the position of the node as derived from all parents
-    const core::Vector3& _GetDerivedPosition() const;
-    /// gets the scaling factor of the node as derived from all parents
-    const core::Vector3& _GetDerivedScale() const;
     /// rotate the node around the z-axis
     void Roll(float angle);
     /// rotate the node around the x-axis
@@ -102,22 +90,11 @@ public:
     void Rotate(const core::Vector3& axis, float angle);
     /// rotate the node around an aritrary axis using a Quarternion
     void Rotate(const core::Quaternion& q);
-    /// gets the full transformation matrix for this node 
-    /**
-    @remarks
-        This method returns the full transformation matrix
-        for this node, including the effect of any parent node
-        transformations, provided they have been updated using the Node::_update method.
-        This should only be called by a SceneManager which knows the
-        derived transforms have been updated before calling this method.
-        Applications should just use the relative transforms.
-    */
-    const core::Matrix4& _GetFullTransform() const;
 
     /// adds an instance of a scene object to this node
     /**
     @remarks
-        Scene objects can include Entity objects, Camera objects, Light objects, 
+        Scene objects can include Entity objects, Camera objects, Light objects,
         ParticleSystem objects etc. Anything that subclasses from MovableObject.
     */
     void AttachObject(Entity* const obj);
@@ -132,6 +109,32 @@ public:
     Entity* const GetAttachedObject(unsigned short index) const;
     /// detaches all objects attached to this node
     void DetachAllObjects();
+
+    /// gets the orientation of the node as derived from all parents
+    const core::Quaternion& _GetDerivedOrientation() const;
+    /// gets the position of the node as derived from all parents
+    const core::Vector3& _GetDerivedPosition() const;
+    /// gets the scaling factor of the node as derived from all parents
+    const core::Vector3& _GetDerivedScale() const;
+    /// gets the full transformation matrix for this node
+    /**
+    @remarks
+        This method returns the full transformation matrix
+        for this node, including the effect of any parent node
+        transformations, provided they have been updated using the Node::_update method.
+        This should only be called by a SceneManager which knows the
+        derived transforms have been updated before calling this method.
+        Applications should just use the relative transforms.
+    */
+    const core::Matrix4& _GetFullTransform() const;
+
+    /// internal method to update the Node
+    /**
+        @note
+            Updates this scene node and any relevant children to incorporate transforms etc.
+            Don't call this yourself unless you are writing a SceneManager implementation.
+    */
+    void _Update();
 
 private:
     /// constructor, only to be called by the creator SceneManager

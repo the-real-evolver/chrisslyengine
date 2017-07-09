@@ -18,6 +18,7 @@ namespace audio
 
 class SoundBase
 {
+    friend class AudioSystem;
 public:
     /// default constructor
     SoundBase();
@@ -32,12 +33,6 @@ public:
     /// requests release
     Result Release();
 
-    /// initialise sound object
-    void _Setup(const char* const filename, Mode modeflags, Codec* const codec);
-    /// internal method that frees the sound object and makes it available for further use
-    void _Release();
-    /// returns if the sound is setup
-    bool _IsInUse() const;
     /// increments the usecount, called when a channel starts playing the sound
     void _IncrementUseCount();
     /// decrements the usecount, called when a channel using the sound was stopped
@@ -46,10 +41,17 @@ public:
     void* _GetSampleBufferPointer(unsigned int position) const;
     /// get pointer to the attached codec
     Codec* const _GetCodec() const;
-    /// create internal sound resources
-    virtual void _CreateInternalResources();
 
 protected:
+    /// initialise sound object
+    void Setup(const char* const filename, Mode modeflags, Codec* const codec);
+    /// internal method that frees the sound object and makes it available for further use
+    void ReleaseInternal();
+    /// returns if the sound is setup
+    bool IsInUse() const;
+    /// create internal sound resources
+    virtual void CreateInternalResources();
+
     Mode mode;
     SoundType soundType;
     AudioFormat audioFormat;

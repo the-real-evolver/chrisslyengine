@@ -46,13 +46,13 @@ public:
     Result Set3DListenerAttributes(const core::Vector3* const pos, const core::Vector3* const forward, const core::Vector3* const up);
 
     /// software mix all currently active channels to 16 bit stereo output
-    void Mix(unsigned int numSamples, unsigned char* const buffer);
+    void _Mix(unsigned int numSamples, unsigned char* const buffer);
 
 private:
     /// copy constructor
     AudioSystem(const AudioSystem&) {};
     /// internal method to retrieve a pointer to the currently selected audiorenderer
-    AudioRenderer* const _GetAudioRenderer() const;
+    AudioRenderer* const GetAudioRenderer() const;
 
     static AudioSystem* Singleton;
 
