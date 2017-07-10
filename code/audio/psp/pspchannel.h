@@ -21,16 +21,17 @@ public:
     PSPChannel();
     /// destructor
     ~PSPChannel();
-    /// signal the channel thread to release the channel
-    void RequestRelease();
-    /// returns if a channel release was requested
-    bool GetReleaseRequest();
 
 private:
     /// copy constructor
     PSPChannel(const PSPChannel&);
     /// prevent copy by assignment
     PSPChannel& operator = (const PSPChannel&);
+
+    /// signal the channel thread to release the channel
+    void RequestRelease();
+    /// returns if a channel release was requested
+    bool GetReleaseRequest();
 
     SceUID threadId;
     bool requestRelease;

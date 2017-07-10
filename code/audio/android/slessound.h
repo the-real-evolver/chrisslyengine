@@ -16,22 +16,22 @@ namespace chrissly
 
 class SLESSound : public audio::SoundBase
 {
+    friend class SLESChannel;
 public:
     /// default constructor
     SLESSound();
     /// destructor
     ~SLESSound();
 
-    /// create internal sound resources
-    void _CreateInternalResources();
-    /// gets the sl audio source
-    SLDataSource GetAudioSource() const;
-
 private:
     /// copy constructor
     SLESSound(const SLESSound&);
     /// prevent copy by assignment
     SLESSound& operator = (const SLESSound&);
+    /// create internal sound resources
+    void CreateInternalResources();
+    /// gets the sl audio source
+    SLDataSource GetAudioSource() const;
 
     SLDataFormat_PCM pcm;
     SLDataLocator_AndroidSimpleBufferQueue bufferQueue;

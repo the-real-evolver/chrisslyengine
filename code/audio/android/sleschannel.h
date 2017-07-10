@@ -22,6 +22,12 @@ public:
     /// destructor
     ~SLESChannel();
 
+private:
+    /// copy constructor
+    SLESChannel(const SLESChannel&);
+    /// prevent copy by assignment
+    SLESChannel& operator = (const SLESChannel&);
+
     /// setup the sl audio player
     void SetupAudioPlayer(SLEngineItf engineInterface, SLObjectItf outputMix);
     /// stop and destroy the sl audio player
@@ -34,12 +40,6 @@ public:
     SLVolumeItf GetVolumeInterface() const;
     /// gets the effect send interface
     SLEffectSendItf GetEffectSendInterface() const;
-
-private:
-    /// copy constructor
-    SLESChannel(const SLESChannel&);
-    /// prevent copy by assignment
-    SLESChannel& operator = (const SLESChannel&);
 
     SLAndroidSimpleBufferQueueItf bufferQueueInterface;
     SLPlayItf playerInterface;

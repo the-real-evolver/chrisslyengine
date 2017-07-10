@@ -28,7 +28,7 @@ SLESSound::~SLESSound()
 /**
 */
 void
-SLESSound::_CreateInternalResources()
+SLESSound::CreateInternalResources()
 {
     // setup the format of the content in the buffer queue
     this->pcm.formatType    = SL_DATAFORMAT_PCM;
