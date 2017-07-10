@@ -40,6 +40,11 @@ public:
     void* const FillStreamBuffer(unsigned int numSamples, unsigned int position);
 
 private:
+    /// copy constructor
+    VorbisCodec(const VorbisCodec&);
+    /// prevent copy by assignment
+    VorbisCodec& operator = (const VorbisCodec&);
+
     unsigned int lengthInSamples;
     bool openedAsStream;
     unsigned int seekPosition;

@@ -43,6 +43,10 @@ public:
     Codec* const _GetCodec() const;
 
 protected:
+    /// copy constructor
+    SoundBase(const SoundBase&);
+    /// prevent copy by assignment
+    SoundBase& operator = (const SoundBase&);
     /// initialise sound object
     void Setup(const char* const filename, Mode modeflags, Codec* const codec);
     /// internal method that frees the sound object and makes it available for further use

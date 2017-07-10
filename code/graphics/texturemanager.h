@@ -35,7 +35,9 @@ public:
 
 private:
     /// copy constructor
-    TextureManager(const TextureManager&) {};
+    TextureManager(const TextureManager&);
+    /// prevent copy by assignment
+    TextureManager& operator = (const TextureManager&);
 
     static TextureManager* Singleton;
 

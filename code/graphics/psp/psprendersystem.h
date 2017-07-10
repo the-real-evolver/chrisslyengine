@@ -73,7 +73,9 @@ public:
 
 private:
     /// copy constructor
-    PSPRenderSystem(const PSPRenderSystem&cc) {};
+    PSPRenderSystem(const PSPRenderSystem&);
+    /// prevent copy by assignment
+    PSPRenderSystem& operator = (const PSPRenderSystem&);
 
     static PSPRenderSystem* Singleton;
 

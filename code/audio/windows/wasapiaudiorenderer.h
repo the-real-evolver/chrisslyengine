@@ -50,7 +50,9 @@ public:
 
 private:
     /// copy constructor
-    WASAPIAudioRenderer(const WASAPIAudioRenderer&) {};
+    WASAPIAudioRenderer(const WASAPIAudioRenderer&);
+    /// prevent copy by assignment
+    WASAPIAudioRenderer& operator = (const WASAPIAudioRenderer&);
 
     static WASAPIAudioRenderer* Singleton;
 

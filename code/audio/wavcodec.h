@@ -40,6 +40,11 @@ public:
     void* const FillStreamBuffer(unsigned int numSamples, unsigned int position);
 
 private:
+    /// copy constructor
+    WavCodec(const WavCodec&);
+    /// prevent copy by assignment
+    WavCodec& operator = (const WavCodec&);
+
     unsigned int riffWavHeaderSize;
     unsigned int lengthInBytes;
     unsigned char bytesPerSample;

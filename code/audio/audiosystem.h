@@ -50,7 +50,9 @@ public:
 
 private:
     /// copy constructor
-    AudioSystem(const AudioSystem&) {};
+    AudioSystem(const AudioSystem&);
+    /// prevent copy by assignment
+    AudioSystem& operator = (const AudioSystem &);
     /// internal method to retrieve a pointer to the currently selected audiorenderer
     AudioRenderer* const GetAudioRenderer() const;
 

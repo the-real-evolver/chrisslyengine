@@ -76,7 +76,9 @@ public:
 
 private:
     /// copy constructor
-    D3D11RenderSystem(const D3D11RenderSystem&) {};
+    D3D11RenderSystem(const D3D11RenderSystem&);
+    /// prevent copy by assignment
+    D3D11RenderSystem& operator = (const D3D11RenderSystem&);
 
     static D3D11RenderSystem* Singleton;
 

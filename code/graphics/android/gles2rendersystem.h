@@ -73,7 +73,10 @@ public:
 
 private:
     /// copy constructor
-    GLES2RenderSystem(const GLES2RenderSystem&cc) {};
+    GLES2RenderSystem(const GLES2RenderSystem&);
+    /// prevent copy by assignment
+    GLES2RenderSystem& operator = (const GLES2RenderSystem&);
+
     /// set uniform matrices
     void SetMatrices();
 

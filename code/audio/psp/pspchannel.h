@@ -27,6 +27,11 @@ public:
     bool GetReleaseRequest();
 
 private:
+    /// copy constructor
+    PSPChannel(const PSPChannel&);
+    /// prevent copy by assignment
+    PSPChannel& operator = (const PSPChannel&);
+
     SceUID threadId;
     bool requestRelease;
 };

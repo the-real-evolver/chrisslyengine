@@ -28,6 +28,11 @@ public:
     SLDataSource GetAudioSource() const;
 
 private:
+    /// copy constructor
+    SLESSound(const SLESSound&);
+    /// prevent copy by assignment
+    SLESSound& operator = (const SLESSound&);
+
     SLDataFormat_PCM pcm;
     SLDataLocator_AndroidSimpleBufferQueue bufferQueue;
     SLDataSource audioSource;

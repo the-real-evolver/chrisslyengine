@@ -84,6 +84,10 @@ public:
     const core::Mutex& _GetSyncLock() const;
 
 protected:
+    /// copy constructor
+    ChannelBase(const ChannelBase&);
+    /// prevent copy by assignment
+    ChannelBase& operator = (const ChannelBase&);
     /// set the sound to playback on this channel
     void AttachSound(Sound* const sound);
     /// set the factor the volume will be scaled with internal if the channel is playing in 3d mode

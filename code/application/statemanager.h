@@ -30,7 +30,7 @@ public:
     /// updates the statemanager
     void Trigger();
     /// changes the state
-    void ChangeState(State* state);
+    void ChangeState(State* const state);
     /// shutdown the statemanger
     void Exit();
     /// returns if the statemanger is running
@@ -38,7 +38,9 @@ public:
 
 private:
     /// copy constructor
-    StateManager(const StateManager&cc) {};
+    StateManager(const StateManager&);
+    /// prevent copy by assignment
+    StateManager& operator = (const StateManager&);
 
     static StateManager* Singleton;
     State* currentState;

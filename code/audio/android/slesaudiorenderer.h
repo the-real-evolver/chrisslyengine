@@ -50,7 +50,9 @@ public:
 
 private:
     /// copy constructor
-    SLESAudioRenderer(const SLESAudioRenderer&cc) {};
+    SLESAudioRenderer(const SLESAudioRenderer&);
+    /// prevent copy by assignment
+    SLESAudioRenderer& operator = (const SLESAudioRenderer&);
 
     static SLESAudioRenderer* Singleton;
 

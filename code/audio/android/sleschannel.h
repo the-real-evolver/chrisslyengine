@@ -36,6 +36,11 @@ public:
     SLEffectSendItf GetEffectSendInterface() const;
 
 private:
+    /// copy constructor
+    SLESChannel(const SLESChannel&);
+    /// prevent copy by assignment
+    SLESChannel& operator = (const SLESChannel&);
+
     SLAndroidSimpleBufferQueueItf bufferQueueInterface;
     SLPlayItf playerInterface;
     SLVolumeItf volumeInterface;

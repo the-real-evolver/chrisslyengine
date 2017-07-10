@@ -48,7 +48,9 @@ public:
 
 private:
     /// copy constructor
-    PSPAudioRenderer(const PSPAudioRenderer&cc) {};
+    PSPAudioRenderer(const PSPAudioRenderer&);
+    /// prevent copy by assignment
+    PSPAudioRenderer& operator = (const PSPAudioRenderer&);
 
     static PSPAudioRenderer* Singleton;
 };

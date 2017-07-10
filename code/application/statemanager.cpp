@@ -47,7 +47,7 @@ StateManager::Trigger()
 /**
 */
 void
-StateManager::ChangeState(State* state)
+StateManager::ChangeState(State* const state)
 {
     if (state != this->currentState)
     {

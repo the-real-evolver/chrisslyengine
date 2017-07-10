@@ -26,7 +26,7 @@ PSPChannel::PSPChannel() :
     CE_ASSERT(this->threadId >= 0, "PSPChannel::PSPChannel(): sceKernelCreateThread() failed: %08x\n", this->threadId);
 
     int error = sceKernelStartThread(this->threadId, sizeof(uintptr_t), &addr);
-    CE_ASSERT(error == 0, "PSPChannel::PSPChannel(): sceKernelStartThread() failed: %08x\n", error);
+    CE_ASSERT(0 == error, "PSPChannel::PSPChannel(): sceKernelStartThread() failed: %08x\n", error);
 }
 
 //------------------------------------------------------------------------------

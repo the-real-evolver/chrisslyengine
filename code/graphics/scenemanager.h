@@ -141,7 +141,9 @@ public:
 
 private:
     /// copy constructor
-    SceneManager(const SceneManager&) {};
+    SceneManager(const SceneManager&);
+    /// prevent copy by assignment
+    SceneManager& operator = (const SceneManager&);
     /// method for preparing shadow textures ready for use in a regular render
     void PrepareShadowTextures();
     /// render the objects in a given queue group 
