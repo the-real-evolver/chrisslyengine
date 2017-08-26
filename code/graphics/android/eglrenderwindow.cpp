@@ -98,7 +98,7 @@ EGLRenderWindow::Create()
 
     if (EGL_FALSE == eglMakeCurrent(this->display, this->surface, this->surface, this->context))
     {
-        CE_ASSERT(false, "Unable to eglMakeCurrent");
+        CE_ASSERT(false, "EGLRenderWindow::Create(): Unable to eglMakeCurrent\n");
     }
 
     eglQuerySurface(this->display, this->surface, EGL_WIDTH, &this->width);

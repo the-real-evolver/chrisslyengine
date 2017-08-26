@@ -68,7 +68,7 @@ D3D11RenderSystem::Initialise(void* const customParams)
         NULL,                       /* __out    D3D_FEATURE_LEVEL *pFeatureLevel                            */
         &this->context              /* __out    ID3D11DeviceContext **ppImmediateContext                    */
     );
-    CE_ASSERT(SUCCEEDED(result), "D3D11RenderSystem::_Initialise(): failed to create d3d11 device\n");
+    CE_ASSERT(SUCCEEDED(result), "D3D11RenderSystem::Initialise(): failed to create d3d11 device\n");
 
     /* initialise rasterizer state object that tells the rasterizer stage how to behave */
     ZeroMemory(&this->currentRasterState, sizeof(this->currentRasterState));
@@ -89,8 +89,8 @@ D3D11RenderSystem::Initialise(void* const customParams)
     this->currentDepthStencilState.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
     this->currentDepthStencilState.DepthFunc = D3D11_COMPARISON_LESS;
     this->currentDepthStencilState.StencilEnable = true;
-    this->currentDepthStencilState.StencilReadMask = 0xFF;
-    this->currentDepthStencilState.StencilWriteMask = 0xFF;
+    this->currentDepthStencilState.StencilReadMask = 0xff;
+    this->currentDepthStencilState.StencilWriteMask = 0xff;
     this->currentDepthStencilState.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
     this->currentDepthStencilState.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
     this->currentDepthStencilState.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
@@ -151,7 +151,7 @@ D3D11RenderSystem::Initialise(void* const customParams)
         this->currentGpuProgram->GetVertexShaderCode()->GetBufferSize(),
         &this->inputLayout
     );
-    CE_ASSERT(SUCCEEDED(result), "D3D11RenderSystem::_Initialise(): failed to create input layout\n");
+    CE_ASSERT(SUCCEEDED(result), "D3D11RenderSystem::Initialise(): failed to create input layout\n");
 
     /* create default input layout for morph animation */
     D3D11_INPUT_ELEMENT_DESC inputDescMorphAnim[] =
@@ -171,7 +171,7 @@ D3D11RenderSystem::Initialise(void* const customParams)
         this->defaultGpuProgramMorphAnim->GetVertexShaderCode()->GetBufferSize(),
         &this->inputLayoutMorphAnim
     );
-    CE_ASSERT(SUCCEEDED(result), "D3D11RenderSystem::_Initialise(): failed to create input layout\n");
+    CE_ASSERT(SUCCEEDED(result), "D3D11RenderSystem::Initialise(): failed to create input layout\n");
 
     /* setup default context states */
     this->context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

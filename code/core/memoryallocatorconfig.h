@@ -11,7 +11,7 @@
 */
 #include <malloc.h>
 
-#define CE_CACHE_LINE_SIZE 64
+#define CE_CACHE_LINE_SIZE 64U
 
 #define CE_NEW new
 #define CE_DELETE delete

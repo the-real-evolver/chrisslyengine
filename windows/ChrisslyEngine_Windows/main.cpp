@@ -46,27 +46,21 @@ WinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prevInstance, _In_ LPSTR cmd
     light->SetDiffuseColour(0xffff00ff);
     light->SetPosition(1.0f, 0.0f, 0.0f);
 
-    MSG msg;
-    while (true)
+    MSG msg = {0};
+    while (msg.message != WM_QUIT)
     {
-        if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+        if (PeekMessage(&msg, NULL, 0U, 0U, PM_REMOVE))
         {
             if (WM_KEYDOWN == msg.message)
             {
                 CE_LOG("-> Key Pressed: '%c'\n", (char)msg.wParam);
             }
-            if (WM_QUIT == msg.message)
-            {
-                break;
-            }
             TranslateMessage(&msg);
             DispatchMessage(&msg);
         }
-        else
-        {
-            sceneNode->Yaw(0.01f);
-            GraphicsSystem::Instance()->RenderOneFrame();
-        }
+
+        sceneNode->Yaw(0.01f);
+        GraphicsSystem::Instance()->RenderOneFrame();
     }
 
     delete graphicsSystem;
