@@ -49,7 +49,7 @@ public:
 inline float
 PSPMath::Pow(float base, float exponent)
 {
-    return pow(base, exponent);
+    return powf(base, exponent);
 }
 
 //------------------------------------------------------------------------------

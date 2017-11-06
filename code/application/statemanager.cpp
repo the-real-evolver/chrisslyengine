@@ -82,7 +82,7 @@ StateManager::Exit()
 /**
 */
 bool
-StateManager::IsRunning()
+StateManager::IsRunning() const
 {
     return this->isRunning;
 }

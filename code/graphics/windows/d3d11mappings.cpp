@@ -225,11 +225,13 @@ D3D11Mappings::Get(const D3D11_SHADER_TYPE_DESC& typeDesc)
                         case 3U: return graphics::GCT_FLOAT3;
                         case 4U: return graphics::GCT_FLOAT4;
                     }
+                    break;
                 case 4U:
                     switch (typeDesc.Columns)
                     {
                         case 4U: return graphics::GCT_MATRIX_4X4;
                     }
+                    break;
             }
             break;
 

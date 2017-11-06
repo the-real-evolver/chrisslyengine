@@ -19,7 +19,7 @@ class WinAPIFSWrapper
 {
 public:
     /// open a file
-    static core::FileHandle Open(const char* const fileName, core::AccessMode flags, core::AccessPattern pattern, int mode);
+    static core::FileHandle Open(const char* const fileName, core::AccessMode mode, core::AccessPattern pattern, int permission);
     /// close a file
     static void Close(core::FileHandle fileHandle);
     /// get size of a file in bytes

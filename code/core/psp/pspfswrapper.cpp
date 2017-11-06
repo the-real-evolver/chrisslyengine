@@ -12,23 +12,23 @@ namespace chrissly
 {
 
 #ifdef ROOT_DIR
-static const char* RootDirectory = ROOT_DIR;
+static const char* const RootDirectory = ROOT_DIR;
 #else
-static const char* RootDirectory = "ms0:/PSP/GAME/ChrisslyEngine_PSP/export/";
+static const char* const RootDirectory = "ms0:/PSP/GAME/ChrisslyEngine_PSP/export/";
 #endif
 
 //------------------------------------------------------------------------------
 /**
 */
 core::FileHandle
-PSPFSWrapper::Open(const char* const fileName, core::AccessMode flags, core::AccessPattern pattern, int mode)
+PSPFSWrapper::Open(const char* const fileName, core::AccessMode mode, core::AccessPattern pattern, int permission)
 {
     char filePath[128U] = {'\0'};
     CE_ASSERT(strlen(RootDirectory) + strlen(fileName) < 128U, "FSWrapper::Open(): file path too long (limit is 128 characters) '%s%s'\n", RootDirectory, fileName);
     strcpy(filePath, RootDirectory);
     strcat(filePath, fileName);
     core::FileHandle fileHandle;
-    fileHandle.handle = sceIoOpen(filePath, PSPFSWrapper::Get(flags), mode);
+    fileHandle.handle = sceIoOpen(filePath, PSPFSWrapper::Get(mode), permission);
     CE_ASSERT(fileHandle.handle >= 0, "FSWrapper::Open(): can't open file '%s'\n", fileName);
     return fileHandle;
 }

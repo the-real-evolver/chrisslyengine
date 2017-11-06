@@ -26,7 +26,9 @@ String::String() :
 //------------------------------------------------------------------------------
 /**
 */
-String::String(const String& rhs)
+String::String(const String& rhs) :
+    data(NULL),
+    size(0U)
 {
     this->Set(rhs.C_Str());
 }
@@ -34,7 +36,9 @@ String::String(const String& rhs)
 //------------------------------------------------------------------------------
 /**
 */
-String::String(const char* const cStr)
+String::String(const char* const cStr) :
+    data(NULL),
+    size(0U)
 {
     this->Set(cStr);
 }

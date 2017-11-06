@@ -13,15 +13,15 @@ namespace chrissly
 /**
 */
 core::FileHandle
-WinAPIFSWrapper::Open(const char* const fileName, core::AccessMode flags, core::AccessPattern pattern, int mode)
+WinAPIFSWrapper::Open(const char* const fileName, core::AccessMode mode, core::AccessPattern pattern, int permission)
 {
     CE_UNREFERENCED_PARAMETER(pattern);
-    CE_UNREFERENCED_PARAMETER(mode);
+    CE_UNREFERENCED_PARAMETER(permission);
 
     core::FileHandle fileHandle;
     fileHandle.handle = CreateFile(
         fileName,                       /* _In_     LPCTSTR lpFileName                          */
-        WinAPIFSWrapper::Get(flags),    /* _In_     DWORD dwDesiredAccess                       */
+        WinAPIFSWrapper::Get(mode),     /* _In_     DWORD dwDesiredAccess                       */
         FILE_SHARE_READ,                /* _In_     DWORD dwShareMode                           */
         NULL,                           /* _In_opt_ LPSECURITY_ATTRIBUTES lpSecurityAttributes  */
         OPEN_EXISTING,                  /* _In_     DWORD dwCreationDisposition                 */

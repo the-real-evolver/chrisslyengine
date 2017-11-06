@@ -85,10 +85,10 @@ D3D11RenderSystem::Initialise(void* const customParams)
 
     /* initialise depth stencil state */
     ZeroMemory(&this->currentDepthStencilState, sizeof(this->currentDepthStencilState));
-    this->currentDepthStencilState.DepthEnable = true;
+    this->currentDepthStencilState.DepthEnable = TRUE;
     this->currentDepthStencilState.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
     this->currentDepthStencilState.DepthFunc = D3D11_COMPARISON_LESS;
-    this->currentDepthStencilState.StencilEnable = true;
+    this->currentDepthStencilState.StencilEnable = TRUE;
     this->currentDepthStencilState.StencilReadMask = 0xff;
     this->currentDepthStencilState.StencilWriteMask = 0xff;
     this->currentDepthStencilState.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;

@@ -15,7 +15,7 @@ AAssetManager* AndroidFSWrapper::AssetManager = NULL;
 /**
 */
 core::FileHandle
-AndroidFSWrapper::Open(const char* const fileName, core::AccessMode flags, core::AccessPattern pattern, int mode)
+AndroidFSWrapper::Open(const char* const fileName, core::AccessMode mode, core::AccessPattern pattern, int permission)
 {
     core::FileHandle fileHandle;
     fileHandle.handle = AAssetManager_open(AndroidFSWrapper::AssetManager, fileName, AndroidFSWrapper::Get(pattern));

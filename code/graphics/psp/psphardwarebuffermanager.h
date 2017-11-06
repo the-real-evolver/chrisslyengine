@@ -6,6 +6,7 @@
 
     (C) 2012 Christian Bleicher
 */
+#include <stdint.h>
 
 //------------------------------------------------------------------------------
 namespace chrissly
@@ -21,7 +22,7 @@ public:
     static unsigned int GetMemorySize(unsigned int width, unsigned int height, unsigned int psm);
 
 private:
-    static unsigned int StaticOffset;
+    static uintptr_t StaticOffset;
 };
 } // namespace chrissly
 //------------------------------------------------------------------------------

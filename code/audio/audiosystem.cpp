@@ -107,6 +107,7 @@ AudioSystem::Release()
 Result
 AudioSystem::CreateSound(const char* const name, Mode mode, Sound** sound)
 {
+    *sound = NULL;
     Sound* snd = NULL;
     unsigned int i;
     for (i = 0U; i < this->soundPool.capacity; ++i)
@@ -129,11 +130,11 @@ AudioSystem::CreateSound(const char* const name, Mode mode, Sound** sound)
     }
     ++ext;
     Codec* codec;
-    if (0 == strcmp(ext, "wav"))
+    if (0 == strncmp(ext, "wav", 3U))
     {
         codec = CE_NEW WavCodec();
     }
-    else if (0 == strcmp(ext, "ogg"))
+    else if (0 == strncmp(ext, "ogg", 3U))
     {
         codec = CE_NEW VorbisCodec();
     }
@@ -155,6 +156,7 @@ AudioSystem::CreateSound(const char* const name, Mode mode, Sound** sound)
 Result
 AudioSystem::PlaySound(int channelid, Sound* const sound, bool paused, Channel** channel)
 {
+    *channel = NULL;
     Channel* chn = NULL;
     unsigned int i;
     for (i = 0U; i < this->channelPool.capacity; ++i)

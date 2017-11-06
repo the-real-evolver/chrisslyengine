@@ -45,7 +45,7 @@ struct FileHandle
 } // namespace chrissly
 //------------------------------------------------------------------------------
 #elif __WINDOWS__
-#include "windows.h"
+#include <windows.h>
 namespace chrissly
 {
 namespace core

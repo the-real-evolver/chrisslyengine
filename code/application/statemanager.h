@@ -34,7 +34,7 @@ public:
     /// shutdown the statemanger
     void Exit();
     /// returns if the statemanger is running
-    bool IsRunning();
+    bool IsRunning() const;
 
 private:
     /// copy constructor

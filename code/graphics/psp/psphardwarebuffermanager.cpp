@@ -3,6 +3,7 @@
 //  (C) 2012 Christian Bleicher
 //------------------------------------------------------------------------------
 #include "psphardwarebuffermanager.h"
+#include "debug.h"
 #include <pspge.h>
 #include <pspgu.h>
 
@@ -36,8 +37,10 @@ PSPHardwareBufferManager::GetMemorySize(unsigned int width, unsigned int height,
             return 4U * width * height;
 
         default:
-            return 0U;
+            CE_ASSERT(false, "PSPHardwareBufferManager::GetMemorySize(): illegal psm format '%u'\n", psm);
     }
+
+    return 0U;
 }
 
 //------------------------------------------------------------------------------
@@ -46,9 +49,8 @@ PSPHardwareBufferManager::GetMemorySize(unsigned int width, unsigned int height,
 void* const
 PSPHardwareBufferManager::GetStaticVramBuffer(unsigned int width, unsigned int height, unsigned int psm)
 {
-    unsigned int memSize = GetMemorySize(width, height, psm);
     void* result = (void*)StaticOffset;
-    StaticOffset += memSize;
+    StaticOffset += GetMemorySize(width, height, psm);
 
     return result;
 }
