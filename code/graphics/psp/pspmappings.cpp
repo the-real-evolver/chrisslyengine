@@ -276,11 +276,13 @@ PSPMappings::Get(graphics::TrackVertexColourType tvct)
 int
 PSPMappings::Get(graphics::Light::LightTypes lt)
 {
-    if (graphics::Light::LT_DIRECTIONAL == lt) {return GU_DIRECTIONAL;}
-    if (graphics::Light::LT_POINT == lt)       {return GU_POINTLIGHT;}
-    if (graphics::Light::LT_SPOTLIGHT == lt)   {return GU_SPOTLIGHT;}
-
-    CE_ASSERT(false, "PSPMappings::Get(): illegal LightTypes '%i'\n", lt);
+    switch (lt)
+    {
+        case graphics::Light::LT_POINT:         return GU_POINTLIGHT;
+        case graphics::Light::LT_DIRECTIONAL:   return GU_DIRECTIONAL;
+        case graphics::Light::LT_SPOTLIGHT:     return GU_SPOTLIGHT;
+        default: CE_ASSERT(false, "PSPMappings::Get(): illegal LightTypes '%i'\n", lt);
+    }
 
     return 0;
 }

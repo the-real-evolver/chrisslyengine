@@ -325,7 +325,7 @@ MaterialParser::ParseTextureUnitState()
 {
     if ('}' == this->lexer.token)
     {
-        CE_ASSERT(this->currentTextureUnitState->GetTextureName().C_Str() != NULL, "MaterialParser::ParseTextureUnitState(): parse error, missing 'texture' in 'texture_unit'\n");
+        CE_ASSERT(this->currentTextureUnitState->GetTextureName().Size() > 0U, "MaterialParser::ParseTextureUnitState(): parse error, missing 'texture' in 'texture_unit'\n");
         this->parserState = StateParsePass;
     }
     else if (0 == strcmp(this->lexer.string, "texture"))

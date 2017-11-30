@@ -246,7 +246,7 @@ TextureUnitState::GetTexture() const
 void
 TextureUnitState::_Load()
 {
-    if (this->textureName.C_Str() != NULL)
+    if (this->textureName.Size() > 0U)
     {
         this->texture = TextureManager::Instance()->Load(this->textureName.C_Str());
     }

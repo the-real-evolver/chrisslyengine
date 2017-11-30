@@ -197,7 +197,7 @@ D3D11Mappings::GetSysMemPitch(unsigned int width, graphics::PixelFormat pf)
         default: CE_ASSERT(false, "D3D11Mappings::GetSysMemPitch(): illegal or unsupported PixelFormat '%i'\n", pf);
     }
 
-    return 0;
+    return 0U;
 }
 
 //------------------------------------------------------------------------------

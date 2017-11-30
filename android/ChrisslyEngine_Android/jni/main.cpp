@@ -23,7 +23,7 @@ GpuProgram* gpuProgram;
 GpuProgramParameters* params;
 Matrix4 mat;
 
-static const char* MorphAnimVertexShader =
+static const char* const MorphAnimVertexShader =
     "#version 100\n"
     "attribute vec2 texCoordIn;\n"
     "attribute vec3 normal;\n"
@@ -48,7 +48,7 @@ static const char* MorphAnimVertexShader =
     "    lightVector = vec3(1.0, 0.0, 0.0) - (worldMatrix * pos).xyz;\n"
     "}\n";
 
-static const char* FragmentShader =
+static const char* const FragmentShader =
     "#version 100\n"
     "precision mediump float;\n"
     "const float MaxDist = 2.5;\n"

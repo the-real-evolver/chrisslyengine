@@ -13,6 +13,8 @@ namespace chrissly
 namespace core
 {
 
+static const char* const EmptyString = "";
+
 //------------------------------------------------------------------------------
 /**
 */
@@ -73,7 +75,7 @@ String::operator = (const char* const cStr)
 /**
 */
 unsigned int
-String::Size()
+String::Size() const
 {
     return this->size;
 }
@@ -84,7 +86,7 @@ String::Size()
 const char* const
 String::C_Str() const
 {
-    return this->data;
+    return this->size > 0U ? this->data : EmptyString;
 }
 
 //------------------------------------------------------------------------------
@@ -93,6 +95,8 @@ String::C_Str() const
 void
 String::Set(const char* const ptr)
 {
+    CE_ASSERT(ptr != NULL, "String::Set(): passed character pointer not valid\n");
+
     this->Set(ptr, strlen(ptr));
 }
 
@@ -102,12 +106,14 @@ String::Set(const char* const ptr)
 void
 String::Set(const char* const ptr, unsigned int length)
 {
+    CE_ASSERT(ptr != NULL, "String::Set(): passed character pointer not valid\n");
+
     this->Delete();
 
     if (length > 0U)
     {
         this->data = (char*)CE_MALLOC(length + 1U);
-        CE_ASSERT(this->data != NULL, "String::Set(): failed to allocate '%i' bytes", length + 1U);
+        CE_ASSERT(this->data != NULL, "String::Set(): failed to allocate '%i' bytes\n", length + 1U);
         strncpy(this->data, ptr, length);
         this->data[length] = '\0';
         this->size = length;

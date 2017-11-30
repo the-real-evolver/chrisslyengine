@@ -29,7 +29,7 @@ public:
     /// assign from const char*
     void operator = (const char* const cStr);
     /// return size of the string
-    unsigned int Size();
+    unsigned int Size() const;
     /// returns a pointer to an array that contains a null-terminated sequence of characters
     const char* const C_Str() const;
     /// set as char ptr

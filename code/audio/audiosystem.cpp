@@ -298,6 +298,10 @@ AudioSystem::_Mix(unsigned int numSamples, unsigned char* const buffer)
                     sound->GetFormat(NULL, NULL, &numChannels, &bits);
                     sound->GetLength(&length);
                     void* sampleBuffer = NULL;
+                    if (mode & audio::MODE_3D)
+                    {
+                        volume *= channel->_GetAttenuationFactor();
+                    }
                     if (position + numSamples >= length)
                     {
                         sampleBuffer = mode & MODE_CREATESTREAM ? sound->_GetCodec()->FillStreamBuffer(length - position, position) : sound->_GetSampleBufferPointer(position);
