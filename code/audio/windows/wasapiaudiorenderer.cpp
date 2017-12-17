@@ -238,33 +238,37 @@ WASAPIAudioRenderer::RunAudioThread()
 
     while (this->running)
     {
-        this->syncLock.Lock();
-
         result = this->audioClient->GetCurrentPadding(&numFramesPadding);
         CE_ASSERT(SUCCEEDED(result), "WASAPIAudioRenderer::RunAudioThread(): failed to get current padding\n");
 
         numFramesAvailable = this->bufferFrameCount - numFramesPadding;
-        result = this->renderClient->GetBuffer(numFramesAvailable, &data);
-        CE_ASSERT(SUCCEEDED(result), "WASAPIAudioRenderer::RunAudioThread(): failed to get buffer\n");
 
-        if (numFramesAvailable > 0U && data != NULL)
+        if (numFramesAvailable > 0U)
         {
-            if (this->resample)
+            this->syncLock.Lock();
+
+            result = this->renderClient->GetBuffer(numFramesAvailable, &data);
+            CE_ASSERT(SUCCEEDED(result), "WASAPIAudioRenderer::RunAudioThread(): failed to get buffer\n");
+
+            if (data != NULL)
             {
-                unsigned int numSamplesToMix = (unsigned int)((double)numFramesAvailable * this->resampleRatio);
-                audio::AudioSystem::Instance()->_Mix(numSamplesToMix, (unsigned char*)this->resampleBuffer);
-                ce_audio_resample_s16_stereo(this->resampleBuffer, numSamplesToMix, (int*)data, numFramesAvailable);
+                if (this->resample)
+                {
+                    unsigned int numSamplesToMix = (unsigned int)((double)numFramesAvailable * this->resampleRatio);
+                    audio::AudioSystem::Instance()->_Mix(numSamplesToMix, (unsigned char*)this->resampleBuffer);
+                    ce_audio_resample_s16_stereo(this->resampleBuffer, numSamplesToMix, (int*)data, numFramesAvailable);
+                }
+                else
+                {
+                    audio::AudioSystem::Instance()->_Mix(numFramesAvailable, data);
+                }
             }
-            else
-            {
-                audio::AudioSystem::Instance()->_Mix(numFramesAvailable, data);
-            }
+
+            result = this->renderClient->ReleaseBuffer(numFramesAvailable, flags);
+            CE_ASSERT(SUCCEEDED(result), "WASAPIAudioRenderer::RunAudioThread(): failed to release buffer\n");
+
+            this->syncLock.Unlock();
         }
-
-        result = this->renderClient->ReleaseBuffer(numFramesAvailable, flags);
-        CE_ASSERT(SUCCEEDED(result), "WASAPIAudioRenderer::RunAudioThread(): failed to release buffer\n");
-
-        this->syncLock.Unlock();
     }
 }
 

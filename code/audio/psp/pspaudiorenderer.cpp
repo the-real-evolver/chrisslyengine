@@ -167,84 +167,74 @@ PSPAudioRenderer::ChannelThread(SceSize args, void* argp)
             sound->_DecrementUseCount();
         }
 
-        bool paused, isPlaying;
+        bool isPlaying, paused;
+        channel->IsPlaying(&isPlaying);
         channel->GetPaused(&paused);
-        if (paused)
+        if (!isPlaying || paused)
         {
             syncLock.Unlock();
             sceKernelDelayThread(10000U);
             continue;
         }
 
-        channel->IsPlaying(&isPlaying);
-        if (isPlaying)
+        unsigned int length, position;
+        sound->GetLength(&length);
+        channel->GetPosition(&position);
+        audio::Mode mode;
+        channel->GetMode(&mode);
+
+        int samplesRemaining = length - position;
+        if (samplesRemaining > 0)
         {
-            unsigned int length, position;
-            sound->GetLength(&length);
-            channel->GetPosition(&position);
-            audio::Mode mode;
-            channel->GetMode(&mode);
+            unsigned int sampleCount = NumOutputSamples;
+            if ((unsigned int)samplesRemaining <= sampleCount)
+            {
+                sampleCount = PSP_AUDIO_SAMPLE_ALIGN(samplesRemaining);
+                sceAudioSetChannelDataLen(index, sampleCount > PSP_AUDIO_SAMPLE_MIN ? sampleCount - PSP_AUDIO_SAMPLE_MIN : 0);
+            }
+            channel->SetPosition(position + sampleCount);
+
             int numChannels;
             sound->GetFormat(NULL, NULL, &numChannels, NULL);
-
-            int samplesRemaining = length - position;
-            if (samplesRemaining > 0)
+            float volume, pan;
+            channel->GetVolume(&volume);
+            channel->GetPan(&pan);
+            float leftVolume, rightVolume;
+            if (mode & audio::MODE_3D)
             {
-                unsigned int sampleCount = NumOutputSamples;
-                if ((unsigned int)samplesRemaining <= sampleCount)
-                {
-                    sampleCount = PSP_AUDIO_SAMPLE_ALIGN(samplesRemaining);
-                    sceAudioSetChannelDataLen(index, sampleCount > PSP_AUDIO_SAMPLE_MIN ? sampleCount - PSP_AUDIO_SAMPLE_MIN : 0);
-                }
-                channel->SetPosition(position + sampleCount);
-
-                float volume, pan;
-                channel->GetVolume(&volume);
-                channel->GetPan(&pan);
-                float leftVolume, rightVolume;
-                if (mode & audio::MODE_3D)
-                {
-                    ce_audio_calculate_stereo_channel_volumes(PAN_CONSTANTPOWER, volume *= channel->_GetAttenuationFactor(), pan, &leftVolume, &rightVolume);
-                }
-                else if (1 == numChannels)
-                {
-                    ce_audio_calculate_stereo_channel_volumes(PAN_CONSTANTPOWER, volume, pan, &leftVolume, &rightVolume);
-                }
-                else
-                {
-                    ce_audio_calculate_stereo_channel_volumes(PAN_STEREO, volume, pan, &leftVolume, &rightVolume);
-                }
-
-                void* sampleBuffer = mode & audio::MODE_CREATESTREAM ? sound->_GetCodec()->FillStreamBuffer(sampleCount, position) : sound->_GetSampleBufferPointer(position);
-
-                syncLock.Unlock();
-
-                sceAudioOutputPannedBlocking(index, (int)((float)PSP_AUDIO_VOLUME_MAX * leftVolume), (int)((float)PSP_AUDIO_VOLUME_MAX * rightVolume), sampleBuffer);
+                ce_audio_calculate_stereo_channel_volumes(PAN_CONSTANTPOWER, volume *= channel->_GetAttenuationFactor(), pan, &leftVolume, &rightVolume);
+            }
+            else if (1 == numChannels)
+            {
+                ce_audio_calculate_stereo_channel_volumes(PAN_CONSTANTPOWER, volume, pan, &leftVolume, &rightVolume);
             }
             else
             {
-                if (mode & audio::MODE_LOOP_NORMAL)
-                {
-                    sceAudioSetChannelDataLen(index, PSP_AUDIO_SAMPLE_ALIGN(NumOutputSamples));
-                    channel->SetPosition(0U);
-
-                    syncLock.Unlock();
-                }
-                else
-                {
-                    sceAudioChRelease(index);
-                    channel->_SetIsPlaying(false);
-                    channel->_SetIndex(audio::Channel::CHANNEL_FREE);
-                    sound->_DecrementUseCount();
-
-                    syncLock.Unlock();
-                }
+                ce_audio_calculate_stereo_channel_volumes(PAN_STEREO, volume, pan, &leftVolume, &rightVolume);
             }
+
+            void* sampleBuffer = mode & audio::MODE_CREATESTREAM ? sound->_GetCodec()->FillStreamBuffer(sampleCount, position) : sound->_GetSampleBufferPointer(position);
+
+            syncLock.Unlock();
+
+            sceAudioOutputPannedBlocking(index, (int)((float)PSP_AUDIO_VOLUME_MAX * leftVolume), (int)((float)PSP_AUDIO_VOLUME_MAX * rightVolume), sampleBuffer);
         }
         else
         {
+            if (mode & audio::MODE_LOOP_NORMAL)
+            {
+                sceAudioSetChannelDataLen(index, PSP_AUDIO_SAMPLE_ALIGN(NumOutputSamples));
+                channel->SetPosition(0U);
+            }
+            else
+            {
+                sceAudioChRelease(index);
+                channel->_SetIsPlaying(false);
+                channel->_SetIndex(audio::Channel::CHANNEL_FREE);
+                sound->_DecrementUseCount();
+            }
+
             syncLock.Unlock();
-            sceKernelDelayThread(10000U);
         }
     }
 
