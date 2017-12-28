@@ -304,27 +304,25 @@ AudioSystem::_Mix(unsigned int numSamples, unsigned char* const buffer)
                     }
                     if (position + numSamples >= length)
                     {
-                        sampleBuffer = mode & MODE_CREATESTREAM ? sound->_GetCodec()->FillStreamBuffer(length - position, position) : sound->_GetSampleBufferPointer(position);
+                        sampleBuffer = channel->_FillOutputBuffer(length - position, position);
                         ce_audio_mix_s16_stereo(bits, numChannels, sampleBuffer, (short*)buffer, length - position, volume, pan);
                         if (mode & MODE_LOOP_NORMAL)
                         {
                             if (length >= numSamples)
                             {
-                                sampleBuffer = mode & MODE_CREATESTREAM ? sound->_GetCodec()->FillStreamBuffer(position + numSamples - length, 0U) : sound->_GetSampleBufferPointer(0U);
+                                sampleBuffer = channel->_FillOutputBuffer(position + numSamples - length, 0U);
                                 ce_audio_mix_s16_stereo(bits, numChannels, sampleBuffer, (short*)buffer + (uintptr_t)((length - position) << 1U), position + numSamples - length, volume, pan);
                                 channel->SetPosition(position + numSamples - length);
                             }
                         }
                         else
                         {
-                            channel->_SetIsPlaying(false);
-                            channel->_SetIndex(Channel::CHANNEL_FREE);
-                            sound->_DecrementUseCount();
+                            channel->_Release();
                         }
                     }
                     else
                     {
-                        sampleBuffer = mode & MODE_CREATESTREAM ? sound->_GetCodec()->FillStreamBuffer(numSamples, position) : sound->_GetSampleBufferPointer(position);
+                        sampleBuffer = channel->_FillOutputBuffer(numSamples, position);
                         ce_audio_mix_s16_stereo(bits, numChannels, sampleBuffer, (short*)buffer, numSamples, volume, pan);
                         channel->SetPosition(position + numSamples);
                     }

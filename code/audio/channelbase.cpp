@@ -327,6 +327,26 @@ ChannelBase::GetIndex(int* const idx)
 //------------------------------------------------------------------------------
 /**
 */
+void* const
+ChannelBase::_FillOutputBuffer(unsigned int numSamples, unsigned int position)
+{
+    return this->mode & MODE_CREATESTREAM ? this->currentSound->_GetCodec()->FillStreamBuffer(numSamples, position) : this->currentSound->_GetSampleBufferPointer(position);
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+ChannelBase::_Release()
+{
+    this->isPlaying = false;
+    this->index = CHANNEL_FREE;
+    this->currentSound->_DecrementUseCount();
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
 void
 ChannelBase::_SetIndex(int idx)
 {

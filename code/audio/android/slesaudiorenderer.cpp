@@ -235,12 +235,8 @@ SLESAudioRenderer::UpdateChannel(audio::Channel* const channel)
 void
 SLESAudioRenderer::ReleaseChannel(audio::Channel* const channel)
 {
-    channel->Release();
-    channel->_SetIsPlaying(false);
-    channel->_SetIndex(audio::Channel::CHANNEL_FREE);
-    audio::Sound* sound;
-    channel->GetCurrentSound(&sound);
-    sound->_DecrementUseCount();
+    channel->ReleaseAudioPlayer();
+    channel->_Release();
 }
 
 //------------------------------------------------------------------------------
@@ -270,10 +266,8 @@ SLESAudioRenderer::BufferQueueCallback(SLAndroidSimpleBufferQueueItf bufferQueue
             }
             else
             {
-                channel->Release();
-                channel->_SetIsPlaying(false);
-                channel->_SetIndex(audio::Channel::CHANNEL_FREE);
-                sound->_DecrementUseCount();
+                channel->ReleaseAudioPlayer();
+                channel->_Release();
             }
         }
         else
@@ -298,10 +292,8 @@ SLESAudioRenderer::BufferQueueCallback(SLAndroidSimpleBufferQueueItf bufferQueue
         }
         else
         {
-            channel->Release();
-            channel->_SetIsPlaying(false);
-            channel->_SetIndex(audio::Channel::CHANNEL_FREE);
-            sound->_DecrementUseCount();
+            channel->ReleaseAudioPlayer();
+            channel->_Release();
         }
     }
 }

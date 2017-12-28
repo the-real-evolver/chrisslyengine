@@ -72,6 +72,10 @@ public:
     /// retrieves the internal channel index for a channel
     Result GetIndex(int* const idx);
 
+    /// processes all attached dsps and returns the mixed result, otherwise the 'dry' sample or stream buffer is returned
+    void* const _FillOutputBuffer(unsigned int numSamples, unsigned int position);
+    /// called when the hardware channel has finished playing or was stopped explicitly
+    void _Release();
     /// set the internal channel index for a channel
     void _SetIndex(int idx);
     /// set isplaying flag

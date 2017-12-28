@@ -217,11 +217,7 @@ void
 WASAPIAudioRenderer::ReleaseChannel(audio::Channel* const channel)
 {
     this->syncLock.Lock();
-    channel->_SetIsPlaying(false);
-    channel->_SetIndex(audio::Channel::CHANNEL_FREE);
-    audio::Sound* sound;
-    channel->GetCurrentSound(&sound);
-    sound->_DecrementUseCount();
+    channel->_Release();
     this->syncLock.Unlock();
 }
 

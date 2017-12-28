@@ -15,8 +15,10 @@ namespace chrissly
 {
 
 PSPAudioRenderer* PSPAudioRenderer::Singleton = NULL;
+const unsigned int PSPAudioRenderer::ShutdownEventFlag = 0x00000001U;
 
 static const int NumOutputSamples = 1024;
+static const SceUInt IdleThreadDelay = 10000U;
 
 //------------------------------------------------------------------------------
 /**
@@ -149,7 +151,7 @@ PSPAudioRenderer::ChannelThread(SceSize args, void* argp)
 {
     audio::Channel* channel = (audio::Channel*)(*(uintptr_t*)argp);
     const core::Mutex& syncLock = channel->_GetSyncLock();
-    while (true)
+    while (channel->IsRunning())
     {
         syncLock.Lock();
 
@@ -160,11 +162,8 @@ PSPAudioRenderer::ChannelThread(SceSize args, void* argp)
 
         if (channel->GetReleaseRequest())
         {
-            sceAudioChangeChannelVolume(index, 0, 0);
             sceAudioChRelease(index);
-            channel->_SetIsPlaying(false);
-            channel->_SetIndex(audio::Channel::CHANNEL_FREE);
-            sound->_DecrementUseCount();
+            channel->_Release();
         }
 
         bool isPlaying, paused;
@@ -173,7 +172,7 @@ PSPAudioRenderer::ChannelThread(SceSize args, void* argp)
         if (!isPlaying || paused)
         {
             syncLock.Unlock();
-            sceKernelDelayThread(10000U);
+            sceKernelDelayThread(IdleThreadDelay);
             continue;
         }
 
@@ -196,10 +195,9 @@ PSPAudioRenderer::ChannelThread(SceSize args, void* argp)
 
             int numChannels;
             sound->GetFormat(NULL, NULL, &numChannels, NULL);
-            float volume, pan;
+            float volume, pan, leftVolume, rightVolume;
             channel->GetVolume(&volume);
             channel->GetPan(&pan);
-            float leftVolume, rightVolume;
             if (mode & audio::MODE_3D)
             {
                 ce_audio_calculate_stereo_channel_volumes(PAN_CONSTANTPOWER, volume *= channel->_GetAttenuationFactor(), pan, &leftVolume, &rightVolume);
@@ -213,7 +211,7 @@ PSPAudioRenderer::ChannelThread(SceSize args, void* argp)
                 ce_audio_calculate_stereo_channel_volumes(PAN_STEREO, volume, pan, &leftVolume, &rightVolume);
             }
 
-            void* sampleBuffer = mode & audio::MODE_CREATESTREAM ? sound->_GetCodec()->FillStreamBuffer(sampleCount, position) : sound->_GetSampleBufferPointer(position);
+            void* sampleBuffer = channel->_FillOutputBuffer(sampleCount, position);
 
             syncLock.Unlock();
 
@@ -229,14 +227,15 @@ PSPAudioRenderer::ChannelThread(SceSize args, void* argp)
             else
             {
                 sceAudioChRelease(index);
-                channel->_SetIsPlaying(false);
-                channel->_SetIndex(audio::Channel::CHANNEL_FREE);
-                sound->_DecrementUseCount();
+                channel->_Release();
             }
 
             syncLock.Unlock();
         }
     }
+
+    int error = sceKernelSetEventFlag(channel->GetShutdownEvent(), ShutdownEventFlag);
+    CE_ASSERT(0 >= error, "PSPAudioRenderer::ChannelThread(): sceKernelSetEventFlag() failed: %08x\n", error);
 
     return 0;
 }

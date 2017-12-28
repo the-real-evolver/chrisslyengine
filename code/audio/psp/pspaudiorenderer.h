@@ -46,6 +46,8 @@ public:
     /// channel thread
     static int ChannelThread(SceSize args, void* argp);
 
+    static const unsigned int ShutdownEventFlag;
+
 private:
     /// copy constructor
     PSPAudioRenderer(const PSPAudioRenderer&);

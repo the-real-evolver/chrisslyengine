@@ -114,11 +114,6 @@ EGLRenderWindow::Create()
 void
 EGLRenderWindow::Update()
 {
-    if (EGL_NO_DISPLAY == this->display)
-    {
-        return;
-    }
-
     graphics::RenderTarget::Update();
 }
 
@@ -128,11 +123,6 @@ EGLRenderWindow::Update()
 void
 EGLRenderWindow::SwapBuffers()
 {
-    if (EGL_NO_DISPLAY == this->display)
-    {
-        return;
-    }
-
     eglSwapBuffers(this->display, this->surface);
 }
 

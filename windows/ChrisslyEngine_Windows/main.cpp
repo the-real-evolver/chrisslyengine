@@ -4,10 +4,13 @@
 //------------------------------------------------------------------------------
 #include "debug.h"
 #include "graphicssystem.h"
+#include "audiosystem.h"
+#include "channel.h"
 #include <windows.h>
 
 using namespace chrissly::core;
 using namespace chrissly::graphics;
+using namespace chrissly::audio;
 
 //------------------------------------------------------------------------------
 /**
@@ -36,6 +39,7 @@ WinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prevInstance, _In_ LPSTR cmd
     Light* light = SceneManager::Instance()->CreateLight("WhitePointLight");
     light->SetType(Light::LT_POINT);
     light->SetDiffuseColour(0xffffffff);
+    light->SetSpecularColour(0xffffffff);
     light->SetPosition(-0.5f, 1.5f, 1.5f);
     light = SceneManager::Instance()->CreateLight("RedPointLight");
     light->SetType(Light::LT_POINT);
@@ -45,6 +49,13 @@ WinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prevInstance, _In_ LPSTR cmd
     light->SetType(Light::LT_POINT);
     light->SetDiffuseColour(0xffff00ff);
     light->SetPosition(1.0f, 0.0f, 0.0f);
+
+    AudioSystem* audioSystem = new AudioSystem();
+    audioSystem->Initialise();
+    Sound* sound;
+    audioSystem->CreateSound("intro.ogg", MODE_CREATESAMPLE | MODE_LOOP_NORMAL, &sound);
+    Channel* channel;
+    audioSystem->PlaySound(Channel::CHANNEL_FREE, sound, false, &channel);
 
     MSG msg = {0};
     while (msg.message != WM_QUIT)
@@ -60,10 +71,13 @@ WinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prevInstance, _In_ LPSTR cmd
         }
 
         sceneNode->Yaw(0.01f);
-        GraphicsSystem::Instance()->RenderOneFrame();
+        graphicsSystem->RenderOneFrame();
+        audioSystem->Update();
     }
 
     delete graphicsSystem;
+
+    delete audioSystem;
 
     return (int)msg.wParam;
 }

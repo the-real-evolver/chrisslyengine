@@ -14,7 +14,7 @@ using namespace chrissly::core;
 using namespace chrissly::graphics;
 using namespace chrissly::audio;
 
-bool initialized = false;
+bool initialised = false;
 GraphicsSystem* graphicsSystem;
 SceneNode* sceneNode;
 int32_t lastX, distance;
@@ -114,7 +114,7 @@ Enter(struct android_app* state)
     audioSystem->CreateSound("intro.ogg", MODE_CREATESAMPLE | MODE_LOOP_NORMAL, &sound);
     audioSystem->PlaySound(Channel::CHANNEL_FREE, sound, false, &channel);
 
-    initialized = true;
+    initialised = true;
 }
 
 //------------------------------------------------------------------------------
@@ -123,7 +123,7 @@ Enter(struct android_app* state)
 static void
 Exit()
 {
-    initialized = false;
+    initialised = false;
 
     delete gpuProgram;
 
@@ -138,7 +138,7 @@ Exit()
 static void
 Trigger()
 {
-    if (initialized)
+    if (initialised)
     {
         animState->AddTime(0.016f);
         sceneNode->Yaw((float)distance * 0.02f);
@@ -180,7 +180,7 @@ HandleCommands(struct android_app* app, int32_t cmd)
     switch (cmd)
     {
         case APP_CMD_DESTROY:
-            if (initialized)
+            if (initialised)
             {
                 Exit();
             }
@@ -197,13 +197,13 @@ HandleCommands(struct android_app* app, int32_t cmd)
             break;
         case APP_CMD_TERM_WINDOW:
             // the window is being hidden or closed, clean it up
-            if (initialized)
+            if (initialised)
             {
                 Exit();
             }
             break;
         case APP_CMD_CONFIG_CHANGED:
-            if (initialized)
+            if (initialised)
             {
                 Exit();
             }
@@ -232,7 +232,7 @@ android_main(struct android_app* state)
     state->onAppCmd = HandleCommands;
     state->onInputEvent = HandleInputEvents;
 
-    // initialize filesystem
+    // initialise filesystem
     FSWrapper::_Initialise(state->activity->assetManager);
 
     while (true)

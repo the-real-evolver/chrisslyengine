@@ -31,7 +31,7 @@ private:
     /// setup the sl audio player
     void SetupAudioPlayer(SLEngineItf engineInterface, SLObjectItf outputMix);
     /// stop and destroy the sl audio player
-    void Release();
+    void ReleaseAudioPlayer();
     /// gets the player interface
     SLPlayItf GetPlayerInterface() const;
     /// gets the buffer queue interface
