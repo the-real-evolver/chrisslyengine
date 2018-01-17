@@ -7,6 +7,6 @@ set ProjectFolder=%CD%\..
 set SrcFolder=%ProjectFolder%\assets\audio
 set DstFolder=%ProjectFolder%\windows\ChrisslyEngine_Windows
 
-XCOPY /y /i %SrcFolder%\intro.ogg %DstFolder%\intro.ogg*
+xcopy /y /i %SrcFolder%\intro.ogg %DstFolder%\intro.ogg*
 
 cd %ProjectFolder%\windows

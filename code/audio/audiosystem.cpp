@@ -177,7 +177,7 @@ AudioSystem::PlaySound(int channelid, Sound* const sound, bool paused, Channel**
     if (channelid != Channel::CHANNEL_FREE)
     {
         CE_ASSERT(channelid < (int)this->channelPool.capacity, "AudioSystem::PlaySound(): invalid channelid '%i' (exceeds channel range '0 - %i')\n", channelid, this->channelPool.capacity - 1U);
-        chn->_SetIndex(channelid);
+        chn->SetIndex(channelid);
     }
 
     chn->AttachSound(sound);
@@ -300,29 +300,29 @@ AudioSystem::_Mix(unsigned int numSamples, unsigned char* const buffer)
                     void* sampleBuffer = NULL;
                     if (mode & audio::MODE_3D)
                     {
-                        volume *= channel->_GetAttenuationFactor();
+                        volume *= channel->GetAttenuationFactor();
                     }
                     if (position + numSamples >= length)
                     {
-                        sampleBuffer = channel->_FillOutputBuffer(length - position, position);
+                        sampleBuffer = channel->FillOutputBuffer(length - position, position);
                         ce_audio_mix_s16_stereo(bits, numChannels, sampleBuffer, (short*)buffer, length - position, volume, pan);
                         if (mode & MODE_LOOP_NORMAL)
                         {
                             if (length >= numSamples)
                             {
-                                sampleBuffer = channel->_FillOutputBuffer(position + numSamples - length, 0U);
+                                sampleBuffer = channel->FillOutputBuffer(position + numSamples - length, 0U);
                                 ce_audio_mix_s16_stereo(bits, numChannels, sampleBuffer, (short*)buffer + (uintptr_t)((length - position) << 1U), position + numSamples - length, volume, pan);
                                 channel->SetPosition(position + numSamples - length);
                             }
                         }
                         else
                         {
-                            channel->_Release();
+                            channel->ReleaseInternal();
                         }
                     }
                     else
                     {
-                        sampleBuffer = channel->_FillOutputBuffer(numSamples, position);
+                        sampleBuffer = channel->FillOutputBuffer(numSamples, position);
                         ce_audio_mix_s16_stereo(bits, numChannels, sampleBuffer, (short*)buffer, numSamples, volume, pan);
                         channel->SetPosition(position + numSamples);
                     }

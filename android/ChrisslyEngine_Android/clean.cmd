@@ -2,10 +2,10 @@
 :: Autor:       evolver
 :: Description: clean the build folder
 
-RD /S /Q obj
-RD /S /Q libs
-RD /S /Q bin
-RD /S /Q gen
+rd /s /q obj
+rd /s /q libs
+rd /s /q bin
+rd /s /q gen
 
 set NDK=C:\dev\android\android-ndk-r8
 %NDK%\ndk-build clean

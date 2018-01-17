@@ -14,10 +14,8 @@ texturetool.exe -pkm -data %SrcFolder%\textures\cerberus_etc1.pkm -out %DstFolde
 
 meshtool.exe -morphanim -length 3.0 -numKeys 31 -src %SrcFolder%\animations\cerberus\cerberus_walk -dst %DstFolder%\cerberus_walk.mesh
 
-XCOPY /i /y %SrcFolder%\materials\materials.material %DstFolder%\materials.material*
+xcopy /i /y %SrcFolder%\materials\materials.material %DstFolder%\materials.material*
 
-XCOPY /i /y %SrcFolder%\audio\intro.ogg %DstFolder%\intro.ogg*
+xcopy /i /y %SrcFolder%\audio\intro.ogg %DstFolder%\intro.ogg*
 
-cd cd %ProjectFolder%\android\ChrisslyEngine_Android
-
-
+cd %ProjectFolder%\android\ChrisslyEngine_Android

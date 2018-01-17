@@ -8,14 +8,30 @@
 */
 
 //------------------------------------------------------------------------------
-#if __PSP__ || __WINDOWS__
+#if __PSP__
 #include "soundbase.h"
 namespace chrissly
 {
+
+class PSPSound : public audio::SoundBase
+{
+    friend class PSPAudioRenderer;
+public:
+    /// default constructor
+    PSPSound() {};
+    /// destructor
+    ~PSPSound() {};
+private:
+    /// copy constructor
+    PSPSound(const PSPSound&);
+    /// prevent copy by assignment
+    PSPSound& operator = (const PSPSound&);
+};
+
 namespace audio
 {
 
-typedef SoundBase Sound;
+typedef chrissly::PSPSound Sound;
 
 } // namespace audio
 } // namespace chrissly
@@ -28,6 +44,34 @@ namespace audio
 {
 
 typedef chrissly::SLESSound Sound;
+
+} // namespace audio
+} // namespace chrissly
+//------------------------------------------------------------------------------
+#elif __WINDOWS__
+#include "soundbase.h"
+namespace chrissly
+{
+
+class WASAPISound : public audio::SoundBase
+{
+    friend class WASAPIAudioRenderer;
+public:
+    /// default constructor
+    WASAPISound() {};
+    /// destructor
+    ~WASAPISound() {};
+private:
+    /// copy constructor
+    WASAPISound(const WASAPISound&);
+    /// prevent copy by assignment
+    WASAPISound& operator = (const WASAPISound&);
+};
+
+namespace audio
+{
+
+typedef chrissly::WASAPISound Sound;
 
 } // namespace audio
 } // namespace chrissly

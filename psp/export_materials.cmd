@@ -7,6 +7,6 @@ set ProjectFolder=%CD%\..
 set SrcFolder=%ProjectFolder%\assets\materials
 set DstFolder=%ProjectFolder%\psp\export
 
-XCOPY /y /i %SrcFolder%\materials.material %DstFolder%\materials.material*
+xcopy /y /i %SrcFolder%\materials.material %DstFolder%\materials.material*
 
 cd %ProjectFolder%\psp

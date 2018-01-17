@@ -111,7 +111,38 @@ SoundBase::Release()
 /**
 */
 void
-SoundBase::_IncrementUseCount()
+SoundBase::Setup(const char* const filename, Mode modeflags, Codec* const codec)
+{
+    this->mode = modeflags;
+    this->audioCodec = codec;
+    this->audioCodec->SetupSound(filename, modeflags, &this->sampleBuffer, this->lengthInSamples, this->audioFormat, this->soundType, this->numChannels, this->bitsPerSample, this->sampleRate);
+    this->CreateInternalResources();
+    this->inUse = true;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+SoundBase::CreateInternalResources()
+{
+
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+bool
+SoundBase::IsInUse() const
+{
+    return this->inUse;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+SoundBase::IncrementUseCount()
 {
     this->releaseSyncLock.Lock();
 
@@ -124,7 +155,7 @@ SoundBase::_IncrementUseCount()
 /**
 */
 void
-SoundBase::_DecrementUseCount()
+SoundBase::DecrementUseCount()
 {
     this->releaseSyncLock.Lock();
 
@@ -145,7 +176,7 @@ SoundBase::_DecrementUseCount()
 /**
 */
 void*
-SoundBase::_GetSampleBufferPointer(unsigned int position) const
+SoundBase::GetSampleBufferPointer(unsigned int position) const
 {
     if (this->mode & MODE_CREATESTREAM)
     {
@@ -164,7 +195,7 @@ SoundBase::_GetSampleBufferPointer(unsigned int position) const
             case AUDIO_FORMAT_PCM16:
                 return (void*)((uintptr_t)this->sampleBuffer + (position << 1U) * this->numChannels);
             default:
-                CE_ASSERT(false, "SoundBase::_GetSampleBufferPointer(): audio format not supported\n");
+                CE_ASSERT(false, "SoundBase::GetSampleBufferPointer(): audio format not supported\n");
         }
     }
 
@@ -175,22 +206,9 @@ SoundBase::_GetSampleBufferPointer(unsigned int position) const
 /**
 */
 Codec* const
-SoundBase::_GetCodec() const
+SoundBase::GetCodec() const
 {
     return this->audioCodec;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-void
-SoundBase::Setup(const char* const filename, Mode modeflags, Codec* const codec)
-{
-    this->mode = modeflags;
-    this->audioCodec = codec;
-    this->audioCodec->SetupSound(filename, modeflags, &this->sampleBuffer, this->lengthInSamples, this->audioFormat, this->soundType, this->numChannels, this->bitsPerSample, this->sampleRate);
-    this->CreateInternalResources();
-    this->inUse = true;
 }
 
 //------------------------------------------------------------------------------
@@ -221,24 +239,6 @@ SoundBase::ReleaseInternal()
     this->inUse = false;
 
     this->requestRelease = false;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-bool
-SoundBase::IsInUse() const
-{
-    return this->inUse;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-void
-SoundBase::CreateInternalResources()
-{
-
 }
 
 } // namespace audio

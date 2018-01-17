@@ -112,15 +112,6 @@ EGLRenderWindow::Create()
 /**
 */
 void
-EGLRenderWindow::Update()
-{
-    graphics::RenderTarget::Update();
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-void
 EGLRenderWindow::SwapBuffers()
 {
     eglSwapBuffers(this->display, this->surface);

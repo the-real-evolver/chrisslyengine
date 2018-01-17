@@ -31,15 +31,31 @@ typedef chrissly::SLESChannel Channel;
 
 } // namespace audio
 } // namespace chrissly
-  //------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #elif __WINDOWS__
 #include "channelbase.h"
 namespace chrissly
 {
+
+class WASAPIChannel : public audio::ChannelBase
+{
+    friend class WASAPIAudioRenderer;
+public:
+    /// default constructor
+    WASAPIChannel() {};
+    /// destructor
+    ~WASAPIChannel() {};
+private:
+    /// copy constructor
+    WASAPIChannel(const WASAPIChannel&);
+    /// prevent copy by assignment
+    WASAPIChannel& operator = (const WASAPIChannel&);
+};
+
 namespace audio
 {
 
-typedef ChannelBase Channel;
+typedef chrissly::WASAPIChannel Channel;
 
 } // namespace audio
 } // namespace chrissly

@@ -140,7 +140,7 @@ ChannelBase::SetPressureLevel(float decibel)
     }
     else
     {
-        this->volume = Math::Pow(10, decibel / 20.0f);
+        this->volume = Math::Pow(10.0f, decibel * 0.05f);
     }
 
     this->propertiesHaveChanged |= PROPERTY_VOLUME;
@@ -327,73 +327,6 @@ ChannelBase::GetIndex(int* const idx)
 //------------------------------------------------------------------------------
 /**
 */
-void* const
-ChannelBase::_FillOutputBuffer(unsigned int numSamples, unsigned int position)
-{
-    return this->mode & MODE_CREATESTREAM ? this->currentSound->_GetCodec()->FillStreamBuffer(numSamples, position) : this->currentSound->_GetSampleBufferPointer(position);
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-void
-ChannelBase::_Release()
-{
-    this->isPlaying = false;
-    this->index = CHANNEL_FREE;
-    this->currentSound->_DecrementUseCount();
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-void
-ChannelBase::_SetIndex(int idx)
-{
-    this->index = idx;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-void
-ChannelBase::_SetIsPlaying(bool isplaying)
-{
-    this->isPlaying = isplaying;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-float
-ChannelBase::_GetAttenuationFactor() const
-{
-    return this->attenuationFactor;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-PropertyChange
-ChannelBase::_PropertiesHaveChanged()
-{
-    PropertyChange propsHaveChanged = this->propertiesHaveChanged;
-    this->propertiesHaveChanged = UNCHANGED;
-    return propsHaveChanged;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-const core::Mutex&
-ChannelBase::_GetSyncLock() const
-{
-    return this->syncLock;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
 void
 ChannelBase::AttachSound(Sound* const sound)
 {
@@ -405,11 +338,78 @@ ChannelBase::AttachSound(Sound* const sound)
 /**
 */
 void
+ChannelBase::SetIndex(int idx)
+{
+    this->index = idx;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+ChannelBase::SetIsPlaying(bool isplaying)
+{
+    this->isPlaying = isplaying;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
 ChannelBase::SetAttenuationFactor(float attenuation)
 {
     this->attenuationFactor = attenuation;
 
     this->propertiesHaveChanged |= PROPERTY_ATTENUATION;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+float
+ChannelBase::GetAttenuationFactor() const
+{
+    return this->attenuationFactor;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+PropertyChange
+ChannelBase::PropertiesHaveChanged()
+{
+    PropertyChange propsHaveChanged = this->propertiesHaveChanged;
+    this->propertiesHaveChanged = UNCHANGED;
+    return propsHaveChanged;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+const core::Mutex&
+ChannelBase::GetSyncLock() const
+{
+    return this->syncLock;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void* const
+ChannelBase::FillOutputBuffer(unsigned int numSamples, unsigned int position)
+{
+    return this->mode & MODE_CREATESTREAM ? this->currentSound->GetCodec()->FillStreamBuffer(numSamples, position) : this->currentSound->GetSampleBufferPointer(position);
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+ChannelBase::ReleaseInternal()
+{
+    this->isPlaying = false;
+    this->index = CHANNEL_FREE;
+    this->currentSound->DecrementUseCount();
 }
 
 } // namespace audio

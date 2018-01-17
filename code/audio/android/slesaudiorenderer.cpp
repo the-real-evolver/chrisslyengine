@@ -135,22 +135,22 @@ SLESAudioRenderer::StartChannel(audio::Channel* const channel)
     audio::Mode mode;
     channel->GetMode(&mode);
 
+    sound->IncrementUseCount();
     SLAndroidSimpleBufferQueueItf bufferQueueInterface = channel->GetBufferQueueInterface();
-    sound->_IncrementUseCount();
     if (mode & audio::MODE_CREATESTREAM)
     {
-        audio::Codec* codec = sound->_GetCodec();
+        audio::Codec* codec = sound->GetCodec();
         codec->InitialiseStream();
         result = (*bufferQueueInterface)->Enqueue(bufferQueueInterface, codec->GetStreamBufferPointer(), codec->GetStreamBufferLength());
     }
     else
     {
-        result = (*bufferQueueInterface)->Enqueue(bufferQueueInterface, sound->_GetSampleBufferPointer(0U), length * numChannels * ((unsigned int)bits >> 3U));
+        result = (*bufferQueueInterface)->Enqueue(bufferQueueInterface, sound->GetSampleBufferPointer(0U), length * numChannels * ((unsigned int)bits >> 3U));
     }
     CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::StartChannel(): failed to enqueue buffer\n");
 
-    channel->_SetIndex(0);
-    channel->_SetIsPlaying(true);
+    channel->SetIndex(0);
+    channel->SetIsPlaying(true);
 
     SLEffectSendItf effectSend = channel->GetEffectSendInterface();
     result = (*effectSend)->EnableEffectSend(effectSend, this->outputMixEnvironmentalReverb, SL_BOOLEAN_FALSE, 0);
@@ -167,15 +167,15 @@ SLESAudioRenderer::UpdateChannel(audio::Channel* const channel)
     channel->GetMode(&mode);
     if (mode & audio::MODE_CREATESTREAM)
     {
-        const core::Mutex& syncLock = channel->_GetSyncLock();
+        const core::Mutex& syncLock = channel->GetSyncLock();
         syncLock.Lock();
         audio::Sound* sound;
         channel->GetCurrentSound(&sound);
-        sound->_GetCodec()->FillStreamBackBuffer();
+        sound->GetCodec()->FillStreamBackBuffer();
         syncLock.Unlock();
     }
 
-    audio::PropertyChange propertyChange = channel->_PropertiesHaveChanged();
+    audio::PropertyChange propertyChange = channel->PropertiesHaveChanged();
     if (propertyChange != audio::UNCHANGED)
     {
         SLresult result;
@@ -185,7 +185,7 @@ SLESAudioRenderer::UpdateChannel(audio::Channel* const channel)
             channel->GetVolume(&volume);
             if (mode & audio::MODE_3D)
             {
-                volume *= channel->_GetAttenuationFactor();
+                volume *= channel->GetAttenuationFactor();
             }
             SLVolumeItf volumeInterface = channel->GetVolumeInterface();
             SLmillibel slVolume;
@@ -236,7 +236,7 @@ void
 SLESAudioRenderer::ReleaseChannel(audio::Channel* const channel)
 {
     channel->ReleaseAudioPlayer();
-    channel->_Release();
+    channel->ReleaseInternal();
 }
 
 //------------------------------------------------------------------------------
@@ -253,9 +253,9 @@ SLESAudioRenderer::BufferQueueCallback(SLAndroidSimpleBufferQueueItf bufferQueue
     channel->GetMode(&mode);
     if (mode & audio::MODE_CREATESTREAM)
     {
-        const core::Mutex& syncLock = channel->_GetSyncLock();
+        const core::Mutex& syncLock = channel->GetSyncLock();
         syncLock.Lock();
-        audio::Codec* codec = sound->_GetCodec();
+        audio::Codec* codec = sound->GetCodec();
         if (codec->EndOfStream())
         {
             if (mode & audio::MODE_LOOP_NORMAL)
@@ -267,7 +267,7 @@ SLESAudioRenderer::BufferQueueCallback(SLAndroidSimpleBufferQueueItf bufferQueue
             else
             {
                 channel->ReleaseAudioPlayer();
-                channel->_Release();
+                channel->ReleaseInternal();
             }
         }
         else
@@ -287,13 +287,13 @@ SLESAudioRenderer::BufferQueueCallback(SLAndroidSimpleBufferQueueItf bufferQueue
             int numChannels, bits;
             sound->GetFormat(NULL, NULL, &numChannels, &bits);
 
-            result = (*bufferQueueInterface)->Enqueue(bufferQueueInterface, sound->_GetSampleBufferPointer(0U), length * numChannels * ((unsigned int)bits >> 3U));
+            result = (*bufferQueueInterface)->Enqueue(bufferQueueInterface, sound->GetSampleBufferPointer(0U), length * numChannels * ((unsigned int)bits >> 3U));
             CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::BufferQueueCallback(): failed to enqueue buffer\n");
         }
         else
         {
             channel->ReleaseAudioPlayer();
-            channel->_Release();
+            channel->ReleaseInternal();
         }
     }
 }
