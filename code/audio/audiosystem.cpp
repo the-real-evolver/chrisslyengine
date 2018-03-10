@@ -156,6 +156,11 @@ AudioSystem::CreateSound(const char* const name, Mode mode, Sound** sound)
 Result
 AudioSystem::PlaySound(int channelid, Sound* const sound, bool paused, Channel** channel)
 {
+    if (sound->mode & MODE_CREATESTREAM)
+    {
+        CE_ASSERT(0U == sound->useCount, "AudioSystem::PlaySound(): multiple channels cannot share a streaming sound\n");
+    }
+
     *channel = NULL;
     Channel* chn = NULL;
     unsigned int i;

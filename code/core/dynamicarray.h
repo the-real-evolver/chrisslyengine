@@ -48,7 +48,7 @@ ce_dynamic_array_init(ce_dynamic_array* const v, unsigned int initial_size)
     }
 
     v->capacity = initial_size;
-    v->size = 0;
+    v->size = 0U;
 
     return v->data;
 }

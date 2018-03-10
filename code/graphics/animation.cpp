@@ -112,7 +112,7 @@ Animation::Apply(Entity* const entity, float timePos)
         VertexAnimationTrack* vertexAnimTrack = (VertexAnimationTrack*)ce_dynamic_array_get(&this->vertexTracks, i);
         unsigned short numKeys = vertexAnimTrack->GetNumKeyFrames() - 1U;
         unsigned short keyIndex;
-        for (keyIndex = 0; keyIndex < numKeys; ++keyIndex)
+        for (keyIndex = 0U; keyIndex < numKeys; ++keyIndex)
         {
             VertexMorphKeyFrame* key = vertexAnimTrack->GetVertexMorphKeyFrame(keyIndex);
             VertexMorphKeyFrame* nextKey = vertexAnimTrack->GetVertexMorphKeyFrame(keyIndex + 1U);

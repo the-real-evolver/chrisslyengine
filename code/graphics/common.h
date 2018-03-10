@@ -19,11 +19,11 @@ namespace graphics
     enum CullingMode
     {
         /// Hardware never culls triangles and renders everything it receives.
-        CULL_NONE = 1,
+        CULL_NONE,
         /// Hardware culls triangles whose vertices are listed clockwise in the view (default).
-        CULL_CLOCKWISE = 2,
+        CULL_CLOCKWISE,
         /// Hardware culls triangles whose vertices are listed anticlockwise in the view.
-        CULL_ANTICLOCKWISE = 3
+        CULL_ANTICLOCKWISE
     };
 
     /// filter type
@@ -52,7 +52,7 @@ namespace graphics
     enum ShadowTechnique
     {
         /// No shadows
-        SHADOWTYPE_NONE = 0x00,
+        SHADOWTYPE_NONE,
         /**
             Texture-based shadow technique which involves a render-to-texture
             of the shadow caster and a projection of that texture onto the
@@ -62,7 +62,7 @@ namespace graphics
             accurate model than the modulative approach and this is especially
             apparent when using coloured lights or bump mapping.
         */
-        SHADOWTYPE_TEXTURE_ADDITIVE = 0x21
+        SHADOWTYPE_TEXTURE_ADDITIVE
     };
 
     /// defines the frame buffer types

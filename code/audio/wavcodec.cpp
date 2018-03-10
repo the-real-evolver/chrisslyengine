@@ -20,7 +20,7 @@ static const unsigned int MaxStreamBufferSamples = 2048U;
 /**
 */
 WavCodec::WavCodec() :
-    riffWavHeaderSize(0U),
+    dataChunkOffset(0U),
     lengthInBytes(0U),
     bytesPerSample(0U),
     openedAsStream(false),
@@ -65,14 +65,14 @@ WavCodec::SetupSound(const char* const filename, Mode mode, void** sampleBuffer,
     FSWrapper::Read(fd, &chunkSize, 4U);
     FSWrapper::Read(fd, chunkID, 4U);
     CE_ASSERT(0 == strncmp(chunkID, "WAVE", 4U), "WavCodec::SetupSound(): '%s' RIFF file but not a wave file\n", filename);
-    this->riffWavHeaderSize = 12U;
+    this->dataChunkOffset = 12U;
 
     short audioFormat, numChannels = 0, blockAlign, bitsPerSample = 0;
 
     while (FSWrapper::Read(fd, chunkID, 4U) > 0)
     {
         FSWrapper::Read(fd, &chunkSize, 4U);
-        this->riffWavHeaderSize += 8U;
+        this->dataChunkOffset += 8U;
         if (0 == strncmp(chunkID, "fmt ", 4U))
         {
             // "fmt " sub-chunk
@@ -86,7 +86,7 @@ WavCodec::SetupSound(const char* const filename, Mode mode, void** sampleBuffer,
             {
                 FSWrapper::Seek(fd, chunkSize - 16U, Current);
             }
-            this->riffWavHeaderSize += chunkSize;
+            this->dataChunkOffset += chunkSize;
         }
         else if (0 == strncmp(chunkID, "data", 4U))
         {
@@ -136,7 +136,7 @@ WavCodec::SetupSound(const char* const filename, Mode mode, void** sampleBuffer,
         {
             // skip information chunks like "fact" etc.
             FSWrapper::Seek(fd, chunkSize, Current);
-            this->riffWavHeaderSize += chunkSize;
+            this->dataChunkOffset += chunkSize;
         }
     }
 }
@@ -151,7 +151,7 @@ WavCodec::InitialiseStream()
     this->currentStreamBufferIndex = 0U;
     this->bytesToLoadToBackBuffer = this->lengthInBytes < MaxStreamBufferSamples * this->bytesPerSample ? this->lengthInBytes : MaxStreamBufferSamples * this->bytesPerSample;
     this->seekPosition = this->bytesToLoadToBackBuffer;
-    FSWrapper::Seek(this->streamFileHandle, this->riffWavHeaderSize, Begin);
+    FSWrapper::Seek(this->streamFileHandle, this->dataChunkOffset, Begin);
     FSWrapper::Read(this->streamFileHandle, this->streamBuffers[0U], this->bytesToLoadToBackBuffer);
     this->currentStreamBufferLength = this->bytesToLoadToBackBuffer;
     this->backBufferFilled = false;
@@ -236,7 +236,7 @@ WavCodec::FillStreamBuffer(unsigned int numSamples, unsigned int position)
     {
         if (this->seekPosition != desiredSeekPosition)
         {
-            FSWrapper::Seek(this->streamFileHandle, desiredSeekPosition + this->riffWavHeaderSize, Begin);
+            FSWrapper::Seek(this->streamFileHandle, desiredSeekPosition + this->dataChunkOffset, Begin);
             this->seekPosition = desiredSeekPosition;
         }
         unsigned int bytesToLoad = numSamples * this->bytesPerSample;

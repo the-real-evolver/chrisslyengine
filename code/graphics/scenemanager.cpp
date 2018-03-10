@@ -473,13 +473,12 @@ SceneManager::_SuppressRenderStateChanges(bool suppress)
 void
 SceneManager::PrepareShadowTextures()
 {
-    this->illuminationStage = IRS_RENDER_TO_TEXTURE;
-
+    bool shadowCameraDirty = true;
     unsigned int i;
-    for (i = 0U; i < this->lights.bucket_count; ++i)
+    for (i = 0U; i < this->lights.bucket_count && shadowCameraDirty; ++i)
     {
         ce_linked_list* it = ce_hash_table_begin(&this->lights, i);
-        while (it != NULL)
+        while (it != NULL && shadowCameraDirty)
         {
             Light* light = (graphics::Light*)((ce_key_value_pair*)it->data)->value;
             if (Light::LT_SPOTLIGHT == light->GetType())
@@ -487,11 +486,13 @@ SceneManager::PrepareShadowTextures()
                 this->shadowCamera->SetPosition(light->GetPosition());
                 this->shadowCamera->SetDirection(light->GetDirection());
                 this->shadowProjection = this->shadowTextureProjScaleTrans * (this->shadowCamera->GetProjectionMatrix() * this->shadowCamera->GetViewMatrix());
-                break;
+                shadowCameraDirty = false;
             }
             it = it->next;
         }
     }
+
+    this->illuminationStage = IRS_RENDER_TO_TEXTURE;
 
     this->shadowRenderTexture->Update();
 

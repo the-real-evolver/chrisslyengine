@@ -22,11 +22,11 @@ public:
     enum LightTypes
     {
         /// point light sources give off light equally in all directions, so require only position not direction
-        LT_POINT = 0,
+        LT_POINT,
         /// directional lights simulate parallel light beams from a distant source, hence have direction but no position
-        LT_DIRECTIONAL = 1,
+        LT_DIRECTIONAL,
         /// spotlights simulate a cone of light from a source so require position and direction, plus extra values for falloff
-        LT_SPOTLIGHT = 2
+        LT_SPOTLIGHT
     };
 
     /// destructor

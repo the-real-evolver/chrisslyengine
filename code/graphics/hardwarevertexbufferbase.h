@@ -20,13 +20,13 @@ enum Usage
         Static buffer which the application rarely modifies once created.
         Modifying the contents of this buffer will involve a performance hit.
     */
-    HBU_STATIC = 1,
+    HBU_STATIC,
     /**
         Indicates the application would like to modify this buffer with the
         CPU fairly often. Buffers created with this flag will typically end
         up in main memory rather than video memory.
     */
-    HBU_DYNAMIC = 2
+    HBU_DYNAMIC
 };
 
 class HardwareVertexBufferBase

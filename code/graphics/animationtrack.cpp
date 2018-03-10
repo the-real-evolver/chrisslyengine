@@ -21,7 +21,7 @@ VertexAnimationTrack::VertexAnimationTrack(unsigned char handle) :
     handle(handle),
     currentTimeIndex(-1)
 {
-    ce_dynamic_array_init(&this->keyFrames, 1);
+    ce_dynamic_array_init(&this->keyFrames, 1U);
 }
 
 //------------------------------------------------------------------------------
@@ -94,7 +94,7 @@ VertexAnimationTrack::ApplyToVertexData(VertexData* const data, int timeIndex)
 {
     if (this->currentTimeIndex != timeIndex)
     {
-        if ((unsigned int)timeIndex < this->keyFrames.size - 1)
+        if ((unsigned int)timeIndex < this->keyFrames.size - 1U)
         {
             HardwareVertexBuffer* kf1 = ((VertexMorphKeyFrame*)ce_dynamic_array_get(&this->keyFrames, timeIndex))->vertexData->vertexBuffer;
             HardwareVertexBuffer* kf2 = ((VertexMorphKeyFrame*)ce_dynamic_array_get(&this->keyFrames, timeIndex + 1))->vertexData->vertexBuffer;

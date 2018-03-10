@@ -45,7 +45,7 @@ private:
     /// prevent copy by assignment
     WavCodec& operator = (const WavCodec&);
 
-    unsigned int riffWavHeaderSize;
+    unsigned int dataChunkOffset;
     unsigned int lengthInBytes;
     unsigned char bytesPerSample;
     bool openedAsStream;

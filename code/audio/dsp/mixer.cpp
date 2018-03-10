@@ -46,7 +46,7 @@ mix_s16_stereo_u8(int num_channels, const unsigned char* _ChrisslyRestrict buffe
     unsigned int i;
     for (i = 0U; i < num_samples; ++i)
     {
-        sample = *buffer + (short)(((float)(*buffer_to_mix) - 127.0f) / 0.0039063f * volume_left);
+        sample = *buffer + (short)(((float)(*buffer_to_mix) - 127.0f) * 256.0f * volume_left);
         CLAMP_SAMPLE(sample)
         *buffer++ = (short)sample;
         if (2 == num_channels)
@@ -54,7 +54,7 @@ mix_s16_stereo_u8(int num_channels, const unsigned char* _ChrisslyRestrict buffe
             ++buffer_to_mix;
         }
 
-        sample = *buffer + (short)(((float)(*buffer_to_mix) - 127.0f) / 0.0039063f * volume_right);
+        sample = *buffer + (short)(((float)(*buffer_to_mix) - 127.0f) * 256.0f * volume_right);
         CLAMP_SAMPLE(sample)
         *buffer++ = (short)sample;
         ++buffer_to_mix;

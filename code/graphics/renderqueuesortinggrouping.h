@@ -17,7 +17,7 @@ namespace chrissly
 namespace graphics
 {
 
-/** 
+/**
     struct associating a single Pass with a single Renderable.
     This is used to for objects sorted by depth and thus not
     grouped by pass
