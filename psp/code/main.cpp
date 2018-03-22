@@ -13,8 +13,7 @@
 #include "debug.h"
 
 PSP_MODULE_INFO("Chrissly Engine PSP", 0, 1, 1);
-PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER);
-// PSP_MAIN_THREAD_PRIORITY
+PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER | THREAD_ATTR_VFPU);
 
 using namespace chrissly::graphics;
 using namespace chrissly::application;

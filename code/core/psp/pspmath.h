@@ -39,6 +39,8 @@ public:
     static inline float Floor(float fValue);
     /// rounds the value upward, returning the smallest integral value that is not less than value
     static inline float Ceil(float fValue);
+    /// computes the absolute value of an floating point number
+    static inline float Fabs(float fValue);
     /// computes the absolute value of an integer number
     static inline int Abs(int n);
 };
@@ -67,7 +69,17 @@ PSPMath::Sqrt(float fValue)
 inline float
 PSPMath::Sin(float fValue)
 {
-    return pspFpuSin(fValue);
+    float sine;
+    __asm__ volatile (
+        "mtv %1, S000\n"
+        "vcst.s S001, VFPU_2_PI\n"
+        "vmul.s S000, S000, S001\n"
+        "vsin.s S000, S000\n"
+        "mfv %0, S000\n"
+        : "=r"(sine)
+        : "r"(fValue)
+    );
+    return sine;
 }
 
 //------------------------------------------------------------------------------
@@ -76,7 +88,17 @@ PSPMath::Sin(float fValue)
 inline float
 PSPMath::Cos(float fValue)
 {
-    return pspFpuCos(fValue);
+    float cosine;
+    __asm__ volatile (
+        "mtv %1, S000\n"
+        "vcst.s S001, VFPU_2_PI\n"
+        "vmul.s S000, S000, S001\n"
+        "vcos.s S000, S000\n"
+        "mfv %0, S000\n"
+        : "=r"(cosine)
+        : "r"(fValue)
+    );
+    return cosine;
 }
 
 //------------------------------------------------------------------------------
@@ -131,6 +153,15 @@ inline float
 PSPMath::Ceil(float fValue)
 {
     return pspFpuCeil(fValue);
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline float
+PSPMath::Fabs(float fValue)
+{
+    return pspFpuAbs(fValue);
 }
 
 //------------------------------------------------------------------------------

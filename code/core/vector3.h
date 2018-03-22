@@ -83,8 +83,8 @@ public:
     float DotProduct(const Vector3& vec) const;
     /// returns the length (magnitude) of the vector
     float Length() const;
-    /// get the maximum value of the vector's components
-    float GetMax() const;
+    /// get the maximum absolute value of the vector's components
+    float GetAbsMax() const;
 
     float x;
     float y;

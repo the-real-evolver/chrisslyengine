@@ -232,10 +232,13 @@ Vector3::Length() const
 /**
 */
 float
-Vector3::GetMax() const
+Vector3::GetAbsMax() const
 {
-    float max = this->x > this->y ? this->x : this->y;
-    if (this->z > max) {return this->z;}
+    float xAbs = Math::Fabs(this->x);
+    float yAbs = Math::Fabs(this->y);
+    float zAbs = Math::Fabs(this->z);
+    float max = xAbs > yAbs ? xAbs : yAbs;
+    if (zAbs > max) {return zAbs;}
     return max;
 }
 

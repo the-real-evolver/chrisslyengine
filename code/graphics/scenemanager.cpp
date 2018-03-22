@@ -355,7 +355,7 @@ SceneManager::_RenderScene(Camera* const camera, Viewport* const vp)
             // apply frustum culling
             // for correct results with non-uniform scaled scenenodes we have to take the maximum value
             // of the three vector elements of the scaling vector as scale factor for the sphere radius
-            if (!camera->IsVisible(sceneNode->_GetDerivedPosition(), entity->GetMesh()->GetBoundingSphereRadius() * sceneNode->GetScale().GetMax()))
+            if (!camera->IsVisible(sceneNode->_GetDerivedPosition(), entity->GetMesh()->GetBoundingSphereRadius() * sceneNode->GetScale().GetAbsMax()))
             {
                 continue;
             }
