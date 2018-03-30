@@ -22,7 +22,7 @@ Camera::Camera() :
     recalcFrustum(true),
     FOVy(90.0f),
     farDist(1000.0f),
-    nearDist(0.1f),
+    nearDist(0.01f),
     aspect(1.7777f),
     projMatrix(Matrix4::ZERO),
     nearHeight(0.0f),

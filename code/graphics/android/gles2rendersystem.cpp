@@ -217,7 +217,7 @@ GLES2RenderSystem::Render(graphics::SubEntity* const renderable)
         glUniform1f(this->currentGpuProgram->GetUniformLocation(graphics::GpuProgramParameters::ACT_MORPH_WEIGHT), renderable->GetMorphWeight());
         CE_GL_ERROR_CHECK("glUniform1f");
 
-        graphics::HardwareVertexBuffer* vertexBuffer = renderable->_GetHardwareVertexAnimVertexData()->vertexBuffer;
+        graphics::HardwareVertexBuffer* vertexBuffer = renderable->GetMorphVertexData()->vertexBuffer;
         unsigned char* buffer = (unsigned char*)vertexBuffer->Map();
 
         GLuint vertexTexCoordHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_TEXTURE_COORDINATES);

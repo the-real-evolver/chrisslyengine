@@ -120,7 +120,7 @@ Animation::Apply(Entity* const entity, float timePos)
             {
                 SubEntity* subEntity = entity->GetSubEntity(vertexAnimTrack->GetHandle());
                 subEntity->SetMorphWeight((timePos - key->GetTime()) / (nextKey->GetTime() - key->GetTime()));
-                vertexAnimTrack->ApplyToVertexData(subEntity->_GetHardwareVertexAnimVertexData(), keyIndex);
+                vertexAnimTrack->ApplyToVertexData(subEntity->GetMorphVertexData(), keyIndex);
                 break;
             }
         }

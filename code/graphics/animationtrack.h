@@ -28,9 +28,9 @@ namespace graphics
 enum VertexAnimationType
 {
     /// no animation
-    VAT_NONE = 0,
+    VAT_NONE,
     /// morph animation is made up of many interpolated snapshot keyframes
-    VAT_MORPH = 1
+    VAT_MORPH
 };
 
 class VertexAnimationTrack

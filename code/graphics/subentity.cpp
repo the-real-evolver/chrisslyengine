@@ -17,10 +17,10 @@ using namespace chrissly::core;
 */
 SubEntity::SubEntity(Entity* parent, SubMesh* subMeshBasis) :
     parentEntity(parent),
-    pMaterial(NULL),
+    material(NULL),
     subMesh(subMeshBasis),
     visible(true),
-    hardwareVertexAnimVertexData(NULL),
+    morphVertexData(NULL),
     morphWeight(0.0f)
 {
 
@@ -31,9 +31,9 @@ SubEntity::SubEntity(Entity* parent, SubMesh* subMeshBasis) :
 */
 SubEntity::~SubEntity()
 {
-    if (this->hardwareVertexAnimVertexData != NULL)
+    if (this->morphVertexData != NULL)
     {
-        CE_DELETE this->hardwareVertexAnimVertexData;
+        CE_DELETE this->morphVertexData;
     }
 }
 
@@ -43,21 +43,21 @@ SubEntity::~SubEntity()
 void
 SubEntity::SetMaterialName(const String& matName)
 {
-    Material* material = MaterialManager::Instance()->GetByName(matName.C_Str());
-    this->SetMaterial(material);
+    Material* mat = MaterialManager::Instance()->GetByName(matName.C_Str());
+    this->SetMaterial(mat);
 }
 
 //------------------------------------------------------------------------------
 /**
 */
 void
-SubEntity::SetMaterial(Material* material)
+SubEntity::SetMaterial(Material* mat)
 {
-    this->pMaterial = material;
+    this->material = mat;
 
-    if (this->pMaterial != NULL)
+    if (this->material != NULL)
     {
-        this->pMaterial->Load();
+        this->material->Load();
     }
 }
  
@@ -67,7 +67,7 @@ SubEntity::SetMaterial(Material* material)
 Material* const
 SubEntity::GetMaterial() const
 {
-    return this->pMaterial;
+    return this->material;
 }
 
 //------------------------------------------------------------------------------
@@ -101,9 +101,9 @@ SubEntity::GetSubMesh() const
 /**
 */
 VertexData* const
-SubEntity::_GetHardwareVertexAnimVertexData() const
+SubEntity::GetMorphVertexData() const
 {
-    return this->hardwareVertexAnimVertexData;
+    return this->morphVertexData;
 }
 
 //------------------------------------------------------------------------------

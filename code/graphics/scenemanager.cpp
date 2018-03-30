@@ -40,9 +40,9 @@ SceneManager::SceneManager() :
     ce_dynamic_array_init(&this->entities, 256U);
     ce_dynamic_array_init(&this->sceneNodes, 256U);
 
-    this->renderQueueOpaque.Initialise(128U);
-    this->renderQueueTransparent.Initialise(64U);
-    this->renderQueueShadowReceiver.Initialise(64U);
+    this->renderQueueOpaque.Initialise(512U);
+    this->renderQueueTransparent.Initialise(256U);
+    this->renderQueueShadowReceiver.Initialise(256U);
 
     this->destRenderSystem = GraphicsSystem::Instance()->GetRenderSystem();
 }

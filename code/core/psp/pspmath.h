@@ -4,8 +4,8 @@
 /**
     @class chrissly::PSPMath
 
-    Wrapper class for common mathematical functions using the FPU of the
-    Playstation Portable.
+    Wrapper class for common mathematical functions using the FPU and VFPU of
+    the Playstation Portable.
 
     (C) 2012 Christian Bleicher
 */

@@ -161,7 +161,7 @@ PSPRenderSystem::Render(graphics::SubEntity* const renderable)
         sceGuMorphWeight(0, 1.0f - morphWeight);
         sceGuMorphWeight(1, morphWeight);
 
-        graphics::HardwareVertexBuffer* vertexBuffer = renderable->_GetHardwareVertexAnimVertexData()->vertexBuffer;
+        graphics::HardwareVertexBuffer* vertexBuffer = renderable->GetMorphVertexData()->vertexBuffer;
         sceGumDrawArray(GU_TRIANGLES,
                         GU_TEXTURE_32BITF | GU_COLOR_8888 | GU_NORMAL_32BITF | GU_VERTEX_32BITF | GU_TRANSFORM_3D | GU_VERTICES(2) | GU_WEIGHTS(2),
                         vertexBuffer->GetNumVertices(), 0,

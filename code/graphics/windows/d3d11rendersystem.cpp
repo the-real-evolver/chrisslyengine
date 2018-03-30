@@ -355,7 +355,7 @@ D3D11RenderSystem::Render(graphics::SubEntity* const renderable)
     if (graphics::VAT_MORPH == renderable->GetSubMesh()->GetVertexAnimationType())
     {
         this->context->IASetInputLayout(this->inputLayoutMorphAnim);
-        vertexBuffer = renderable->_GetHardwareVertexAnimVertexData()->vertexBuffer;
+        vertexBuffer = renderable->GetMorphVertexData()->vertexBuffer;
         params->SetAutoConstant(graphics::GpuProgramParameters::ACT_MORPH_WEIGHT, renderable->GetMorphWeight());
     }
     else

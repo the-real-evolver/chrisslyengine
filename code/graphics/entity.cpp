@@ -48,7 +48,7 @@ Entity::Entity(Mesh* const mesh) :
                     HardwareVertexBuffer* subMeshVertexBuffer = subEntity->GetSubMesh()->vertexData->vertexBuffer;
                     HardwareVertexBuffer* vertexBuffer = CE_NEW HardwareVertexBuffer(subMeshVertexBuffer->GetNumVertices(),
                                                                                     2U * subMeshVertexBuffer->GetBytesPerVertex(), HBU_DYNAMIC, false);
-                    subEntity->hardwareVertexAnimVertexData = CE_NEW VertexData(vertexBuffer);
+                    subEntity->morphVertexData = CE_NEW VertexData(vertexBuffer);
                 }
 
                 it = it->next;
