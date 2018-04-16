@@ -18,7 +18,7 @@ class GLES2GpuProgram
 {
 public:
     /// construct from vertex and fragment source
-    GLES2GpuProgram(const char* vertexShaderSource, const char* fragmentShaderSource);
+    GLES2GpuProgram(const char* const vertexShaderSource, const char* const fragmentShaderSource);
     /// destructor
     ~GLES2GpuProgram();
     /// get a reference to the default parameters which are to be used for all uses of this program
@@ -40,7 +40,7 @@ private:
     /// populate named constants
     void ExtractConstantDefs();
     /// create and compiles a shader from the given string and returns a handle to it
-    GLuint CreateShaderFromString(GLenum shaderType, const char* const source);
+    GLuint CreateShaderFromString(GLenum shaderType, const char* source);
     /// creates a gpu program from the given shader handles
     GLuint CreateProgram(GLuint vertexShader, GLuint fragmentShader);
 

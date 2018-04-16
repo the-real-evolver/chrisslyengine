@@ -20,7 +20,7 @@ GLES2GpuProgram::GLES2GpuProgram()
 //------------------------------------------------------------------------------
 /**
 */
-GLES2GpuProgram::GLES2GpuProgram(const char* vertexShaderSource, const char* fragmentShaderSource) :
+GLES2GpuProgram::GLES2GpuProgram(const char* const vertexShaderSource, const char* const fragmentShaderSource) :
     defaultParams(NULL)
 {
     GLuint vertexShader = this->CreateShaderFromString(GL_VERTEX_SHADER, vertexShaderSource);

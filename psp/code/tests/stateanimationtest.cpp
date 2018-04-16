@@ -17,10 +17,13 @@ StateAnimationTest* StateAnimationTest::Singleton = NULL;
 /**
 */
 StateAnimationTest::StateAnimationTest() :
+    sceneNode(NULL),
+    animState(NULL),
     loop(true),
     pause(false)
 {
     Singleton = this;
+    memset(&this->pad, 0, sizeof(this->pad));
 }
 
 //------------------------------------------------------------------------------
@@ -41,7 +44,7 @@ StateAnimationTest::Enter()
 
     Material* material = MaterialManager::Instance()->GetByName("cerberus_material_psp");
     Entity* entity = SceneManager::Instance()->CreateEntity("cerberus_walk.mesh");
-    entity->GetSubEntity(0)->SetMaterial(material);
+    entity->GetSubEntity(0U)->SetMaterial(material);
 
     this->animState = entity->GetAnimationState("default");
     this->animState->SetEnabled(true);

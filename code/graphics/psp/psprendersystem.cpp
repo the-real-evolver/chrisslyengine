@@ -223,7 +223,7 @@ PSPRenderSystem::SetPass(graphics::Pass* const pass)
     pass->GetDepthCheckEnabled() ? sceGuEnable(GU_DEPTH_TEST) : sceGuDisable(GU_DEPTH_TEST);
 
     // depth write
-    sceGuDepthMask(pass->GetDepthWriteEnabled() ? GU_FALSE : GU_TRUE);
+    sceGuDepthMask(!pass->GetDepthWriteEnabled());
 
     // culling mode
     switch (pass->GetCullingMode())

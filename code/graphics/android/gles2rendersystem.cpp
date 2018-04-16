@@ -320,7 +320,7 @@ GLES2RenderSystem::SetPass(graphics::Pass* const pass)
     pass->GetDepthCheckEnabled() ? glEnable(GL_DEPTH_TEST) : glDisable(GL_DEPTH_TEST);
 
     // depth write
-    glDepthMask(pass->GetDepthWriteEnabled() ? GL_TRUE : GL_FALSE);
+    glDepthMask(pass->GetDepthWriteEnabled());
 
     // culling mode
     switch (pass->GetCullingMode())

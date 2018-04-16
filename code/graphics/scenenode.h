@@ -144,7 +144,7 @@ private:
 
     /// pointer to parent node
     SceneNode* parent;
-    /// collection of pointers to direct children; hashmap for efficiency
+    /// collection of pointers to direct children
     ce_linked_list* children;
 
     /// stores the orientation of the node relative to it's parent.

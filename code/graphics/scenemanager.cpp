@@ -332,7 +332,7 @@ SceneManager::_RenderScene(Camera* const camera, Viewport* const vp)
         // update transformation
         this->GetRootSceneNode()->_Update();
 
-        // are we using any shadows at all?
+        // update shadowmap if shadows are enabled
         if (this->IsShadowTechniqueInUse() && !this->suppressRenderStateChanges)
         {
             this->PrepareShadowTextures();
@@ -352,6 +352,11 @@ SceneManager::_RenderScene(Camera* const camera, Viewport* const vp)
             // for all attached entities
             Entity* entity = sceneNode->GetAttachedObject((unsigned short)entityIndex);
 
+            if (this->IsShadowTechniqueInUse() && this->illuminationStage == IRS_RENDER_TO_TEXTURE && !entity->GetCastShadows())
+            {
+                continue;
+            }
+
             // apply frustum culling
             // for correct results with non-uniform scaled scenenodes we have to take the maximum value
             // of the three vector elements of the scaling vector as scale factor for the sphere radius
@@ -360,13 +365,10 @@ SceneManager::_RenderScene(Camera* const camera, Viewport* const vp)
                 continue;
             }
 
-            if (this->IsShadowTechniqueInUse() && this->illuminationStage == IRS_RENDER_TO_TEXTURE && !entity->GetCastShadows())
-            {
-                continue;
-            }
-
             // update animation
-            if (entity->HasVertexAnimation() && this->illuminationStage != IRS_RENDER_TO_TEXTURE)
+            if (entity->HasVertexAnimation() && (!this->IsShadowTechniqueInUse() ||
+                (this->IsShadowTechniqueInUse() && this->illuminationStage == IRS_RENDER_TO_TEXTURE) ||
+                (this->IsShadowTechniqueInUse() && this->illuminationStage != IRS_RENDER_TO_TEXTURE && !entity->GetCastShadows())))
             {
                 entity->UpdateAnimation();
             }

@@ -73,7 +73,7 @@ Mesh::GetSubMesh(unsigned short index) const
 /**
 */
 Animation* const
-Mesh::CreateAnimation(const char* name, float length)
+Mesh::CreateAnimation(const char* const name, float length)
 {
     Animation* animation = CE_NEW Animation(name, length);
 
@@ -86,7 +86,7 @@ Mesh::CreateAnimation(const char* name, float length)
 /**
 */
 Animation* const
-Mesh::GetAnimation(const char* name)
+Mesh::GetAnimation(const char* const name)
 {
     return (Animation*)ce_hash_table_find(&this->animations, name, strlen(name));
 }
@@ -117,7 +117,7 @@ Mesh::RemoveAllAnimations()
 bool
 Mesh::HasVertexAnimation() const
 {
-    return (this->animations.size > 0);
+    return this->animations.size > 0U;
 }
 
 //------------------------------------------------------------------------------

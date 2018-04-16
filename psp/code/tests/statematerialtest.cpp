@@ -23,9 +23,11 @@ StateMaterialTest::StateMaterialTest() :
     gothSceneNode(NULL),
     cubeMaterial(NULL),
     lightConeSceneNode(NULL),
-    spotLight(NULL)
+    spotLight(NULL),
+    vMod(0.0f)
 {
     Singleton = this;
+    memset(&this->pad, 0, sizeof(this->pad));
 }
 
 //------------------------------------------------------------------------------
@@ -162,7 +164,7 @@ StateMaterialTest::Trigger()
 
     // test uv animation
     this->vMod += 0.003f;
-    this->cubeMaterial->GetPass(1)->GetTextureUnitState(0)->SetTextureScroll(0.0f, this->vMod);
+    this->cubeMaterial->GetPass(1U)->GetTextureUnitState(0U)->SetTextureScroll(0.0f, this->vMod);
 
     // rotate scenenode
     this->gothSceneNode->Yaw(0.01f);

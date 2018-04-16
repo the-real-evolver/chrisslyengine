@@ -433,7 +433,7 @@ Pass::IsProgrammable() const
 /**
 */
 void
-Pass::SetGpuProgram(GpuProgram* program)
+Pass::SetGpuProgram(GpuProgram* const program)
 {
     this->gpuProgram = program;
 }

@@ -7,7 +7,7 @@
 #include "chrisslymath.h"
 #include "debug.h"
 
-#define CLAMP_SAMPLE(sample) {if (sample > 32767) {sample = 32767;} else if (sample < -32767) {sample = -32767;}}
+#define CLAMP_SAMPLE(sample) {if ((sample) > 32767) {(sample) = 32767;} else if ((sample) < -32768) {(sample) = -32768;}}
 
 //------------------------------------------------------------------------------
 /**

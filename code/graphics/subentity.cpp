@@ -51,7 +51,7 @@ SubEntity::SetMaterialName(const String& matName)
 /**
 */
 void
-SubEntity::SetMaterial(Material* mat)
+SubEntity::SetMaterial(Material* const mat)
 {
     this->material = mat;
 

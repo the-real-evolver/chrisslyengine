@@ -49,6 +49,7 @@ Entity::Entity(Mesh* const mesh) :
                     HardwareVertexBuffer* vertexBuffer = CE_NEW HardwareVertexBuffer(subMeshVertexBuffer->GetNumVertices(),
                                                                                     2U * subMeshVertexBuffer->GetBytesPerVertex(), HBU_DYNAMIC, false);
                     subEntity->morphVertexData = CE_NEW VertexData(vertexBuffer);
+                    vertexTrack->ApplyToVertexData(subEntity->morphVertexData, 0);
                 }
 
                 it = it->next;
@@ -159,7 +160,7 @@ Entity::HasVertexAnimation() const
 /**
 */
 AnimationState* const
-Entity::GetAnimationState(const char* name) const
+Entity::GetAnimationState(const char* const name) const
 {
     return (AnimationState*)ce_hash_table_find(&this->animationStates, name, strlen(name));
 }
