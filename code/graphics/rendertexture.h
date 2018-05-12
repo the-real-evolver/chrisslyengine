@@ -21,7 +21,7 @@ typedef chrissly::PSPRenderTexture RenderTexture;
 } // namespace chrissly
 //------------------------------------------------------------------------------
 #elif __ANDROID__
-#include "android/gles2rendertexture.h"
+#include "gles2/gles2rendertexture.h"
 namespace chrissly
 {
 namespace graphics
@@ -33,7 +33,7 @@ typedef chrissly::GLES2RenderTexture RenderTexture;
 } // namespace chrissly
 //------------------------------------------------------------------------------
 #elif __WINDOWS__
-#include "windows/d3d11rendertexture.h"
+#include "d3d11/d3d11rendertexture.h"
 namespace chrissly
 {
 namespace graphics

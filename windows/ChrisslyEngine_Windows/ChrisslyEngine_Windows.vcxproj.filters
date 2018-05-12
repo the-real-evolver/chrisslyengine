@@ -107,33 +107,6 @@
     <ClCompile Include="..\..\code\graphics\viewport.cpp">
       <Filter>graphics</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\code\graphics\windows\d3d11gpuprogram.cpp">
-      <Filter>graphics\windows</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\code\graphics\windows\d3d11hardwarevertexbuffer.cpp">
-      <Filter>graphics\windows</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\code\graphics\windows\d3d11mappings.cpp">
-      <Filter>graphics\windows</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\code\graphics\windows\d3d11rendersystem.cpp">
-      <Filter>graphics\windows</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\code\graphics\windows\d3d11rendertexture.cpp">
-      <Filter>graphics\windows</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\code\graphics\windows\d3d11texture.cpp">
-      <Filter>graphics\windows</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\code\graphics\windows\dxgirenderwindow.cpp">
-      <Filter>graphics\windows</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\code\graphics\windows\d3d11constantbuffer.cpp">
-      <Filter>graphics\windows</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\code\graphics\windows\d3d11statecache.cpp">
-      <Filter>graphics\windows</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\code\audio\audiosystem.cpp">
       <Filter>audio</Filter>
     </ClCompile>
@@ -149,9 +122,6 @@
     <ClCompile Include="..\..\code\audio\wavcodec.cpp">
       <Filter>audio</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\code\audio\windows\wasapiaudiorenderer.cpp">
-      <Filter>audio\windows</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\code\audio\dsp\mixer.cpp">
       <Filter>audio\dsp</Filter>
     </ClCompile>
@@ -163,6 +133,36 @@
     </ClCompile>
     <ClCompile Include="..\..\code\audio\dsp\samplerateconverter.cpp">
       <Filter>audio\dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\audio\wasapi\wasapiaudiorenderer.cpp">
+      <Filter>audio\wasapi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\graphics\d3d11\d3d11constantbuffer.cpp">
+      <Filter>graphics\d3d11</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\graphics\d3d11\d3d11gpuprogram.cpp">
+      <Filter>graphics\d3d11</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\graphics\d3d11\d3d11hardwarevertexbuffer.cpp">
+      <Filter>graphics\d3d11</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\graphics\d3d11\d3d11mappings.cpp">
+      <Filter>graphics\d3d11</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\graphics\d3d11\d3d11rendersystem.cpp">
+      <Filter>graphics\d3d11</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\graphics\d3d11\d3d11rendertexture.cpp">
+      <Filter>graphics\d3d11</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\graphics\d3d11\d3d11statecache.cpp">
+      <Filter>graphics\d3d11</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\graphics\d3d11\d3d11texture.cpp">
+      <Filter>graphics\d3d11</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\graphics\d3d11\dxgirenderwindow.cpp">
+      <Filter>graphics\d3d11</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -178,9 +178,6 @@
     <Filter Include="graphics">
       <UniqueIdentifier>{70e0e4f1-e3ea-49e3-9574-5478a671d438}</UniqueIdentifier>
     </Filter>
-    <Filter Include="graphics\windows">
-      <UniqueIdentifier>{0ac22231-a789-4ce7-8ed0-f347e5a28efc}</UniqueIdentifier>
-    </Filter>
     <Filter Include="thirdparty">
       <UniqueIdentifier>{ea202187-7cc3-47d5-bdd1-a294826f5e02}</UniqueIdentifier>
     </Filter>
@@ -190,11 +187,14 @@
     <Filter Include="audio">
       <UniqueIdentifier>{773e7525-02b6-4fae-967c-87efa694c593}</UniqueIdentifier>
     </Filter>
-    <Filter Include="audio\windows">
-      <UniqueIdentifier>{31efd57d-d93b-4515-b550-bd4a97e8fd6a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="audio\dsp">
       <UniqueIdentifier>{e9a0ab98-b9f5-452e-a3d7-e6a21293ea4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\wasapi">
+      <UniqueIdentifier>{31efd57d-d93b-4515-b550-bd4a97e8fd6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics\d3d11">
+      <UniqueIdentifier>{0ac22231-a789-4ce7-8ed0-f347e5a28efc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -369,38 +369,8 @@
     <ClInclude Include="..\..\code\graphics\viewport.h">
       <Filter>graphics</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\code\graphics\windows\d3d11defaultshaders.h">
-      <Filter>graphics\windows</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\code\graphics\windows\d3d11gpuprogram.h">
-      <Filter>graphics\windows</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\code\graphics\windows\d3d11hardwarevertexbuffer.h">
-      <Filter>graphics\windows</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\code\graphics\windows\d3d11mappings.h">
-      <Filter>graphics\windows</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\code\graphics\windows\d3d11rendersystem.h">
-      <Filter>graphics\windows</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\code\graphics\windows\d3d11rendertexture.h">
-      <Filter>graphics\windows</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\code\graphics\windows\d3d11texture.h">
-      <Filter>graphics\windows</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\code\graphics\windows\dxgirenderwindow.h">
-      <Filter>graphics\windows</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\code\thirdparty\stb\stb_c_lexer.h">
       <Filter>thirdparty\stb</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\code\graphics\windows\d3d11constantbuffer.h">
-      <Filter>graphics\windows</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\code\graphics\windows\d3d11statecache.h">
-      <Filter>graphics\windows</Filter>
     </ClInclude>
     <ClInclude Include="..\..\code\audio\audioformat.h">
       <Filter>audio</Filter>
@@ -444,9 +414,6 @@
     <ClInclude Include="..\..\code\audio\wavcodec.h">
       <Filter>audio</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\code\audio\windows\wasapiaudiorenderer.h">
-      <Filter>audio\windows</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\code\audio\dsp\mixer.h">
       <Filter>audio\dsp</Filter>
     </ClInclude>
@@ -461,6 +428,39 @@
     </ClInclude>
     <ClInclude Include="..\..\code\audio\dsp\samplerateconverter.h">
       <Filter>audio\dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\audio\wasapi\wasapiaudiorenderer.h">
+      <Filter>audio\wasapi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\graphics\d3d11\d3d11constantbuffer.h">
+      <Filter>graphics\d3d11</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\graphics\d3d11\d3d11defaultshaders.h">
+      <Filter>graphics\d3d11</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\graphics\d3d11\d3d11gpuprogram.h">
+      <Filter>graphics\d3d11</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\graphics\d3d11\d3d11hardwarevertexbuffer.h">
+      <Filter>graphics\d3d11</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\graphics\d3d11\d3d11mappings.h">
+      <Filter>graphics\d3d11</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\graphics\d3d11\d3d11rendersystem.h">
+      <Filter>graphics\d3d11</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\graphics\d3d11\d3d11rendertexture.h">
+      <Filter>graphics\d3d11</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\graphics\d3d11\d3d11statecache.h">
+      <Filter>graphics\d3d11</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\graphics\d3d11\d3d11texture.h">
+      <Filter>graphics\d3d11</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\graphics\d3d11\dxgirenderwindow.h">
+      <Filter>graphics\d3d11</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

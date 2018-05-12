@@ -21,7 +21,7 @@ typedef chrissly::PSPRenderWindow RenderWindow;
 } // namespace chrissly
 //------------------------------------------------------------------------------
 #elif __ANDROID__
-#include "android/eglrenderwindow.h"
+#include "egl/eglrenderwindow.h"
 namespace chrissly
 {
 namespace graphics
@@ -33,7 +33,7 @@ typedef chrissly::EGLRenderWindow RenderWindow;
 } // namespace chrissly
 //------------------------------------------------------------------------------
 #elif __WINDOWS__
-#include "windows/dxgirenderwindow.h"
+#include "d3d11/dxgirenderwindow.h"
 namespace chrissly
 {
 namespace graphics

@@ -132,8 +132,8 @@
     <ClCompile Include="..\..\code\audio\dsp\samplerateconverter.cpp" />
     <ClCompile Include="..\..\code\audio\soundbase.cpp" />
     <ClCompile Include="..\..\code\audio\vorbiscodec.cpp" />
+    <ClCompile Include="..\..\code\audio\wasapi\wasapiaudiorenderer.cpp" />
     <ClCompile Include="..\..\code\audio\wavcodec.cpp" />
-    <ClCompile Include="..\..\code\audio\windows\wasapiaudiorenderer.cpp" />
     <ClCompile Include="..\..\code\core\chrisslymemory.cpp" />
     <ClCompile Include="..\..\code\core\chrisslystring.cpp" />
     <ClCompile Include="..\..\code\core\matrix3.cpp" />
@@ -148,6 +148,15 @@
     <ClCompile Include="..\..\code\graphics\animationstate.cpp" />
     <ClCompile Include="..\..\code\graphics\animationtrack.cpp" />
     <ClCompile Include="..\..\code\graphics\camera.cpp" />
+    <ClCompile Include="..\..\code\graphics\d3d11\d3d11constantbuffer.cpp" />
+    <ClCompile Include="..\..\code\graphics\d3d11\d3d11gpuprogram.cpp" />
+    <ClCompile Include="..\..\code\graphics\d3d11\d3d11hardwarevertexbuffer.cpp" />
+    <ClCompile Include="..\..\code\graphics\d3d11\d3d11mappings.cpp" />
+    <ClCompile Include="..\..\code\graphics\d3d11\d3d11rendersystem.cpp" />
+    <ClCompile Include="..\..\code\graphics\d3d11\d3d11rendertexture.cpp" />
+    <ClCompile Include="..\..\code\graphics\d3d11\d3d11statecache.cpp" />
+    <ClCompile Include="..\..\code\graphics\d3d11\d3d11texture.cpp" />
+    <ClCompile Include="..\..\code\graphics\d3d11\dxgirenderwindow.cpp" />
     <ClCompile Include="..\..\code\graphics\entity.cpp" />
     <ClCompile Include="..\..\code\graphics\gpuprogramparams.cpp" />
     <ClCompile Include="..\..\code\graphics\graphicssystem.cpp" />
@@ -170,15 +179,6 @@
     <ClCompile Include="..\..\code\graphics\texturemanager.cpp" />
     <ClCompile Include="..\..\code\graphics\textureunitstate.cpp" />
     <ClCompile Include="..\..\code\graphics\viewport.cpp" />
-    <ClCompile Include="..\..\code\graphics\windows\d3d11constantbuffer.cpp" />
-    <ClCompile Include="..\..\code\graphics\windows\d3d11gpuprogram.cpp" />
-    <ClCompile Include="..\..\code\graphics\windows\d3d11hardwarevertexbuffer.cpp" />
-    <ClCompile Include="..\..\code\graphics\windows\d3d11mappings.cpp" />
-    <ClCompile Include="..\..\code\graphics\windows\d3d11rendersystem.cpp" />
-    <ClCompile Include="..\..\code\graphics\windows\d3d11rendertexture.cpp" />
-    <ClCompile Include="..\..\code\graphics\windows\d3d11statecache.cpp" />
-    <ClCompile Include="..\..\code\graphics\windows\d3d11texture.cpp" />
-    <ClCompile Include="..\..\code\graphics\windows\dxgirenderwindow.cpp" />
     <ClCompile Include="..\..\code\thirdparty\stb\stb_vorbis.c" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
@@ -198,8 +198,8 @@
     <ClInclude Include="..\..\code\audio\soundbase.h" />
     <ClInclude Include="..\..\code\audio\soundtype.h" />
     <ClInclude Include="..\..\code\audio\vorbiscodec.h" />
+    <ClInclude Include="..\..\code\audio\wasapi\wasapiaudiorenderer.h" />
     <ClInclude Include="..\..\code\audio\wavcodec.h" />
-    <ClInclude Include="..\..\code\audio\windows\wasapiaudiorenderer.h" />
     <ClInclude Include="..\..\code\core\chrisslymath.h" />
     <ClInclude Include="..\..\code\core\chrisslymemory.h" />
     <ClInclude Include="..\..\code\core\chrisslymutex.h" />
@@ -229,6 +229,16 @@
     <ClInclude Include="..\..\code\graphics\blendmode.h" />
     <ClInclude Include="..\..\code\graphics\camera.h" />
     <ClInclude Include="..\..\code\graphics\common.h" />
+    <ClInclude Include="..\..\code\graphics\d3d11\d3d11constantbuffer.h" />
+    <ClInclude Include="..\..\code\graphics\d3d11\d3d11defaultshaders.h" />
+    <ClInclude Include="..\..\code\graphics\d3d11\d3d11gpuprogram.h" />
+    <ClInclude Include="..\..\code\graphics\d3d11\d3d11hardwarevertexbuffer.h" />
+    <ClInclude Include="..\..\code\graphics\d3d11\d3d11mappings.h" />
+    <ClInclude Include="..\..\code\graphics\d3d11\d3d11rendersystem.h" />
+    <ClInclude Include="..\..\code\graphics\d3d11\d3d11rendertexture.h" />
+    <ClInclude Include="..\..\code\graphics\d3d11\d3d11statecache.h" />
+    <ClInclude Include="..\..\code\graphics\d3d11\d3d11texture.h" />
+    <ClInclude Include="..\..\code\graphics\d3d11\dxgirenderwindow.h" />
     <ClInclude Include="..\..\code\graphics\entity.h" />
     <ClInclude Include="..\..\code\graphics\gpuprogram.h" />
     <ClInclude Include="..\..\code\graphics\gpuprogramparams.h" />
@@ -259,16 +269,6 @@
     <ClInclude Include="..\..\code\graphics\textureunitstate.h" />
     <ClInclude Include="..\..\code\graphics\vertexdata.h" />
     <ClInclude Include="..\..\code\graphics\viewport.h" />
-    <ClInclude Include="..\..\code\graphics\windows\d3d11constantbuffer.h" />
-    <ClInclude Include="..\..\code\graphics\windows\d3d11defaultshaders.h" />
-    <ClInclude Include="..\..\code\graphics\windows\d3d11gpuprogram.h" />
-    <ClInclude Include="..\..\code\graphics\windows\d3d11hardwarevertexbuffer.h" />
-    <ClInclude Include="..\..\code\graphics\windows\d3d11mappings.h" />
-    <ClInclude Include="..\..\code\graphics\windows\d3d11rendersystem.h" />
-    <ClInclude Include="..\..\code\graphics\windows\d3d11rendertexture.h" />
-    <ClInclude Include="..\..\code\graphics\windows\d3d11statecache.h" />
-    <ClInclude Include="..\..\code\graphics\windows\d3d11texture.h" />
-    <ClInclude Include="..\..\code\graphics\windows\dxgirenderwindow.h" />
     <ClInclude Include="..\..\code\thirdparty\stb\stb_c_lexer.h" />
     <ClInclude Include="..\..\code\thirdparty\stb\stb_vorbis.h" />
   </ItemGroup>

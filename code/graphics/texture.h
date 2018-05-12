@@ -21,7 +21,7 @@ typedef chrissly::PSPTexture Texture;
 } // namespace chrissly
 //------------------------------------------------------------------------------
 #elif __ANDROID__
-#include "android/gles2texture.h"
+#include "gles2/gles2texture.h"
 namespace chrissly
 {
 namespace graphics
@@ -33,7 +33,7 @@ typedef chrissly::GLES2Texture Texture;
 } // namespace chrissly
 //------------------------------------------------------------------------------
 #elif __WINDOWS__
-#include "windows/d3d11texture.h"
+#include "d3d11/d3d11texture.h"
 namespace chrissly
 {
 namespace graphics

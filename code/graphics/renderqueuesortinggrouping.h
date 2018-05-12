@@ -17,11 +17,6 @@ namespace chrissly
 namespace graphics
 {
 
-/**
-    struct associating a single Pass with a single Renderable.
-    This is used to for objects sorted by depth and thus not
-    grouped by pass
-*/
 struct RenderablePass
 {
     /// pointer to the Renderable details
@@ -32,9 +27,6 @@ struct RenderablePass
     RenderablePass(SubEntity* rend, Pass* p) : renderable(rend), pass(p) {}
 };
 
-/**
-    collection of renderables
-*/
 class QueuedRenderableCollection
 {
 public:

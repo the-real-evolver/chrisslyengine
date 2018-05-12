@@ -20,7 +20,7 @@ class GpuProgram {};
 } // namespace chrissly
 //------------------------------------------------------------------------------
 #elif __ANDROID__
-#include "android/gles2gpuprogram.h"
+#include "gles2/gles2gpuprogram.h"
 namespace chrissly
 {
 namespace graphics
@@ -32,7 +32,7 @@ typedef chrissly::GLES2GpuProgram GpuProgram;
 } // namespace chrissly
 //------------------------------------------------------------------------------
 #elif __WINDOWS__
-#include "windows/d3d11gpuprogram.h"
+#include "d3d11/d3d11gpuprogram.h"
 namespace chrissly
 {
 namespace graphics

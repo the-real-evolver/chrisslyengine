@@ -21,7 +21,7 @@ typedef chrissly::PSPChannel Channel;
 } // namespace chrissly
 //------------------------------------------------------------------------------
 #elif __ANDROID__
-#include "android/sleschannel.h"
+#include "sles/sleschannel.h"
 namespace chrissly
 {
 namespace audio

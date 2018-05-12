@@ -21,7 +21,7 @@ typedef chrissly::PSPMutex Mutex;
 } // namespace chrissly
 //------------------------------------------------------------------------------
 #elif __ANDROID__
-#include "android/posixmutex.h"
+#include "posix/posixmutex.h"
 namespace chrissly
 {
 namespace core

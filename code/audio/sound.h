@@ -37,7 +37,7 @@ typedef chrissly::PSPSound Sound;
 } // namespace chrissly
 //------------------------------------------------------------------------------
 #elif __ANDROID__
-#include "android/slessound.h"
+#include "sles/slessound.h"
 namespace chrissly
 {
 namespace audio

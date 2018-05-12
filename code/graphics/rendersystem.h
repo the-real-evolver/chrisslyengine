@@ -21,7 +21,7 @@ typedef chrissly::PSPRenderSystem RenderSystem;
 } // namespace chrissly
 //------------------------------------------------------------------------------
 #elif __ANDROID__
-#include "android/gles2rendersystem.h"
+#include "gles2/gles2rendersystem.h"
 namespace chrissly
 {
 namespace graphics
@@ -33,7 +33,7 @@ typedef chrissly::GLES2RenderSystem RenderSystem;
 } // namespace chrissly
 //------------------------------------------------------------------------------
 #elif __WINDOWS__
-#include "windows/d3d11rendersystem.h"
+#include "d3d11/d3d11rendersystem.h"
 namespace chrissly
 {
 namespace graphics

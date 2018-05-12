@@ -43,7 +43,7 @@ typedef PSPHardwareVertexBuffer HardwareVertexBuffer;
 } // namespace chrissly
 //------------------------------------------------------------------------------
 #elif __ANDROID__
-#include "android/gles2hardwarevertexbuffer.h"
+#include "gles2/gles2hardwarevertexbuffer.h"
 namespace chrissly
 {
 namespace graphics
@@ -55,7 +55,7 @@ typedef GLES2HardwareVertexBuffer HardwareVertexBuffer;
 } // namespace chrissly
 //------------------------------------------------------------------------------
 #elif __WINDOWS__
-#include "windows/d3d11hardwarevertexbuffer.h"
+#include "d3d11/d3d11hardwarevertexbuffer.h"
 namespace chrissly
 {
 namespace graphics

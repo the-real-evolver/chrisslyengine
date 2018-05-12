@@ -21,7 +21,7 @@ typedef chrissly::PSPAudioRenderer AudioRenderer;
 } // namespace chrissly
 //------------------------------------------------------------------------------
 #elif __ANDROID__
-#include "android/slesaudiorenderer.h"
+#include "sles/slesaudiorenderer.h"
 namespace chrissly
 {
 namespace audio
@@ -33,7 +33,7 @@ typedef chrissly::SLESAudioRenderer AudioRenderer;
 } // namespace chrissly
   //------------------------------------------------------------------------------
 #elif __WINDOWS__
-#include "windows/wasapiaudiorenderer.h"
+#include "wasapi/wasapiaudiorenderer.h"
 namespace chrissly
 {
 namespace audio

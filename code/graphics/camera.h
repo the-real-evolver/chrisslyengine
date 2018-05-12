@@ -68,9 +68,9 @@ public:
     float GetFarClipDistance() const;
     /// sets the aspect ratio for the frustum viewport
     void SetAspectRatio(float ratio);
-    /// retreives the current aspect ratio.
+    /// retreives the current aspect ratio
     float GetAspectRatio() const;
-    /// gets the view matrix for this frustum. Mainly for use by engine internally
+    /// gets the view matrix for this frustum
     const core::Matrix4& GetViewMatrix() const;
     /// gets the projection matrix for this frustum
     const core::Matrix4& GetProjectionMatrix() const;
@@ -94,7 +94,7 @@ private:
 
     /// implementation of updateView (called if out of date)
     void UpdateView() const;
-    /// implementation of updateFrustum (called if out of date) 
+    /// implementation of updateFrustum (called if out of date)
     void UpdateFrustum() const;
     /// camera orientation, quaternion style
     core::Quaternion orientation;

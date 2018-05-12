@@ -30,15 +30,15 @@ LOCAL_SRC_FILES := $(CE_SRC_FILES)/core/android/androiddebug.cpp $(CE_SRC_FILES)
                    $(CE_SRC_FILES)/graphics/scenemanager.cpp $(CE_SRC_FILES)/graphics/scenenode.cpp \
                    $(CE_SRC_FILES)/graphics/camera.cpp $(CE_SRC_FILES)/graphics/viewport.cpp \
                    $(CE_SRC_FILES)/graphics/animation.cpp $(CE_SRC_FILES)/graphics/animationtrack.cpp $(CE_SRC_FILES)/graphics/keyframe.cpp $(CE_SRC_FILES)/graphics/animationstate.cpp \
-                   $(CE_SRC_FILES)/graphics/rendertarget.cpp $(CE_SRC_FILES)/graphics/android/gles2rendertexture.cpp $(CE_SRC_FILES)/graphics/android/eglrenderwindow.cpp \
-                   $(CE_SRC_FILES)/graphics/android/gles2mappings.cpp $(CE_SRC_FILES)/graphics/android/gles2texture.cpp $(CE_SRC_FILES)/graphics/android/gles2rendersystem.cpp \
-                   $(CE_SRC_FILES)/graphics/android/gles2gpuprogram.cpp $(CE_SRC_FILES)/graphics/gpuprogramparams.cpp \
-                   $(CE_SRC_FILES)/graphics/android/gles2hardwarevertexbuffer.cpp \
-                   $(CE_SRC_FILES)/graphics/android/gles2debug.cpp \
+                   $(CE_SRC_FILES)/graphics/rendertarget.cpp $(CE_SRC_FILES)/graphics/gles2/gles2rendertexture.cpp $(CE_SRC_FILES)/graphics/egl/eglrenderwindow.cpp \
+                   $(CE_SRC_FILES)/graphics/gles2/gles2mappings.cpp $(CE_SRC_FILES)/graphics/gles2/gles2texture.cpp $(CE_SRC_FILES)/graphics/gles2/gles2rendersystem.cpp \
+                   $(CE_SRC_FILES)/graphics/gles2/gles2gpuprogram.cpp $(CE_SRC_FILES)/graphics/gpuprogramparams.cpp \
+                   $(CE_SRC_FILES)/graphics/gles2/gles2hardwarevertexbuffer.cpp \
+                   $(CE_SRC_FILES)/graphics/gles2/gles2debug.cpp \
                    $(CE_SRC_FILES)/thirdparty/stb/stb_vorbis.c \
                    $(CE_SRC_FILES)/audio/wavcodec.cpp $(CE_SRC_FILES)/audio/vorbiscodec.cpp $(CE_SRC_FILES)/audio/soundbase.cpp $(CE_SRC_FILES)/audio/audiosystem.cpp $(CE_SRC_FILES)/audio/channelbase.cpp \
                    $(CE_SRC_FILES)/audio/dsp/mixer.cpp \
-                   $(CE_SRC_FILES)/audio/android/slesaudiorenderer.cpp $(CE_SRC_FILES)/audio/android/slessound.cpp $(CE_SRC_FILES)/audio/android/sleschannel.cpp \
+                   $(CE_SRC_FILES)/audio/sles/slesaudiorenderer.cpp $(CE_SRC_FILES)/audio/sles/slessound.cpp $(CE_SRC_FILES)/audio/sles/sleschannel.cpp \
                    main.cpp
 
 LOCAL_LDLIBS := -llog -lGLESv2 -landroid -lEGL -lOpenSLES
