@@ -8,7 +8,7 @@
 */
 
 //------------------------------------------------------------------------------
-#if __PSP__
+#if __CE_PSP__
 #include "psp/pspchannel.h"
 namespace chrissly
 {
@@ -20,7 +20,7 @@ typedef chrissly::PSPChannel Channel;
 } // namespace audio
 } // namespace chrissly
 //------------------------------------------------------------------------------
-#elif __ANDROID__
+#elif __CE_SLES__
 #include "sles/sleschannel.h"
 namespace chrissly
 {
@@ -32,7 +32,7 @@ typedef chrissly::SLESChannel Channel;
 } // namespace audio
 } // namespace chrissly
 //------------------------------------------------------------------------------
-#elif __WINDOWS__
+#elif __CE_WASAPI__
 #include "channelbase.h"
 namespace chrissly
 {

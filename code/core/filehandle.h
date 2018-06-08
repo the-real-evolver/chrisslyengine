@@ -8,7 +8,7 @@
 */
 
 //------------------------------------------------------------------------------
-#if __PSP__
+#if __CE_PSP__
 #include <pspiofilemgr.h>
 namespace chrissly
 {
@@ -26,7 +26,7 @@ struct FileHandle
 } // namespace core
 } // namespace chrissly
 //------------------------------------------------------------------------------
-#elif __ANDROID__
+#elif __CE_ANDROID__
 #include <android/asset_manager.h>
 namespace chrissly
 {
@@ -44,7 +44,7 @@ struct FileHandle
 } // namespace core
 } // namespace chrissly
 //------------------------------------------------------------------------------
-#elif __WINDOWS__
+#elif __CE_WINDOWS__
 #include <windows.h>
 namespace chrissly
 {

@@ -8,7 +8,7 @@
 */
 
 //------------------------------------------------------------------------------
-#if __PSP__
+#if __CE_PSP__
 #include "psp/pspfswrapper.h"
 namespace chrissly
 {
@@ -20,7 +20,7 @@ typedef chrissly::PSPFSWrapper FSWrapper;
 } // namespace core
 } // namespace chrissly
 //------------------------------------------------------------------------------
-#elif __ANDROID__
+#elif __CE_ANDROID__
 #include "android/androidfswrapper.h"
 namespace chrissly
 {
@@ -32,7 +32,7 @@ typedef chrissly::AndroidFSWrapper FSWrapper;
 } // namespace core
 } // namespace chrissly
 //------------------------------------------------------------------------------
-#elif __WINDOWS__
+#elif __CE_WINDOWS__
 #include "windows/winapifswrapper.h"
 namespace chrissly
 {

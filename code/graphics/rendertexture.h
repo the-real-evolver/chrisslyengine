@@ -8,7 +8,7 @@
 */
 
 //------------------------------------------------------------------------------
-#if __PSP__
+#if __CE_PSP__
 #include "psp/psprendertexture.h"
 namespace chrissly
 {
@@ -20,7 +20,7 @@ typedef chrissly::PSPRenderTexture RenderTexture;
 } // namespace graphics
 } // namespace chrissly
 //------------------------------------------------------------------------------
-#elif __ANDROID__
+#elif __CE_GLES2__
 #include "gles2/gles2rendertexture.h"
 namespace chrissly
 {
@@ -32,7 +32,7 @@ typedef chrissly::GLES2RenderTexture RenderTexture;
 } // namespace graphics
 } // namespace chrissly
 //------------------------------------------------------------------------------
-#elif __WINDOWS__
+#elif __CE_D3D11__
 #include "d3d11/d3d11rendertexture.h"
 namespace chrissly
 {

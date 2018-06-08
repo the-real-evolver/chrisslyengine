@@ -3,7 +3,7 @@
 #  (C) 2011 Christian Bleicher
 #------------------------------------------------------------------------------
 # for a custom root directroy use: -DROOT_DIR=\"ms0:\\\/PSP\\\/GAME\\\/YourApplication\\\/\"
-CFLAGS = -O2 -G0 -Wall -D__PSP__ -D__DEBUG__
+CFLAGS = -O2 -G0 -Wall -D__CE_DEBUG__ -D__CE_PSP__
 CXXFLAGS = $(CFLAGS) -fno-exceptions
 ASFLAGS = $(CFLAGS)
 PSPSDK = $(shell psp-config --pspsdk-path)

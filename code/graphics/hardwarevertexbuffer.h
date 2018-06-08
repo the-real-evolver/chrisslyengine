@@ -30,7 +30,7 @@ namespace graphics
 } // namespace graphics
 } // namespace chrissly
 //------------------------------------------------------------------------------
-#if __PSP__
+#if __CE_PSP__
 #include "psp/psphardwarevertexbuffer.h"
 namespace chrissly
 {
@@ -42,7 +42,7 @@ typedef PSPHardwareVertexBuffer HardwareVertexBuffer;
 } // namespace graphics
 } // namespace chrissly
 //------------------------------------------------------------------------------
-#elif __ANDROID__
+#elif __CE_GLES2__
 #include "gles2/gles2hardwarevertexbuffer.h"
 namespace chrissly
 {
@@ -54,7 +54,7 @@ typedef GLES2HardwareVertexBuffer HardwareVertexBuffer;
 } // namespace graphics
 } // namespace chrissly
 //------------------------------------------------------------------------------
-#elif __WINDOWS__
+#elif __CE_D3D11__
 #include "d3d11/d3d11hardwarevertexbuffer.h"
 namespace chrissly
 {

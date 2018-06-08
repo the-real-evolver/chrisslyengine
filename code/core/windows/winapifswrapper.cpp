@@ -39,7 +39,7 @@ WinAPIFSWrapper::Open(const char* const fileName, core::AccessMode mode, core::A
 void
 WinAPIFSWrapper::Close(core::FileHandle fileHandle)
 {
-#if __DEBUG__
+#if __CE_DEBUG__
     BOOL result =
 #endif
     CloseHandle(fileHandle.handle);
@@ -54,7 +54,7 @@ WinAPIFSWrapper::GetFileSize(core::FileHandle fileHandle)
 {
     LARGE_INTEGER fileSize;
 
-#if __DEBUG__
+#if __CE_DEBUG__
     BOOL result =
 #endif
     GetFileSizeEx(fileHandle.handle, &fileSize);
@@ -71,7 +71,7 @@ WinAPIFSWrapper::Read(core::FileHandle fileHandle, void* const buf, unsigned int
 {
     DWORD bytesRead;
 
-#if __DEBUG__
+#if __CE_DEBUG__
     BOOL result =
 #endif
     ReadFile(
@@ -92,7 +92,7 @@ WinAPIFSWrapper::Read(core::FileHandle fileHandle, void* const buf, unsigned int
 void
 WinAPIFSWrapper::Seek(core::FileHandle fileHandle, int offset, core::SeekOrigin whence)
 {
-#if __DEBUG__
+#if __CE_DEBUG__
     DWORD result =
 #endif
     SetFilePointer(

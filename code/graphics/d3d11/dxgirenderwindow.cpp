@@ -78,7 +78,7 @@ DXGIRenderWindow::Create()
     wndClass.hInstance = this->instance;
     wndClass.lpfnWndProc = &DXGIRenderWindow::WindowCallback;
     wndClass.lpszClassName = ClassName;
-#if __DEBUG__
+#if __CE_DEBUG__
     ATOM id =
 #endif
     RegisterClassEx(&wndClass);
@@ -186,7 +186,7 @@ DXGIRenderWindow::Create()
 void
 DXGIRenderWindow::SwapBuffers()
 {
-#if __DEBUG__
+#if __CE_DEBUG__
     HRESULT result =
 #endif
     this->swapChain->Present(1U, 0U);

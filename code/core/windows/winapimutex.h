@@ -49,7 +49,7 @@ WinAPIMutex::WinAPIMutex()
 inline
 WinAPIMutex::~WinAPIMutex()
 {
-#if __DEBUG__
+#if __CE_DEBUG__
     BOOL result =
 #endif
     CloseHandle(this->mutex);
@@ -62,7 +62,7 @@ WinAPIMutex::~WinAPIMutex()
 inline void
 WinAPIMutex::Lock() const
 {
-#if __DEBUG__
+#if __CE_DEBUG__
     DWORD state =
 #endif
     WaitForSingleObject(this->mutex, INFINITE);
@@ -75,7 +75,7 @@ WinAPIMutex::Lock() const
 inline void
 WinAPIMutex::Unlock() const
 {
-#if __DEBUG__
+#if __CE_DEBUG__
     BOOL result =
 #endif
     ReleaseMutex(this->mutex);

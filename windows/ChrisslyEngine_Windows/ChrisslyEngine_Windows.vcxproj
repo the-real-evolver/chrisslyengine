@@ -81,7 +81,7 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>__WINDOWS__;__DEBUG__;_CRT_SECURE_NO_WARNINGS;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>__CE_DEBUG__;__CE_WINDOWS__;__CE_D3D11__;__CE_WASAPI__;_CRT_SECURE_NO_WARNINGS;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>C:\dev\chrisslyengine\code;C:\dev\chrisslyengine\code\core;C:\dev\chrisslyengine\code\core\standard;C:\dev\chrisslyengine\code\core\windows;C:\dev\chrisslyengine\code\graphics;C:\dev\chrisslyengine\code\graphics\windows;C:\dev\chrisslyengine\code\audio;C:\dev\chrisslyengine\code\audio\windows;C:\dev\chrisslyengine\code\thirdparty\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <FloatingPointModel>Fast</FloatingPointModel>
     </ClCompile>
@@ -104,7 +104,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>C:\dev\chrisslyengine\code;C:\dev\chrisslyengine\code\core;C:\dev\chrisslyengine\code\core\standard;C:\dev\chrisslyengine\code\core\windows;C:\dev\chrisslyengine\code\graphics;C:\dev\chrisslyengine\code\graphics\windows;C:\dev\chrisslyengine\code\audio;C:\dev\chrisslyengine\code\audio\windows;C:\dev\chrisslyengine\code\thirdparty\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>__WINDOWS__;_CRT_SECURE_NO_WARNINGS;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>__CE_WINDOWS__;__CE_D3D11__;__CE_WASAPI__;_CRT_SECURE_NO_WARNINGS;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>

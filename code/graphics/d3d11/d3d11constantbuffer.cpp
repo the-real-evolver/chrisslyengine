@@ -33,7 +33,7 @@ D3D11ConstantBuffer::D3D11ConstantBuffer(UINT byteWidth, UINT slot, unsigned int
     desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
     desc.MiscFlags = 0U;
     desc.ByteWidth = byteWidth;
-#if __DEBUG__
+#if __CE_DEBUG__
     HRESULT result =
 #endif
     D3D11RenderSystem::Instance()->GetDevice()->CreateBuffer(&desc, NULL, &this->buffer);

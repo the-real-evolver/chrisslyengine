@@ -76,7 +76,7 @@ EGLRenderWindow::Create()
     // pick the first EGLConfig that matches
     eglChooseConfig(this->display, attribs, &config, 1, &numConfigs);
 
-#if __ANDROID__
+#if __CE_ANDROID__
     // EGL_NATIVE_VISUAL_ID is an attribute of the EGLConfig that is
     // guaranteed to be accepted by ANativeWindow_setBuffersGeometry().
     // As soon as we picked a EGLConfig, we can safely reconfigure the

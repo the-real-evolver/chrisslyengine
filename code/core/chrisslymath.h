@@ -8,7 +8,7 @@
 */
 
 //------------------------------------------------------------------------------
-#if __PSP__
+#if __CE_PSP__
 #include "psp/pspmath.h"
 namespace chrissly
 {
@@ -20,7 +20,7 @@ typedef chrissly::PSPMath Math;
 } // namespace core
 } // namespace chrissly
 //------------------------------------------------------------------------------
-#elif __ANDROID__ || __WINDOWS__
+#elif __CE_ANDROID__ || __CE_WINDOWS__
 #include "standard/standardmath.h"
 namespace chrissly
 {

@@ -4,7 +4,7 @@
 //------------------------------------------------------------------------------
 #include "timer.h"
 
-#if __PSP__
+#if __CE_PSP__
 #undef CLOCKS_PER_SEC
 #define CLOCKS_PER_SEC 1000000
 #endif

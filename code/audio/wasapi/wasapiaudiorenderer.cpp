@@ -113,7 +113,7 @@ WASAPIAudioRenderer::Shutdown()
 {
     if (this->audioClient != NULL)
     {
-#if __DEBUG__
+#if __CE_DEBUG__
         HRESULT result =
 #endif
         this->audioClient->Stop();
@@ -150,7 +150,7 @@ WASAPIAudioRenderer::StartAudioProcessing()
 
     this->thread = CreateThread(NULL, 0U, ThreadProc, (LPVOID)this, 0U, NULL);
     CE_ASSERT(this->thread != NULL, "WASAPIAudioRenderer::StartAudioProcessing(): failed to create audio thread\n");
-#if __DEBUG__
+#if __CE_DEBUG__
     BOOL success =
 #endif
     SetThreadPriority(this->thread, THREAD_PRIORITY_HIGHEST);
@@ -165,12 +165,12 @@ WASAPIAudioRenderer::StopAudioProcessing()
 {
     this->running = false;
 
-#if __DEBUG__
+#if __CE_DEBUG__
     DWORD state =
 #endif
     WaitForSingleObject(this->thread, INFINITE);
     CE_ASSERT(WAIT_OBJECT_0 == state, "WASAPIAudioRenderer::StopAudioProcessing(): failed to wait for thread '%p'\n", this->thread);
-#if __DEBUG__
+#if __CE_DEBUG__
     BOOL result =
 #endif
     CloseHandle(this->thread);
@@ -264,6 +264,10 @@ WASAPIAudioRenderer::RunAudioThread()
             CE_ASSERT(SUCCEEDED(result), "WASAPIAudioRenderer::RunAudioThread(): failed to release buffer\n");
 
             this->syncLock.Unlock();
+        }
+        else
+        {
+            Sleep(1U);
         }
     }
 }

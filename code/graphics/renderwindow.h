@@ -8,7 +8,7 @@
 */
 
 //------------------------------------------------------------------------------
-#if __PSP__
+#if __CE_PSP__
 #include "psp/psprenderwindow.h"
 namespace chrissly
 {
@@ -20,7 +20,7 @@ typedef chrissly::PSPRenderWindow RenderWindow;
 } // namespace graphics
 } // namespace chrissly
 //------------------------------------------------------------------------------
-#elif __ANDROID__
+#elif __CE_ANDROID__
 #include "egl/eglrenderwindow.h"
 namespace chrissly
 {
@@ -32,7 +32,7 @@ typedef chrissly::EGLRenderWindow RenderWindow;
 } // namespace graphics
 } // namespace chrissly
 //------------------------------------------------------------------------------
-#elif __WINDOWS__
+#elif __CE_D3D11__
 #include "d3d11/dxgirenderwindow.h"
 namespace chrissly
 {

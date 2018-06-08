@@ -8,7 +8,7 @@
 */
 
 //------------------------------------------------------------------------------
-#if __PSP__
+#if __CE_PSP__
 #include "psp/pspaudiorenderer.h"
 namespace chrissly
 {
@@ -20,7 +20,7 @@ typedef chrissly::PSPAudioRenderer AudioRenderer;
 } // namespace audio
 } // namespace chrissly
 //------------------------------------------------------------------------------
-#elif __ANDROID__
+#elif __CE_SLES__
 #include "sles/slesaudiorenderer.h"
 namespace chrissly
 {
@@ -32,7 +32,7 @@ typedef chrissly::SLESAudioRenderer AudioRenderer;
 } // namespace audio
 } // namespace chrissly
   //------------------------------------------------------------------------------
-#elif __WINDOWS__
+#elif __CE_WASAPI__
 #include "wasapi/wasapiaudiorenderer.h"
 namespace chrissly
 {

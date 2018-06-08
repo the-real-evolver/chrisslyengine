@@ -12,7 +12,7 @@ include $(CLEAR_VARS)
 
 LOCAL_MODULE := chrisslyengine_android
 
-LOCAL_CFLAGS := -Werror -D__ANDROID__ -D__DEBUG__
+LOCAL_CFLAGS := -Werror -D__CE_DEBUG__ -D__CE_ANDROID__ -D__CE_GLES2__ -D__CE_SLES__
 
 LOCAL_C_INCLUDES += $(CE_INCLUDES) $(CE_INCLUDES)/core $(CE_INCLUDES)/graphics $(CE_INCLUDES)/audio $(CE_INCLUDES)/thirdparty/stb
 

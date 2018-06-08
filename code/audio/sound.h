@@ -8,7 +8,7 @@
 */
 
 //------------------------------------------------------------------------------
-#if __PSP__
+#if __CE_PSP__
 #include "soundbase.h"
 namespace chrissly
 {
@@ -36,7 +36,7 @@ typedef chrissly::PSPSound Sound;
 } // namespace audio
 } // namespace chrissly
 //------------------------------------------------------------------------------
-#elif __ANDROID__
+#elif __CE_SLES__
 #include "sles/slessound.h"
 namespace chrissly
 {
@@ -48,7 +48,7 @@ typedef chrissly::SLESSound Sound;
 } // namespace audio
 } // namespace chrissly
 //------------------------------------------------------------------------------
-#elif __WINDOWS__
+#elif __CE_WASAPI__
 #include "soundbase.h"
 namespace chrissly
 {

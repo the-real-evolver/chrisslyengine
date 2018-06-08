@@ -34,7 +34,7 @@ D3D11HardwareVertexBuffer::D3D11HardwareVertexBuffer(unsigned int numVertices, u
         desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
         desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 
-#if __DEBUG__
+#if __CE_DEBUG__
         HRESULT result =
 #endif
         D3D11RenderSystem::Instance()->GetDevice()->CreateBuffer(&desc, NULL, &this->d3d11Buffer);
@@ -66,7 +66,7 @@ D3D11HardwareVertexBuffer::Map()
     else if (graphics::HBU_DYNAMIC == this->usage)
     {
         D3D11_MAPPED_SUBRESOURCE resource;
-#if __DEBUG__
+#if __CE_DEBUG__
         HRESULT result =
 #endif
         D3D11RenderSystem::Instance()->GetContext()->Map(this->d3d11Buffer, 0U, D3D11_MAP_WRITE_DISCARD, 0U, &resource);
@@ -95,7 +95,7 @@ D3D11HardwareVertexBuffer::Unmap()
         ZeroMemory(&data, sizeof(data));
         data.pSysMem = this->vertexBuffer;
 
-#if __DEBUG__
+#if __CE_DEBUG__
         HRESULT result =
 #endif
         D3D11RenderSystem::Instance()->GetDevice()->CreateBuffer(&desc, &data, &this->d3d11Buffer);

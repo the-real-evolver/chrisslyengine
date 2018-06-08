@@ -8,7 +8,7 @@
 */
 
 //------------------------------------------------------------------------------
-#if __PSP__
+#if __CE_PSP__
 #include "psp/pspmutex.h"
 namespace chrissly
 {
@@ -20,7 +20,7 @@ typedef chrissly::PSPMutex Mutex;
 } // namespace core
 } // namespace chrissly
 //------------------------------------------------------------------------------
-#elif __ANDROID__
+#elif __CE_ANDROID__
 #include "posix/posixmutex.h"
 namespace chrissly
 {
@@ -32,7 +32,7 @@ typedef chrissly::PosixMutex Mutex;
 } // namespace core
 } // namespace chrissly
 //------------------------------------------------------------------------------
-#elif __WINDOWS__
+#elif __CE_WINDOWS__
 #include "windows/winapimutex.h"
 namespace chrissly
 {

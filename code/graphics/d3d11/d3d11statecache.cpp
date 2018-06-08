@@ -40,7 +40,7 @@ D3D11StateCache::GetRasterizerState(const D3D11_RASTERIZER_DESC& desc)
         return state;
     }
 
-#if __DEBUG__
+#if __CE_DEBUG__
     HRESULT result =
 #endif
     D3D11RenderSystem::Instance()->GetDevice()->CreateRasterizerState(&desc, &state);
@@ -63,7 +63,7 @@ D3D11StateCache::GetDepthStencilState(const D3D11_DEPTH_STENCIL_DESC& desc)
         return state;
     }
 
-#if __DEBUG__
+#if __CE_DEBUG__
     HRESULT result =
 #endif
     D3D11RenderSystem::Instance()->GetDevice()->CreateDepthStencilState(&desc, &state);
@@ -86,7 +86,7 @@ D3D11StateCache::GetBlendState(const D3D11_BLEND_DESC& desc)
         return state;
     }
 
-#if __DEBUG__
+#if __CE_DEBUG__
     HRESULT result =
 #endif
     D3D11RenderSystem::Instance()->GetDevice()->CreateBlendState(&desc, &state);
@@ -109,7 +109,7 @@ D3D11StateCache::GetSamplerState(const D3D11_SAMPLER_DESC& desc)
         return state;
     }
 
-#if __DEBUG__
+#if __CE_DEBUG__
     HRESULT result =
 #endif
     D3D11RenderSystem::Instance()->GetDevice()->CreateSamplerState(&desc, &state);

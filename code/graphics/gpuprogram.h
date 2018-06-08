@@ -8,7 +8,7 @@
 */
 
 //------------------------------------------------------------------------------
-#if __PSP__
+#if __CE_PSP__
 namespace chrissly
 {
 namespace graphics
@@ -19,7 +19,7 @@ class GpuProgram {};
 } // namespace graphics
 } // namespace chrissly
 //------------------------------------------------------------------------------
-#elif __ANDROID__
+#elif __CE_GLES2__
 #include "gles2/gles2gpuprogram.h"
 namespace chrissly
 {
@@ -31,7 +31,7 @@ typedef chrissly::GLES2GpuProgram GpuProgram;
 } // namespace graphics
 } // namespace chrissly
 //------------------------------------------------------------------------------
-#elif __WINDOWS__
+#elif __CE_D3D11__
 #include "d3d11/d3d11gpuprogram.h"
 namespace chrissly
 {
