@@ -14,7 +14,7 @@ namespace chrissly
 */
 PSPTexture::PSPTexture()
 {
-
+    ce_dynamic_array_init(&this->mipmapInfos, 0U);
 }
 
 //------------------------------------------------------------------------------

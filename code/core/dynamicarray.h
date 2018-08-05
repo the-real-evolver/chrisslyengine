@@ -14,20 +14,20 @@
 
 //------------------------------------------------------------------------------
 
-/// A resizable array
+/// A resizable array.
 typedef struct ce_dynamic_array
 {
-    void** data;            //!< pointer to array of void pointers
-    unsigned int capacity;  //!< storage space currently allocated for the array
-    unsigned int size;      //!< number of actual objects held in the array, not necessarily equal to its storage capacity
+    void** data;            //!< A pointer to array of void pointers.
+    unsigned int capacity;  //!< The storage space currently allocated for the array.
+    unsigned int size;      //!< The number of actual objects held in the array, not necessarily equal to its storage capacity.
 } ce_dynamic_array;
 
 //------------------------------------------------------------------------------
 /**
-    \brief Initialises an array with the supplied initial size
-    \param v the array to initialise
-    \param initialSize the initial size to allocate
-    \return a pointer to the data, or NULL on error.
+    \brief Initialises an array with the supplied initial size.
+    \param v The array to initialise.
+    \param initial_size The initial size to allocate.
+    \return A pointer to the data, or NULL on error.
 */
 inline void*
 ce_dynamic_array_init(ce_dynamic_array* const v, unsigned int initial_size)
@@ -55,7 +55,7 @@ ce_dynamic_array_init(ce_dynamic_array* const v, unsigned int initial_size)
 
 //------------------------------------------------------------------------------
 /**
-    \brief Frees memory allocated by the dynamic array
+    \brief Frees memory allocated by the dynamic array.
     \param v The array to delete.
 */
 inline void
@@ -78,7 +78,7 @@ ce_dynamic_array_delete(ce_dynamic_array* const v)
 
 //------------------------------------------------------------------------------
 /**
-    \brief Gets the entry at the supplied index
+    \brief Gets the entry at the supplied index.
     \param v The array to get from.
     \param index The index of the data to get.
     \return The data or NULL if v is NULL or the index is out of range.
@@ -101,11 +101,11 @@ ce_dynamic_array_get(ce_dynamic_array* const v, unsigned int index)
 
 //------------------------------------------------------------------------------
 /**
-    \brief Sets the entry to the supplied value
+    \brief Sets the entry to the supplied value.
     \param v The array to set.
     \param index The index of the data to set (array will be resized to fit the index).
     \param item The data to set.
-    \return false if v is NULL or there isn't enough memory, true otherwise
+    \return false if v is NULL or there isn't enough memory, true otherwise.
 */
 inline bool
 ce_dynamic_array_set(ce_dynamic_array* const v, unsigned int index, void* const item)
@@ -117,7 +117,7 @@ ce_dynamic_array_set(ce_dynamic_array* const v, unsigned int index, void* const 
 
     if (index >= v->capacity)
     {
-        // resize the array, making sure it is bigger than index.
+        // resize the array, making sure it is bigger than index
         unsigned int new_size = (v->capacity * 2U > index ? v->capacity * 2U : index + 1U);
 
         void** temp = (void**)CE_REALLOC(v->data, sizeof(void*) * new_size);
@@ -138,7 +138,7 @@ ce_dynamic_array_set(ce_dynamic_array* const v, unsigned int index, void* const 
 
 //------------------------------------------------------------------------------
 /**
-    \brief Adds a new element at the end of the array, after its current last element
+    \brief Adds a new element at the end of the array, after its current last element.
     \param v The array to set.
     \param item The data to set.
 */

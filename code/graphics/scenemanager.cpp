@@ -288,6 +288,7 @@ SceneManager::SetShadowTechnique(ShadowTechnique technique)
             this->shadowTexture->SetHeight(this->shadowRenderTexture->GetHeight());
             this->shadowTexture->SetBuffer(this->shadowRenderTexture->GetBuffer());
             this->shadowTexture->SetSwizzleEnabled(false);
+            this->shadowTexture->CreateInternalResources();
             tus->SetTexture(this->shadowTexture);
 
             this->shadowTextureProjScaleTrans = Matrix4::IDENTITY;

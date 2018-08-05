@@ -195,9 +195,7 @@ ce_hash_table_resize(ce_hash_table* const table, unsigned int new_size)
 
     ce_hash_table_clear(table);
 
-    table->buckets = new_table.buckets;
-    table->bucket_count = new_table.bucket_count;
-    table->size = new_table.size;
+    *table = new_table;
 }
 
 //------------------------------------------------------------------------------

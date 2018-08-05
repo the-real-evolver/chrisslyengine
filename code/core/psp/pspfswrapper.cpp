@@ -29,7 +29,7 @@ PSPFSWrapper::Open(const char* const fileName, core::AccessMode mode, core::Acce
     strcat(filePath, fileName);
     core::FileHandle fileHandle;
     fileHandle.handle = sceIoOpen(filePath, PSPFSWrapper::Get(mode), permission);
-    CE_ASSERT(fileHandle.handle >= 0, "FSWrapper::Open(): can't open file '%s'\n", fileName);
+    CE_ASSERT(fileHandle.handle >= 0, "FSWrapper::Open(): can't open file '%s'\n", filePath);
     return fileHandle;
 }
 
