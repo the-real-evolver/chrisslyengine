@@ -1,5 +1,5 @@
 :: Name:        export_animations.cmd
-:: Autor:       evolver
+:: Author:      evolver
 :: Description: export animations
 
 :: setup variables

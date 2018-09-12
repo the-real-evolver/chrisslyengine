@@ -1,5 +1,5 @@
 :: Name:        clean.cmd
-:: Autor:       evolver
+:: Author:      evolver
 :: Description: clean the build folder
 
 rd /s /q obj

@@ -1,5 +1,5 @@
 :: Name:        export_meshes.cmd
-:: Autor:       evolver
+:: Author:      evolver
 :: Description: export meshes
 
 :: setup variables

@@ -1,5 +1,5 @@
 :: Name:        export_audio.cmd
-:: Autor:       evolver
+:: Author:      evolver
 :: Description: export audio
 
 :: setup variables

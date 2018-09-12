@@ -1,5 +1,5 @@
 :: Name:        startemulator.cmd
-:: Autor:       evolver
+:: Author:      evolver
 :: Description: starts PSP Emulator ("PPSSPP")
 
 :: open PPSSPP

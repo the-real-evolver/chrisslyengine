@@ -1,5 +1,5 @@
 :: Name:        export_textures.cmd
-:: Autor:       evolver
+:: Author:      evolver
 :: Description: add header to raw texture data from intermediate folder
 
 :: setup variables

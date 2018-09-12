@@ -1,5 +1,5 @@
 :: Name:        export_materials.cmd
-:: Autor:       evolver
+:: Author:      evolver
 :: Description: export materials
 
 :: setup variables

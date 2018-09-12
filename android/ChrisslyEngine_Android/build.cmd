@@ -1,5 +1,5 @@
 :: Name:        build.cmd
-:: Autor:       evolver
+:: Author:      evolver
 :: Description: compile native code, build shared libary
 
 set NDK=C:\dev\android\android-ndk-r8

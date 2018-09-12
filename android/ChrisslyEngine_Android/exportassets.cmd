@@ -1,5 +1,5 @@
 :: Name:        exportassets.cmd
-:: Autor:       evolver
+:: Author:      evolver
 :: Description: export assets for Android platform
 
 :: setup variables
