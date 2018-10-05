@@ -7,6 +7,7 @@
     (C) 2014 Christian Bleicher
 */
 #include "sound.h"
+#include "dsp.h"
 #include "channel.h"
 #include "audiorenderer.h"
 #include "dynamicarray.h"
@@ -38,6 +39,8 @@ public:
     Result Release();
     /// loads a sound into memory, or opens it for streaming
     Result CreateSound(const char* const name, Mode mode, Sound** sound);
+    /// creates a dsp object to be added to a channel, for the purpose of sound filtering
+    Result CreateDSP(const DspDescription* const desc, DSP** const dsp);
     /// plays a sound object on a particular channel
     Result PlaySound(int channelid, Sound* const sound, bool paused, Channel** channel);
     /// updates the audio system. This should be called once per 'game' tick, or once per frame in your application
@@ -63,6 +66,8 @@ private:
     ce_dynamic_array soundPool;
 
     ce_dynamic_array channelPool;
+
+    ce_dynamic_array dspPool;
 
     core::Vector3 listenerPos;
     core::Vector3 listenerForward;

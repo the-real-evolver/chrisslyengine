@@ -32,7 +32,8 @@ ChannelBase::ChannelBase() :
     attenuationFactor(0.0f),
     propertiesHaveChanged(UNCHANGED)
 {
-
+    memset(this->outputBuffer, 0, sizeof(this->outputBuffer));
+    ce_dynamic_array_init(&this->dsps, 1U);
 }
 
 //------------------------------------------------------------------------------
@@ -327,6 +328,21 @@ ChannelBase::GetIndex(int* const idx)
 //------------------------------------------------------------------------------
 /**
 */
+Result
+ChannelBase::AddDSP(unsigned int idx, DSP* const dsp)
+{
+    // only support one dsp at index zero for now
+    if (0U == idx && 0U == this->dsps.size)
+    {
+        ce_dynamic_array_push_back(&this->dsps, dsp);
+    }
+
+    return OK;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
 void
 ChannelBase::AttachSound(Sound* const sound)
 {
@@ -398,7 +414,26 @@ ChannelBase::GetSyncLock() const
 void* const
 ChannelBase::FillOutputBuffer(unsigned int numSamples, unsigned int position)
 {
-    return this->mode & MODE_CREATESTREAM ? this->currentSound->GetCodec()->FillStreamBuffer(numSamples, position) : this->currentSound->GetSampleBufferPointer(position);
+    void* buffer = this->mode & MODE_CREATESTREAM ? this->currentSound->GetCodec()->FillStreamBuffer(numSamples, position) : this->currentSound->GetSampleBufferPointer(position);
+
+    // apply dsps
+    unsigned int i;
+    for (i = 0U; i < this->dsps.size; ++i)
+    {
+        DSP* dsp = (DSP*)ce_dynamic_array_get(&this->dsps, i);
+        bool bypass;
+        dsp->GetBypass(&bypass);
+        if (0U == i && !bypass)
+        {
+            // dsp at index zero always takes the samplebuffer as input
+            int numChannels, bits;
+            this->currentSound->GetFormat(NULL, NULL, &numChannels, &bits);
+            dsp->Process(numChannels, bits, numSamples, buffer, this->outputBuffer);
+            buffer = this->outputBuffer;
+        }
+    }
+
+    return buffer;
 }
 
 //------------------------------------------------------------------------------
@@ -407,6 +442,13 @@ ChannelBase::FillOutputBuffer(unsigned int numSamples, unsigned int position)
 void
 ChannelBase::ReleaseInternal()
 {
+    // release and detach dsps
+    unsigned int i;
+    for (i = 0U; i < this->dsps.size; ++i)
+    {
+        ((DSP*)ce_dynamic_array_get(&this->dsps, i))->Release();
+    }
+    ce_dynamic_array_delete(&this->dsps);
     this->isPlaying = false;
     this->index = CHANNEL_FREE;
     this->currentSound->DecrementUseCount();

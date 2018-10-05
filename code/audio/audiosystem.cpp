@@ -56,6 +56,13 @@ AudioSystem::Initialise(void* const customParams)
         ce_dynamic_array_set(&this->soundPool, i, sound);
     }
 
+    ce_dynamic_array_init(&this->dspPool, 8U);
+    for (i = 0U; i < this->dspPool.capacity; ++i)
+    {
+        DSP* dsp = CE_NEW DSP();
+        ce_dynamic_array_set(&this->dspPool, i, dsp);
+    }
+
     ce_dynamic_array_init(&this->channelPool, this->activeRenderer->GetNumHardwareChannels());
     for (i = 0U; i < this->channelPool.capacity; ++i)
     {
@@ -89,6 +96,12 @@ AudioSystem::Release()
         CE_DELETE channel;
     }
     ce_dynamic_array_delete(&this->channelPool);
+
+    for (i = 0U; i < this->dspPool.capacity; ++i)
+    {
+        CE_DELETE(DSP*)ce_dynamic_array_get(&this->dspPool, i);
+    }
+    ce_dynamic_array_delete(&this->dspPool);
 
     for (i = 0U; i < this->soundPool.capacity; ++i)
     {
@@ -146,6 +159,35 @@ AudioSystem::CreateSound(const char* const name, Mode mode, Sound** sound)
     snd->Setup(name, mode, codec);
 
     *sound = snd;
+
+    return OK;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+Result
+AudioSystem::CreateDSP(const DspDescription* const desc, DSP** const dsp)
+{
+    *dsp = NULL;
+    DSP* newDsp = NULL;
+    unsigned int i;
+    for (i = 0U; i < this->dspPool.capacity; ++i)
+    {
+        newDsp = (DSP*)ce_dynamic_array_get(&this->dspPool, i);
+        if (!newDsp->IsInUse())
+        {
+            break;
+        }
+    }
+    if (i == this->dspPool.capacity)
+    {
+        return ERR_MEMORY;
+    }
+
+    newDsp->Setup(desc);
+
+    *dsp = newDsp;
 
     return OK;
 }

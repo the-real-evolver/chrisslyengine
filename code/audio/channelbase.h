@@ -7,9 +7,11 @@
     (C) 2014 Christian Bleicher
 */
 #include "sound.h"
+#include "dsp.h"
 #include "propertychangedflags.h"
 #include "vector3.h"
 #include "chrisslymutex.h"
+#include "dynamicarray.h"
 
 //------------------------------------------------------------------------------
 namespace chrissly
@@ -71,6 +73,8 @@ public:
     Result GetCurrentSound(Sound** sound);
     /// retrieves the internal channel index for a channel
     Result GetIndex(int* const idx);
+    /// adds a dsp to the channel
+    Result AddDSP(unsigned int idx, DSP* const dsp);
 
 protected:
     /// copy constructor
@@ -110,6 +114,8 @@ protected:
     float attenuationFactor;
     PropertyChange propertiesHaveChanged;
     core::Mutex syncLock;
+    int outputBuffer[1024];
+    ce_dynamic_array dsps;
 };
 
 } // namespace audio

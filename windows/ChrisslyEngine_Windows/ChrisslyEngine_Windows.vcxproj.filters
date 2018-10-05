@@ -164,6 +164,9 @@
     <ClCompile Include="..\..\code\graphics\d3d11\dxgirenderwindow.cpp">
       <Filter>graphics\d3d11</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\code\audio\dsp.cpp">
+      <Filter>audio</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="core">
@@ -461,6 +464,9 @@
     </ClInclude>
     <ClInclude Include="..\..\code\graphics\d3d11\dxgirenderwindow.h">
       <Filter>graphics\d3d11</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\audio\dsp.h">
+      <Filter>audio</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

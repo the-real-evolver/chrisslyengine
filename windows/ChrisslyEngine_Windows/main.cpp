@@ -12,6 +12,50 @@ using namespace chrissly::core;
 using namespace chrissly::graphics;
 using namespace chrissly::audio;
 
+static const unsigned int DelayInSamples = 35280U;
+static int delayBuffer[65535U];
+static unsigned int delaySamplePosition = 0U;
+
+//------------------------------------------------------------------------------
+/**
+*/
+Result
+DspCallback(int numChannels, int bits, unsigned int numSamples, void* inBuffer, void* outBuffer)
+{
+    CE_ASSERT(2 == numChannels && 16 == bits, "DspCallback(): only 16 Bit stereo sounds are supported\n");
+    CE_UNREFERENCED_PARAMETER(numChannels);
+    CE_UNREFERENCED_PARAMETER(bits);
+
+    const short* input = (const short*)inBuffer;
+    short* output = (short*)outBuffer;
+    unsigned int position = delaySamplePosition, i;
+    for (i = 0U; i < numSamples; ++i)
+    {
+        /* 1. mix delaybuffer with input */
+        if (position >= DelayInSamples)
+        {
+            position = 0U;
+        }
+        const short* delaySample = (short*)&delayBuffer[position++];
+        *output++ = *input++ + (short)((float)(*delaySample) * 0.6f);
+        ++delaySample;
+        *output++ = *input++ + (short)((float)(*delaySample) * 0.6f);
+    }
+
+    const int* buffer = (const int*)inBuffer;
+    for (i = 0U; i < numSamples; ++i)
+    {
+        /* 2. fill delaybuffer with input */
+        if (delaySamplePosition >= DelayInSamples)
+        {
+            delaySamplePosition = 0U;
+        }
+        delayBuffer[delaySamplePosition++] = buffer[i];
+    }
+
+    return OK;
+}
+
 //------------------------------------------------------------------------------
 /**
 */
@@ -57,6 +101,13 @@ WinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prevInstance, _In_ LPSTR cmd
     Channel* channel;
     audioSystem->PlaySound(Channel::CHANNEL_FREE, sound, false, &channel);
 
+    memset(delayBuffer, 0, sizeof(delayBuffer));
+    DspDescription dspDesc = {DspCallback};
+    DSP* dsp;
+    audioSystem->CreateDSP(&dspDesc, &dsp);
+    channel->AddDSP(0U, dsp);
+    bool bypassDsp = false;
+
     MSG msg = {0};
     while (msg.message != WM_QUIT)
     {
@@ -65,6 +116,11 @@ WinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prevInstance, _In_ LPSTR cmd
             if (WM_KEYDOWN == msg.message)
             {
                 CE_LOG("-> Key Pressed: '%c'\n", (char)msg.wParam);
+                if (VK_SPACE == msg.wParam)
+                {
+                    bypassDsp = !bypassDsp;
+                    dsp->SetBypass(bypassDsp);
+                }
             }
             TranslateMessage(&msg);
             DispatchMessage(&msg);

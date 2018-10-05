@@ -128,6 +128,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\code\audio\audiosystem.cpp" />
     <ClCompile Include="..\..\code\audio\channelbase.cpp" />
+    <ClCompile Include="..\..\code\audio\dsp.cpp" />
     <ClCompile Include="..\..\code\audio\dsp\mixer.cpp" />
     <ClCompile Include="..\..\code\audio\dsp\samplerateconverter.cpp" />
     <ClCompile Include="..\..\code\audio\soundbase.cpp" />
@@ -189,6 +190,7 @@
     <ClInclude Include="..\..\code\audio\channel.h" />
     <ClInclude Include="..\..\code\audio\channelbase.h" />
     <ClInclude Include="..\..\code\audio\codec.h" />
+    <ClInclude Include="..\..\code\audio\dsp.h" />
     <ClInclude Include="..\..\code\audio\dsp\mixer.h" />
     <ClInclude Include="..\..\code\audio\dsp\samplerateconverter.h" />
     <ClInclude Include="..\..\code\audio\errorcode.h" />

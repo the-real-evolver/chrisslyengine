@@ -187,19 +187,6 @@ Quaternion::operator = (const Quaternion& rkQ)
 Quaternion
 Quaternion::operator * (const Quaternion& rkQ) const
 {
-    /* 
-        float ww = (q1.zp + q1.xp) * (q2.xp + q2.yp);
-        float yy = (q1.wp - q1.yp) * (q2.wp + q2.zp);
-        float zz = (q1.wp + q1.yp) * (q2.wp - q2.zp);
-        float xx = ww + yy + zz;
-        float qq = 0.5 * (xx + (q1.zp - q1.xp) * (q2.xp - q2.yp));
-
-        float w = qq - ww + (q1.zp - q1.yp) * (q2.yp - q2.zp);
-        float x = qq - xx + (q1.xp + q1.wp) * (q2.xp + q2.wp);
-        float y = qq - yy + (q1.wp - q1.xp) * (q2.yp + q2.zp);
-        float z = qq - zz + (q1.zp + q1.yp) * (q2.wp - q2.xp);
-    */
-
     return Quaternion
     (
         this->w * rkQ.w - this->x * rkQ.x - this->y * rkQ.y - this->z * rkQ.z,
