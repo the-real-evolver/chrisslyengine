@@ -13,6 +13,7 @@ using namespace chrissly::graphics;
 using namespace chrissly::audio;
 
 static const unsigned int DelayInSamples = 35280U;
+static const float Decay = 0.6f;
 static int delayBuffer[65535U];
 static unsigned int delaySamplePosition = 0U;
 
@@ -32,24 +33,17 @@ DspCallback(int numChannels, int bits, unsigned int numSamples, void* inBuffer, 
     for (i = 0U; i < numSamples; ++i)
     {
         /* 1. mix delaybuffer with input */
-        if (position >= DelayInSamples)
-        {
-            position = 0U;
-        }
+        if (position >= DelayInSamples) {position = 0U;}
         const short* delaySample = (short*)&delayBuffer[position++];
-        *output++ = *input++ + (short)((float)(*delaySample) * 0.6f);
-        ++delaySample;
-        *output++ = *input++ + (short)((float)(*delaySample) * 0.6f);
+        *output++ = *input++ + (short)((float)(*delaySample++) * Decay);
+        *output++ = *input++ + (short)((float)(*delaySample) * Decay);
     }
 
     const int* buffer = (const int*)inBuffer;
     for (i = 0U; i < numSamples; ++i)
     {
         /* 2. fill delaybuffer with input */
-        if (delaySamplePosition >= DelayInSamples)
-        {
-            delaySamplePosition = 0U;
-        }
+        if (delaySamplePosition >= DelayInSamples) {delaySamplePosition = 0U;}
         delayBuffer[delaySamplePosition++] = buffer[i];
     }
 

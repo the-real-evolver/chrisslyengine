@@ -121,46 +121,41 @@ Result
 AudioSystem::CreateSound(const char* const name, Mode mode, Sound** sound)
 {
     *sound = NULL;
-    Sound* snd = NULL;
     unsigned int i;
     for (i = 0U; i < this->soundPool.capacity; ++i)
     {
-        snd = (Sound*)ce_dynamic_array_get(&this->soundPool, i);
+        Sound *snd = (Sound*)ce_dynamic_array_get(&this->soundPool, i);
         if (!snd->IsInUse())
         {
-            break;
+            char* ext = (char*)strrchr(name, '.');
+            if (NULL == ext)
+            {
+                return ERR_PLUGIN_MISSING;
+            }
+            ++ext;
+            Codec* codec;
+            if (0 == strncmp(ext, "wav", 3U))
+            {
+                codec = CE_NEW WavCodec();
+            }
+            else if (0 == strncmp(ext, "ogg", 3U))
+            {
+                codec = CE_NEW VorbisCodec();
+            }
+            else
+            {
+                return ERR_PLUGIN_MISSING;
+            }
+
+            snd->Setup(name, mode, codec);
+
+            *sound = snd;
+
+            return OK;
         }
     }
-    if (i == this->soundPool.capacity)
-    {
-        return ERR_MEMORY;
-    }
 
-    char* ext = (char*)strrchr(name, '.');
-    if (NULL == ext)
-    {
-        return ERR_PLUGIN_MISSING;
-    }
-    ++ext;
-    Codec* codec;
-    if (0 == strncmp(ext, "wav", 3U))
-    {
-        codec = CE_NEW WavCodec();
-    }
-    else if (0 == strncmp(ext, "ogg", 3U))
-    {
-        codec = CE_NEW VorbisCodec();
-    }
-    else
-    {
-        return ERR_PLUGIN_MISSING;
-    }
-
-    snd->Setup(name, mode, codec);
-
-    *sound = snd;
-
-    return OK;
+    return ERR_MEMORY;
 }
 
 //------------------------------------------------------------------------------
@@ -169,27 +164,21 @@ AudioSystem::CreateSound(const char* const name, Mode mode, Sound** sound)
 Result
 AudioSystem::CreateDSP(const DspDescription* const desc, DSP** const dsp)
 {
-    *dsp = NULL;
-    DSP* newDsp = NULL;
     unsigned int i;
     for (i = 0U; i < this->dspPool.capacity; ++i)
     {
-        newDsp = (DSP*)ce_dynamic_array_get(&this->dspPool, i);
+        DSP* newDsp = (DSP*)ce_dynamic_array_get(&this->dspPool, i);
         if (!newDsp->IsInUse())
         {
-            break;
+            newDsp->Setup(desc);
+            *dsp = newDsp;
+            return OK;
         }
     }
-    if (i == this->dspPool.capacity)
-    {
-        return ERR_MEMORY;
-    }
 
-    newDsp->Setup(desc);
+    *dsp = NULL;
 
-    *dsp = newDsp;
-
-    return OK;
+    return ERR_MEMORY;
 }
 
 //------------------------------------------------------------------------------
@@ -203,42 +192,38 @@ AudioSystem::PlaySound(int channelid, Sound* const sound, bool paused, Channel**
         CE_ASSERT(0U == sound->useCount, "AudioSystem::PlaySound(): multiple channels cannot share a streaming sound\n");
     }
 
-    *channel = NULL;
-    Channel* chn = NULL;
     unsigned int i;
     for (i = 0U; i < this->channelPool.capacity; ++i)
     {
-        chn = (Channel*)ce_dynamic_array_get(&this->channelPool, i);
+        Channel* chn = (Channel*)ce_dynamic_array_get(&this->channelPool, i);
         int index;
         chn->GetIndex(&index);
         if (Channel::CHANNEL_FREE == index)
         {
-            break;
+            if (channelid != Channel::CHANNEL_FREE)
+            {
+                CE_ASSERT(channelid < (int)this->channelPool.capacity, "AudioSystem::PlaySound(): invalid channelid '%i' (exceeds channel range '0 - %i')\n", channelid, this->channelPool.capacity - 1U);
+                chn->SetIndex(channelid);
+            }
+
+            chn->AttachSound(sound);
+            chn->SetPaused(paused);
+            chn->SetPosition(0U);
+            chn->SetVolume(1.0f);
+            chn->SetPan(0.0f);
+            chn->SetAttenuationFactor(0.0f);
+
+            this->activeRenderer->StartChannel(chn);
+
+            *channel = chn;
+
+            return OK;
         }
     }
-    if (i == this->channelPool.capacity)
-    {
-        return ERR_CHANNEL_ALLOC;
-    }
 
-    if (channelid != Channel::CHANNEL_FREE)
-    {
-        CE_ASSERT(channelid < (int)this->channelPool.capacity, "AudioSystem::PlaySound(): invalid channelid '%i' (exceeds channel range '0 - %i')\n", channelid, this->channelPool.capacity - 1U);
-        chn->SetIndex(channelid);
-    }
+    *channel = NULL;
 
-    chn->AttachSound(sound);
-    chn->SetPaused(paused);
-    chn->SetPosition(0U);
-    chn->SetVolume(1.0f);
-    chn->SetPan(0.0f);
-    chn->SetAttenuationFactor(0.0f);
-
-    this->activeRenderer->StartChannel(chn);
-
-    *channel = chn;
-
-    return OK;
+    return ERR_CHANNEL_ALLOC;
 }
 
 //------------------------------------------------------------------------------
