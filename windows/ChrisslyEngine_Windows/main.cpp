@@ -29,21 +29,17 @@ DspCallback(int numChannels, int bits, unsigned int numSamples, void* inBuffer, 
 
     const short* input = (const short*)inBuffer;
     short* output = (short*)outBuffer;
-    unsigned int position = delaySamplePosition, i;
+    const int* buffer = (const int*)inBuffer;
+    unsigned int i;
     for (i = 0U; i < numSamples; ++i)
     {
         /* 1. mix delaybuffer with input */
-        if (position >= DelayInSamples) {position = 0U;}
-        const short* delaySample = (short*)&delayBuffer[position++];
+        if (delaySamplePosition >= DelayInSamples) {delaySamplePosition = 0U;}
+        const short* delaySample = (short*)&delayBuffer[delaySamplePosition];
         *output++ = *input++ + (short)((float)(*delaySample++) * Decay);
         *output++ = *input++ + (short)((float)(*delaySample) * Decay);
-    }
 
-    const int* buffer = (const int*)inBuffer;
-    for (i = 0U; i < numSamples; ++i)
-    {
         /* 2. fill delaybuffer with input */
-        if (delaySamplePosition >= DelayInSamples) {delaySamplePosition = 0U;}
         delayBuffer[delaySamplePosition++] = buffer[i];
     }
 

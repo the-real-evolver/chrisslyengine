@@ -92,10 +92,10 @@ Enter(struct android_app* state)
     MaterialManager::Instance()->Initialise();
     Material* material = MaterialManager::Instance()->CreateOrRetrieve("cerberus_material_gles");
     gpuProgram = new GpuProgram(MorphAnimVertexShader, FragmentShader);
-    material->GetPass(0)->SetGpuProgram(gpuProgram);
+    material->GetPass(0U)->SetGpuProgram(gpuProgram);
 
     Entity* entity = SceneManager::Instance()->CreateEntity("cerberus_walk.mesh");
-    entity->GetSubEntity(0)->SetMaterial(material);
+    entity->GetSubEntity(0U)->SetMaterial(material);
     animState = entity->GetAnimationState("default");
     animState->SetEnabled(true);
     animState->SetLoop(true);
@@ -105,7 +105,7 @@ Enter(struct android_app* state)
     sceneNode->SetPosition(0.0f, 0.0f, 0.0f);
 
     params = gpuProgram->GetDefaultParameters();
-    mat[0][0] = 0.9f; mat[0][1] = 0.9f; mat[0][2] = 0.9f;
+    mat[0U][0U] = 0.9f; mat[0U][1U] = 0.9f; mat[0U][2U] = 0.9f;
     params->SetNamedConstant("specularColor", mat);
 
     audioSystem = new AudioSystem();
@@ -143,7 +143,7 @@ Trigger()
         animState->AddTime(0.016f);
         sceneNode->Yaw((float)distance * 0.02f);
         float val = (float)lastX * 0.003f;
-        mat[0][0] = val; mat[0][1] = val; mat[0][2] = val;
+        mat[0U][0U] = val; mat[0U][1U] = val; mat[0U][2U] = val;
         params->SetNamedConstant("specularColor", mat);
         graphicsSystem->RenderOneFrame();
 
