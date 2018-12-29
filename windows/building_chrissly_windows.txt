@@ -1,0 +1,9 @@
+Building Chrissly for Windows
+========================================================================
+- install Visual Studio 2015 and the DirectX SDK (see: https://www.microsoft.com/en-us/download/details.aspx?id=6812)
+- open 'windows/ChrisslyEngine_Windows.sln', right click 'ChrisslyEngine_Windows' in the project explorer and click 'Build'
+- run 'windows/exportassets.cmd'
+
+Running the sample
+========================================================================
+- press 'F5' in Visual Studio to start/debug the sample application
