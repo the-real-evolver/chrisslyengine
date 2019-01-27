@@ -21,6 +21,12 @@ static unsigned int __attribute__((aligned(16U))) DisplayList[262144U];
 
 static const int MaxLights = 4;
 
+static const ScePspFVector3 SphereMapTransformMatrix[2U] =
+{
+    {1.0f, 0.0f, 0.0f},
+    {0.0f, 1.0f, 0.0f}
+};
+
 //------------------------------------------------------------------------------
 /**
 */
@@ -259,9 +265,17 @@ PSPRenderSystem::SetPass(graphics::Pass* const pass)
         tus->GetTextureBlendOperation(lbt, lbo);
         sceGuTexFunc(PSPMappings::Get(lbo), PSPMappings::Get(lbt));
 
-        sceGuTexWrap(PSPMappings::Get(tus->GetTextureAddressingMode().u), PSPMappings::Get(tus->GetTextureAddressingMode().v));
-        sceGuTexMapMode(PSPMappings::Get(tus->GetTextureMappingMode()), 0U, 0U);
+        graphics::TextureUnitState::TextureMappingMode tmm = tus->GetTextureMappingMode();
+        if (graphics::TextureUnitState::TMM_ENVIRONMENT_MAP == tmm)
+        {
+            sceGuLight(2, GU_DIRECTIONAL, GU_UNKNOWN_LIGHT_COMPONENT, &SphereMapTransformMatrix[0U]);
+            sceGuLight(3, GU_DIRECTIONAL, GU_UNKNOWN_LIGHT_COMPONENT, &SphereMapTransformMatrix[1U]);
+            sceGuDisable(GU_LIGHT2);
+            sceGuDisable(GU_LIGHT3);
+        }
+        sceGuTexMapMode(PSPMappings::Get(tmm), 2U, 3U);
         sceGuTexProjMapMode(PSPMappings::Get(tus->GetTextureProjectionMappingMode()));
+        sceGuTexWrap(PSPMappings::Get(tus->GetTextureAddressingMode().u), PSPMappings::Get(tus->GetTextureAddressingMode().v));
 
         int numMipmaps = texture->GetNumMipmaps();
         sceGuTexMode(PSPMappings::Get(texture->GetFormat()), numMipmaps, 0, texture->GetSwizzleEnabled());

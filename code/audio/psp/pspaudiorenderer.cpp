@@ -92,8 +92,9 @@ PSPAudioRenderer::StartChannel(audio::Channel* const channel)
 
     audio::Sound* sound;
     channel->GetCurrentSound(&sound);
-    int index, numChannels;
-    sound->GetFormat(NULL, NULL, &numChannels, NULL);
+    int index, numChannels, bits;
+    sound->GetFormat(NULL, NULL, &numChannels, &bits);
+    CE_ASSERT(16 == bits, "PSPAudioRenderer::StartChannel(): %i bit sample format not supported\n", bits);
 
     PspAudioFormats format = PSP_AUDIO_FORMAT_MONO;
     switch (numChannels)

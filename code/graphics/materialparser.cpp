@@ -387,6 +387,14 @@ MaterialParser::ParseTextureUnitState()
         float vScale = (float)this->lexer.real_number;
         this->currentTextureUnitState->SetTextureScale(uScale, vScale);
     }
+    else if (0 == strcmp(this->lexer.string, "env_map"))
+    {
+        if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
+        if (0 == strcmp(this->lexer.string, "spherical"))
+        {
+            this->currentTextureUnitState->SetTextureMappingMode(TextureUnitState::TMM_ENVIRONMENT_MAP);
+        }
+    }
 }
 
 //------------------------------------------------------------------------------
