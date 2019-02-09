@@ -29,7 +29,7 @@ OBJS = $(CE)/core/quaternion.o $(CE)/core/vector3.o $(CE)/core/matrix3.o $(CE)/c
        $(CE)/graphics/hardwarevertexbufferbase.o \
        $(CE)/graphics/meshmanager.o $(CE)/graphics/mesh.o $(CE)/graphics/submesh.o \
        $(CE)/graphics/subentity.o $(CE)/graphics/entity.o \
-       $(CE)/graphics/renderqueuesortinggrouping.o \
+       $(CE)/graphics/renderqueue.o \
        $(CE)/graphics/light.o \
        $(CE)/graphics/scenemanager.o $(CE)/graphics/scenenode.o \
        $(CE)/graphics/camera.o $(CE)/graphics/viewport.o \

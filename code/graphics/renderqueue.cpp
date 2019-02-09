@@ -1,8 +1,10 @@
 //------------------------------------------------------------------------------
-//  renderqueuesortinggrouping.cpp
+//  renderqueue.cpp
 //  (C) 2012 Christian Bleicher
 //------------------------------------------------------------------------------
-#include "renderqueuesortinggrouping.h"
+#include "renderqueue.h"
+#include "debug.h"
+#include <stdint.h>
 
 namespace chrissly
 {
@@ -12,7 +14,9 @@ namespace graphics
 //------------------------------------------------------------------------------
 /**
 */
-QueuedRenderableCollection::QueuedRenderableCollection() :
+RenderQueue::RenderQueue() :
+    renderablePasses(NULL),
+    renderablePassesCapacity(0U),
     numRenderablePasses(0U)
 {
 
@@ -21,7 +25,7 @@ QueuedRenderableCollection::QueuedRenderableCollection() :
 //------------------------------------------------------------------------------
 /**
 */
-QueuedRenderableCollection::~QueuedRenderableCollection()
+RenderQueue::~RenderQueue()
 {
     this->Destroy();
 }
@@ -30,17 +34,13 @@ QueuedRenderableCollection::~QueuedRenderableCollection()
 /**
 */
 void
-QueuedRenderableCollection::Initialise(unsigned short capacity)
+RenderQueue::Initialise(unsigned short capacity)
 {
-    ce_dynamic_array_init(&this->renderablePasses, capacity);
-
-    unsigned int i;
-    for (i = 0U; i < this->renderablePasses.capacity; ++i)
-    {
-        RenderablePass* renderablePass = CE_NEW RenderablePass(NULL, NULL);
-        ce_dynamic_array_set(&this->renderablePasses, i, renderablePass);
-    }
-
+    unsigned int bufferSize = capacity * sizeof(RenderablePass*);
+    this->renderablePasses = (RenderablePass*)CE_MALLOC(bufferSize);
+    CE_ASSERT(this->renderablePasses != NULL, "RenderQueue::Initialise(): failed to allocate '%i' bytes\n", bufferSize);
+    memset(this->renderablePasses, 0, bufferSize);
+    this->renderablePassesCapacity = capacity;
     this->numRenderablePasses = 0U;
 }
 
@@ -48,16 +48,10 @@ QueuedRenderableCollection::Initialise(unsigned short capacity)
 /**
 */
 void
-QueuedRenderableCollection::Destroy()
+RenderQueue::Destroy()
 {
-    unsigned int i;
-    for (i = 0U; i < this->renderablePasses.capacity; ++i)
-    {
-        CE_DELETE (RenderablePass*)ce_dynamic_array_get(&this->renderablePasses, i);
-    }
-
-    ce_dynamic_array_delete(&this->renderablePasses);
-
+    CE_FREE(this->renderablePasses);
+    this->renderablePassesCapacity = 0U;
     this->numRenderablePasses = 0U;
 }
 
@@ -65,7 +59,7 @@ QueuedRenderableCollection::Destroy()
 /**
 */
 void
-QueuedRenderableCollection::Clear()
+RenderQueue::Clear()
 {
     this->numRenderablePasses = 0U;
 }
@@ -74,13 +68,14 @@ QueuedRenderableCollection::Clear()
 /**
 */
 void
-QueuedRenderableCollection::AddRenderable(SubEntity* const rend, Pass* const pass)
+RenderQueue::AddRenderable(SubEntity* const rend, Pass* const pass)
 {
-    if (this->numRenderablePasses < this->renderablePasses.capacity)
+    if (this->numRenderablePasses < this->renderablePassesCapacity)
     {
-        RenderablePass* renderablePass = (RenderablePass*)ce_dynamic_array_get(&this->renderablePasses, this->numRenderablePasses);
+        RenderablePass* renderablePass = this->renderablePasses + (uintptr_t)this->numRenderablePasses;
         renderablePass->renderable = rend;
         renderablePass->pass = pass;
+
         ++this->numRenderablePasses;
     }
 }
@@ -89,7 +84,7 @@ QueuedRenderableCollection::AddRenderable(SubEntity* const rend, Pass* const pas
 /**
 */
 unsigned short
-QueuedRenderableCollection::GetNumRenderablePasses() const
+RenderQueue::GetNumRenderablePasses() const
 {
     return this->numRenderablePasses;
 }
@@ -98,9 +93,9 @@ QueuedRenderableCollection::GetNumRenderablePasses() const
 /**
 */
 RenderablePass* const
-QueuedRenderableCollection::GetRenderablePass(unsigned short index) const
+RenderQueue::GetRenderablePass(unsigned short index) const
 {
-    return (RenderablePass*)ce_dynamic_array_get(&this->renderablePasses, index);
+    return this->renderablePasses + (uintptr_t)index;
 }
 
 } // namespace graphics

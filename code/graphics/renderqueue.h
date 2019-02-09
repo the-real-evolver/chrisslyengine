@@ -1,10 +1,10 @@
-#ifndef RENDERQUEUESORTINGGROUPING_H_
-#define RENDERQUEUESORTINGGROUPING_H_
+#ifndef RENDERQUEUE_H_
+#define RENDERQUEUE_H_
 //------------------------------------------------------------------------------
 /**
     @struct chrissly::graphics::RenderablePass
 
-    @class chrissly::graphics::QueuedRenderableCollection
+    @class chrissly::graphics::RenderQueue
 
     (C) 2011 Christian Bleicher
 */
@@ -23,17 +23,15 @@ struct RenderablePass
     SubEntity* renderable;
     /// pointer to the Pass
     Pass* pass;
-
-    RenderablePass(SubEntity* rend, Pass* p) : renderable(rend), pass(p) {}
 };
 
-class QueuedRenderableCollection
+class RenderQueue
 {
 public:
     /// default constructor
-    QueuedRenderableCollection();
+    RenderQueue();
     /// destructor
-    ~QueuedRenderableCollection();
+    ~RenderQueue();
     /// allocate collection
     void Initialise(unsigned short capacity);
     /// destroy collection
@@ -48,7 +46,8 @@ public:
     RenderablePass* const GetRenderablePass(unsigned short index) const;
 
 private:
-    mutable ce_dynamic_array renderablePasses;
+    RenderablePass* renderablePasses;
+    unsigned short renderablePassesCapacity;
     unsigned short numRenderablePasses;
 };
 

@@ -25,7 +25,7 @@ LOCAL_SRC_FILES := $(CE_SRC_FILES)/core/android/androiddebug.cpp $(CE_SRC_FILES)
                    $(CE_SRC_FILES)/graphics/hardwarevertexbufferbase.cpp \
                    $(CE_SRC_FILES)/graphics/meshmanager.cpp $(CE_SRC_FILES)/graphics/mesh.cpp $(CE_SRC_FILES)/graphics/submesh.cpp \
                    $(CE_SRC_FILES)/graphics/subentity.cpp  $(CE_SRC_FILES)/graphics/entity.cpp \
-                   $(CE_SRC_FILES)/graphics/renderqueuesortinggrouping.cpp \
+                   $(CE_SRC_FILES)/graphics/renderqueue.cpp \
                    $(CE_SRC_FILES)/graphics/light.cpp \
                    $(CE_SRC_FILES)/graphics/scenemanager.cpp $(CE_SRC_FILES)/graphics/scenenode.cpp \
                    $(CE_SRC_FILES)/graphics/camera.cpp $(CE_SRC_FILES)/graphics/viewport.cpp \

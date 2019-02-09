@@ -10,7 +10,7 @@
 #include "entity.h"
 #include "scenenode.h"
 #include "light.h"
-#include "renderqueuesortinggrouping.h"
+#include "renderqueue.h"
 #include "rendertexture.h"
 #include "rendersystem.h"
 #include "linkedlist.h"
@@ -147,9 +147,9 @@ private:
     /// method for preparing shadow textures ready for use in a regular render
     void PrepareShadowTextures();
     /// render the objects in a given queue group 
-    void RenderQueueGroupObjects(QueuedRenderableCollection* const queue);
+    void RenderQueueGroupObjects(RenderQueue* const queue);
     /// render a group rendering only shadow receivers
-    void RenderTextureShadowReceiverQueueGroupObjects(QueuedRenderableCollection* const queue);
+    void RenderTextureShadowReceiverQueueGroupObjects(RenderQueue* const queue);
 
     static SceneManager* Singleton;
 
@@ -160,9 +160,9 @@ private:
     SceneNode* sceneRoot;
     unsigned int ambientLight;
     RenderSystem* destRenderSystem;
-    QueuedRenderableCollection renderQueueOpaque;
-    QueuedRenderableCollection renderQueueTransparent;
-    QueuedRenderableCollection renderQueueShadowReceiver;
+    RenderQueue renderQueueOpaque;
+    RenderQueue renderQueueTransparent;
+    RenderQueue renderQueueShadowReceiver;
     bool suppressRenderStateChanges;
 
     IlluminationRenderStage illuminationStage;

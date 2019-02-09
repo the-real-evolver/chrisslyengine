@@ -506,7 +506,7 @@ SceneManager::PrepareShadowTextures()
 /**
 */
 void
-SceneManager::RenderQueueGroupObjects(QueuedRenderableCollection* const queue)
+SceneManager::RenderQueueGroupObjects(RenderQueue* const queue)
 {
     Pass* lastPass = NULL;
 
@@ -540,7 +540,7 @@ SceneManager::RenderQueueGroupObjects(QueuedRenderableCollection* const queue)
 /**
 */
 void
-SceneManager::RenderTextureShadowReceiverQueueGroupObjects(QueuedRenderableCollection* const queue)
+SceneManager::RenderTextureShadowReceiverQueueGroupObjects(RenderQueue* const queue)
 {
     this->destRenderSystem->SetPass(this->shadowPass);
 

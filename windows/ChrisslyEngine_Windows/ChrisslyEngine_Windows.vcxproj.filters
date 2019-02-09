@@ -77,9 +77,6 @@
     <ClCompile Include="..\..\code\graphics\pass.cpp">
       <Filter>graphics</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\code\graphics\renderqueuesortinggrouping.cpp">
-      <Filter>graphics</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\code\graphics\rendertarget.cpp">
       <Filter>graphics</Filter>
     </ClCompile>
@@ -166,6 +163,9 @@
     </ClCompile>
     <ClCompile Include="..\..\code\audio\dsp.cpp">
       <Filter>audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\graphics\renderqueue.cpp">
+      <Filter>graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -327,9 +327,6 @@
     <ClInclude Include="..\..\code\graphics\pixelformat.h">
       <Filter>graphics</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\code\graphics\renderqueuesortinggrouping.h">
-      <Filter>graphics</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\code\graphics\rendersystem.h">
       <Filter>graphics</Filter>
     </ClInclude>
@@ -467,6 +464,9 @@
     </ClInclude>
     <ClInclude Include="..\..\code\audio\dsp.h">
       <Filter>audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\graphics\renderqueue.h">
+      <Filter>graphics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
