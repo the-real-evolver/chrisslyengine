@@ -36,7 +36,7 @@ RenderQueue::~RenderQueue()
 void
 RenderQueue::Initialise(unsigned short capacity)
 {
-    unsigned int bufferSize = capacity * sizeof(RenderablePass*);
+    unsigned int bufferSize = capacity * sizeof(RenderablePass);
     this->renderablePasses = (RenderablePass*)CE_MALLOC(bufferSize);
     CE_ASSERT(this->renderablePasses != NULL, "RenderQueue::Initialise(): failed to allocate '%i' bytes\n", bufferSize);
     memset(this->renderablePasses, 0, bufferSize);

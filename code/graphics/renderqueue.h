@@ -32,15 +32,15 @@ public:
     RenderQueue();
     /// destructor
     ~RenderQueue();
-    /// allocate collection
+    /// allocate queue
     void Initialise(unsigned short capacity);
-    /// destroy collection
+    /// destroy queue
     void Destroy();
-    /// empty the collection
+    /// empty the queue
     void Clear();
-    /// add a renderable to the collection using a given pass
+    /// add a renderable to the queue using a given pass
     void AddRenderable(SubEntity* const rend, Pass* const pass);
-    /// gets the number of renderable pass currently populating the collection
+    /// gets the number of renderable pass currently populating the queue
     unsigned short GetNumRenderablePasses() const;
     /// get RenderablePass at given index
     RenderablePass* const GetRenderablePass(unsigned short index) const;
