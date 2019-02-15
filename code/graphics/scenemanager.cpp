@@ -523,8 +523,8 @@ SceneManager::RenderQueueGroupObjects(RenderQueue* const queue)
             if (pass != lastPass)
             {
                 this->destRenderSystem->SetPass(pass);
+                lastPass = pass;
             }
-            lastPass = pass;
         }
 
         // render entity

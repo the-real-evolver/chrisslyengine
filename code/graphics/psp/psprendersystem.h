@@ -79,6 +79,8 @@ private:
 
     static PSPRenderSystem* Singleton;
 
+    ce_hash_table* lights;
+    bool restoreLights;
     unsigned int ambientLight;
     ScePspFVector3 lightPos;
     ScePspFVector3 lightDir;

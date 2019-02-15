@@ -31,6 +31,8 @@ static const ScePspFVector3 SphereMapTransformMatrix[2U] =
 /**
 */
 PSPRenderSystem::PSPRenderSystem() :
+    lights(NULL),
+    restoreLights(false),
     ambientLight(0x00000000)
 {
     Singleton = this;
@@ -208,6 +210,13 @@ PSPRenderSystem::EndFrame()
 void
 PSPRenderSystem::SetPass(graphics::Pass* const pass)
 {
+    // the lighting state has to be restored cause the last used pass modified it
+    if (this->restoreLights)
+    {
+        this->ProcessLights(this->lights);
+        this->restoreLights = false;
+    }
+
     // scene blending parameters
     if (pass->GetSceneBlendingEnabled())
     {
@@ -272,6 +281,7 @@ PSPRenderSystem::SetPass(graphics::Pass* const pass)
             sceGuLight(3, GU_DIRECTIONAL, GU_UNKNOWN_LIGHT_COMPONENT, &SphereMapTransformMatrix[1U]);
             sceGuDisable(GU_LIGHT2);
             sceGuDisable(GU_LIGHT3);
+            this->restoreLights = true;
         }
         sceGuTexMapMode(PSPMappings::Get(tmm), 2U, 3U);
         sceGuTexProjMapMode(PSPMappings::Get(tus->GetTextureProjectionMappingMode()));
@@ -388,6 +398,8 @@ PSPRenderSystem::ProcessLights(ce_hash_table* const lights)
     {
         sceGuDisable(GU_LIGHT0 + i);
     }
+
+    this->lights = lights;
 }
 
 //------------------------------------------------------------------------------
