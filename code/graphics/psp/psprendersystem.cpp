@@ -214,7 +214,6 @@ PSPRenderSystem::SetPass(graphics::Pass* const pass)
     if (this->restoreLights)
     {
         this->ProcessLights(this->lights);
-        this->restoreLights = false;
     }
 
     // scene blending parameters
@@ -400,6 +399,7 @@ PSPRenderSystem::ProcessLights(ce_hash_table* const lights)
     }
 
     this->lights = lights;
+    this->restoreLights = false;
 }
 
 //------------------------------------------------------------------------------
