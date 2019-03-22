@@ -60,7 +60,15 @@ PSPMath::Pow(float base, float exponent)
 inline float
 PSPMath::Sqrt(float fValue)
 {
-    return pspFpuSqrt(fValue);
+    float root;
+    __asm__ volatile (
+        "mtv %1, S000\n"
+        "vsqrt.s S000, S000\n"
+        "mfv %0, S000\n"
+        : "=r"(root)
+        : "r"(fValue)
+    );
+    return root;
 }
 
 //------------------------------------------------------------------------------
@@ -161,7 +169,15 @@ PSPMath::Ceil(float fValue)
 inline float
 PSPMath::Fabs(float fValue)
 {
-    return pspFpuAbs(fValue);
+    float absolute;
+    __asm__ volatile (
+        "mtv %1, S000\n"
+        "vabs.s S000, S000\n"
+        "mfv %0, S000\n"
+        : "=r"(absolute)
+        : "r"(fValue)
+    );
+    return absolute;
 }
 
 //------------------------------------------------------------------------------
