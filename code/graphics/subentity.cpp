@@ -21,7 +21,8 @@ SubEntity::SubEntity(Entity* parent, SubMesh* subMeshBasis) :
     subMesh(subMeshBasis),
     visible(true),
     morphVertexData(NULL),
-    morphWeight(0.0f)
+    morphWeight(0.0f),
+    distanceToCamera(0.0f)
 {
 
 }

@@ -44,6 +44,7 @@ material transparent_material
         fog_override true 1.0 0.5 0.0 0.0 50.0
         scene_blend src_alpha one_minus_src_alpha
         cull_hardware none
+        depth_write off
         texture_unit
         {
             texture gothic_alpha.tex

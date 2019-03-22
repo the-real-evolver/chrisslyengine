@@ -20,6 +20,7 @@ class SubEntity
 {
     friend class Entity;
     friend class SceneManager;
+    friend class RenderQueue;
 public:
     /// destructor
     ~SubEntity();
@@ -57,6 +58,8 @@ private:
     VertexData* morphVertexData;
     /// vertex morph weight
     float morphWeight;
+    /// cached distance to camera
+    float distanceToCamera;
 };
 
 } // namespace graphics

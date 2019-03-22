@@ -315,6 +315,18 @@ MaterialParser::ParsePass()
             this->currentPass->SetDepthCheckEnabled(false);
         }
     }
+    else if (0 == strcmp(this->lexer.string, "depth_write"))
+    {
+        if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
+        if (0 == strcmp(this->lexer.string, "on"))
+        {
+            this->currentPass->SetDepthWriteEnabled(true);
+        }
+        else if (0 == strcmp(this->lexer.string, "off"))
+        {
+            this->currentPass->SetDepthWriteEnabled(false);
+        }
+    }
 }
 
 //------------------------------------------------------------------------------
