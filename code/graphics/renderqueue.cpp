@@ -118,7 +118,7 @@ RenderQueue::Sort()
             }
         }
 
-        if (hitIndex != searchIndex)
+        if (hitIndex != swapIndex)
         {
             RenderablePass rpTmp;
             rpTmp = *(this->renderablePasses + (uintptr_t)swapIndex);
