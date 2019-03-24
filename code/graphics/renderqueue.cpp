@@ -83,38 +83,6 @@ RenderQueue::AddRenderable(SubEntity* const rend, Pass* const pass)
 //------------------------------------------------------------------------------
 /**
 */
-void
-RenderQueue::InsertSortedRenderable(SubEntity* const rend, Pass* const pass)
-{
-    if (this->numRenderablePasses < this->renderablePassesCapacity)
-    {
-        RenderablePass* renderablePass = NULL;
-        int index, insertionIndex;
-        for (insertionIndex = 0; insertionIndex < this->numRenderablePasses; ++insertionIndex)
-        {
-            renderablePass = this->renderablePasses + (uintptr_t)insertionIndex;
-            if (rend->distanceToCamera > renderablePass->renderable->distanceToCamera)
-            {
-                break;
-            }
-        }
-
-        for (index = this->numRenderablePasses - 1; index >= insertionIndex; --index)
-        {
-            *(this->renderablePasses + (uintptr_t)index + 1U) = *(this->renderablePasses + (uintptr_t)index);
-        }
-
-        renderablePass = this->renderablePasses + (uintptr_t)insertionIndex;
-        renderablePass->renderable = rend;
-        renderablePass->pass = pass;
-
-        ++this->numRenderablePasses;
-    }
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
 unsigned short
 RenderQueue::GetNumRenderablePasses() const
 {
@@ -128,6 +96,36 @@ RenderablePass* const
 RenderQueue::GetRenderablePass(unsigned short index) const
 {
     return this->renderablePasses + (uintptr_t)index;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+RenderQueue::Sort()
+{
+    int swapIndex, searchIndex, hitIndex;
+    for (swapIndex = 0; swapIndex < this->numRenderablePasses - 1; ++swapIndex)
+    {
+        hitIndex = swapIndex;
+        for (searchIndex = swapIndex + 1; searchIndex < this->numRenderablePasses; ++searchIndex)
+        {
+            RenderablePass* rpHit = this->renderablePasses + (uintptr_t)hitIndex;
+            RenderablePass* rpSearch = this->renderablePasses + (uintptr_t)searchIndex;
+            if (rpSearch->renderable->distanceToCamera > rpHit->renderable->distanceToCamera)
+            {
+                hitIndex = searchIndex;
+            }
+        }
+
+        if (hitIndex != searchIndex)
+        {
+            RenderablePass rpTmp;
+            rpTmp = *(this->renderablePasses + (uintptr_t)swapIndex);
+            *(this->renderablePasses + (uintptr_t)swapIndex) = *(this->renderablePasses + (uintptr_t)hitIndex);
+            *(this->renderablePasses + (uintptr_t)hitIndex) = rpTmp;
+        }
+    }
 }
 
 } // namespace graphics

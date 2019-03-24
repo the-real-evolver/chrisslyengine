@@ -407,11 +407,8 @@ SceneManager::_RenderScene(Camera* const camera, Viewport* const vp)
                     if (pass->GetSceneBlendingEnabled())
                     {
                         // add to transparency queue
-                        // Sort renderables by distance to camera from furthest to nearest, cause blending is usually order dependent.
-                        // Traditional alpha blending (BlendFunc(SRC_ALPHA, ONE_MINUS_SRC_ALPHA)) for instance is order dependent cause
-                        // the subtraction is not commutative, hence the order in which the values are subtracted from each other matters.
                         subEntity->distanceToCamera = (camera->GetPosition() - sceneNode->GetPosition()).Length();
-                        this->renderQueueTransparent.InsertSortedRenderable(subEntity, pass);
+                        this->renderQueueTransparent.AddRenderable(subEntity, pass);
                     }
                     else
                     {
@@ -447,6 +444,10 @@ SceneManager::_RenderScene(Camera* const camera, Viewport* const vp)
     else
     {
         this->RenderQueueGroupObjects(&this->renderQueueOpaque);
+        // Sort transparent renderables by distance to camera from furthest to nearest, cause blending is usually order dependent.
+        // Traditional alpha blending (BlendFunc(SRC_ALPHA, ONE_MINUS_SRC_ALPHA)) for instance is order dependent cause
+        // the subtraction is not commutative, hence the order in which the values are subtracted from each other matters.
+        this->renderQueueTransparent.Sort();
         this->RenderQueueGroupObjects(&this->renderQueueTransparent);
 
         if (this->IsShadowTechniqueInUse() && !this->suppressRenderStateChanges)

@@ -59,6 +59,8 @@ WinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prevInstance, _In_ LPSTR cmd
     GraphicsSystem* graphicsSystem = new GraphicsSystem();
     RenderWindow* window = graphicsSystem->Initialise((void*)instance);
     Camera* camera = SceneManager::Instance()->CreateCamera("MainCamera");
+    camera->SetPosition(-0.5f, -0.25f, 1.0f);
+    camera->SetOrientation(Quaternion());
     window->AddViewport(camera, 0, 0, 960, 544);
 
     MaterialManager::Instance()->Initialise();
@@ -67,8 +69,6 @@ WinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prevInstance, _In_ LPSTR cmd
     sceneNode->AttachObject(entity);
     sceneNode->SetPosition(-0.5f, 0.0f, 0.0f);
     sceneNode->SetScale(1.0f, 1.0f, 1.0f);
-    camera->SetPosition(-0.5f, -0.25f, 1.0f);
-    camera->SetOrientation(Quaternion());
 
     Light* light = SceneManager::Instance()->CreateLight("WhitePointLight");
     light->SetType(Light::LT_POINT);

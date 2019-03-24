@@ -40,12 +40,12 @@ public:
     void Clear();
     /// add a renderable to the queue using a given pass
     void AddRenderable(SubEntity* const rend, Pass* const pass);
-    /// sort insert renderable in order of distance to camera, from furthest to nearest
-    void InsertSortedRenderable(SubEntity* const rend, Pass* const pass);
     /// gets the number of renderable pass currently populating the queue
     unsigned short GetNumRenderablePasses() const;
     /// get RenderablePass at given index
     RenderablePass* const GetRenderablePass(unsigned short index) const;
+    /// sort queue in order of distance to camera, from furthest to nearest
+    void Sort();
 
 private:
     RenderablePass* renderablePasses;
