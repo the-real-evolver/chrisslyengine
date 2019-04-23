@@ -120,8 +120,7 @@ RenderQueue::Sort()
 
         if (hitIndex != swapIndex)
         {
-            RenderablePass rpTmp;
-            rpTmp = *(this->renderablePasses + (uintptr_t)swapIndex);
+            RenderablePass rpTmp = *(this->renderablePasses + (uintptr_t)swapIndex);
             *(this->renderablePasses + (uintptr_t)swapIndex) = *(this->renderablePasses + (uintptr_t)hitIndex);
             *(this->renderablePasses + (uintptr_t)hitIndex) = rpTmp;
         }

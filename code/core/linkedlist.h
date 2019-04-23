@@ -36,15 +36,11 @@ ce_linked_list_add(ce_linked_list** front, void* const data)
     ce_linked_list* node = (ce_linked_list*)CE_MALLOC(sizeof(ce_linked_list));
 
     node->prev = NULL;
+    node->next = *front;
     node->data = data;
 
-    if (NULL == *front)
+    if (*front != NULL)
     {
-        node->next = NULL;
-    }
-    else
-    {
-        node->next = *front;
         (*front)->prev = node;
     }
 
