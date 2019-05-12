@@ -29,10 +29,12 @@ D3D11GpuProgram::D3D11GpuProgram(const char* const source, const char* const fil
     vertexShaderCode(NULL),
     fragmentShaderCode(NULL),
     vertexShader(NULL),
-    fragmentShader(NULL)
+    fragmentShader(NULL),
+    bufferSlot(0U)
 {
     /* compile and create vertex shader */
     ID3D10Blob* errorBlob = NULL;
+#if __CE_USE_LEGACY_DIRECTX_SDK__
     HRESULT result = D3DX11CompileFromMemory(
         source,                             /* __in     LPCSTR pSrcData                     */
         strlen(source),                     /* __in     SIZE_T SrcDataLen                   */
@@ -48,6 +50,21 @@ D3D11GpuProgram::D3D11GpuProgram(const char* const source, const char* const fil
         &errorBlob,                         /* __out    ID3D10Blob **ppErrorMsgs            */
         NULL                                /* __out    HRESULT *pHResult                   */
     );
+#else
+    HRESULT result = D3DCompile(
+        source,                             /* _In_reads_bytes_(SrcDataSize)                            LPCVOID pSrcData                    */
+        strlen(source),                     /* _In_                                                     SIZE_T SrcDataSize                  */
+        fileName,                           /* _In_opt_                                                 LPCSTR pSourceName                  */
+        NULL,                               /* _In_reads_opt_(_Inexpressible_(pDefines->Name != NULL))  CONST D3D_SHADER_MACRO* pDefines    */
+        NULL,                               /* _In_opt_                                                 ID3DInclude* pInclude               */
+        vertexShaderFunctionName,           /* _In_opt_                                                 LPCSTR pEntrypoint                  */
+        "vs_4_0",                           /* _In_                                                     LPCSTR pTarget                      */
+        D3DCOMPILE_WARNINGS_ARE_ERRORS,     /* _In_                                                     UINT Flags1                         */
+        0U,                                 /* _In_                                                     UINT Flags2                         */
+        &this->vertexShaderCode,            /* _Out_                                                    ID3DBlob** ppCode                   */
+        &errorBlob                          /* _Out_opt_                                                ID3DBlob** ppErrorMsgs              */
+    );
+#endif
     CE_ASSERT(SUCCEEDED(result), "D3D11GpuProgram::D3D11GpuProgram(): failed to compile vertex shader '%s' in file '%s'\n", vertexShaderFunctionName, fileName);
 
     result = D3D11RenderSystem::Instance()->GetDevice()->CreateVertexShader(
@@ -65,6 +82,7 @@ D3D11GpuProgram::D3D11GpuProgram(const char* const source, const char* const fil
     }
 
     /* compile and create fragment shader */
+#if __CE_USE_LEGACY_DIRECTX_SDK__
     result = D3DX11CompileFromMemory(
         source,                             /* __in     LPCSTR pSrcData                     */
         strlen(source),                     /* __in     SIZE_T SrcDataLen                   */
@@ -80,6 +98,21 @@ D3D11GpuProgram::D3D11GpuProgram(const char* const source, const char* const fil
         &errorBlob,                         /* __out    ID3D10Blob **ppErrorMsgs            */
         NULL                                /* __out    HRESULT *pHResult                   */
     );
+#else
+    result = D3DCompile(
+        source,                             /* _In_reads_bytes_(SrcDataSize)                            LPCVOID pSrcData                    */
+        strlen(source),                     /* _In_                                                     SIZE_T SrcDataSize                  */
+        fileName,                           /* _In_opt_                                                 LPCSTR pSourceName                  */
+        NULL,                               /* _In_reads_opt_(_Inexpressible_(pDefines->Name != NULL))  CONST D3D_SHADER_MACRO* pDefines    */
+        NULL,                               /* _In_opt_                                                 ID3DInclude* pInclude               */
+        fragmentShaderFunctionName,         /* _In_opt_                                                 LPCSTR pEntrypoint                  */
+        "ps_4_0",                           /* _In_                                                     LPCSTR pTarget                      */
+        D3DCOMPILE_WARNINGS_ARE_ERRORS,     /* _In_                                                     UINT Flags1                         */
+        0U,                                 /* _In_                                                     UINT Flags2                         */
+        &this->fragmentShaderCode,          /* _Out_                                                    ID3DBlob** ppCode                   */
+        &errorBlob                          /* _Out_opt_                                                ID3DBlob** ppErrorMsgs              */
+    );
+#endif
     CE_ASSERT(SUCCEEDED(result), "D3D11GpuProgram::D3D11GpuProgram(): failed to compile fragment shader '%s' in file '%s'\n", fragmentShaderFunctionName, fileName);
 
     result = D3D11RenderSystem::Instance()->GetDevice()->CreatePixelShader(
@@ -96,7 +129,21 @@ D3D11GpuProgram::D3D11GpuProgram(const char* const source, const char* const fil
         errorBlob = NULL;
     }
 
-    this->ExtractConstantDefs();
+    this->constantDefs = CE_NEW graphics::GpuNamedConstants;
+    this->defaultParams = CE_NEW graphics::GpuProgramParameters;
+    this->defaultParams->_SetNamedConstants(this->constantDefs);
+
+    ce_dynamic_array_init(&this->constantBuffersPerObject, 1U);
+    ce_dynamic_array_init(&this->constantBuffersPerPass, 1U);
+
+#if __CE_USE_LEGACY_DIRECTX_SDK__
+    this->ExtractConstantDefs(this->fragmentShaderCode);
+#else
+    ce_hash_table_init(&this->constantBuffers, 2U);
+    this->ExtractConstantDefs(this->vertexShaderCode);
+    this->ExtractConstantDefs(this->fragmentShaderCode);
+    ce_hash_table_clear(&this->constantBuffers);
+#endif
 }
 
 //------------------------------------------------------------------------------
@@ -214,17 +261,10 @@ D3D11GpuProgram::UpdatePerPassConstantBuffers()
 /**
 */
 void
-D3D11GpuProgram::ExtractConstantDefs()
+D3D11GpuProgram::ExtractConstantDefs(ID3D10Blob* const shaderCode)
 {
-    this->constantDefs = CE_NEW graphics::GpuNamedConstants;
-    this->defaultParams = CE_NEW graphics::GpuProgramParameters;
-    this->defaultParams->_SetNamedConstants(this->constantDefs);
-
-    ce_dynamic_array_init(&this->constantBuffersPerObject, 1U);
-    ce_dynamic_array_init(&this->constantBuffersPerPass, 1U);
-
     ID3D11ShaderReflection* reflector = NULL;
-    HRESULT result = D3DReflect(this->fragmentShaderCode->GetBufferPointer(), this->fragmentShaderCode->GetBufferSize(), IID_ID3D11ShaderReflection, (void**)&reflector);
+    HRESULT result = D3DReflect(shaderCode->GetBufferPointer(), shaderCode->GetBufferSize(), IID_ID3D11ShaderReflection, (void**)&reflector);
     CE_ASSERT(SUCCEEDED(result), "D3D11GpuProgram::ExtractConstantDefs(): failed to reflect vertex shader source code\n");
     D3D11_SHADER_DESC shaderDesc;
     result = reflector->GetDesc(&shaderDesc);
@@ -242,7 +282,16 @@ D3D11GpuProgram::ExtractConstantDefs()
         CE_ASSERT(SUCCEEDED(result), "D3D11GpuProgram::ExtractConstantDefs(): failed to get buffer description\n");
 
         /* create constant buffer */
+#if __CE_USE_LEGACY_DIRECTX_SDK__
         D3D11ConstantBuffer* constantBuffer = CE_NEW D3D11ConstantBuffer(bufferDesc.Size, bufferIndex, bufferDesc.Variables);
+#else
+        if (ce_hash_table_find(&this->constantBuffers, bufferDesc.Name, strlen(bufferDesc.Name)) != NULL)
+        {
+            continue;
+        }
+        D3D11ConstantBuffer* constantBuffer = CE_NEW D3D11ConstantBuffer(bufferDesc.Size, this->bufferSlot++, bufferDesc.Variables);
+        ce_hash_table_insert(&this->constantBuffers, bufferDesc.Name, strlen(bufferDesc.Name), constantBuffer);
+#endif
 
         UINT constantIndex;
         for (constantIndex = 0U; constantIndex < bufferDesc.Variables; ++constantIndex)

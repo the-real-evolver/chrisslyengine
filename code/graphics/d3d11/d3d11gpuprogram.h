@@ -8,7 +8,11 @@
 */
 #include "gpuprogramparams.h"
 #pragma warning(disable : 4005)
+#if __CE_USE_LEGACY_DIRECTX_SDK__
 #include <d3dx11.h>
+#else
+#include <d3d11.h>
+#endif
 
 //------------------------------------------------------------------------------
 namespace chrissly
@@ -41,7 +45,7 @@ private:
     /// private default constructor
     D3D11GpuProgram();
     /// populate named constants
-    void ExtractConstantDefs();
+    void ExtractConstantDefs(ID3D10Blob* const shaderCode);
 
     graphics::GpuProgramParameters* defaultParams;
     graphics::GpuNamedConstants* constantDefs;
@@ -53,6 +57,9 @@ private:
     ID3D10Blob* fragmentShaderCode;
     ID3D11VertexShader* vertexShader;
     ID3D11PixelShader* fragmentShader;
+
+    ce_hash_table constantBuffers;
+    UINT bufferSlot;
 };
 
 } // namespace chrissly

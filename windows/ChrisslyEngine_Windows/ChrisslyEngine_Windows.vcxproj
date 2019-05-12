@@ -81,7 +81,7 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>__CE_DEBUG__;__CE_WINDOWS__;__CE_D3D11__;__CE_WASAPI__;_CRT_SECURE_NO_WARNINGS;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>__CE_DEBUG__;__CE_WINDOWS__;__CE_D3D11__;__CE_WASAPI__;__CE_USE_LEGACY_DIRECTX_SDK__;_CRT_SECURE_NO_WARNINGS;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\..\code;..\..\code\core;..\..\code\core\standard;..\..\code\core\windows;..\..\code\graphics;..\..\code\graphics\windows;..\..\code\audio;..\..\code\audio\windows;..\..\code\thirdparty\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <FloatingPointModel>Fast</FloatingPointModel>
     </ClCompile>
@@ -104,7 +104,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\..\code;..\..\code\core;..\..\code\core\standard;..\..\code\core\windows;..\..\code\graphics;..\..\code\graphics\windows;..\..\code\audio;..\..\code\audio\windows;..\..\code\thirdparty\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>__CE_WINDOWS__;__CE_D3D11__;__CE_WASAPI__;_CRT_SECURE_NO_WARNINGS;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>__CE_WINDOWS__;__CE_D3D11__;__CE_WASAPI__;__CE_USE_LEGACY_DIRECTX_SDK__;_CRT_SECURE_NO_WARNINGS;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
