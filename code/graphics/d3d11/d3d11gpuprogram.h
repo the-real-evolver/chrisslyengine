@@ -7,12 +7,7 @@
     (C) 2016 Christian Bleicher
 */
 #include "gpuprogramparams.h"
-#pragma warning(disable : 4005)
-#if __CE_USE_LEGACY_DIRECTX_SDK__
-#include <d3dx11.h>
-#else
-#include <d3d11.h>
-#endif
+#include "d3d11config.h"
 
 //------------------------------------------------------------------------------
 namespace chrissly

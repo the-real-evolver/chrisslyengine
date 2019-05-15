@@ -231,6 +231,7 @@
     <ClInclude Include="..\..\code\graphics\blendmode.h" />
     <ClInclude Include="..\..\code\graphics\camera.h" />
     <ClInclude Include="..\..\code\graphics\common.h" />
+    <ClInclude Include="..\..\code\graphics\d3d11\d3d11config.h" />
     <ClInclude Include="..\..\code\graphics\d3d11\d3d11constantbuffer.h" />
     <ClInclude Include="..\..\code\graphics\d3d11\d3d11defaultshaders.h" />
     <ClInclude Include="..\..\code\graphics\d3d11\d3d11gpuprogram.h" />

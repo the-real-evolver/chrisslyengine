@@ -8,7 +8,7 @@
 */
 #include "texturebase.h"
 #pragma warning(disable : 4005)
-#include <d3dx11.h>
+#include "d3d11config.h"
 
 //------------------------------------------------------------------------------
 namespace chrissly

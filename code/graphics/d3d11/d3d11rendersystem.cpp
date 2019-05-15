@@ -8,6 +8,7 @@
 #include "light.h"
 #include "common.h"
 #include "debug.h"
+#include <float.h>
 
 namespace chrissly
 {
