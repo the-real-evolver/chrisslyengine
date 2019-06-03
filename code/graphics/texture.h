@@ -43,7 +43,7 @@ typedef chrissly::D3D11Texture Texture;
 
 } // namespace graphics
 } // namespace chrissly
-  //------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #else
 #error "Texture class not implemented on this platform!"
 #endif

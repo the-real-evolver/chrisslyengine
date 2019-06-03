@@ -43,7 +43,7 @@ typedef chrissly::DXGIRenderWindow RenderWindow;
 
 } // namespace graphics
 } // namespace chrissly
-  //------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #else
 #error "RenderWindow class not implemented on this platform!"
 #endif

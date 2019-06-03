@@ -42,7 +42,7 @@ typedef chrissly::D3D11GpuProgram GpuProgram;
 
 } // namespace graphics
 } // namespace chrissly
-  //------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #else
 #error "GpuProgram class not implemented on this platform!"
 #endif

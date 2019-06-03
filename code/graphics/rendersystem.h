@@ -43,7 +43,7 @@ typedef chrissly::D3D11RenderSystem RenderSystem;
 
 } // namespace graphics
 } // namespace chrissly
-  //------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #else
 #error "RenderSystem class not implemented on this platform!"
 #endif
