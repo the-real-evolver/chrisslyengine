@@ -70,7 +70,7 @@ PSPRenderSystem::Initialise(void* const customParams)
     sceGuDepthFunc(GU_GEQUAL);
     sceGuShadeModel(GU_SMOOTH);
     sceGuFinish();
-    sceGuSync(0, 0);
+    sceGuSync(GU_SYNC_FINISH, GU_SYNC_WHAT_DONE);
     sceGuDisplay(GU_TRUE);
 
     return renderWindow;
@@ -201,7 +201,7 @@ void
 PSPRenderSystem::EndFrame()
 {
     sceGuFinish();
-    sceGuSync(0, 0);
+    sceGuSync(GU_SYNC_FINISH, GU_SYNC_WHAT_DONE);
 }
 
 //------------------------------------------------------------------------------

@@ -46,7 +46,7 @@ PSPRenderWindow::Create()
     sceGuDispBuffer(width, height, dispBuffer, bufferWidth);
     sceGuDepthBuffer(depthBuffer, bufferWidth);
     sceGuFinish();
-    sceGuSync(0, 0);
+    sceGuSync(GU_SYNC_FINISH, GU_SYNC_WHAT_DONE);
 
     this->buffer = NULL;
     this->width = bufferWidth;
