@@ -1,5 +1,6 @@
 ------------------------------------------------------------------------------
   "intro.ogg"
+  "sphere_env_map.raw"
 
     Author:  Christian Bleicher (evolver)
     License: MIT
@@ -7,13 +8,13 @@
 
 ------------------------------------------------------------------------------
   "gothic_woman.obj"
-  "gothic_alpha.raw" 
+  "gothic_alpha.raw"
   "gothic_solid.raw"
 
   are generated from the following original file:
-  
+
     http://opengameart.org/sites/default/files/fleur.tar.gz
-  
+
     Author:  Tiziana aka TiZeta
     License: CREATIVE COMMONS Attribution-ShareAlike 3.0 Unported (see below)
     See:     http://opengameart.org/content/goth-female-fleur-du-mal
@@ -26,9 +27,9 @@
   "cerberus_etc1.pkg"
 
   are generated from the following original files:
-  
+
     http://opengameart.org/sites/default/files/cerberus_v002.blend
-    http://opengameart.org/sites/default/files/cerberus_texture_0.png  
+    http://opengameart.org/sites/default/files/cerberus_texture_0.png
 
     Authors: Clement Wu, Nikolaus & Botanic
     License: CREATIVE COMMONS Attribution-ShareAlike 3.0 Unported (see below)
@@ -39,9 +40,9 @@
   "floor.raw"
 
   is generated from the following original file:
-  
+
     http://opengameart.org/sites/default/files/oga-textures/ancient%20flooring.jpg
-  
+
     Author:  Dim
     License: CREATIVE COMMONS Attribution 3.0 Unported
     See:     http://opengameart.org/node/8136
@@ -52,9 +53,9 @@
   "water.raw"
 
   is generated from the following original file:
-  
+
     http://opengameart.org/sites/default/files/oga-textures/water.png
-  
+
     Author:  Mysteryem
     License: CREATIVE COMMONS Attribution-ShareAlike 3.0 Unported (see below)
     See:     http://opengameart.org/node/8081

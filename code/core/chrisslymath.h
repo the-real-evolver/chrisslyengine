@@ -8,6 +8,13 @@
 */
 
 //------------------------------------------------------------------------------
+/// computes a + t * (b - a), i.e. the linear interpolation between a and b for the parameter t (or extrapolation, when t is outside the range [0,1])
+inline float ce_math_lerp(float a, float b, float t)
+{
+    return a + t * (b - a);
+}
+
+//------------------------------------------------------------------------------
 #if __CE_PSP__
 #include "psp/pspmath.h"
 namespace chrissly

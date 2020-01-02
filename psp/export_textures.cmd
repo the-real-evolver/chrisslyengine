@@ -18,5 +18,6 @@ texturetool.exe -format PF_R5G6B5 -width 512 -height 512 -swizzled -data %SrcFol
 texturetool.exe -format PF_A4R4G4B4 -width 512 -height 512 -swizzled -data %SrcFolder%\gothic_alpha.raw -out %DstFolder%\gothic_alpha.tex
 
 texturetool.exe -format PF_R5G6B5 -width 512 -height 512 -swizzled -data %SrcFolder%\cerberus.raw -out %DstFolder%\cerberus.tex
+texturetool.exe -format PF_DXT1 -width 256 -height 256 -data %SrcFolder%\sphere_env_map.raw -out %DstFolder%\sphere_env_map.tex
 
 cd %ProjectFolder%\psp

@@ -7,6 +7,15 @@ material cerberus_material_psp
             texture cerberus.tex
         }
     }
+    pass
+    {
+        scene_blend src_colour dest_colour
+        texture_unit
+        {
+            texture sphere_env_map.tex
+            env_map spherical
+        }
+    }
 }
 
 material cerberus_material_gles

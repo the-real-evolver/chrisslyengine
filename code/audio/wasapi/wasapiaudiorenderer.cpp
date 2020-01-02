@@ -97,7 +97,6 @@ WASAPIAudioRenderer::Initialise(void* const customParams)
 
     if (format->nSamplesPerSec != 44100U)
     {
-        CE_ASSERT(format->nSamplesPerSec <= 88200U, "WASAPIAudioRenderer::Initialise(): upsampling to %i Hz not supported by the samplerate converter\n");
         this->resample = true;
         this->resampleRatio = 44100.0 / (double)format->nSamplesPerSec;
     }

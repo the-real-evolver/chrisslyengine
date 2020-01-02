@@ -105,6 +105,7 @@ PSPRenderSystem::SetViewport(graphics::Viewport* const vp)
     int left = vp->GetActualLeft();
     int top = vp->GetActualTop();
 
+    // set viewport within guard-band
     sceGuOffset(2048U - ((unsigned int)width >> 1U) - left, 2048U - ((unsigned int)height >> 1U) - top);
     sceGuViewport(2048, 2048, width, height);
     sceGuScissor(left, top, left + width, top + height);
