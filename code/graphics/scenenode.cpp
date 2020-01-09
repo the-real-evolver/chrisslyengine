@@ -21,7 +21,8 @@ SceneNode::SceneNode() :
     scale(Vector3::UNIFORM_SCALE),
     derivedScale(Vector3::UNIFORM_SCALE),
     cachedTransform(Matrix4::IDENTITY),
-    cachedTransformOutOfDate(true)
+    cachedTransformOutOfDate(true),
+    updateChilds(false)
 {
     ce_dynamic_array_init(&this->objects, 1U);
 }
@@ -91,7 +92,7 @@ void
 SceneNode::SetOrientation(const Quaternion& q)
 {
     this->orientation = q;
-    this->cachedTransformOutOfDate = true;
+    this->updateChilds = this->cachedTransformOutOfDate = true;
 }
 
 //------------------------------------------------------------------------------
@@ -104,7 +105,7 @@ SceneNode::SetOrientation(float w, float x, float y, float z)
     this->orientation.x = x;
     this->orientation.y = y;
     this->orientation.z = z;
-    this->cachedTransformOutOfDate = true;
+    this->updateChilds = this->cachedTransformOutOfDate = true;
 }
 
 //------------------------------------------------------------------------------
@@ -114,7 +115,7 @@ void
 SceneNode::SetPosition(const Vector3& pos)
 {
     this->position = pos;
-    this->cachedTransformOutOfDate = true;
+    this->updateChilds = this->cachedTransformOutOfDate = true;
 }
 
 //------------------------------------------------------------------------------
@@ -126,7 +127,7 @@ SceneNode::SetPosition(float x, float y, float z)
     this->position.x = x;
     this->position.y = y;
     this->position.z = z;
-    this->cachedTransformOutOfDate = true;
+    this->updateChilds = this->cachedTransformOutOfDate = true;
 }
 
 //------------------------------------------------------------------------------
@@ -145,7 +146,7 @@ void
 SceneNode::SetScale(const Vector3& s)
 {
     this->scale = s;
-    this->cachedTransformOutOfDate = true;
+    this->updateChilds = this->cachedTransformOutOfDate = true;
 }
 
 //------------------------------------------------------------------------------
@@ -157,7 +158,7 @@ SceneNode::SetScale(float x, float y, float z)
     this->scale.x = x;
     this->scale.y = y;
     this->scale.z = z;
-    this->cachedTransformOutOfDate = true;
+    this->updateChilds = this->cachedTransformOutOfDate = true;
 }
 
 //------------------------------------------------------------------------------
@@ -217,7 +218,7 @@ SceneNode::Rotate(const Quaternion& q)
     Quaternion qnorm = q;
     qnorm.Normalise();
     this->orientation = this->orientation * qnorm;
-    this->cachedTransformOutOfDate = true;
+    this->updateChilds = this->cachedTransformOutOfDate = true;
 }
 
 //------------------------------------------------------------------------------
@@ -331,7 +332,7 @@ SceneNode::_GetFullTransform() const
 /**
 */
 void
-SceneNode::_Update()
+SceneNode::_Update(bool parentHasChanged)
 {
     if (this->parent)
     {
@@ -358,12 +359,19 @@ SceneNode::_Update()
         this->derivedScale = this->scale;
     }
 
+    if (parentHasChanged)
+    {
+        this->updateChilds = this->cachedTransformOutOfDate = true;
+    }
+
     ce_linked_list* it = this->children;
     while (it != NULL)
     {
-        ((SceneNode*)it->data)->_Update();
+        ((SceneNode*)it->data)->_Update(this->updateChilds);
         it = it->next;
     }
+
+    this->updateChilds = false;
 }
 
 //------------------------------------------------------------------------------
@@ -373,7 +381,7 @@ void
 SceneNode::SetParent(SceneNode* const p)
 {
     this->parent = p;
-    this->cachedTransformOutOfDate = true;
+    this->updateChilds = this->cachedTransformOutOfDate = true;
 }
 
 } // namespace graphics

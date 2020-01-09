@@ -331,7 +331,7 @@ SceneManager::_RenderScene(Camera* const camera, Viewport* const vp)
     if (this->illuminationStage != IRS_RENDER_TO_TEXTURE)
     {
         // update transformation
-        this->GetRootSceneNode()->_Update();
+        this->GetRootSceneNode()->_Update(false);
 
         // update shadowmap if shadows are enabled
         if (this->IsShadowTechniqueInUse() && !this->suppressRenderStateChanges)

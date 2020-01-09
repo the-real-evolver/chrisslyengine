@@ -134,7 +134,7 @@ public:
             Updates this scene node and any relevant children to incorporate transforms etc.
             Don't call this yourself unless you are writing a SceneManager implementation.
     */
-    void _Update();
+    void _Update(bool parentHasChanged);
 
 private:
     /// constructor, only to be called by the creator SceneManager
@@ -184,6 +184,7 @@ private:
     /// cached derived transform as a 4x4 matrix
     mutable core::Matrix4 cachedTransform;
     mutable bool cachedTransformOutOfDate;
+    bool updateChilds;
 
     mutable ce_dynamic_array objects;
 };
