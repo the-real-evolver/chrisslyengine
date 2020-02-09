@@ -6,7 +6,7 @@
 set ProjectFolder=%CD%\..\..
 set SrcFolder=%ProjectFolder%\assets
 set DstFolder=%ProjectFolder%\android\ChrisslyEngine_Android\assets
-set ToolChainFolder=%ProjectFolder%\tools
+set ToolChainFolder=%ProjectFolder%\tools\bin\win32
 
 cd %ToolChainFolder%
 

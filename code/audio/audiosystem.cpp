@@ -187,6 +187,11 @@ AudioSystem::CreateDSP(const DspDescription* const desc, DSP** const dsp)
 Result
 AudioSystem::PlaySound(int channelid, Sound* const sound, bool paused, Channel** channel)
 {
+    if (NULL == sound)
+    {
+        return ERR_INVALID_PARAM;
+    }
+
     if (sound->mode & MODE_CREATESTREAM)
     {
         CE_ASSERT(0U == sound->useCount, "AudioSystem::PlaySound(): multiple channels cannot share a streaming sound\n");
@@ -256,7 +261,8 @@ AudioSystem::Update()
                 float distance = distanceVec.Length();
                 if (distance >= minDistance && distance <= maxDistance)
                 {
-                    channel->SetPan(-Math::Sin(Math::ATan2(distanceVec.DotProduct(sideVec), distanceVec.DotProduct(this->listenerForward))));
+                    // note that sideVec points to the "left" and the order of parameters of the atan2 function is (y, x) not (x, y)
+                    channel->SetPan(-Math::Cos(Math::ATan2(distanceVec.DotProduct(this->listenerForward), distanceVec.DotProduct(sideVec))));
                     channel->SetAttenuationFactor(1.0f - (distance - minDistance) / (maxDistance - minDistance));
                 }
                 else

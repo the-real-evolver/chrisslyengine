@@ -6,7 +6,7 @@
 set ProjectFolder=%CD%\..
 set SrcFolder=%ProjectFolder%\assets\meshes
 set DstFolder=%ProjectFolder%\windows\ChrisslyEngine_Windows
-set ToolChainFolder=%ProjectFolder%\tools
+set ToolChainFolder=%ProjectFolder%\tools\bin\win32
 
 cd %ToolChainFolder%
 
