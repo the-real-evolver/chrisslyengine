@@ -152,9 +152,6 @@
     <ClCompile Include="..\..\code\graphics\d3d11\d3d11rendertexture.cpp">
       <Filter>graphics\d3d11</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\code\graphics\d3d11\d3d11statecache.cpp">
-      <Filter>graphics\d3d11</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\code\graphics\d3d11\d3d11texture.cpp">
       <Filter>graphics\d3d11</Filter>
     </ClCompile>
@@ -451,9 +448,6 @@
       <Filter>graphics\d3d11</Filter>
     </ClInclude>
     <ClInclude Include="..\..\code\graphics\d3d11\d3d11rendertexture.h">
-      <Filter>graphics\d3d11</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\code\graphics\d3d11\d3d11statecache.h">
       <Filter>graphics\d3d11</Filter>
     </ClInclude>
     <ClInclude Include="..\..\code\graphics\d3d11\d3d11texture.h">

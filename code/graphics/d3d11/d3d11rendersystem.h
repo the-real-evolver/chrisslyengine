@@ -9,7 +9,6 @@
 #include "renderwindow.h"
 #include "subentity.h"
 #include "hashtable.h"
-#include "d3d11statecache.h"
 
 //------------------------------------------------------------------------------
 namespace chrissly
@@ -102,7 +101,6 @@ private:
     ID3D11InputLayout* inputLayout;
     ID3D11InputLayout* inputLayoutMorphAnim;
 
-    D3D11StateCache stateCache;
     D3D11_RASTERIZER_DESC currentRasterState;
     D3D11_DEPTH_STENCIL_DESC currentDepthStencilState;
     D3D11_BLEND_DESC currentBlendState;

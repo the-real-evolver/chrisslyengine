@@ -202,8 +202,6 @@ D3D11RenderSystem::Shutdown()
     this->defaultGpuProgramMorphAnim = NULL;
     this->currentGpuProgram = NULL;
 
-    this->stateCache.Invalidate();
-
     if (this->inputLayout != NULL)
     {
         this->inputLayout->Release();
@@ -407,14 +405,18 @@ D3D11RenderSystem::SetPass(graphics::Pass* const pass)
     {
         this->currentBlendState.RenderTarget[0U].BlendEnable = FALSE;
     }
-    ID3D11BlendState* blendState = this->stateCache.GetBlendState(this->currentBlendState);
+    ID3D11BlendState* blendState = NULL;
+    HRESULT result = this->device->CreateBlendState(&this->currentBlendState, &blendState);
+    CE_ASSERT(SUCCEEDED(result), "D3D11RenderSystem::SetPass(): failed to create blend state\n");
     float blendFactor[4U] = {0.0f, 0.0f, 0.0f, 0.0f};
     this->context->OMSetBlendState(blendState, blendFactor, 0xffffffff);
 
     /* depth check and depth write */
     this->currentDepthStencilState.DepthEnable = pass->GetDepthCheckEnabled();
     this->currentDepthStencilState.DepthWriteMask = pass->GetDepthWriteEnabled() ? D3D11_DEPTH_WRITE_MASK_ALL : D3D11_DEPTH_WRITE_MASK_ZERO;
-    ID3D11DepthStencilState* depthStencilState = this->stateCache.GetDepthStencilState(this->currentDepthStencilState);
+    ID3D11DepthStencilState* depthStencilState = NULL;
+    result = this->device->CreateDepthStencilState(&this->currentDepthStencilState, &depthStencilState);
+    CE_ASSERT(SUCCEEDED(result), "D3D11RenderSystem::SetPass(): failed to create depth stencil state\n");
     this->context->OMSetDepthStencilState(depthStencilState, 1U);
 
     /* culling mode */
@@ -430,7 +432,9 @@ D3D11RenderSystem::SetPass(graphics::Pass* const pass)
             this->currentRasterState.CullMode = D3D11_CULL_FRONT;
             break;
     }
-    ID3D11RasterizerState* rasterState = this->stateCache.GetRasterizerState(this->currentRasterState);
+    ID3D11RasterizerState* rasterState = NULL;
+    result = this->device->CreateRasterizerState(&this->currentRasterState, &rasterState);
+    CE_ASSERT(SUCCEEDED(result), "D3D11RenderSystem::SetPass(): failed to create rasterizer state\n");
     this->context->RSSetState(rasterState);
 
     /* texture unit parameters */
@@ -444,7 +448,9 @@ D3D11RenderSystem::SetPass(graphics::Pass* const pass)
         this->currentSamplerState.Filter = D3D11Mappings::Get(tus->GetTextureFiltering(graphics::FT_MIN), tus->GetTextureFiltering(graphics::FT_MAG), tus->GetTextureFiltering(graphics::FT_MIP));
         this->currentSamplerState.AddressU = D3D11Mappings::Get(tus->GetTextureAddressingMode().u);
         this->currentSamplerState.AddressV = D3D11Mappings::Get(tus->GetTextureAddressingMode().v);
-        ID3D11SamplerState* samplerState = this->stateCache.GetSamplerState(this->currentSamplerState);
+        ID3D11SamplerState* samplerState = NULL;
+        result = this->device->CreateSamplerState(&this->currentSamplerState, &samplerState);
+        CE_ASSERT(SUCCEEDED(result), "D3D11RenderSystem::SetPass(): failed to create sampler state\n");
         this->context->PSSetSamplers(textureUnitState, 1U, &samplerState);
     }
 

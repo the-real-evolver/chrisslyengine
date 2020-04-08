@@ -71,6 +71,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IncludePath>$(VC_IncludePath);$(DXSDK_DIR)Include;$(WindowsSDK_IncludePath)</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x86);$(DXSDK_DIR)Lib\x86;$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86</LibraryPath>
+    <ExecutablePath>$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>$(VC_IncludePath);$(DXSDK_DIR)Include;$(WindowsSDK_IncludePath)</IncludePath>
@@ -155,7 +156,6 @@
     <ClCompile Include="..\..\code\graphics\d3d11\d3d11mappings.cpp" />
     <ClCompile Include="..\..\code\graphics\d3d11\d3d11rendersystem.cpp" />
     <ClCompile Include="..\..\code\graphics\d3d11\d3d11rendertexture.cpp" />
-    <ClCompile Include="..\..\code\graphics\d3d11\d3d11statecache.cpp" />
     <ClCompile Include="..\..\code\graphics\d3d11\d3d11texture.cpp" />
     <ClCompile Include="..\..\code\graphics\d3d11\dxgirenderwindow.cpp" />
     <ClCompile Include="..\..\code\graphics\entity.cpp" />
@@ -239,7 +239,6 @@
     <ClInclude Include="..\..\code\graphics\d3d11\d3d11mappings.h" />
     <ClInclude Include="..\..\code\graphics\d3d11\d3d11rendersystem.h" />
     <ClInclude Include="..\..\code\graphics\d3d11\d3d11rendertexture.h" />
-    <ClInclude Include="..\..\code\graphics\d3d11\d3d11statecache.h" />
     <ClInclude Include="..\..\code\graphics\d3d11\d3d11texture.h" />
     <ClInclude Include="..\..\code\graphics\d3d11\dxgirenderwindow.h" />
     <ClInclude Include="..\..\code\graphics\entity.h" />

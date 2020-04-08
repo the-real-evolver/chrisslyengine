@@ -264,10 +264,6 @@ WASAPIAudioRenderer::RunAudioThread()
 
             this->syncLock.Unlock();
         }
-        else
-        {
-            Sleep(1U);
-        }
     }
 }
 
