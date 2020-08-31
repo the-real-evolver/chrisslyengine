@@ -23,6 +23,7 @@ SceneManager* SceneManager::Singleton = NULL;
 SceneManager::SceneManager() :
     sceneRoot(NULL),
     ambientLight(0x00000000),
+    renderQueuesEndedCallback(NULL),
     suppressRenderStateChanges(false),
     illuminationStage(IRS_NONE),
     shadowTechnique(SHADOWTYPE_NONE),
@@ -454,6 +455,11 @@ SceneManager::_RenderScene(Camera* const camera, Viewport* const vp)
         {
             this->RenderTextureShadowReceiverQueueGroupObjects(&this->renderQueueShadowReceiver);
         }
+
+        if (this->renderQueuesEndedCallback != NULL)
+        {
+            this->renderQueuesEndedCallback();
+        }
     }
 
     this->destRenderSystem->EndFrame();
@@ -468,11 +474,22 @@ SceneManager::_SetPass(Pass* const pass)
     this->destRenderSystem->SetPass(pass);
 }
 
-//---------------------------------------------------------------------
+//------------------------------------------------------------------------------
+/**
+*/
 void
 SceneManager::_SuppressRenderStateChanges(bool suppress)
 {
     this->suppressRenderStateChanges = suppress;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+SceneManager::_SetRenderQueuesEndedCallback(RenderQueuesEndedCallback callback)
+{
+    this->renderQueuesEndedCallback = callback;
 }
 
 //------------------------------------------------------------------------------

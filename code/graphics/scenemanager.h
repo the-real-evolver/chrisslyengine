@@ -138,6 +138,9 @@ public:
             can be rendered without changing state.
     */
     void _SuppressRenderStateChanges(bool suppress);
+    /// sets a callback which will be notified when render queues are finished processing
+    typedef void(*RenderQueuesEndedCallback)();
+    void _SetRenderQueuesEndedCallback(RenderQueuesEndedCallback callback);
 
 private:
     /// copy constructor
@@ -163,6 +166,7 @@ private:
     RenderQueue renderQueueOpaque;
     RenderQueue renderQueueTransparent;
     RenderQueue renderQueueShadowReceiver;
+    RenderQueuesEndedCallback renderQueuesEndedCallback;
     bool suppressRenderStateChanges;
 
     IlluminationRenderStage illuminationStage;
