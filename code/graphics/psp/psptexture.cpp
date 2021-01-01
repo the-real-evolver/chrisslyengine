@@ -20,15 +20,27 @@ PSPTexture::PSPTexture()
 //------------------------------------------------------------------------------
 /**
 */
+PSPTexture::PSPTexture(graphics::RenderTexture* const rt) :
+    TextureBase(rt)
+{
+    ce_dynamic_array_init(&this->mipmapInfos, 0U);
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
 PSPTexture::~PSPTexture()
 {
-    unsigned int i;
-    for (i = 0U; i < this->mipmapInfos.capacity; ++i)
+    if (!this->isRenderTarget)
     {
-        CE_DELETE (MipmapInfo*)ce_dynamic_array_get(&this->mipmapInfos, i);
-    }
+        unsigned int i;
+        for (i = 0U; i < this->mipmapInfos.capacity; ++i)
+        {
+            CE_DELETE (MipmapInfo*)ce_dynamic_array_get(&this->mipmapInfos, i);
+        }
 
-    ce_dynamic_array_delete(&this->mipmapInfos);
+        ce_dynamic_array_delete(&this->mipmapInfos);
+    }
 }
 
 //------------------------------------------------------------------------------
@@ -37,25 +49,28 @@ PSPTexture::~PSPTexture()
 void
 PSPTexture::CreateInternalResources()
 {
-    ce_dynamic_array_init(&this->mipmapInfos, this->numMipmaps);
-
-    void* mipmapbuffer = this->textureBuffer;
-    int mipmapWidth = this->width;
-    int mipmapHeight = this->height;
-
-    unsigned int i;
-    for (i = 0U; i < this->mipmapInfos.capacity; ++i)
+    if (!this->isRenderTarget)
     {
-        mipmapbuffer = (void*)((uintptr_t)mipmapbuffer + PSPHardwareBufferManager::GetMemorySize(mipmapWidth, mipmapHeight, PSPMappings::Get(this->format)));
-        mipmapWidth = (unsigned int)mipmapWidth >> 1U;
-        mipmapHeight = (unsigned int)mipmapHeight >> 1U;
+        ce_dynamic_array_init(&this->mipmapInfos, this->numMipmaps);
 
-        MipmapInfo* mipmapInfo = CE_NEW MipmapInfo;
-        mipmapInfo->buffer = mipmapbuffer;
-        mipmapInfo->width = mipmapWidth;
-        mipmapInfo->height = mipmapHeight;
+        void* mipmapbuffer = this->textureBuffer;
+        int mipmapWidth = this->width;
+        int mipmapHeight = this->height;
 
-        ce_dynamic_array_set(&this->mipmapInfos, i, mipmapInfo);
+        unsigned int i;
+        for (i = 0U; i < this->mipmapInfos.capacity; ++i)
+        {
+            mipmapbuffer = (void*)((uintptr_t)mipmapbuffer + PSPHardwareBufferManager::GetMemorySize(mipmapWidth, mipmapHeight, PSPMappings::Get(this->format)));
+            mipmapWidth = (unsigned int)mipmapWidth >> 1U;
+            mipmapHeight = (unsigned int)mipmapHeight >> 1U;
+
+            MipmapInfo* mipmapInfo = CE_NEW MipmapInfo;
+            mipmapInfo->buffer = mipmapbuffer;
+            mipmapInfo->width = mipmapWidth;
+            mipmapInfo->height = mipmapHeight;
+
+            ce_dynamic_array_set(&this->mipmapInfos, i, mipmapInfo);
+        }
     }
 }
 

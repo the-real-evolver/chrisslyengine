@@ -20,7 +20,23 @@ TextureBase::TextureBase() :
     width(0),
     numMipmaps(0),
     textureBuffer(NULL),
-    swizzled(true)
+    swizzled(true),
+    isRenderTarget(false)
+{
+
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+TextureBase::TextureBase(RenderTexture* const rt) :
+    format(rt->GetFormat()),
+    height(rt->GetHeight()),
+    width(rt->GetWidth()),
+    numMipmaps(0),
+    textureBuffer(rt->GetBuffer()),
+    swizzled(false),
+    isRenderTarget(true)
 {
 
 }
@@ -30,9 +46,12 @@ TextureBase::TextureBase() :
 */
 TextureBase::~TextureBase()
 {
-    if (this->textureBuffer != NULL)
+    if (!this->isRenderTarget)
     {
-        CE_FREE(this->textureBuffer);
+        if (this->textureBuffer != NULL)
+        {
+            CE_FREE(this->textureBuffer);
+        }
     }
 }
 

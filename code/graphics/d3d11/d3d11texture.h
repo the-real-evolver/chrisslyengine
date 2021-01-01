@@ -18,6 +18,8 @@ class D3D11Texture : public graphics::TextureBase
 public:
     /// default constructor
     D3D11Texture();
+    /// construct from rendertexture
+    D3D11Texture(graphics::RenderTexture* const rt);
     /// destructor
     ~D3D11Texture();
     /// create d3d11 tetxure and shader resource view

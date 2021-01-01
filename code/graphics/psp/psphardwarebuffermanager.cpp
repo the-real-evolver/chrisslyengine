@@ -65,4 +65,13 @@ PSPHardwareBufferManager::GetStaticVramTexture(unsigned int width, unsigned int 
     return (void*)(((uintptr_t)result) + ((uintptr_t)sceGeEdramGetAddr()));
 }
 
+//------------------------------------------------------------------------------
+/**
+*/
+void
+PSPHardwareBufferManager::Release()
+{
+    PSPHardwareBufferManager::StaticOffset = 0U;
+}
+
 } // namespace chrissly

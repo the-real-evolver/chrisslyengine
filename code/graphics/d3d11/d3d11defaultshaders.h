@@ -161,7 +161,7 @@ const char* const DefaultGpuProgramLit =
     "        float specFactor = pow(max(0.0f, dot(reflect(-L, normalize(input.worldNormal)), normalize(cameraPosition - input.worldPosition))), lightParams[i][3][2]);\n"
     "        specular += mul(float3(lightParams[i][0][2], lightParams[i][1][2], lightParams[i][2][2]), specFactor);\n"
     "    }\n"
-    "    colour.rgb = clamp(colour.rgb * diffuse + specular, 0.0f, 1.0f);\n"
+    "    colour.rgb = clamp(colour.rgb * (diffuse + specular), 0.0f, 1.0f);\n"
     "    output = colour;\n"
     "};\n";
 
@@ -236,8 +236,76 @@ const char* const DefaultGpuProgramLitFog =
     "        float specFactor = pow(max(0.0f, dot(reflect(-L, normalize(input.worldNormal)), normalize(cameraPosition - input.worldPosition))), lightParams[i][3][2]);\n"
     "        specular += mul(float3(lightParams[i][0][2], lightParams[i][1][2], lightParams[i][2][2]), specFactor);\n"
     "    }\n"
-    "    colour.rgb = clamp(colour.rgb * diffuse + specular, 0.0f, 1.0f);\n"
+    "    colour.rgb = clamp(colour.rgb * (diffuse + specular), 0.0f, 1.0f);\n"
     "    output = lerp(float4(fogColour, 1.0f), colour, input.fogFactor.x);\n"
+    "};\n";
+
+//------------------------------------------------------------------------------
+/**
+*/
+const char* const DefaultGpuProgramShadowCaster =
+    "Texture2D texture0 : register(t0);\n"
+    "SamplerState samplerLinear : register(s0);\n"
+    "cbuffer AutoConstantBuffer : register(b0)\n"
+    "{\n"
+    "    matrix worldViewProjMatrix;\n"
+    "};\n"
+    "struct VertexIn\n"
+    "{\n"
+    "    float2 uv : TEXCOORD0;\n"
+    "    float3 normal : NORMAL0;\n"
+    "    float3 position : POSITION0;\n"
+    "    float4 colour : COLOR0;\n"
+    "};\n"
+    "struct VertexOut\n"
+    "{\n"
+    "    float4 position : SV_Position;\n"
+    "};\n"
+    "void DefaultVertexShader(VertexIn input, out VertexOut output)\n"
+    "{\n"
+    "    output.position = mul(float4(input.position, 1.0f), worldViewProjMatrix);\n"
+    "}\n"
+    "void DefaultFragmentShader(VertexOut input, out float4 output : SV_Target)\n"
+    "{\n"
+    "    output = float4(0.5, 0.5, 0.5, 1.0);\n"
+    "};\n";
+
+//------------------------------------------------------------------------------
+/**
+*/
+const char* const DefaultGpuProgramShadowReceiver =
+    "Texture2D texture0 : register(t0);\n"
+    "SamplerState samplerLinear : register(s0);\n"
+    "cbuffer AutoConstantBuffer : register(b0)\n"
+    "{\n"
+    "    matrix worldViewProjMatrix;\n"
+    "    matrix textureMatrix;\n"
+    "};\n"
+    "struct VertexIn\n"
+    "{\n"
+    "    float2 uv : TEXCOORD0;\n"
+    "    float3 normal : NORMAL0;\n"
+    "    float3 position : POSITION0;\n"
+    "    float4 colour : COLOR0;\n"
+    "};\n"
+    "struct VertexOut\n"
+    "{\n"
+    "    float4 uv : TEXCOORD;\n"
+    "    float4 position : SV_Position;\n"
+    "};\n"
+    "void DefaultVertexShader(VertexIn input, out VertexOut output)\n"
+    "{\n"
+    "    output.uv = mul(float4(input.position, 1.0f), textureMatrix);\n"
+    "    output.position = mul(float4(input.position, 1.0f), worldViewProjMatrix);\n"
+    "}\n"
+    "void DefaultFragmentShader(VertexOut input, out float4 output : SV_Target)\n"
+    "{\n"
+    "    float4 colour = {1.0f, 1.0f, 1.0f, 1.0f};\n"
+    "    if (input.uv.w > 0.0f)\n"
+    "    {\n"
+    "        colour = texture0.Sample(samplerLinear, input.uv.xy / input.uv.w);\n"
+    "    }\n"
+    "    output = colour;"
     "};\n";
 
 //------------------------------------------------------------------------------

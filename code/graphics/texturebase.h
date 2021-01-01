@@ -7,6 +7,7 @@
     (C) 2010 Christian Bleicher
 */
 #include "pixelformat.h"
+#include "rendertexture.h"
 
 //------------------------------------------------------------------------------
 namespace chrissly
@@ -19,6 +20,8 @@ class TextureBase
 public:
     /// default constructor
     TextureBase();
+    /// construct from rendertexture
+    TextureBase(RenderTexture* const rt);
     /// destructor
     virtual ~TextureBase();
 
@@ -56,6 +59,7 @@ protected:
     int numMipmaps;
     void* textureBuffer;
     bool swizzled;
+    bool isRenderTarget;
 };
 
 } // namespace graphics

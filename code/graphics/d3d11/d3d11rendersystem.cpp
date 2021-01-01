@@ -25,10 +25,13 @@ D3D11RenderSystem::D3D11RenderSystem() :
     worldMatrix(core::Matrix4::ZERO),
     viewMatrix(core::Matrix4::ZERO),
     projectionMatrix(core::Matrix4::ZERO),
+    textureMatrix(core::Matrix4::ZERO),
     defaultGpuProgram(NULL),
     defaultGpuProgramFog(NULL),
     defaultGpuProgramLit(NULL),
     defaultGpuProgramLitFog(NULL),
+    defaultGpuProgramShadowCaster(NULL),
+    defaultGpuProgramShadowReceiver(NULL),
     defaultGpuProgramMorphAnim(NULL),
     currentGpuProgram(NULL),
     device(NULL),
@@ -88,7 +91,7 @@ D3D11RenderSystem::Initialise(void* const customParams)
     ZeroMemory(&this->currentDepthStencilState, sizeof(this->currentDepthStencilState));
     this->currentDepthStencilState.DepthEnable = TRUE;
     this->currentDepthStencilState.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-    this->currentDepthStencilState.DepthFunc = D3D11_COMPARISON_LESS;
+    this->currentDepthStencilState.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
     this->currentDepthStencilState.StencilEnable = TRUE;
     this->currentDepthStencilState.StencilReadMask = 0xff;
     this->currentDepthStencilState.StencilWriteMask = 0xff;
@@ -135,6 +138,8 @@ D3D11RenderSystem::Initialise(void* const customParams)
     this->defaultGpuProgramFog = CE_NEW D3D11GpuProgram(DefaultGpuProgramFog, "defaultshaderfog.fx", "DefaultVertexShader", "DefaultFragmentShader");
     this->defaultGpuProgramLit = CE_NEW D3D11GpuProgram(DefaultGpuProgramLit, "defaultshaderlit.fx", "DefaultVertexShader", "DefaultFragmentShader");
     this->defaultGpuProgramLitFog = CE_NEW D3D11GpuProgram(DefaultGpuProgramLitFog, "defaultshaderlitfog.fx", "DefaultVertexShader", "DefaultFragmentShader");
+    this->defaultGpuProgramShadowCaster = CE_NEW D3D11GpuProgram(DefaultGpuProgramShadowCaster, "defaultshadershadowcaster.fx", "DefaultVertexShader", "DefaultFragmentShader");
+    this->defaultGpuProgramShadowReceiver = CE_NEW D3D11GpuProgram(DefaultGpuProgramShadowReceiver, "defaultshadershadowreceiver.fx", "DefaultVertexShader", "DefaultFragmentShader");
     this->defaultGpuProgramMorphAnim = CE_NEW D3D11GpuProgram(DefaultGpuProgramMorphAnim, "defaultshadermorphanim.fx", "DefaultVertexShader", "DefaultFragmentShader");
     this->currentGpuProgram = this->defaultGpuProgram;
 
@@ -198,6 +203,10 @@ D3D11RenderSystem::Shutdown()
     this->defaultGpuProgramLit = NULL;
     CE_DELETE this->defaultGpuProgramLitFog;
     this->defaultGpuProgramLitFog = NULL;
+    CE_DELETE this->defaultGpuProgramShadowCaster;
+    this->defaultGpuProgramShadowCaster = NULL;
+    CE_DELETE this->defaultGpuProgramShadowReceiver;
+    this->defaultGpuProgramShadowReceiver = NULL;
     CE_DELETE this->defaultGpuProgramMorphAnim;
     this->defaultGpuProgramMorphAnim = NULL;
     this->currentGpuProgram = NULL;
@@ -240,6 +249,12 @@ D3D11RenderSystem::SetRenderTarget(graphics::RenderTarget* const target)
         renderTargetView = renderWindow->GetRenderTargetView();
         depthStencilView = renderWindow->GetDepthStencilView();
     }
+    else if ('DXRT' == target->GetType())
+    {
+        D3D11RenderTexture* renderTexture = (D3D11RenderTexture*)target;
+        renderTargetView = renderTexture->GetRenderTargetView();
+    }
+
     this->context->OMSetRenderTargets(1U, &renderTargetView, depthStencilView);
 }
 
@@ -268,6 +283,11 @@ D3D11RenderSystem::SetViewport(graphics::Viewport* const vp)
             renderTargetView = renderWindow->GetRenderTargetView();
             depthStencilView = renderWindow->GetDepthStencilView();
         }
+        else if ('DXRT' == target->GetType())
+        {
+            D3D11RenderTexture* renderTexture = (D3D11RenderTexture*)target;
+            renderTargetView = renderTexture->GetRenderTargetView();
+        }
         else
         {
             return;
@@ -280,7 +300,10 @@ D3D11RenderSystem::SetViewport(graphics::Viewport* const vp)
         {
             this->context->ClearRenderTargetView(renderTargetView, clearColour);
         }
-        this->context->ClearDepthStencilView(depthStencilView, D3D11Mappings::Get(clearFlags), 1.0f, 0U);
+        if (depthStencilView != NULL)
+        {
+            this->context->ClearDepthStencilView(depthStencilView, D3D11Mappings::Get(clearFlags), 1.0f, 0U);
+        }
     }
 }
 
@@ -335,7 +358,7 @@ D3D11RenderSystem::SetProjectionMatrix(const core::Matrix4& m)
 void
 D3D11RenderSystem::SetTextureMatrix(const core::Matrix4& m)
 {
-    CE_UNREFERENCED_PARAMETER(m);
+    this->textureMatrix = m;
 }
 
 //------------------------------------------------------------------------------
@@ -349,6 +372,7 @@ D3D11RenderSystem::Render(graphics::SubEntity* const renderable)
     core::Matrix4 mvp = this->projectionMatrix * this->viewMatrix * this->worldMatrix;
     params->SetAutoConstant(graphics::GpuProgramParameters::ACT_WORLDVIEWPROJ_MATRIX, mvp);
     params->SetAutoConstant(graphics::GpuProgramParameters::ACT_WORLD_MATRIX, this->worldMatrix);
+    params->SetAutoConstant(graphics::GpuProgramParameters::ACT_TEXTURE_MATRIX, this->textureMatrix);
 
     graphics::HardwareVertexBuffer* vertexBuffer = NULL;
     if (graphics::VAT_MORPH == renderable->GetSubMesh()->GetVertexAnimationType())
@@ -581,6 +605,26 @@ D3D11RenderSystem::GetDefaultMorphAnimationGpuProgram() const
 {
     CE_ASSERT(this->defaultGpuProgramMorphAnim != NULL, "D3D11RenderSystem::GetDefaultMorphAnimatioGpuProgram(): gpu program not valid\n");
     return this->defaultGpuProgramMorphAnim;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+D3D11GpuProgram* const
+D3D11RenderSystem::GetDefaultShadowCasterGpuProgram() const
+{
+    CE_ASSERT(this->defaultGpuProgramShadowCaster != NULL, "D3D11RenderSystem::GetDefaultShadowCasterGpuProgram(): gpu program not valid\n");
+    return this->defaultGpuProgramShadowCaster;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+D3D11GpuProgram* const
+D3D11RenderSystem::GetDefaultShadowReceiverGpuProgram() const
+{
+    CE_ASSERT(this->defaultGpuProgramShadowReceiver != NULL, "D3D11RenderSystem::GetDefaultShadowReceiverGpuProgram(): gpu program not valid\n");
+    return this->defaultGpuProgramShadowReceiver;
 }
 
 //------------------------------------------------------------------------------

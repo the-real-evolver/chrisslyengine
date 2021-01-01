@@ -281,15 +281,18 @@ SceneManager::SetShadowTechnique(ShadowTechnique technique)
             tus->SetTextureBlendOperation(LBT_COLOUR, LBO_REPLACE);
             tus->SetTextureMappingMode(TextureUnitState::TMM_TEXTURE_MATRIX);
             tus->SetTextureProjectionMappingMode(TextureUnitState::TPM_POSITION);
+#elif __CE_D3D11__
+            this->shadowRenderTexture->Create(512, 512, PF_R8G8B8A8);
+            Viewport* vp = this->shadowRenderTexture->AddViewport(this->shadowCamera, 1, 1, 510, 510);
+            vp->SetClearEveryFrame(true, FBT_COLOUR);
+            vp->SetBackgroundColour(0xffffffff);
+            this->shadowRttPass->SetGpuProgram(this->destRenderSystem->GetDefaultShadowCasterGpuProgram());
+            this->shadowPass->SetGpuProgram(this->destRenderSystem->GetDefaultShadowReceiverGpuProgram());
+            this->shadowPass->SetSceneBlendingEnabled(true);
+            this->shadowPass->SetSceneBlending(SBF_DEST_COLOUR, SBF_ZERO);
 #endif
 
-            this->shadowTexture = CE_NEW Texture();
-            this->shadowTexture->SetFormat(this->shadowRenderTexture->GetFormat());
-            this->shadowTexture->SetWidth(this->shadowRenderTexture->GetWidth());
-            this->shadowTexture->SetHeight(this->shadowRenderTexture->GetHeight());
-            this->shadowTexture->SetBuffer(this->shadowRenderTexture->GetBuffer());
-            this->shadowTexture->SetSwizzleEnabled(false);
-            this->shadowTexture->CreateInternalResources();
+            this->shadowTexture = CE_NEW Texture(this->shadowRenderTexture);
             tus->SetTexture(this->shadowTexture);
 
             this->shadowTextureProjScaleTrans = Matrix4::IDENTITY;

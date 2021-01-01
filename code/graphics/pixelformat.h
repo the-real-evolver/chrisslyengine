@@ -44,8 +44,10 @@ namespace graphics
         PF_COLOR_INDEX32 = 12,
         /// Ericsson Texture Compression
         PF_ETC1_RGB8 = 13,
+        /// 128-bit pixel format, 32 bits (float) for red, 32 bits (float) for green, 32 bits (float) for blue, 32 bits (float) for alpha
+        PF_FLOAT32_RGBA = 14,
         /// Number of pixel formats currently defined
-        PF_COUNT = 14
+        PF_COUNT = 15
     };
 
 } // namespace graphics

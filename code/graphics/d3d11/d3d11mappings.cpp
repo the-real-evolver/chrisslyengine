@@ -148,6 +148,7 @@ D3D11Mappings::Get(graphics::PixelFormat pf)
         case graphics::PF_DXT1:          return DXGI_FORMAT_BC1_UNORM;
         case graphics::PF_DXT3:          return DXGI_FORMAT_BC2_UNORM;
         case graphics::PF_DXT5:          return DXGI_FORMAT_BC3_UNORM;
+        case graphics::PF_FLOAT32_RGBA:  return DXGI_FORMAT_R32G32B32A32_FLOAT;
         case graphics::PF_R5G6B5:
         case graphics::PF_A1R5G5B5:
         case graphics::PF_A4R4G4B4:

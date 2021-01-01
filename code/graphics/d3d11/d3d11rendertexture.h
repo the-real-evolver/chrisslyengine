@@ -7,6 +7,7 @@
     (C) 2016 Christian Bleicher
 */
 #include "rendertarget.h"
+#include "d3d11config.h"
 
 //------------------------------------------------------------------------------
 namespace chrissly
@@ -19,8 +20,22 @@ public:
     D3D11RenderTexture();
     /// destructor
     ~D3D11RenderTexture();
+    /// creates a rendertexture from the given parameters
+    void Create(int w, int h, graphics::PixelFormat fmt);
     /// does nothing no need for doublebuffering when rendering offline
     void SwapBuffers();
+    /// get the type of the rendertarget
+    unsigned int GetType() const;
+
+    /// gets a pointer to the shader resource view
+    ID3D11ShaderResourceView* const GetShaderResourceView() const;
+    /// gets a pointer to the rendertarget view
+    ID3D11RenderTargetView* const GetRenderTargetView() const;
+
+private:
+    ID3D11RenderTargetView* renderTargetView;
+    ID3D11ShaderResourceView* shaderResourceView;
+    ID3D11Texture2D* texture;
 };
 
 } // namespace chrissly

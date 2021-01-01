@@ -18,6 +18,8 @@ class GLES2Texture : public graphics::TextureBase
 public:
     /// default constructor
     GLES2Texture();
+    /// construct from rendertexture
+    GLES2Texture(graphics::RenderTexture* const rt);
     /// destructor
     ~GLES2Texture();
     /// generate gl texture name

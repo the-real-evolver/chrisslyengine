@@ -68,6 +68,10 @@ public:
 
     /// get pointer to the default morph animation gpu program (useful if a custom pass wants to use morph animation)
     D3D11GpuProgram* const GetDefaultMorphAnimationGpuProgram() const;
+    /// get pointer to the default shadow receiver gpu program
+    D3D11GpuProgram* const GetDefaultShadowReceiverGpuProgram() const;
+    /// get pointer to the default shadow caster gpu program
+    D3D11GpuProgram* const GetDefaultShadowCasterGpuProgram() const;
     /// get pointer to the d3d11 device
     ID3D11Device* const GetDevice() const;
     /// get pointer to the d3d11 device context
@@ -87,11 +91,14 @@ private:
     core::Matrix4 worldMatrix;
     core::Matrix4 viewMatrix;
     core::Matrix4 projectionMatrix;
+    core::Matrix4 textureMatrix;
 
     D3D11GpuProgram* defaultGpuProgram;
     D3D11GpuProgram* defaultGpuProgramFog;
     D3D11GpuProgram* defaultGpuProgramLit;
     D3D11GpuProgram* defaultGpuProgramLitFog;
+    D3D11GpuProgram* defaultGpuProgramShadowCaster;
+    D3D11GpuProgram* defaultGpuProgramShadowReceiver;
     D3D11GpuProgram* defaultGpuProgramMorphAnim;
     D3D11GpuProgram* currentGpuProgram;
 

@@ -25,6 +25,8 @@ public:
     };
     /// default constructor
     PSPTexture();
+    /// construct from rendertexture
+    PSPTexture(graphics::RenderTexture* const rt);
     /// destructor
     ~PSPTexture();
     /// create mipmap infos

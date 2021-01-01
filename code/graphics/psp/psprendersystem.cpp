@@ -4,6 +4,7 @@
 //------------------------------------------------------------------------------
 #include "psprendersystem.h"
 #include "pspmappings.h"
+#include "psphardwarebuffermanager.h"
 #include "common.h"
 #include "animationtrack.h"
 #include "vertexdata.h"
@@ -82,6 +83,7 @@ PSPRenderSystem::Initialise(void* const customParams)
 void
 PSPRenderSystem::Shutdown()
 {
+    PSPHardwareBufferManager::Release();
     sceGuTerm();
 }
 
