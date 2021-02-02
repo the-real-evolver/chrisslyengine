@@ -31,6 +31,10 @@ public:
     SubEntity* const GetSubEntity(unsigned int index) const;
     /// retrieves the number of SubEntity objects making up this entity
     unsigned int GetNumSubEntities() const;
+    /// tells this Entity whether to be visible or not
+    void SetVisible(bool vis);
+    /// returns whether or not this Entity is supposed to be visible
+    bool IsVisible() const;
     /// sets whether or not this object will cast shadows
     /**
         @remarks
@@ -72,6 +76,8 @@ private:
     Mesh* mesh;
     /// list of SubEntities (point to SubMeshes)
     mutable ce_dynamic_array subEntities;
+    /// is this Entity visible?
+    bool visible;
     /// does this object cast shadows?
     bool castShadows;
     /// does this object receive shadows?

@@ -79,6 +79,32 @@ SceneNode::RemoveAllChildren()
 //------------------------------------------------------------------------------
 /**
 */
+void
+SceneNode::RemoveAndDestroyAllChildren()
+{
+    unsigned int i;
+    for (i = 0U; i < this->objects.size; ++i)
+    {
+        SceneManager::Instance()->DestroyEntity((Entity*)ce_dynamic_array_get(&this->objects, i));
+    }
+    ce_dynamic_array_delete(&this->objects);
+
+    ce_linked_list* it = this->children;
+    while (it != NULL)
+    {
+        SceneNode* sceneNode = (SceneNode*)it->data;
+        sceneNode->RemoveAndDestroyAllChildren();
+        SceneManager::Instance()->DestroySceneNode(sceneNode);
+        ce_linked_list* node = it;
+        it = it->next;
+        ce_linked_list_remove(node);
+    }
+    this->children = NULL;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
 const Quaternion&
 SceneNode::GetOrientation() const
 {
@@ -225,6 +251,26 @@ SceneNode::Rotate(const Quaternion& q)
 /**
 */
 void
+SceneNode::SetVisible(bool vis)
+{
+    unsigned int i;
+    for (i = 0U; i < this->objects.size; ++i)
+    {
+        ((Entity*)ce_dynamic_array_get(&this->objects, i))->SetVisible(vis);
+    }
+
+    ce_linked_list* it = this->children;
+    while (it != NULL)
+    {
+        ((SceneNode*)it->data)->SetVisible(vis);
+        it = it->next;
+    }
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
 SceneNode::AttachObject(Entity* const obj)
 {
     ce_dynamic_array_push_back(&this->objects, obj);
@@ -256,6 +302,11 @@ SceneNode::GetAttachedObject(unsigned short index) const
 void
 SceneNode::DetachAllObjects()
 {
+    unsigned int i;
+    for (i = 0U; i < this->objects.size; ++i)
+    {
+        ((Entity*)ce_dynamic_array_get(&this->objects, i))->_NotifyAttached(NULL);
+    }
     ce_dynamic_array_delete(&this->objects);
 }
 

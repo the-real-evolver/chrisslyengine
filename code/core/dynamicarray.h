@@ -140,7 +140,7 @@ ce_dynamic_array_set(ce_dynamic_array* const v, unsigned int index, void* const 
 /**
     \brief Adds a new element at the end of the array, after its current last element.
     \param v The array to set.
-    \param item The data to set.
+    \param item The data to push.
 */
 inline void
 ce_dynamic_array_push_back(ce_dynamic_array* const v, void* const item)
@@ -153,6 +153,33 @@ ce_dynamic_array_push_back(ce_dynamic_array* const v, void* const item)
     ce_dynamic_array_set(v, v->size, item);
 
     ++v->size;
+}
+
+//------------------------------------------------------------------------------
+/**
+    \brief Swap erase the given element.
+    \param v The array to set.
+    \param item The item to erase.
+*/
+inline void
+ce_dynamic_array_erase(ce_dynamic_array* const v, void* const item)
+{
+    if (NULL == v)
+    {
+        return;
+    }
+
+    unsigned int i;
+    for (i = 0U; i < v->size; ++i)
+    {
+        if (v->data[i] == item)
+        {
+            v->data[i] = v->data[v->size - 1U];
+            v->data[v->size - 1U] = NULL;
+            --v->size;
+            break;
+        }
+    }
 }
 
 //------------------------------------------------------------------------------

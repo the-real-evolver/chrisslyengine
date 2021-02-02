@@ -19,6 +19,7 @@ using namespace chrissly::core;
 Entity::Entity(Mesh* const mesh) :
     parentNode(NULL),
     mesh(mesh),
+    visible(true),
     castShadows(false),
     receivesShadows(false)
 {
@@ -111,6 +112,23 @@ Entity::GetNumSubEntities() const
     return this->subEntities.capacity;
 }
 
+//------------------------------------------------------------------------------
+/**
+*/
+void
+Entity::SetVisible(bool vis)
+{
+    this->visible = vis;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+bool
+Entity::IsVisible() const
+{
+    return this->visible;
+}
 //------------------------------------------------------------------------------
 /**
 */

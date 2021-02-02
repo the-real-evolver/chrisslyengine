@@ -36,6 +36,8 @@ public:
         this parent, potentially to be reattached elsewhere.
     */
     void RemoveAllChildren();
+    /// recursively removes all child nodes including attached entities and delete them
+    void RemoveAndDestroyAllChildren();
 
     /// sets the orientation of this node via a quaternion
     /**
@@ -90,6 +92,9 @@ public:
     void Rotate(const core::Vector3& axis, float angle);
     /// rotate the node around an aritrary axis using a Quarternion
     void Rotate(const core::Quaternion& q);
+
+    /// recursively make all objects attached to this node become visible / invisible
+    void SetVisible(bool vis);
 
     /// adds an instance of a scene object to this node
     /**

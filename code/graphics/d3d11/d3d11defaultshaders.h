@@ -244,8 +244,6 @@ const char* const DefaultGpuProgramLitFog =
 /**
 */
 const char* const DefaultGpuProgramShadowCaster =
-    "Texture2D texture0 : register(t0);\n"
-    "SamplerState samplerLinear : register(s0);\n"
     "cbuffer AutoConstantBuffer : register(b0)\n"
     "{\n"
     "    matrix worldViewProjMatrix;\n"

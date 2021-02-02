@@ -171,6 +171,17 @@ SceneManager::CreateEntity(const char* const meshName)
 //------------------------------------------------------------------------------
 /**
 */
+void
+SceneManager::DestroyEntity(Entity* const entity)
+{
+    CE_ASSERT(entity != NULL, "SceneManager::DestroyEntity(): invalid pointer passed");
+    ce_dynamic_array_erase(&this->entities, entity);
+    CE_DELETE entity;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
 SceneNode* const
 SceneManager::CreateSceneNode()
 {
@@ -180,6 +191,17 @@ SceneManager::CreateSceneNode()
     ce_dynamic_array_push_back(&this->sceneNodes, sceneNode);
 
     return sceneNode;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+SceneManager::DestroySceneNode(SceneNode* const node)
+{
+    CE_ASSERT(node != NULL, "SceneManager::DestroySceneNode(): invalid pointer passed");
+    ce_dynamic_array_erase(&this->sceneNodes, node);
+    CE_DELETE node;
 }
 
 //------------------------------------------------------------------------------
@@ -257,12 +279,19 @@ SceneManager::SetShadowTechnique(ShadowTechnique technique)
             this->shadowCamera = CE_NEW Camera();
             this->shadowCamera->SetAspectRatio(1.0f);
 
+            this->shadowTextureProjScaleTrans = Matrix4::IDENTITY;
+            this->shadowTextureProjScaleTrans[0U][0U] = 0.5f;
+            this->shadowTextureProjScaleTrans[1U][1U] = -0.5f;
+            this->shadowTextureProjScaleTrans[0U][3U] = 0.5f;
+            this->shadowTextureProjScaleTrans[1U][3U] = 0.5f;
+            this->shadowProjection = this->shadowTextureProjScaleTrans * (this->shadowCamera->GetProjectionMatrix() * this->shadowCamera->GetViewMatrix());
+
             this->shadowRenderTexture = CE_NEW RenderTexture();
             this->shadowRttPass = CE_NEW Pass(0U);
             this->shadowRttPass->SetDepthCheckEnabled(false);
             this->shadowPass = CE_NEW Pass(0U);
             TextureUnitState* tus = this->shadowPass->CreateTextureUnitState();
-            tus->SetTextureAddressingMode(TextureUnitState::TAM_CLAMP, TextureUnitState::TAM_CLAMP);
+            tus->SetTextureAddressingMode(TextureUnitState::TAM_BORDER, TextureUnitState::TAM_BORDER);
 
 #if __CE_PSP__
             this->shadowRenderTexture->Create(256, 256, PF_A4R4G4B4);
@@ -283,7 +312,7 @@ SceneManager::SetShadowTechnique(ShadowTechnique technique)
             tus->SetTextureProjectionMappingMode(TextureUnitState::TPM_POSITION);
 #elif __CE_D3D11__
             this->shadowRenderTexture->Create(512, 512, PF_R8G8B8A8);
-            Viewport* vp = this->shadowRenderTexture->AddViewport(this->shadowCamera, 1, 1, 510, 510);
+            Viewport* vp = this->shadowRenderTexture->AddViewport(this->shadowCamera, 0, 0, 511, 511);
             vp->SetClearEveryFrame(true, FBT_COLOUR);
             vp->SetBackgroundColour(0xffffffff);
             this->shadowRttPass->SetGpuProgram(this->destRenderSystem->GetDefaultShadowCasterGpuProgram());
@@ -294,14 +323,6 @@ SceneManager::SetShadowTechnique(ShadowTechnique technique)
 
             this->shadowTexture = CE_NEW Texture(this->shadowRenderTexture);
             tus->SetTexture(this->shadowTexture);
-
-            this->shadowTextureProjScaleTrans = Matrix4::IDENTITY;
-            this->shadowTextureProjScaleTrans[0U][0U] = 0.5f;
-            this->shadowTextureProjScaleTrans[1U][1U] = -0.5f;
-            this->shadowTextureProjScaleTrans[0U][3U] = 0.5f;
-            this->shadowTextureProjScaleTrans[1U][3U] = 0.5f;
-
-            this->shadowProjection = this->shadowTextureProjScaleTrans * (this->shadowCamera->GetProjectionMatrix() * this->shadowCamera->GetViewMatrix());
 
             this->shadowTextureConfigDirty = false;
         }
@@ -356,6 +377,11 @@ SceneManager::_RenderScene(Camera* const camera, Viewport* const vp)
         {
             // for all attached entities
             Entity* entity = sceneNode->GetAttachedObject((unsigned short)entityIndex);
+
+            if (!entity->IsVisible())
+            {
+                continue;
+            }
 
             if (this->IsShadowTechniqueInUse() && this->illuminationStage == IRS_RENDER_TO_TEXTURE && !entity->GetCastShadows())
             {

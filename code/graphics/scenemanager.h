@@ -68,6 +68,8 @@ public:
         mesh will be loaded if it is not already.
     */
     Entity* const CreateEntity(const char* const meshName);
+    /// destroys the given entity Entity instance
+    void DestroyEntity(Entity* const entity);
 
     /// creates an instance of a SceneNode
     /**
@@ -87,6 +89,8 @@ public:
             which takes a name parameter.
     */
     SceneNode* const CreateSceneNode();
+    /// destroys the given SceneNode instance
+    void DestroySceneNode(SceneNode* const node);
     /// gets the SceneNode at the root of the scene hierarchy
     /**
         @remarks
