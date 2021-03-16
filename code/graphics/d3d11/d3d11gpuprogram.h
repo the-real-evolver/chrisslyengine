@@ -49,7 +49,6 @@ private:
     ce_dynamic_array constantBuffersPerPass;
 
     ID3D10Blob* vertexShaderCode;
-    ID3D10Blob* fragmentShaderCode;
     ID3D11VertexShader* vertexShader;
     ID3D11PixelShader* fragmentShader;
 

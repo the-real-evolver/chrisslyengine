@@ -27,13 +27,13 @@ D3D11GpuProgram::D3D11GpuProgram(const char* const source, const char* const fil
     defaultParams(NULL),
     constantDefs(NULL),
     vertexShaderCode(NULL),
-    fragmentShaderCode(NULL),
     vertexShader(NULL),
     fragmentShader(NULL),
     bufferSlot(0U)
 {
     /* compile and create vertex shader */
     ID3D10Blob* errorBlob = NULL;
+    ID3D10Blob* fragmentShaderCode = NULL;
 #if __CE_USE_LEGACY_DIRECTX_SDK__
     HRESULT result = D3DX11CompileFromMemory(
         source,                             /* __in     LPCSTR pSrcData                     */
@@ -94,7 +94,7 @@ D3D11GpuProgram::D3D11GpuProgram(const char* const source, const char* const fil
         D3D10_SHADER_OPTIMIZATION_LEVEL2,   /* __in     UINT Flags1                         */
         0U,                                 /* __in     UINT Flags2                         */
         NULL,                               /* __in     ID3DX11ThreadPump *pPump            */
-        &this->fragmentShaderCode,          /* __out    ID3D10Blob **ppShader               */
+        &fragmentShaderCode,                /* __out    ID3D10Blob **ppShader               */
         &errorBlob,                         /* __out    ID3D10Blob **ppErrorMsgs            */
         NULL                                /* __out    HRESULT *pHResult                   */
     );
@@ -109,15 +109,15 @@ D3D11GpuProgram::D3D11GpuProgram(const char* const source, const char* const fil
         "ps_4_0",                           /* _In_                                                     LPCSTR pTarget                      */
         D3DCOMPILE_WARNINGS_ARE_ERRORS,     /* _In_                                                     UINT Flags1                         */
         0U,                                 /* _In_                                                     UINT Flags2                         */
-        &this->fragmentShaderCode,          /* _Out_                                                    ID3DBlob** ppCode                   */
+        &fragmentShaderCode,                /* _Out_                                                    ID3DBlob** ppCode                   */
         &errorBlob                          /* _Out_opt_                                                ID3DBlob** ppErrorMsgs              */
     );
 #endif
     CE_ASSERT(SUCCEEDED(result), "D3D11GpuProgram::D3D11GpuProgram(): failed to compile fragment shader '%s' in file '%s'\n", fragmentShaderFunctionName, fileName);
 
     result = D3D11RenderSystem::Instance()->GetDevice()->CreatePixelShader(
-        this->fragmentShaderCode->GetBufferPointer(),
-        this->fragmentShaderCode->GetBufferSize(),
+        fragmentShaderCode->GetBufferPointer(),
+        fragmentShaderCode->GetBufferSize(),
         NULL,
         &this->fragmentShader
     );
@@ -141,9 +141,13 @@ D3D11GpuProgram::D3D11GpuProgram(const char* const source, const char* const fil
 #else
     ce_hash_table_init(&this->constantBuffers, 2U);
     this->ExtractConstantDefs(this->vertexShaderCode);
-    this->ExtractConstantDefs(this->fragmentShaderCode);
+    this->ExtractConstantDefs(fragmentShaderCode);
     ce_hash_table_clear(&this->constantBuffers);
 #endif
+    if (fragmentShaderCode != NULL)
+    {
+        fragmentShaderCode->Release();
+    }
 }
 
 //------------------------------------------------------------------------------
@@ -174,10 +178,6 @@ D3D11GpuProgram::~D3D11GpuProgram()
     if (this->vertexShader != NULL)
     {
         this->vertexShader->Release();
-    }
-    if (this->fragmentShaderCode != NULL)
-    {
-        this->fragmentShaderCode->Release();
     }
     if (this->fragmentShader != NULL)
     {

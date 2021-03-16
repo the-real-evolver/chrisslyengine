@@ -32,6 +32,7 @@ SceneManager::SceneManager() :
     shadowRenderTexture(NULL),
     shadowCamera(NULL),
     shadowRttPass(NULL),
+    shadowRttMorphAnimPass(NULL),
     shadowPass(NULL)
 {
     Singleton = this;
@@ -67,6 +68,7 @@ SceneManager::~SceneManager()
         CE_DELETE this->shadowRenderTexture;
         CE_DELETE this->shadowCamera;
         CE_DELETE this->shadowRttPass;
+        CE_DELETE this->shadowRttMorphAnimPass;
         CE_DELETE this->shadowPass;
     }
 }
@@ -289,7 +291,10 @@ SceneManager::SetShadowTechnique(ShadowTechnique technique)
             this->shadowRenderTexture = CE_NEW RenderTexture();
             this->shadowRttPass = CE_NEW Pass(0U);
             this->shadowRttPass->SetDepthCheckEnabled(false);
+            this->shadowRttMorphAnimPass = CE_NEW Pass(0U);
+            this->shadowRttMorphAnimPass->SetDepthCheckEnabled(false);
             this->shadowPass = CE_NEW Pass(0U);
+            this->shadowPass->SetSceneBlendingEnabled(true);
             TextureUnitState* tus = this->shadowPass->CreateTextureUnitState();
             tus->SetTextureAddressingMode(TextureUnitState::TAM_BORDER, TextureUnitState::TAM_BORDER);
 
@@ -305,7 +310,6 @@ SceneManager::SetShadowTechnique(ShadowTechnique technique)
             this->shadowRttPass->SetSceneBlendingEnabled(true);
             this->shadowRttPass->SetSceneBlending(SBF_FIX, SBF_FIX);
             this->shadowRttPass->SetBlendingFixColors(0xff888888, 0xff000000);
-            this->shadowPass->SetSceneBlendingEnabled(true);
             this->shadowPass->SetSceneBlending(SBF_SOURCE_COLOUR, SBF_ONE_MINUS_SOURCE_ALPHA);
             tus->SetTextureBlendOperation(LBT_COLOUR, LBO_REPLACE);
             tus->SetTextureMappingMode(TextureUnitState::TMM_TEXTURE_MATRIX);
@@ -316,8 +320,8 @@ SceneManager::SetShadowTechnique(ShadowTechnique technique)
             vp->SetClearEveryFrame(true, FBT_COLOUR);
             vp->SetBackgroundColour(0xffffffff);
             this->shadowRttPass->SetGpuProgram(this->destRenderSystem->GetDefaultShadowCasterGpuProgram());
+            this->shadowRttMorphAnimPass->SetGpuProgram(this->destRenderSystem->GetDefaultShadowCasterMorphAnimGpuProgram());
             this->shadowPass->SetGpuProgram(this->destRenderSystem->GetDefaultShadowReceiverGpuProgram());
-            this->shadowPass->SetSceneBlendingEnabled(true);
             this->shadowPass->SetSceneBlending(SBF_DEST_COLOUR, SBF_ZERO);
 #endif
 
@@ -424,7 +428,11 @@ SceneManager::_RenderScene(Camera* const camera, Viewport* const vp)
                 // add to shadow caster queue
                 if (this->IsShadowTechniqueInUse() && this->illuminationStage == IRS_RENDER_TO_TEXTURE)
                 {
+#if __CE_D3D11__
+                    this->renderQueueOpaque.AddRenderable(subEntity, (VAT_MORPH == subEntity->GetSubMesh()->GetVertexAnimationType()) ? this->shadowRttMorphAnimPass : this->shadowRttPass);
+#else
                     this->renderQueueOpaque.AddRenderable(subEntity, this->shadowRttPass);
+#endif
                     continue;
                 }
 

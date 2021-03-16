@@ -181,6 +181,7 @@ private:
     RenderTexture* shadowRenderTexture;
     Camera* shadowCamera;
     Pass* shadowRttPass;
+    Pass* shadowRttMorphAnimPass;
     Pass* shadowPass;
     core::Matrix4 shadowTextureProjScaleTrans;
     core::Matrix4 shadowProjection;

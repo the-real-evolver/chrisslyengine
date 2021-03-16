@@ -344,5 +344,38 @@ const char* const DefaultGpuProgramMorphAnim =
     "{\n"
     "    output = texture0.Sample(samplerLinear, input.uv);\n"
     "};\n";
+
+//------------------------------------------------------------------------------
+/**
+*/
+const char* const DefaultGpuProgramShadowCasterMorphAnim =
+    "cbuffer AutoConstantBuffer : register(b0)\n"
+    "{\n"
+    "    matrix worldViewProjMatrix;\n"
+    "    float1 morphWeight;\n"
+    "};\n"
+    "struct VertexIn\n"
+    "{\n"
+    "    float2 uv : TEXCOORD0;\n"
+    "    float3 normal : NORMAL0;\n"
+    "    float3 position : POSITION0;\n"
+    "    float4 colour : COLOR0;\n"
+    "    float2 uvTarget : TEXCOORD1;\n"
+    "    float3 normalTarget : NORMAL1;\n"
+    "    float3 positionMorphTarget : POSITION1;\n"
+    "    float4 colourTarget : COLOR1;\n"
+    "};\n"
+    "struct VertexOut\n"
+    "{\n"
+    "    float4 position : SV_Position;\n"
+    "};\n"
+    "void DefaultVertexShader(VertexIn input, out VertexOut output)\n"
+    "{\n"
+    "    output.position = mul(float4((input.position + (input.positionMorphTarget - input.position) * morphWeight), 1.0f), worldViewProjMatrix);\n"
+    "}\n"
+    "void DefaultFragmentShader(VertexOut input, out float4 output : SV_Target)\n"
+    "{\n"
+    "    output = float4(0.5, 0.5, 0.5, 1.0);\n"
+    "};\n";
 //------------------------------------------------------------------------------
 #endif
