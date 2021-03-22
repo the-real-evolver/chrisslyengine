@@ -290,11 +290,12 @@ SceneManager::SetShadowTechnique(ShadowTechnique technique)
 
             this->shadowRenderTexture = CE_NEW RenderTexture();
             this->shadowRttPass = CE_NEW Pass(0U);
-            this->shadowRttPass->SetDepthCheckEnabled(false);
+            this->shadowRttPass->SetCullingMode(CULL_NONE);
             this->shadowRttMorphAnimPass = CE_NEW Pass(0U);
-            this->shadowRttMorphAnimPass->SetDepthCheckEnabled(false);
+            this->shadowRttMorphAnimPass->SetCullingMode(CULL_NONE);
             this->shadowPass = CE_NEW Pass(0U);
             this->shadowPass->SetSceneBlendingEnabled(true);
+            this->shadowPass->SetSceneBlending(SBF_DEST_COLOUR, SBF_ZERO);
             TextureUnitState* tus = this->shadowPass->CreateTextureUnitState();
             tus->SetTextureAddressingMode(TextureUnitState::TAM_BORDER, TextureUnitState::TAM_BORDER);
 
@@ -310,8 +311,7 @@ SceneManager::SetShadowTechnique(ShadowTechnique technique)
             this->shadowRttPass->SetSceneBlendingEnabled(true);
             this->shadowRttPass->SetSceneBlending(SBF_FIX, SBF_FIX);
             this->shadowRttPass->SetBlendingFixColors(0xff888888, 0xff000000);
-            this->shadowPass->SetSceneBlending(SBF_SOURCE_COLOUR, SBF_ONE_MINUS_SOURCE_ALPHA);
-            tus->SetTextureBlendOperation(LBT_COLOUR, LBO_REPLACE);
+            this->shadowRttPass->SetDepthCheckEnabled(false);
             tus->SetTextureMappingMode(TextureUnitState::TMM_TEXTURE_MATRIX);
             tus->SetTextureProjectionMappingMode(TextureUnitState::TPM_POSITION);
 #elif __CE_D3D11__
@@ -322,7 +322,6 @@ SceneManager::SetShadowTechnique(ShadowTechnique technique)
             this->shadowRttPass->SetGpuProgram(this->destRenderSystem->GetDefaultShadowCasterGpuProgram());
             this->shadowRttMorphAnimPass->SetGpuProgram(this->destRenderSystem->GetDefaultShadowCasterMorphAnimGpuProgram());
             this->shadowPass->SetGpuProgram(this->destRenderSystem->GetDefaultShadowReceiverGpuProgram());
-            this->shadowPass->SetSceneBlending(SBF_DEST_COLOUR, SBF_ZERO);
 #endif
 
             this->shadowTexture = CE_NEW Texture(this->shadowRenderTexture);
