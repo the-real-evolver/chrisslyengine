@@ -18,7 +18,9 @@ namespace audio
 struct DspDescription
 {
     /// callback where processing is done
-    Result (*Process)(int numChannels, int bits, unsigned int numSamples, void* inBuffer, void* outBuffer);
+    Result (*Process)(int numChannels, int bits, unsigned int numSamples, const void* const inBuffer, void* const outBuffer, void* const userData);
+    /// optional data supplied by the user, will be passed to the Process callback function during playback
+    void* userData;
 };
 
 class DSP
@@ -34,6 +36,10 @@ public:
     Result SetBypass(bool enabled);
     /// retrieves the bypass state of the dsp
     Result GetBypass(bool* const enabled);
+    /// sets the user data
+    Result SetUserData(void* const data);
+    /// retrieves the user data
+    Result GetUserData(void** const data);
     /// frees the dsp object and makes it available for further use
     Result Release();
 
@@ -49,7 +55,8 @@ private:
 
     bool bypass;
     bool inUse;
-    Result (*Process)(int numChannels, int bits, unsigned int numSamples, void* inbuffer, void* outbuffer);
+    Result (*Process)(int numChannels, int bits, unsigned int numSamples, const void* const inbuffer, void* const outbuffer, void* const userData);
+    void* userData;
 };
 
 } // namespace audio

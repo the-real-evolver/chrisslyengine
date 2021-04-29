@@ -258,6 +258,10 @@ D3D11RenderSystem::SetRenderTarget(graphics::RenderTarget* const target)
         D3D11RenderTexture* renderTexture = (D3D11RenderTexture*)target;
         renderTargetView = renderTexture->GetRenderTargetView();
     }
+    else
+    {
+        return;
+    }
 
     this->context->OMSetRenderTargets(1U, &renderTargetView, depthStencilView);
 }

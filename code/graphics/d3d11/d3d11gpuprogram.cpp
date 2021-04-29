@@ -33,7 +33,6 @@ D3D11GpuProgram::D3D11GpuProgram(const char* const source, const char* const fil
 {
     /* compile and create vertex shader */
     ID3D10Blob* errorBlob = NULL;
-    ID3D10Blob* fragmentShaderCode = NULL;
 #if __CE_USE_LEGACY_DIRECTX_SDK__
     HRESULT result = D3DX11CompileFromMemory(
         source,                             /* __in     LPCSTR pSrcData                     */
@@ -82,6 +81,7 @@ D3D11GpuProgram::D3D11GpuProgram(const char* const source, const char* const fil
     }
 
     /* compile and create fragment shader */
+    ID3D10Blob* fragmentShaderCode = NULL;
 #if __CE_USE_LEGACY_DIRECTX_SDK__
     result = D3DX11CompileFromMemory(
         source,                             /* __in     LPCSTR pSrcData                     */
@@ -137,7 +137,7 @@ D3D11GpuProgram::D3D11GpuProgram(const char* const source, const char* const fil
     ce_dynamic_array_init(&this->constantBuffersPerPass, 1U);
 
 #if __CE_USE_LEGACY_DIRECTX_SDK__
-    this->ExtractConstantDefs(this->fragmentShaderCode);
+    this->ExtractConstantDefs(fragmentShaderCode);
 #else
     ce_hash_table_init(&this->constantBuffers, 2U);
     this->ExtractConstantDefs(this->vertexShaderCode);

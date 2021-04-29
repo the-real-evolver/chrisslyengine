@@ -6,6 +6,7 @@
 #include "wavcodec.h"
 #include "vorbiscodec.h"
 #include "dsp/mixer.h"
+#include "dsp/filters.h"
 #include "memoryallocatorconfig.h"
 #include "chrisslymath.h"
 #include "debug.h"
@@ -20,6 +21,8 @@ namespace audio
 using namespace chrissly::core;
 
 AudioSystem* AudioSystem::Singleton = NULL;
+
+static float DistanceFilterStore[32U] = {0.0f};
 
 //------------------------------------------------------------------------------
 /**
@@ -211,6 +214,18 @@ AudioSystem::PlaySound(int channelid, Sound* const sound, bool paused, Channel**
                 chn->SetIndex(channelid);
             }
 
+            audio::Mode mode;
+            sound->GetMode(&mode);
+            if (mode & MODE_3D)
+            {
+                DspDescription dspDesc = {DistanceFilterCallback, chn};
+                DSP* dsp;
+                CreateDSP(&dspDesc, &dsp);
+                chn->SetUserData((void*)i);
+                chn->AddDSP(0U, dsp);
+                memset(DistanceFilterStore + 16U * i, 0, 16U);
+            }
+
             chn->AttachSound(sound);
             chn->SetPaused(paused);
             chn->SetPosition(0U);
@@ -377,6 +392,19 @@ AudioRenderer* const
 AudioSystem::GetAudioRenderer() const
 {
     return this->activeRenderer;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+Result
+AudioSystem::DistanceFilterCallback(int numChannels, int bits, unsigned int numSamples, const void* const inBuffer, void* const outBuffer, void* const dspUserData)
+{
+    Channel* channel = (Channel*)dspUserData;
+    void* userData;
+    channel->GetUserData(&userData);
+    ce_audio_filter_lowpass(bits, numChannels, inBuffer, outBuffer, numSamples, channel->GetAttenuationFactor(), DistanceFilterStore + 4U * (unsigned int)userData);
+    return OK;
 }
 
 } // namespace audio

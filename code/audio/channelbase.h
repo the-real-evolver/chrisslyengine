@@ -69,6 +69,10 @@ public:
     Result Set3DMinMaxDistance(float mindistance, float maxdistance);
     /// retrieves the current minimum and maximum audible distance for a channel
     Result Get3DMinMaxDistance(float* const mindistance, float* const maxdistance);
+    /// sets the user data
+    Result SetUserData(void* const data);
+    /// retrieves the user data
+    Result GetUserData(void** const data);
     /// returns the currently playing sound for this channel
     Result GetCurrentSound(Sound** sound);
     /// retrieves the internal channel index for a channel
@@ -116,6 +120,7 @@ protected:
     core::Mutex syncLock;
     int outputBuffer[1024];
     ce_dynamic_array dsps;
+    void* userData;
 };
 
 } // namespace audio

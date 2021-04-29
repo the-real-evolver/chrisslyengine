@@ -30,7 +30,8 @@ ChannelBase::ChannelBase() :
     currentSound(NULL),
     index(CHANNEL_FREE),
     attenuationFactor(0.0f),
-    propertiesHaveChanged(UNCHANGED)
+    propertiesHaveChanged(UNCHANGED),
+    userData(NULL)
 {
     memset(this->outputBuffer, 0, sizeof(this->outputBuffer));
     ce_dynamic_array_init(&this->dsps, 1U);
@@ -309,6 +310,26 @@ ChannelBase::Get3DMinMaxDistance(float* const mindistance, float* const maxdista
 /**
 */
 Result
+ChannelBase::SetUserData(void* const data)
+{
+    this->userData = data;
+    return OK;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+Result
+ChannelBase::GetUserData(void** const data)
+{
+    *data = this->userData;
+    return OK;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+Result
 ChannelBase::GetCurrentSound(Sound** sound)
 {
     *sound = this->currentSound;
@@ -428,7 +449,9 @@ ChannelBase::FillOutputBuffer(unsigned int numSamples, unsigned int position)
             // dsp at index zero always takes the samplebuffer as input
             int numChannels, bits;
             this->currentSound->GetFormat(NULL, NULL, &numChannels, &bits);
-            dsp->Process(numChannels, bits, numSamples, buffer, this->outputBuffer);
+            void* dspUserData;
+            dsp->GetUserData(&dspUserData);
+            dsp->Process(numChannels, bits, numSamples, buffer, this->outputBuffer, dspUserData);
             buffer = this->outputBuffer;
         }
     }

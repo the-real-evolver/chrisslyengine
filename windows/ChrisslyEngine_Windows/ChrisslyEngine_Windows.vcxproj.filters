@@ -164,6 +164,9 @@
     <ClCompile Include="..\..\code\graphics\renderqueue.cpp">
       <Filter>graphics</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\code\audio\dsp\filters.cpp">
+      <Filter>audio\dsp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="core">
@@ -464,6 +467,9 @@
     </ClInclude>
     <ClInclude Include="..\..\code\graphics\d3d11\d3d11config.h">
       <Filter>graphics\d3d11</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\audio\dsp\filters.h">
+      <Filter>audio\dsp</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

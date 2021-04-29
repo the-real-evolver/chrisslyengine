@@ -16,7 +16,8 @@ namespace audio
 DSP::DSP() :
     bypass(false),
     inUse(false),
-    Process(NULL)
+    Process(NULL),
+    userData(NULL)
 {
 
 }
@@ -53,11 +54,32 @@ DSP::GetBypass(bool* const enabled)
 /**
 */
 Result
+DSP::SetUserData(void* const data)
+{
+    this->userData = data;
+    return OK;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+Result
+DSP::GetUserData(void** const data)
+{
+    *data = this->userData;
+    return OK;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+Result
 DSP::Release()
 {
     this->bypass = false;
     this->inUse = false;
     this->Process = NULL;
+    this->userData = NULL;
     return OK;
 }
 
@@ -70,6 +92,7 @@ DSP::Setup(const DspDescription* const desc)
     this->bypass = false;
     this->inUse = true;
     this->Process = desc->Process;
+    this->userData = desc->userData;
 }
 
 //------------------------------------------------------------------------------
