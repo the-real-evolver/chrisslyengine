@@ -118,7 +118,7 @@ protected:
     float attenuationFactor;
     PropertyChange propertiesHaveChanged;
     core::Mutex syncLock;
-    int outputBuffer[1024];
+    int outputBuffer[1024U];
     ce_dynamic_array dsps;
     void* userData;
 };

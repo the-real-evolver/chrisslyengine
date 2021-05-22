@@ -214,9 +214,7 @@ AudioSystem::PlaySound(int channelid, Sound* const sound, bool paused, Channel**
                 chn->SetIndex(channelid);
             }
 
-            audio::Mode mode;
-            sound->GetMode(&mode);
-            if (mode & MODE_3D)
+            if (sound->mode & MODE_3D)
             {
                 DspDescription dspDesc = {DistanceFilterCallback, chn};
                 DSP* dsp;

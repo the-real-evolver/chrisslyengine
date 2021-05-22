@@ -11,7 +11,7 @@ namespace chrissly
 
 WASAPIAudioRenderer* WASAPIAudioRenderer::Singleton = NULL;
 
-static const unsigned int RequestedBufferSizeInSamples = 1024U;
+static const double RequestedFrameDurationInSeconds = 0.023;
 static const unsigned short AudioChannelMax = 8U;
 static const REFERENCE_TIME ReftimesPerSec = 10000000;
 
@@ -82,7 +82,7 @@ WASAPIAudioRenderer::Initialise(void* const customParams)
     format->nAvgBytesPerSec = format->nSamplesPerSec * format->nBlockAlign;
     format->cbSize = 0U;
 
-    REFERENCE_TIME hnsRequestedDuration = (REFERENCE_TIME)((double)RequestedBufferSizeInSamples / (double)format->nSamplesPerSec * (double)ReftimesPerSec);
+    REFERENCE_TIME hnsRequestedDuration = (REFERENCE_TIME)(RequestedFrameDurationInSeconds * (double)ReftimesPerSec);
     result = this->audioClient->Initialize(AUDCLNT_SHAREMODE_SHARED, 0U, hnsRequestedDuration, 0, format, NULL);
     CE_ASSERT(SUCCEEDED(result), "WASAPIAudioRenderer::Initialise(): failed to initialise audio client\n");
 
