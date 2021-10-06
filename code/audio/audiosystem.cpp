@@ -214,7 +214,7 @@ AudioSystem::PlaySound(int channelid, Sound* const sound, bool paused, Channel**
                 chn->SetIndex(channelid);
             }
 
-            if (sound->mode & MODE_3D)
+            if (sound->mode & MODE_3D && i < 8U)
             {
                 DspDescription dspDesc = {DistanceFilterCallback, chn};
                 DSP* dsp;
@@ -272,15 +272,19 @@ AudioSystem::Update()
                 channel->Get3DAttributes(&channelPos);
                 Vector3 distanceVec = channelPos - this->listenerPos;
                 float distance = distanceVec.Length();
-                if (distance >= minDistance && distance <= maxDistance)
+                if (distance < minDistance)
+                {
+                    channel->SetAttenuationFactor(1.0f);
+                }
+                else if (distance > maxDistance)
+                {
+                    channel->SetAttenuationFactor(0.0f);
+                }
+                else
                 {
                     // note that sideVec points to the "left" and the order of parameters of the atan2 function is (y, x) not (x, y)
                     channel->SetPan(-Math::Cos(Math::ATan2(distanceVec.DotProduct(this->listenerForward), distanceVec.DotProduct(sideVec))));
                     channel->SetAttenuationFactor(1.0f - (distance - minDistance) / (maxDistance - minDistance));
-                }
-                else
-                {
-                    channel->SetAttenuationFactor(0.0f);
                 }
             }
 
