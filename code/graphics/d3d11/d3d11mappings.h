@@ -11,7 +11,7 @@
 #include "textureunitstate.h"
 #include "gpuprogramparams.h"
 #include <windows.h>
-#include "d3d11config.h"
+#include <d3d11.h>
 #include <D3DCompiler.h>
 
 //------------------------------------------------------------------------------

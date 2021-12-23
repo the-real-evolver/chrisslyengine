@@ -465,9 +465,6 @@
     <ClInclude Include="..\..\code\graphics\renderqueue.h">
       <Filter>graphics</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\code\graphics\d3d11\d3d11config.h">
-      <Filter>graphics\d3d11</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\code\audio\dsp\filters.h">
       <Filter>audio\dsp</Filter>
     </ClInclude>
