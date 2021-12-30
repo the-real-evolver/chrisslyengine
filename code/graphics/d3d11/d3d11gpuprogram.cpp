@@ -46,7 +46,18 @@ D3D11GpuProgram::D3D11GpuProgram(const char* const source, const char* const fil
         &this->vertexShaderCode,            /* _Out_                                                    ID3DBlob** ppCode                   */
         &errorBlob                          /* _Out_opt_                                                ID3DBlob** ppErrorMsgs              */
     );
-    CE_ASSERT(SUCCEEDED(result), "D3D11GpuProgram::D3D11GpuProgram(): failed to compile vertex shader '%s' in file '%s'\n", vertexShaderFunctionName, fileName);
+
+    if (FAILED(result))
+    {
+        if (errorBlob != NULL)
+        {
+            char* errorMsg = (char*)errorBlob->GetBufferPointer();
+            errorMsg[errorBlob->GetBufferSize() - 1U] = '\0';
+            CE_ASSERT(SUCCEEDED(result), "\nD3D11GpuProgram::D3D11GpuProgram(): failed to compile vertex shader '%s' in file '%s'\nError: '%s'\n", vertexShaderFunctionName, fileName, errorMsg);
+            errorBlob->Release();
+            errorBlob = NULL;
+        }
+    }
 
     result = D3D11RenderSystem::Instance()->GetDevice()->CreateVertexShader(
         this->vertexShaderCode->GetBufferPointer(),
@@ -55,12 +66,6 @@ D3D11GpuProgram::D3D11GpuProgram(const char* const source, const char* const fil
         &this->vertexShader
     );
     CE_ASSERT(SUCCEEDED(result), "D3D11GpuProgram::D3D11GpuProgram(): failed to create vertex shader '%s' in file '%s'\n", vertexShaderFunctionName, fileName);
-
-    if (errorBlob != NULL)
-    {
-        errorBlob->Release();
-        errorBlob = NULL;
-    }
 
     /* compile and create fragment shader */
     ID3D10Blob* fragmentShaderCode = NULL;
@@ -77,7 +82,18 @@ D3D11GpuProgram::D3D11GpuProgram(const char* const source, const char* const fil
         &fragmentShaderCode,                /* _Out_                                                    ID3DBlob** ppCode                   */
         &errorBlob                          /* _Out_opt_                                                ID3DBlob** ppErrorMsgs              */
     );
-    CE_ASSERT(SUCCEEDED(result), "D3D11GpuProgram::D3D11GpuProgram(): failed to compile fragment shader '%s' in file '%s'\n", fragmentShaderFunctionName, fileName);
+
+    if (FAILED(result))
+    {
+        if (errorBlob != NULL)
+        {
+            char* errorMsg = (char*)errorBlob->GetBufferPointer();
+            errorMsg[errorBlob->GetBufferSize() - 1U] = '\0';
+            CE_ASSERT(SUCCEEDED(result), "\nD3D11GpuProgram::D3D11GpuProgram(): failed to compile fragment shader '%s' in file '%s'\nError: %s\n", fragmentShaderFunctionName, fileName, errorMsg);
+            errorBlob->Release();
+            errorBlob = NULL;
+        }
+    }
 
     result = D3D11RenderSystem::Instance()->GetDevice()->CreatePixelShader(
         fragmentShaderCode->GetBufferPointer(),
@@ -86,12 +102,6 @@ D3D11GpuProgram::D3D11GpuProgram(const char* const source, const char* const fil
         &this->fragmentShader
     );
     CE_ASSERT(SUCCEEDED(result), "D3D11GpuProgram::D3D11GpuProgram(): failed to create fragment shader '%s' in file '%s'\n", fragmentShaderFunctionName, fileName);
-
-    if (errorBlob != NULL)
-    {
-        errorBlob->Release();
-        errorBlob = NULL;
-    }
 
     this->constantDefs = CE_NEW graphics::GpuNamedConstants;
     this->defaultParams = CE_NEW graphics::GpuProgramParameters;

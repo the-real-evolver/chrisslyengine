@@ -585,6 +585,10 @@ D3D11RenderSystem::ProcessLights(ce_hash_table* const lights)
             this->defaultLightShaderParams[lightIndex][2U][1U] = green;
             this->defaultLightShaderParams[lightIndex][2U][2U] = blue;
 
+            this->defaultLightShaderParams[lightIndex][3U][0U] = light->GetAttenuationConstant();
+            this->defaultLightShaderParams[lightIndex][3U][1U] = light->GetAttenuationLinear();
+            this->defaultLightShaderParams[lightIndex][3U][2U] = light->GetAttenuationQuadric();
+
             ++lightIndex;
             it = it->next;
         }
@@ -592,7 +596,11 @@ D3D11RenderSystem::ProcessLights(ce_hash_table* const lights)
 
     for (i = lightIndex; i < MaxLights; ++i)
     {
-        this->defaultLightShaderParams[lightIndex] = core::Matrix4::ZERO;
+        this->defaultLightShaderParams[i] = core::Matrix4::ZERO;
+
+        this->defaultLightShaderParams[i][3U][0U] = 1.0f;
+        this->defaultLightShaderParams[i][3U][1U] = 0.0f;
+        this->defaultLightShaderParams[i][3U][2U] = 0.0f;
     }
 }
 
