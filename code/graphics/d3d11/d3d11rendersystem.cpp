@@ -495,7 +495,11 @@ D3D11RenderSystem::SetPass(graphics::Pass* const pass)
     {
         bool lit = pass->GetLightingEnabled();
         bool fog = (graphics::FOG_LINEAR == pass->GetFogMode());
-        if (!fog && !lit)
+        if (pass->IsMorphAnimationIncluded())
+        {
+            this->currentGpuProgram = this->defaultGpuProgramMorphAnim;
+        }
+        else if (!fog && !lit)
         {
             this->currentGpuProgram = this->defaultGpuProgram;
         }
@@ -599,8 +603,6 @@ D3D11RenderSystem::ProcessLights(ce_hash_table* const lights)
         this->defaultLightShaderParams[i] = core::Matrix4::ZERO;
 
         this->defaultLightShaderParams[i][3U][0U] = 1.0f;
-        this->defaultLightShaderParams[i][3U][1U] = 0.0f;
-        this->defaultLightShaderParams[i][3U][2U] = 0.0f;
     }
 }
 
@@ -611,16 +613,6 @@ void
 D3D11RenderSystem::SetAmbientLight(unsigned int colour)
 {
     this->ambientLight = colour;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-D3D11GpuProgram* const
-D3D11RenderSystem::GetDefaultMorphAnimationGpuProgram() const
-{
-    CE_ASSERT(this->defaultGpuProgramMorphAnim != NULL, "D3D11RenderSystem::GetDefaultMorphAnimatioGpuProgram(): gpu program not valid\n");
-    return this->defaultGpuProgramMorphAnim;
 }
 
 //------------------------------------------------------------------------------

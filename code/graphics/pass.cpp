@@ -34,6 +34,7 @@ Pass::Pass(unsigned short index) :
     fogColour(0xffffffff),
     fogStart(0.0f),
     fogEnd(1.0f),
+    morphAnimation(false),
     gpuProgram(NULL)
 {
     ce_dynamic_array_init(&this->textureUnitStates, 1U);
@@ -373,6 +374,24 @@ float
 Pass::GetFogEnd() const
 {
     return this->fogEnd;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+Pass::SetMorphAnimationIncluded(bool included)
+{
+    this->morphAnimation = included;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+bool
+Pass::IsMorphAnimationIncluded() const
+{
+    return this->morphAnimation;
 }
 
 //------------------------------------------------------------------------------

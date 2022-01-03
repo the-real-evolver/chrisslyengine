@@ -66,8 +66,6 @@ public:
     /// sets the colour & strength of the ambient (global directionless) light in the world
     void SetAmbientLight(unsigned int colour);
 
-    /// get pointer to the default morph animation gpu program (useful if a custom pass wants to use morph animation)
-    D3D11GpuProgram* const GetDefaultMorphAnimationGpuProgram() const;
     /// get pointer to the default shadow receiver gpu program
     D3D11GpuProgram* const GetDefaultShadowReceiverGpuProgram() const;
     /// get pointer to the default shadow caster gpu program

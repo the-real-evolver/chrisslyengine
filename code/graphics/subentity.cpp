@@ -58,6 +58,14 @@ SubEntity::SetMaterial(Material* const mat)
 
     if (this->material != NULL)
     {
+        if (VAT_MORPH == this->GetSubMesh()->GetVertexAnimationType())
+        {
+            unsigned int i;
+            for (i = 0U; i < this->material->GetNumPasses(); ++i)
+            {
+                this->material->GetPass(i)->SetMorphAnimationIncluded(true);
+            }
+        }
         this->material->Load();
     }
 }

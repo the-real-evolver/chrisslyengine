@@ -194,6 +194,11 @@ public:
     /// returns the fog end distance for this pass
     float GetFogEnd() const;
 
+    /// sets whether the attached or the default gpu-program includes the required instructions to perform morph animation
+    void SetMorphAnimationIncluded(bool included);
+    /// returns whether the attached or the default gpu-program includes the required instructions to perform morph animation
+    bool IsMorphAnimationIncluded() const;
+
     /// inserts a new TextureUnitState object into the Pass
     TextureUnitState* const CreateTextureUnitState();
     /// retrieves a pointer to a texture unit state so it may be modified
@@ -235,6 +240,7 @@ private:
     unsigned int fogColour;
     float fogStart;
     float fogEnd;
+    bool morphAnimation;
 
     mutable ce_dynamic_array textureUnitStates;
 
