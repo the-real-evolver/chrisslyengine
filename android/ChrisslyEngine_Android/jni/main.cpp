@@ -90,12 +90,11 @@ Enter(struct android_app* state)
     window->AddViewport(camera, 0, 0, window->GetWidth(), window->GetHeight());
 
     MaterialManager::Instance()->Initialise();
-    Material* material = MaterialManager::Instance()->CreateOrRetrieve("cerberus_material_gles");
+    Material* material = MaterialManager::Instance()->CreateOrRetrieve("cerberus_material");
     gpuProgram = new GpuProgram(MorphAnimVertexShader, FragmentShader);
     material->GetPass(0U)->SetGpuProgram(gpuProgram);
 
     Entity* entity = SceneManager::Instance()->CreateEntity("cerberus_walk.mesh");
-    entity->GetSubEntity(0U)->SetMaterial(material);
     animState = entity->GetAnimationState("default");
     animState->SetEnabled(true);
     animState->SetLoop(true);

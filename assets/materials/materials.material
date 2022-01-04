@@ -18,13 +18,13 @@ material cerberus_material_psp
     }
 }
 
-material cerberus_material_gles
+material cerberus_material
 {
     pass
     {
         texture_unit
         {
-            texture cerberus_etc1.tex
+            texture cerberus.tex
         }
     }
 }

@@ -657,7 +657,7 @@ vt 0.554657 0.064543
 vt 0.357820 0.111600
 vt 0.343925 0.077731
 vt 0.444475 0.064538
-usemtl Material.001_cerberus_texture.png
+usemtl cerberus_material
 s 1
 f 11/1 5/2 7/3
 f 11/1 7/3 9/4
