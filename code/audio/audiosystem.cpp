@@ -31,6 +31,9 @@ AudioSystem::AudioSystem()
 {
     Singleton = this;
     this->activeRenderer = CE_NEW AudioRenderer();
+    ce_dynamic_array_init(&this->soundPool, 0U);
+    ce_dynamic_array_init(&this->dspPool, 0U);
+    ce_dynamic_array_init(&this->channelPool, 0U);
 }
 
 //------------------------------------------------------------------------------

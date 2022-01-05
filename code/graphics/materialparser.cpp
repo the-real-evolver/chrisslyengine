@@ -28,6 +28,7 @@ MaterialParser::MaterialParser() :
     currentPass(NULL),
     currentTextureUnitState(NULL)
 {
+    memset(&this->lexer, 0, sizeof(this->lexer));
     this->textBuffer = (char*)CE_MALLOC_ALIGN(CE_CACHE_LINE_SIZE, LexerTextBufferSize);
     CE_ASSERT(this->textBuffer != NULL, "MaterialParser::MaterialParser(): failed to allocate '%i' bytes\n", LexerTextBufferSize);
 }

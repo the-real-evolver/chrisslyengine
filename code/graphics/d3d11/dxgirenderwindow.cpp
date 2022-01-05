@@ -10,8 +10,8 @@ namespace chrissly
 
 static const char* const ClassName = "CHRISSLYENGINE_WINDOWS";
 static const char* const WindowTitle = "ChrisslyEngine";
-static const int WindowWidth = 960;
-static const int WindowHeight = 544;
+static const int WindowWidth = 1280;
+static const int WindowHeight = 720;
 
 //------------------------------------------------------------------------------
 /**

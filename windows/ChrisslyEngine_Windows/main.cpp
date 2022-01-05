@@ -62,7 +62,7 @@ WinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prevInstance, _In_ LPSTR cmd
     Camera* camera = SceneManager::Instance()->CreateCamera("MainCamera");
     camera->SetPosition(-0.5f, -0.25f, 1.0f);
     camera->SetOrientation(Quaternion());
-    window->AddViewport(camera, 0, 0, 960, 544);
+    window->AddViewport(camera, 0, 0, 1280, 720);
 
     MaterialManager::Instance()->Initialise();
     Entity* entity = SceneManager::Instance()->CreateEntity("gothic_woman.mesh");

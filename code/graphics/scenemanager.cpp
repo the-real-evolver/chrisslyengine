@@ -400,9 +400,7 @@ SceneManager::_RenderScene(Camera* const camera, Viewport* const vp)
             }
 
             // update animation
-            if (entity->HasVertexAnimation() && (!this->IsShadowTechniqueInUse() ||
-                (this->IsShadowTechniqueInUse() && this->illuminationStage == IRS_RENDER_TO_TEXTURE) ||
-                (this->IsShadowTechniqueInUse() && this->illuminationStage != IRS_RENDER_TO_TEXTURE && !entity->GetCastShadows())))
+            if (entity->HasVertexAnimation())
             {
                 entity->UpdateAnimation();
             }

@@ -592,6 +592,7 @@ D3D11RenderSystem::ProcessLights(ce_hash_table* const lights)
             this->defaultLightShaderParams[lightIndex][3U][0U] = light->GetAttenuationConstant();
             this->defaultLightShaderParams[lightIndex][3U][1U] = light->GetAttenuationLinear();
             this->defaultLightShaderParams[lightIndex][3U][2U] = light->GetAttenuationQuadric();
+            this->defaultLightShaderParams[lightIndex][3U][3U] = light->GetAttenuationRange();
 
             ++lightIndex;
             it = it->next;
