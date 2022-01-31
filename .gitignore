@@ -11,6 +11,7 @@ windows/.vs
 windows/Debug/
 windows/Release/
 windows/x64/Debug/
+windows/x64/Release/
 windows/ChrisslyEngine_Windows/Debug/
 windows/ChrisslyEngine_Windows/Release/
 windows/ChrisslyEngine_Windows/x64/Release/
