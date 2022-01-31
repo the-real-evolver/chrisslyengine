@@ -223,6 +223,15 @@ DXGIRenderWindow::GetDepthStencilView() const
 //------------------------------------------------------------------------------
 /**
 */
+HWND
+DXGIRenderWindow::GetWindowHandle() const
+{
+    return this->hwnd;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
 LRESULT WINAPI
 DXGIRenderWindow::WindowCallback(HWND wnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {

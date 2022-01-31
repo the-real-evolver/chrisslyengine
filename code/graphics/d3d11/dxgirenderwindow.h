@@ -32,6 +32,8 @@ public:
     /// gets a pointer to the depth stencil view
     ID3D11DepthStencilView* const GetDepthStencilView() const;
 
+    /// gets the window handle
+    HWND GetWindowHandle() const;
     /// callback function that processes messages sent to the window
     static LRESULT WINAPI WindowCallback(HWND wnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
