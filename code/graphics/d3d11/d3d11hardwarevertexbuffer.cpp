@@ -13,14 +13,6 @@ namespace chrissly
 //------------------------------------------------------------------------------
 /**
 */
-D3D11HardwareVertexBuffer::D3D11HardwareVertexBuffer()
-{
-
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
 D3D11HardwareVertexBuffer::D3D11HardwareVertexBuffer(unsigned int numVertices, unsigned int bytesPerVertex, graphics::Usage usage, bool useShadowBuffer) :
     HardwareVertexBufferBase(numVertices, bytesPerVertex, usage, useShadowBuffer),
     d3d11Buffer(NULL)

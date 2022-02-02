@@ -8,6 +8,7 @@
 #include "channel.h"
 #include <windows.h>
 
+using namespace chrissly;
 using namespace chrissly::core;
 using namespace chrissly::graphics;
 using namespace chrissly::audio;
@@ -57,8 +58,9 @@ WinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prevInstance, _In_ LPSTR cmd
     CE_UNREFERENCED_PARAMETER(showCmd);
     CE_UNREFERENCED_PARAMETER(prevInstance);
 
+    D3D11ConfigOptions config(instance, 1280, 720);
     GraphicsSystem* graphicsSystem = new GraphicsSystem();
-    RenderWindow* window = graphicsSystem->Initialise((void*)instance);
+    RenderWindow* window = graphicsSystem->Initialise((void*)&config);
     Camera* camera = SceneManager::Instance()->CreateCamera("MainCamera");
     camera->SetPosition(-0.5f, -0.25f, 1.0f);
     camera->SetOrientation(Quaternion());

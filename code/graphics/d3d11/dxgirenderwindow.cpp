@@ -10,22 +10,12 @@ namespace chrissly
 
 static const char* const ClassName = "CHRISSLYENGINE_WINDOWS";
 static const char* const WindowTitle = "ChrisslyEngine";
-static const int WindowWidth = 1280;
-static const int WindowHeight = 720;
 
 //------------------------------------------------------------------------------
 /**
 */
-DXGIRenderWindow::DXGIRenderWindow()
-{
-
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-DXGIRenderWindow::DXGIRenderWindow(HINSTANCE inst, ID3D11Device* const dev) :
-    instance(inst),
+DXGIRenderWindow::DXGIRenderWindow(D3D11ConfigOptions* config, ID3D11Device* const dev) :
+    instance(config->instance),
     hwnd(NULL),
     device(dev),
     swapChain(NULL),
@@ -33,7 +23,8 @@ DXGIRenderWindow::DXGIRenderWindow(HINSTANCE inst, ID3D11Device* const dev) :
     depthStencilBuffer(NULL),
     depthStencilView(NULL)
 {
-
+    this->width = config->windowWidth;
+    this->height = config->windowHeight;
 }
 
 //------------------------------------------------------------------------------
@@ -86,7 +77,7 @@ DXGIRenderWindow::Create()
 
     DWORD style = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_VISIBLE;
     DWORD exStyle = 0U;
-    RECT rect = {0, 0, WindowWidth, WindowHeight};
+    RECT rect = {0, 0, (LONG)this->width, (LONG)this->height};
     AdjustWindowRectEx(&rect, style, FALSE, exStyle);
 
     this->hwnd = CreateWindowEx(
@@ -118,8 +109,8 @@ DXGIRenderWindow::Create()
 
     DXGI_SWAP_CHAIN_DESC sd;
     ZeroMemory(&sd, sizeof(sd));
-    sd.BufferDesc.Width = WindowWidth;
-    sd.BufferDesc.Height = WindowHeight;
+    sd.BufferDesc.Width = (UINT)this->width;
+    sd.BufferDesc.Height = (UINT)this->height;
     sd.BufferDesc.RefreshRate.Numerator = 60U;
     sd.BufferDesc.RefreshRate.Denominator = 1U;
     sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -152,8 +143,8 @@ DXGIRenderWindow::Create()
     /* create depth stencil buffer and depth stencil view */
     D3D11_TEXTURE2D_DESC depthBufferDesc;
     ZeroMemory(&depthBufferDesc, sizeof(depthBufferDesc));
-    depthBufferDesc.Width = WindowWidth;
-    depthBufferDesc.Height = WindowHeight;
+    depthBufferDesc.Width = (UINT)this->width;
+    depthBufferDesc.Height = (UINT)this->height;
     depthBufferDesc.MipLevels = 1U;
     depthBufferDesc.ArraySize = 1U;
     depthBufferDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
@@ -175,8 +166,6 @@ DXGIRenderWindow::Create()
     CE_ASSERT(SUCCEEDED(result), "DXGIRenderWindow::Create(): failed to create depth stencil view\n");
 
     this->buffer = NULL;
-    this->width = WindowWidth;
-    this->height = WindowHeight;
     this->format = graphics::PF_R8G8B8A8;
 }
 

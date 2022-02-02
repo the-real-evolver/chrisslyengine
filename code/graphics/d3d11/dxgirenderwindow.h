@@ -13,11 +13,24 @@
 //------------------------------------------------------------------------------
 namespace chrissly
 {
+// this struct has to be passed to GraphicsSystem::Initialise() in order to initialise the D3D11RenderWindow
+struct D3D11ConfigOptions
+{
+    /// default constructor
+    D3D11ConfigOptions() : instance(NULL), windowWidth(0), windowHeight(0) {};
+    /// constructor with all parameters
+    D3D11ConfigOptions(HINSTANCE inst, int width, int height) : instance(inst), windowWidth(width), windowHeight(height) {};
+
+    HINSTANCE instance;
+    int windowWidth;
+    int windowHeight;
+};
+
 class DXGIRenderWindow : public graphics::RenderTarget
 {
 public:
     /// constructor with instance handle and device
-    DXGIRenderWindow(HINSTANCE inst, ID3D11Device* const dev);
+    DXGIRenderWindow(D3D11ConfigOptions* config, ID3D11Device* const dev);
     /// destructor
     ~DXGIRenderWindow();
     /// creates & displays the new window

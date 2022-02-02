@@ -12,14 +12,6 @@ namespace chrissly
 //------------------------------------------------------------------------------
 /**
 */
-D3D11ConstantBuffer::D3D11ConstantBuffer()
-{
-
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
 D3D11ConstantBuffer::D3D11ConstantBuffer(UINT byteWidth, UINT slot, unsigned int numConstants) :
     buffer(NULL),
     slot(slot)

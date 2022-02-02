@@ -15,14 +15,6 @@ namespace graphics
 //------------------------------------------------------------------------------
 /**
 */
-HardwareVertexBufferBase::HardwareVertexBufferBase()
-{
-
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
 HardwareVertexBufferBase::HardwareVertexBufferBase(unsigned int numVertices, unsigned int bytesPerVertex, Usage usage, bool useShadowBuffer) :
     numVertices(numVertices),
     bytesPerVertex(bytesPerVertex),

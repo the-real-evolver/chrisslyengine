@@ -15,14 +15,6 @@ namespace chrissly
 //------------------------------------------------------------------------------
 /**
 */
-D3D11GpuProgram::D3D11GpuProgram()
-{
-
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
 D3D11GpuProgram::D3D11GpuProgram(const char* const source, const char* const fileName, const char* const vertexShaderFunctionName, const char* const fragmentShaderFunctionName) :
     defaultParams(NULL),
     constantDefs(NULL),

@@ -42,6 +42,10 @@ D3D11RenderSystem::D3D11RenderSystem() :
 {
     Singleton = this;
     this->viewPort = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
+    ZeroMemory(&this->currentRasterState, sizeof(this->currentRasterState));
+    ZeroMemory(&this->currentDepthStencilState, sizeof(this->currentDepthStencilState));
+    ZeroMemory(&this->currentBlendState, sizeof(this->currentBlendState));
+    ZeroMemory(&this->currentSamplerState, sizeof(this->currentSamplerState));
 }
 
 //------------------------------------------------------------------------------
@@ -185,7 +189,7 @@ D3D11RenderSystem::Initialise(void* const customParams)
     this->context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
     /* create default render window */
-    graphics::RenderWindow* renderWindow = CE_NEW graphics::RenderWindow((HINSTANCE)customParams, this->device);
+    graphics::RenderWindow* renderWindow = CE_NEW graphics::RenderWindow((D3D11ConfigOptions*)customParams, this->device);
     renderWindow->Create();
 
     return renderWindow;
