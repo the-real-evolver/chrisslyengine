@@ -5,7 +5,7 @@
 :: setup variables
 set ProjectFolder=%CD%\..
 set SrcFolder=%ProjectFolder%\assets\materials
-set DstFolder=%ProjectFolder%\windows\ChrisslyEngine_Windows
+set DstFolder=%ProjectFolder%\windows\export
 
 xcopy /y /i %SrcFolder%\materials.material %DstFolder%\materials.material*
 

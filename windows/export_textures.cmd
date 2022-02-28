@@ -5,7 +5,7 @@
 :: setup variables
 set ProjectFolder=%CD%\..
 set SrcFolder=%ProjectFolder%\assets\textures
-set DstFolder=%ProjectFolder%\windows\ChrisslyEngine_Windows
+set DstFolder=%ProjectFolder%\windows\export
 set ToolChainFolder=%ProjectFolder%\tools\bin\win32
 
 cd %ToolChainFolder%
