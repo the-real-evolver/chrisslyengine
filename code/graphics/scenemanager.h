@@ -131,6 +131,8 @@ public:
     ShadowTechnique GetShadowTechnique() const;
     /// is there any shadowing technique in use?
     bool IsShadowTechniqueInUse() const;
+    /// returns a pointer to the shadow texture currently in use at the given index
+    Texture* const GetShadowTexture(size_t index) const;
     /// prompts the class to send its contents to the renderer
     void _RenderScene(Camera* const camera, Viewport* const vp);
     /// internal method for setting up the renderstate for a rendering pass

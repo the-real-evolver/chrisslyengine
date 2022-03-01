@@ -353,6 +353,16 @@ SceneManager::IsShadowTechniqueInUse() const
 //------------------------------------------------------------------------------
 /**
 */
+Texture* const
+SceneManager::GetShadowTexture(size_t index) const
+{
+    CE_ASSERT(0U == index, "SceneManager::GetShadowTexture(): invalid index");
+    return this->shadowTexture;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
 void
 SceneManager::_RenderScene(Camera* const camera, Viewport* const vp)
 {
