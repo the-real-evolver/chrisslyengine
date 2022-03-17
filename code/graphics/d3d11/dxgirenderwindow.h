@@ -17,13 +17,14 @@ namespace chrissly
 struct D3D11ConfigOptions
 {
     /// default constructor
-    D3D11ConfigOptions() : instance(NULL), windowWidth(0), windowHeight(0) {};
+    D3D11ConfigOptions() : instance(NULL), windowWidth(0), windowHeight(0), fullScreen(false) {};
     /// constructor with all parameters
-    D3D11ConfigOptions(HINSTANCE inst, int width, int height) : instance(inst), windowWidth(width), windowHeight(height) {};
+    D3D11ConfigOptions(HINSTANCE inst, int width, int height, bool fs) : instance(inst), windowWidth(width), windowHeight(height), fullScreen(fs) {};
 
     HINSTANCE instance;
     int windowWidth;
     int windowHeight;
+    bool fullScreen;
 };
 
 class DXGIRenderWindow : public graphics::RenderTarget
@@ -61,6 +62,7 @@ private:
     ID3D11RenderTargetView* renderTargetView;
     ID3D11Texture2D* depthStencilBuffer;
     ID3D11DepthStencilView* depthStencilView;
+    bool fullScreen;
 };
 
 } // namespace chrissly

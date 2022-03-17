@@ -58,13 +58,13 @@ WinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prevInstance, _In_ LPSTR cmd
     CE_UNREFERENCED_PARAMETER(showCmd);
     CE_UNREFERENCED_PARAMETER(prevInstance);
 
-    D3D11ConfigOptions config(instance, 1280, 720);
+    D3D11ConfigOptions config(instance, 1280, 720, false);
     GraphicsSystem* graphicsSystem = new GraphicsSystem();
     RenderWindow* window = graphicsSystem->Initialise((void*)&config);
     Camera* camera = SceneManager::Instance()->CreateCamera("MainCamera");
     camera->SetPosition(-0.5f, -0.25f, 1.0f);
     camera->SetOrientation(Quaternion());
-    window->AddViewport(camera, 0, 0, 1280, 720);
+    window->AddViewport(camera, 0, 0, window->GetWidth(), window->GetHeight());
 
     MaterialManager::Instance()->Initialise();
     Entity* entity = SceneManager::Instance()->CreateEntity("gothic_woman.mesh");

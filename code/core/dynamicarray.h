@@ -40,7 +40,10 @@ ce_dynamic_array_init(ce_dynamic_array* const v, unsigned int initial_size)
     if (initial_size > 0U)
     {
         v->data = (void**)CE_CALLOC(initial_size, sizeof(void*));
-        memset(v->data, 0, initial_size * sizeof(void*));
+        if (v->data != NULL)
+        {
+            memset(v->data, 0, initial_size * sizeof(void*));
+        }
     }
     else
     {

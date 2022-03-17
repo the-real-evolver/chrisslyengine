@@ -21,10 +21,20 @@ DXGIRenderWindow::DXGIRenderWindow(D3D11ConfigOptions* config, ID3D11Device* con
     swapChain(NULL),
     renderTargetView(NULL),
     depthStencilBuffer(NULL),
-    depthStencilView(NULL)
+    depthStencilView(NULL),
+    fullScreen(false)
 {
-    this->width = config->windowWidth;
-    this->height = config->windowHeight;
+    if (config->fullScreen)
+    {
+        this->width = GetSystemMetrics(SM_CXSCREEN);
+        this->height = GetSystemMetrics(SM_CYSCREEN);
+    }
+    else
+    {
+        this->width = config->windowWidth;
+        this->height = config->windowHeight;
+    }
+    this->fullScreen = config->fullScreen;
 }
 
 //------------------------------------------------------------------------------
@@ -75,7 +85,7 @@ DXGIRenderWindow::Create()
     RegisterClassEx(&wndClass);
     CE_ASSERT(id != 0U, "DXGIRenderWindow::Create(): failed to register class\n");
 
-    DWORD style = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_VISIBLE;
+    DWORD style = this->fullScreen ? (WS_POPUP | WS_VISIBLE) : (WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_VISIBLE);
     DWORD exStyle = 0U;
     RECT rect = {0, 0, (LONG)this->width, (LONG)this->height};
     AdjustWindowRectEx(&rect, style, FALSE, exStyle);
