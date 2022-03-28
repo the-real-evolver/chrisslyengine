@@ -6,7 +6,6 @@
 
     (C) 2010 Christian Bleicher
 */
-#include "dynamicarray.h"
 #include "meshmanager.h"
 #include "texturemanager.h"
 #include "scenemanager.h"
@@ -56,7 +55,7 @@ private:
     MaterialManager* materialManager;
     SceneManager* sceneManager;
     RenderWindow* autoWindow;
-    ce_dynamic_array renderTargets;
+    RenderTarget** renderTargets;
 };
 
 } // namespace graphics

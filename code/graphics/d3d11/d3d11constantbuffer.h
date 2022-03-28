@@ -6,7 +6,7 @@
 
     (C) 2016 Christian Bleicher
 */
-#include "dynamicarray.h"
+#include "gpuprogramparams.h"
 #include <d3d11.h>
 
 //------------------------------------------------------------------------------
@@ -32,7 +32,7 @@ private:
 
     ID3D11Buffer* buffer;
     UINT slot;
-    mutable ce_dynamic_array constants;
+    graphics::GpuConstantDefinition** constants;
 };
 
 } // namespace chrissly

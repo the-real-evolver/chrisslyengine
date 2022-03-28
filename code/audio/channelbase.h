@@ -11,7 +11,6 @@
 #include "propertychangedflags.h"
 #include "vector3.h"
 #include "chrisslymutex.h"
-#include "dynamicarray.h"
 
 //------------------------------------------------------------------------------
 namespace chrissly
@@ -119,7 +118,7 @@ protected:
     PropertyChange propertiesHaveChanged;
     core::Mutex syncLock;
     int outputBuffer[1024U];
-    ce_dynamic_array dsps;
+    DSP** dsps;
     void* userData;
 };
 

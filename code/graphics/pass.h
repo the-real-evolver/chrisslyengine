@@ -7,7 +7,6 @@
     (C) 2010 Christian Bleicher
 */
 #include "common.h"
-#include "dynamicarray.h"
 #include "textureunitstate.h"
 #include "blendmode.h"
 #include "gpuprogram.h"
@@ -242,7 +241,7 @@ private:
     float fogEnd;
     bool morphAnimation;
 
-    mutable ce_dynamic_array textureUnitStates;
+    TextureUnitState** textureUnitStates;
 
     GpuProgram* gpuProgram;
 };

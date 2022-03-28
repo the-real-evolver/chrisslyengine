@@ -216,9 +216,6 @@
     <ClInclude Include="..\..\code\core\debug.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\code\core\dynamicarray.h">
-      <Filter>core</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\code\core\filehandle.h">
       <Filter>core</Filter>
     </ClInclude>
@@ -467,6 +464,9 @@
     </ClInclude>
     <ClInclude Include="..\..\code\audio\dsp\filters.h">
       <Filter>audio\dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\core\chrisslyarray.h">
+      <Filter>core</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

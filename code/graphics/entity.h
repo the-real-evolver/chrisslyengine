@@ -75,7 +75,7 @@ private:
     /// the Mesh that this Entity is based on
     Mesh* mesh;
     /// list of SubEntities (point to SubMeshes)
-    mutable ce_dynamic_array subEntities;
+    SubEntity** subEntities;
     /// is this Entity visible?
     bool visible;
     /// does this object cast shadows?

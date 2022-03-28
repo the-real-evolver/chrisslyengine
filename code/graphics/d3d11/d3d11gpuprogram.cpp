@@ -6,6 +6,7 @@
 #include "d3d11constantbuffer.h"
 #include "d3d11rendersystem.h"
 #include "d3d11mappings.h"
+#include "chrisslyarray.h"
 #include "debug.h"
 #include <D3DCompiler.h>
 
@@ -18,6 +19,8 @@ namespace chrissly
 D3D11GpuProgram::D3D11GpuProgram(const char* const source, const char* const fileName, const char* const vertexShaderFunctionName, const char* const fragmentShaderFunctionName) :
     defaultParams(NULL),
     constantDefs(NULL),
+    constantBuffersPerObject(NULL),
+    constantBuffersPerPass(NULL),
     vertexShaderCode(NULL),
     vertexShader(NULL),
     fragmentShader(NULL),
@@ -99,8 +102,8 @@ D3D11GpuProgram::D3D11GpuProgram(const char* const source, const char* const fil
     this->defaultParams = CE_NEW graphics::GpuProgramParameters;
     this->defaultParams->_SetNamedConstants(this->constantDefs);
 
-    ce_dynamic_array_init(&this->constantBuffersPerObject, 1U);
-    ce_dynamic_array_init(&this->constantBuffersPerPass, 1U);
+    ce_array_init(this->constantBuffersPerObject, 1U);
+    ce_array_init(this->constantBuffersPerPass, 1U);
 
     ce_hash_table_init(&this->constantBuffers, 2U);
     this->ExtractConstantDefs(this->vertexShaderCode);
@@ -122,17 +125,17 @@ D3D11GpuProgram::~D3D11GpuProgram()
     CE_DELETE this->defaultParams;
 
     unsigned int i;
-    for (i = 0U; i < this->constantBuffersPerObject.size; ++i)
+    for (i = 0U; i < ce_array_size(this->constantBuffersPerObject); ++i)
     {
-        CE_DELETE (D3D11ConstantBuffer*)ce_dynamic_array_get(&this->constantBuffersPerObject, i);
+        CE_DELETE this->constantBuffersPerObject[i];
     }
-    ce_dynamic_array_delete(&this->constantBuffersPerObject);
+    ce_array_delete(this->constantBuffersPerObject);
 
-    for (i = 0U; i < this->constantBuffersPerPass.size; ++i)
+    for (i = 0U; i < ce_array_size(this->constantBuffersPerPass); ++i)
     {
-        CE_DELETE (D3D11ConstantBuffer*)ce_dynamic_array_get(&this->constantBuffersPerPass, i);
+        CE_DELETE this->constantBuffersPerPass[i];
     }
-    ce_dynamic_array_delete(&this->constantBuffersPerPass);
+    ce_array_delete(this->constantBuffersPerPass);
 
     if (this->vertexShaderCode != NULL)
     {
@@ -184,13 +187,13 @@ void
 D3D11GpuProgram::BindConstantBuffers()
 {
     unsigned int i;
-    for (i = 0U; i < this->constantBuffersPerObject.size; ++i)
+    for (i = 0U; i < ce_array_size(this->constantBuffersPerObject); ++i)
     {
-        ((D3D11ConstantBuffer*)ce_dynamic_array_get(&this->constantBuffersPerObject, i))->Bind();
+        this->constantBuffersPerObject[i]->Bind();
     }
-    for (i = 0U; i < this->constantBuffersPerPass.size; ++i)
+    for (i = 0U; i < ce_array_size(this->constantBuffersPerPass); ++i)
     {
-        ((D3D11ConstantBuffer*)ce_dynamic_array_get(&this->constantBuffersPerPass, i))->Bind();
+        this->constantBuffersPerPass[i]->Bind();
     }
 }
 
@@ -201,9 +204,9 @@ void
 D3D11GpuProgram::UpdatePerObjectConstantBuffers()
 {
     unsigned int i;
-    for (i = 0U; i < this->constantBuffersPerObject.size; ++i)
+    for (i = 0U; i < ce_array_size(this->constantBuffersPerObject); ++i)
     {
-        ((D3D11ConstantBuffer*)ce_dynamic_array_get(&this->constantBuffersPerObject, i))->UpdateConstants();
+        this->constantBuffersPerObject[i]->UpdateConstants();
     }
 }
 
@@ -214,9 +217,9 @@ void
 D3D11GpuProgram::UpdatePerPassConstantBuffers()
 {
     unsigned int i;
-    for (i = 0U; i < this->constantBuffersPerPass.size; ++i)
+    for (i = 0U; i < ce_array_size(this->constantBuffersPerPass); ++i)
     {
-        ((D3D11ConstantBuffer*)ce_dynamic_array_get(&this->constantBuffersPerPass, i))->UpdateConstants();
+        this->constantBuffersPerPass[i]->UpdateConstants();
     }
 }
 
@@ -283,7 +286,7 @@ D3D11GpuProgram::ExtractConstantDefs(ID3D10Blob* const shaderCode)
                 variable->arraySize = 1U;
             }
 
-            ce_dynamic_array_push_back(&constantBuffer->constants, variable);
+            ce_array_push_back(constantBuffer->constants, variable);
 
             ce_hash_table_insert(&this->constantDefs->map, variableDesc.Name, strlen(variableDesc.Name), variable);
 
@@ -316,7 +319,7 @@ D3D11GpuProgram::ExtractConstantDefs(ID3D10Blob* const shaderCode)
             CE_LOG("D3D11GpuProgram::ExtractConstantDefs(): add type: %i name: '%s' size: %u offset: %i arraySize %i\n", variable->constType, variableDesc.Name, variable->size, variable->location, variable->arraySize);
         }
 
-        ce_dynamic_array_push_back(updatePerObject ? &this->constantBuffersPerObject : &this->constantBuffersPerPass, constantBuffer);
+        ce_array_push_back(updatePerObject ? this->constantBuffersPerObject : this->constantBuffersPerPass, constantBuffer);
     }
 }
 

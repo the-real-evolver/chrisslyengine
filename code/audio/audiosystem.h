@@ -10,7 +10,6 @@
 #include "dsp.h"
 #include "channel.h"
 #include "audiorenderer.h"
-#include "dynamicarray.h"
 #include "vector3.h"
 
 //------------------------------------------------------------------------------
@@ -65,11 +64,11 @@ private:
 
     AudioRenderer* activeRenderer;
 
-    ce_dynamic_array soundPool;
+    Sound** soundPool;
 
-    ce_dynamic_array channelPool;
+    Channel** channelPool;
 
-    ce_dynamic_array dspPool;
+    DSP** dspPool;
 
     core::Vector3 listenerPos;
     core::Vector3 listenerForward;

@@ -6,7 +6,6 @@
 
     (C) 2011 Christian Bleicher
 */
-#include "dynamicarray.h"
 #include "camera.h"
 #include "rendertarget.h"
 #include "pixelformat.h"
@@ -53,7 +52,7 @@ public:
     virtual unsigned int GetType() const;
 
 protected:
-    mutable ce_dynamic_array viewports;
+    Viewport** viewports;
     void* buffer;
     int width;
     int height;

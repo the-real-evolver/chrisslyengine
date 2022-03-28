@@ -4,6 +4,7 @@
 //------------------------------------------------------------------------------
 #include "renderqueue.h"
 #include "debug.h"
+#include "chrisslyarray.h"
 #include <stdint.h>
 
 namespace chrissly
@@ -15,9 +16,7 @@ namespace graphics
 /**
 */
 RenderQueue::RenderQueue() :
-    renderablePasses(NULL),
-    renderablePassesCapacity(0U),
-    numRenderablePasses(0U)
+    renderablePasses(NULL)
 {
 
 }
@@ -36,12 +35,8 @@ RenderQueue::~RenderQueue()
 void
 RenderQueue::Initialise(unsigned short capacity)
 {
-    unsigned int bufferSize = capacity * sizeof(RenderablePass);
-    this->renderablePasses = (RenderablePass*)CE_MALLOC(bufferSize);
-    CE_ASSERT(this->renderablePasses != NULL, "RenderQueue::Initialise(): failed to allocate '%i' bytes\n", bufferSize);
-    memset(this->renderablePasses, 0, bufferSize);
-    this->renderablePassesCapacity = capacity;
-    this->numRenderablePasses = 0U;
+    this->renderablePasses = NULL;
+    ce_array_init(this->renderablePasses, capacity);
 }
 
  //------------------------------------------------------------------------------
@@ -50,9 +45,7 @@ RenderQueue::Initialise(unsigned short capacity)
 void
 RenderQueue::Destroy()
 {
-    CE_FREE(this->renderablePasses);
-    this->renderablePassesCapacity = 0U;
-    this->numRenderablePasses = 0U;
+    ce_array_delete(this->renderablePasses);
 }
 
 //------------------------------------------------------------------------------
@@ -61,7 +54,7 @@ RenderQueue::Destroy()
 void
 RenderQueue::Clear()
 {
-    this->numRenderablePasses = 0U;
+    if (this->renderablePasses) ce_array_header(this->renderablePasses)->size = 0U;
 }
 
 //------------------------------------------------------------------------------
@@ -70,13 +63,13 @@ RenderQueue::Clear()
 void
 RenderQueue::AddRenderable(SubEntity* const rend, Pass* const pass)
 {
-    if (this->numRenderablePasses < this->renderablePassesCapacity)
+    if (!ce_array_full(this->renderablePasses))
     {
-        RenderablePass* renderablePass = this->renderablePasses + (uintptr_t)this->numRenderablePasses;
+        RenderablePass* renderablePass = this->renderablePasses + ce_array_header(this->renderablePasses)->size;
         renderablePass->renderable = rend;
         renderablePass->pass = pass;
 
-        ++this->numRenderablePasses;
+        ce_array_header(this->renderablePasses)->size++;
     }
 }
 
@@ -86,7 +79,7 @@ RenderQueue::AddRenderable(SubEntity* const rend, Pass* const pass)
 unsigned short
 RenderQueue::GetNumRenderablePasses() const
 {
-    return this->numRenderablePasses;
+    return (unsigned short)ce_array_size(this->renderablePasses);
 }
 
 //------------------------------------------------------------------------------
@@ -104,11 +97,11 @@ RenderQueue::GetRenderablePass(unsigned short index) const
 void
 RenderQueue::Sort()
 {
-    int swapIndex, searchIndex, hitIndex;
-    for (swapIndex = 0; swapIndex < this->numRenderablePasses - 1; ++swapIndex)
+    int swapIndex, searchIndex, hitIndex, numRenderablePasses = ce_array_size(this->renderablePasses);
+    for (swapIndex = 0; swapIndex < numRenderablePasses - 1; ++swapIndex)
     {
         hitIndex = swapIndex;
-        for (searchIndex = swapIndex + 1; searchIndex < this->numRenderablePasses; ++searchIndex)
+        for (searchIndex = swapIndex + 1; searchIndex < numRenderablePasses; ++searchIndex)
         {
             RenderablePass* rpHit = this->renderablePasses + (uintptr_t)hitIndex;
             RenderablePass* rpSearch = this->renderablePasses + (uintptr_t)searchIndex;

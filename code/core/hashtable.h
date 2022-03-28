@@ -9,7 +9,7 @@
     (C) 2012 Christian Bleicher (evolver)
 */
 #include "linkedlist.h"
-#include "dynamicarray.h"
+#include "chrisslyarray.h"
 #include <stdint.h>
 
 //------------------------------------------------------------------------------
@@ -17,7 +17,7 @@
 /// hashtable
 struct ce_hash_table
 {
-    ce_dynamic_array buckets;
+    ce_linked_list** buckets;
     unsigned int bucket_count;
     unsigned int size;
 };
@@ -61,7 +61,8 @@ ce_hash_table_init(ce_hash_table* const table, unsigned int initial_size)
         return;
     }
 
-    ce_dynamic_array_init(&table->buckets, initial_size);
+    table->buckets = NULL;
+    ce_array_init(table->buckets, initial_size);
     table->bucket_count = initial_size;
     table->size = 0U;
 }
@@ -80,7 +81,7 @@ ce_hash_table_clear(ce_hash_table* const table)
     unsigned int i;
     for (i = 0U; i < table->bucket_count; ++i)
     {
-        ce_linked_list* it = (ce_linked_list*)ce_dynamic_array_get(&table->buckets, i);
+        ce_linked_list* it = table->buckets[i];
         while (it != NULL)
         {
             ce_linked_list* node = it;
@@ -92,7 +93,7 @@ ce_hash_table_clear(ce_hash_table* const table)
         }
     }
 
-    ce_dynamic_array_delete(&table->buckets);
+    ce_array_delete(table->buckets);
     table->bucket_count = 0U;
     table->size = 0U;
 }
@@ -124,7 +125,7 @@ ce_hash_table_insert(ce_hash_table* const table, const char* const key, unsigned
     memcpy(kvp->key, key, key_length);
     kvp->value = value;
 
-    ce_linked_list** bucket = (ce_linked_list**)(table->buckets.data + (uintptr_t)(ce_hash_function(key, key_length) % table->bucket_count));
+    ce_linked_list** bucket = table->buckets + (uintptr_t)(ce_hash_function(key, key_length) % table->bucket_count);
     ce_linked_list_add(bucket, kvp);
 
     ++table->size;
@@ -141,7 +142,7 @@ ce_hash_table_find(ce_hash_table* const table, const char* const key, unsigned i
         return NULL;
     }
 
-    ce_linked_list* it = (ce_linked_list*)ce_dynamic_array_get(&table->buckets, ce_hash_function(key, key_length) % table->bucket_count);
+    ce_linked_list* it = table->buckets[ce_hash_function(key, key_length) % table->bucket_count];
     while (it != NULL)
     {
         ce_key_value_pair* kvp = (ce_key_value_pair*)it->data;
@@ -169,7 +170,7 @@ ce_hash_table_begin(ce_hash_table* const table, unsigned int index)
         return NULL;
     }
 
-    return (ce_linked_list*)ce_dynamic_array_get(&table->buckets, index);
+    return table->buckets[index];
 }
 
 //------------------------------------------------------------------------------
@@ -184,7 +185,7 @@ ce_hash_table_resize(ce_hash_table* const table, unsigned int new_size)
     unsigned int i;
     for (i = 0U; i < table->bucket_count; ++i)
     {
-        ce_linked_list* it = (ce_linked_list*)ce_dynamic_array_get(&table->buckets, i);
+        ce_linked_list* it = table->buckets[i];
         while (it != NULL)
         {
             ce_key_value_pair* kvp = (ce_key_value_pair*)it->data;

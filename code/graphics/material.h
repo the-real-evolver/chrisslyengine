@@ -6,7 +6,6 @@
 
     (C) 2010 Christian Bleicher
 */
-#include "dynamicarray.h"
 #include "pass.h"
 
 //------------------------------------------------------------------------------
@@ -37,7 +36,7 @@ public:
 
 private:
     /// list of primary passes
-    mutable ce_dynamic_array passes;
+    Pass** passes;
 
     bool loaded;
 };

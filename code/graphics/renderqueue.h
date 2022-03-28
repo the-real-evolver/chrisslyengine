@@ -49,8 +49,6 @@ public:
 
 private:
     RenderablePass* renderablePasses;
-    unsigned short renderablePassesCapacity;
-    unsigned short numRenderablePasses;
 };
 
 } // namespace graphics

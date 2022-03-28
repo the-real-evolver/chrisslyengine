@@ -7,6 +7,7 @@
     (C) 2016 Christian Bleicher
 */
 #include "gpuprogramparams.h"
+#include "d3d11constantbuffer.h"
 #include <d3d11.h>
 
 //------------------------------------------------------------------------------
@@ -45,8 +46,8 @@ private:
     graphics::GpuProgramParameters* defaultParams;
     graphics::GpuNamedConstants* constantDefs;
 
-    ce_dynamic_array constantBuffersPerObject;
-    ce_dynamic_array constantBuffersPerPass;
+    D3D11ConstantBuffer** constantBuffersPerObject;
+    D3D11ConstantBuffer** constantBuffersPerPass;
 
     ID3D10Blob* vertexShaderCode;
     ID3D11VertexShader* vertexShader;

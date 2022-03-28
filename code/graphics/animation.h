@@ -7,7 +7,6 @@
     (C) 2012 Christian Bleicher
 */
 #include "animationtrack.h"
-#include "dynamicarray.h"
 #include "chrisslystring.h"
 
 //------------------------------------------------------------------------------
@@ -48,7 +47,7 @@ public:
 private:
     core::String name;
     float length;
-    mutable ce_dynamic_array vertexTracks;
+    VertexAnimationTrack** vertexTracks;
 };
 
 } // namespace graphics

@@ -4,6 +4,7 @@
 //------------------------------------------------------------------------------
 #include "material.h"
 #include "memoryallocatorconfig.h"
+#include "chrisslyarray.h"
 
 namespace chrissly
 {
@@ -14,9 +15,10 @@ namespace graphics
 /**
 */
 Material::Material() :
+    passes(NULL),
     loaded(false)
 {
-    ce_dynamic_array_init(&this->passes, 1U);
+    ce_array_init(this->passes, 1U);
 }
 
 //------------------------------------------------------------------------------
@@ -33,8 +35,8 @@ Material::~Material()
 Pass* const
 Material::CreatePass()
 {
-    Pass* pass = CE_NEW Pass((unsigned short)this->passes.size);
-    ce_dynamic_array_push_back(&this->passes, pass);
+    Pass* pass = CE_NEW Pass((unsigned short)ce_array_size(this->passes));
+    ce_array_push_back(this->passes, pass);
 
     return pass;
 }
@@ -45,7 +47,7 @@ Material::CreatePass()
 Pass* const
 Material::GetPass(unsigned short index) const
 {
-    return (Pass*)ce_dynamic_array_get(&this->passes, index);
+    return this->passes[index];
 }
 
 //------------------------------------------------------------------------------
@@ -54,7 +56,7 @@ Material::GetPass(unsigned short index) const
 unsigned short
 Material::GetNumPasses() const
 {
-    return (unsigned short)this->passes.size;
+    return (unsigned short)ce_array_size(this->passes);
 }
 
 //------------------------------------------------------------------------------
@@ -64,12 +66,11 @@ void
 Material::RemoveAllPasses()
 {
     unsigned int i;
-    for (i = 0U; i < this->passes.size; ++i)
+    for (i = 0U; i < ce_array_size(this->passes); ++i)
     {
-        CE_DELETE (Pass*)ce_dynamic_array_get(&this->passes, i);
+        CE_DELETE this->passes[i];
     }
-
-    ce_dynamic_array_delete(&this->passes);
+    ce_array_delete(this->passes);
 }
 
 //------------------------------------------------------------------------------
@@ -81,9 +82,9 @@ Material::Load()
     if (!this->loaded)
     {
         unsigned int i;
-        for (i = 0U; i < this->passes.size; ++i)
+        for (i = 0U; i < ce_array_size(this->passes); ++i)
         {
-            ((Pass*)ce_dynamic_array_get(&this->passes, i))->_Load();
+            this->passes[i]->_Load();
         }
         this->loaded = true;
     }

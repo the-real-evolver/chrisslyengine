@@ -3,6 +3,7 @@
 //  (C) 2011 Christian Bleicher
 //------------------------------------------------------------------------------
 #include "rendertarget.h"
+#include "chrisslyarray.h"
 
 namespace chrissly
 {
@@ -13,13 +14,14 @@ namespace graphics
 /**
 */
 RenderTarget::RenderTarget() :
+    viewports(NULL),
     buffer(NULL),
     width(0),
     height(0),
     format(PF_UNKNOWN),
     frameTime(0.0)
 {
-    ce_dynamic_array_init(&this->viewports, 1U);
+    ce_array_init(this->viewports, 1U);
     this->timer.Start();
 }
 
@@ -38,9 +40,9 @@ void
 RenderTarget::Update()
 {
     unsigned int i;
-    for (i = 0U; i < this->viewports.size; ++i)
+    for (i = 0U; i < ce_array_size(this->viewports); ++i)
     {
-        ((Viewport*)ce_dynamic_array_get(&this->viewports, i))->Update();
+        this->viewports[i]->Update();
     }
 
     this->frameTime = this->timer.GetTime();
@@ -54,7 +56,7 @@ Viewport* const
 RenderTarget::AddViewport(Camera* const cam, int left, int top, int w, int h)
 {
     Viewport* viewport = CE_NEW Viewport(cam, this, left, top, w, h);
-    ce_dynamic_array_push_back(&this->viewports, viewport);
+    ce_array_push_back(this->viewports, viewport);
 
     return viewport;
 }
@@ -65,7 +67,7 @@ RenderTarget::AddViewport(Camera* const cam, int left, int top, int w, int h)
 unsigned short
 RenderTarget::GetNumViewports() const
 {
-    return (unsigned short)this->viewports.size;
+    return (unsigned short)ce_array_size(this->viewports);
 }
 
 //------------------------------------------------------------------------------
@@ -74,7 +76,7 @@ RenderTarget::GetNumViewports() const
 Viewport* const
 RenderTarget::GetViewport(unsigned short index) const
 {
-    return (Viewport*)ce_dynamic_array_get(&this->viewports, index);
+    return this->viewports[index];
 }
 
 //------------------------------------------------------------------------------
@@ -84,12 +86,11 @@ void
 RenderTarget::RemoveAllViewports()
 {
     unsigned int i;
-    for (i = 0U; i < this->viewports.size; ++i)
+    for (i = 0U; i < ce_array_size(this->viewports); ++i)
     {
-        CE_DELETE (Viewport*)ce_dynamic_array_get(&this->viewports, i);
+        CE_DELETE this->viewports[i];
     }
-
-    ce_dynamic_array_delete(&this->viewports);
+    ce_array_delete(this->viewports);
 }
 
 //------------------------------------------------------------------------------

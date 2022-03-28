@@ -7,7 +7,6 @@
     (C) 2011 Christian Bleicher
 */
 #include "linkedlist.h"
-#include "dynamicarray.h"
 #include "quaternion.h"
 #include "vector3.h"
 #include "matrix4.h"
@@ -191,7 +190,7 @@ private:
     mutable bool cachedTransformOutOfDate;
     bool updateChilds;
 
-    mutable ce_dynamic_array objects;
+    Entity** objects;
 };
 
 } // namespace graphics

@@ -8,7 +8,6 @@
 */
 #include "submesh.h"
 #include "animation.h"
-#include "dynamicarray.h"
 #include "hashtable.h"
 
 //------------------------------------------------------------------------------
@@ -48,7 +47,7 @@ public:
 
 private:
     /// a list of submeshes which make up this mesh
-    mutable ce_dynamic_array subMeshes;
+    SubMesh** subMeshes;
     /// storage of morph animations, lookup by name
     ce_hash_table animations;
     /// local bounding sphere radius (centered on object)

@@ -8,6 +8,7 @@
 #include "dsp/mixer.h"
 #include "dsp/filters.h"
 #include "memoryallocatorconfig.h"
+#include "chrisslyarray.h"
 #include "chrisslymath.h"
 #include "debug.h"
 #include <stdio.h>
@@ -27,13 +28,13 @@ static float DistanceFilterStore[32U] = {0.0f};
 //------------------------------------------------------------------------------
 /**
 */
-AudioSystem::AudioSystem()
+AudioSystem::AudioSystem() :
+    soundPool(NULL),
+    channelPool(NULL),
+    dspPool(NULL)
 {
     Singleton = this;
     this->activeRenderer = CE_NEW AudioRenderer();
-    ce_dynamic_array_init(&this->soundPool, 0U);
-    ce_dynamic_array_init(&this->dspPool, 0U);
-    ce_dynamic_array_init(&this->channelPool, 0U);
 }
 
 //------------------------------------------------------------------------------
@@ -54,26 +55,23 @@ AudioSystem::Initialise(void* const customParams)
 {
     this->activeRenderer->Initialise(customParams);
 
-    ce_dynamic_array_init(&this->soundPool, 8U);
+    ce_array_init(this->soundPool, 8U);
     unsigned int i;
-    for (i = 0U; i < this->soundPool.capacity; ++i)
+    for (i = 0U; i < ce_array_header(this->soundPool)->capacity; ++i)
     {
-        Sound* sound = CE_NEW Sound();
-        ce_dynamic_array_set(&this->soundPool, i, sound);
+        ce_array_push_back(this->soundPool, CE_NEW Sound());
     }
 
-    ce_dynamic_array_init(&this->dspPool, 8U);
-    for (i = 0U; i < this->dspPool.capacity; ++i)
+    ce_array_init(this->dspPool, 8U);
+    for (i = 0U; i < ce_array_header(this->dspPool)->capacity; ++i)
     {
-        DSP* dsp = CE_NEW DSP();
-        ce_dynamic_array_set(&this->dspPool, i, dsp);
+        ce_array_push_back(this->dspPool, CE_NEW DSP());
     }
 
-    ce_dynamic_array_init(&this->channelPool, this->activeRenderer->GetNumHardwareChannels());
-    for (i = 0U; i < this->channelPool.capacity; ++i)
+    ce_array_init(this->channelPool, this->activeRenderer->GetNumHardwareChannels());
+    for (i = 0U; i < ce_array_header(this->channelPool)->capacity; ++i)
     {
-        Channel* channel = CE_NEW Channel();
-        ce_dynamic_array_set(&this->channelPool, i, channel);
+        ce_array_push_back(this->channelPool, CE_NEW Channel());
     }
 
     this->activeRenderer->StartAudioProcessing();
@@ -90,9 +88,9 @@ AudioSystem::Release()
     this->activeRenderer->StopAudioProcessing();
 
     unsigned int i;
-    for (i = 0U; i < this->channelPool.capacity; ++i)
+    for (i = 0U; i < ce_array_size(this->channelPool); ++i)
     {
-        Channel* channel = (Channel*)ce_dynamic_array_get(&this->channelPool, i);
+        Channel* channel = this->channelPool[i];
         int index;
         channel->GetIndex(&index);
         if (index != Channel::CHANNEL_FREE)
@@ -101,19 +99,19 @@ AudioSystem::Release()
         }
         CE_DELETE channel;
     }
-    ce_dynamic_array_delete(&this->channelPool);
+    ce_array_delete(this->channelPool);
 
-    for (i = 0U; i < this->dspPool.capacity; ++i)
+    for (i = 0U; i < ce_array_size(this->dspPool); ++i)
     {
-        CE_DELETE(DSP*)ce_dynamic_array_get(&this->dspPool, i);
+        CE_DELETE this->dspPool[i];
     }
-    ce_dynamic_array_delete(&this->dspPool);
+    ce_array_delete(this->dspPool);
 
-    for (i = 0U; i < this->soundPool.capacity; ++i)
+    for (i = 0U; i < ce_array_size(this->soundPool); ++i)
     {
-        CE_DELETE (Sound*)ce_dynamic_array_get(&this->soundPool, i);
+        CE_DELETE this->soundPool[i];
     }
-    ce_dynamic_array_delete(&this->soundPool);
+    ce_array_delete(this->soundPool);
 
     this->activeRenderer->Shutdown();
 
@@ -128,9 +126,9 @@ AudioSystem::CreateSound(const char* const name, Mode mode, Sound** sound)
 {
     *sound = NULL;
     unsigned int i;
-    for (i = 0U; i < this->soundPool.capacity; ++i)
+    for (i = 0U; i < ce_array_size(this->soundPool); ++i)
     {
-        Sound *snd = (Sound*)ce_dynamic_array_get(&this->soundPool, i);
+        Sound* snd = this->soundPool[i];
         if (!snd->IsInUse())
         {
             char* ext = (char*)strrchr(name, '.');
@@ -171,9 +169,9 @@ Result
 AudioSystem::CreateDSP(const DspDescription* const desc, DSP** const dsp)
 {
     unsigned int i;
-    for (i = 0U; i < this->dspPool.capacity; ++i)
+    for (i = 0U; i < ce_array_size(this->dspPool); ++i)
     {
-        DSP* newDsp = (DSP*)ce_dynamic_array_get(&this->dspPool, i);
+        DSP* newDsp = this->dspPool[i];
         if (!newDsp->IsInUse())
         {
             newDsp->Setup(desc);
@@ -204,16 +202,16 @@ AudioSystem::PlaySound(int channelid, Sound* const sound, bool paused, Channel**
     }
 
     unsigned int i;
-    for (i = 0U; i < this->channelPool.capacity; ++i)
+    for (i = 0U; i < ce_array_size(this->channelPool); ++i)
     {
-        Channel* chn = (Channel*)ce_dynamic_array_get(&this->channelPool, i);
+        Channel* chn = this->channelPool[i];
         int index;
         chn->GetIndex(&index);
         if (Channel::CHANNEL_FREE == index)
         {
             if (channelid != Channel::CHANNEL_FREE)
             {
-                CE_ASSERT(channelid < (int)this->channelPool.capacity, "AudioSystem::PlaySound(): invalid channelid '%i' (exceeds channel range '0 - %i')\n", channelid, this->channelPool.capacity - 1U);
+                CE_ASSERT(channelid < (int)ce_array_size(this->channelPool), "AudioSystem::PlaySound(): invalid channelid '%i' (exceeds channel range '0 - %i')\n", channelid, ce_array_size(this->channelPool) - 1U);
                 chn->SetIndex(channelid);
             }
 
@@ -257,9 +255,9 @@ AudioSystem::Update()
     sideVec.Normalise();
 
     unsigned int i;
-    for (i = 0U; i < this->channelPool.capacity; ++i)
+    for (i = 0U; i < ce_array_size(this->channelPool); ++i)
     {
-        Channel* channel = (Channel*)ce_dynamic_array_get(&this->channelPool, i);
+        Channel* channel = this->channelPool[i];
         int index;
         channel->GetIndex(&index);
         if (index != Channel::CHANNEL_FREE)
@@ -328,9 +326,9 @@ AudioSystem::_Mix(unsigned int numSamples, unsigned char* const buffer)
 {
     memset(buffer, 0, numSamples << 2U);
     unsigned int i;
-    for (i = 0U; i < this->channelPool.capacity; ++i)
+    for (i = 0U; i < ce_array_size(this->channelPool); ++i)
     {
-        Channel* channel = (Channel*)ce_dynamic_array_get(&this->channelPool, i);
+        Channel* channel = this->channelPool[i];
         int index;
         channel->GetIndex(&index);
         if (index != Channel::CHANNEL_FREE)

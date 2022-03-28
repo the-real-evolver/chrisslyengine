@@ -16,7 +16,8 @@ GraphicsSystem* GraphicsSystem::Singleton = NULL;
 /**
 */
 GraphicsSystem::GraphicsSystem() :
-    autoWindow(NULL)
+    autoWindow(NULL),
+    renderTargets(NULL)
 {
     Singleton = this;
     this->activeRenderer = CE_NEW RenderSystem();
@@ -24,7 +25,7 @@ GraphicsSystem::GraphicsSystem() :
     this->textureManager = CE_NEW TextureManager();
     this->materialManager = CE_NEW MaterialManager();
     this->sceneManager = CE_NEW SceneManager();
-    ce_dynamic_array_init(&this->renderTargets, 1U);
+    ce_array_init(this->renderTargets, 1U);
 }
 
 //------------------------------------------------------------------------------
@@ -35,11 +36,11 @@ GraphicsSystem::~GraphicsSystem()
     Singleton = NULL;
 
     unsigned int i;
-    for (i = 0U; i < this->renderTargets.size; ++i)
+    for (i = 0U; i < ce_array_size(this->renderTargets); ++i)
     {
-        CE_DELETE (RenderTarget*)ce_dynamic_array_get(&this->renderTargets, i);
+        CE_DELETE this->renderTargets[i];
     }
-    ce_dynamic_array_delete(&this->renderTargets);
+    ce_array_delete(this->renderTargets);
 
     CE_DELETE this->sceneManager;
     CE_DELETE this->materialManager;
@@ -58,7 +59,7 @@ GraphicsSystem::Initialise(void* const customParams)
 {
     this->autoWindow = this->activeRenderer->Initialise(customParams);
 
-    ce_dynamic_array_push_back(&this->renderTargets, this->autoWindow);
+    ce_array_push_back(this->renderTargets, this->autoWindow);
 
     return this->autoWindow;
 }
@@ -80,9 +81,9 @@ GraphicsSystem::RenderOneFrame()
 {
     // update all rendertargets
     unsigned int index;
-    for (index = 0U; index < this->renderTargets.size; ++index)
+    for (index = 0U; index < ce_array_size(this->renderTargets); ++index)
     {
-        RenderTarget* rt = (RenderTarget*)ce_dynamic_array_get(&this->renderTargets, index);
+        RenderTarget* rt = this->renderTargets[index];
         rt->Update();
         rt->SwapBuffers();
     }

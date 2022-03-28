@@ -4,6 +4,7 @@
 //------------------------------------------------------------------------------
 #include "channelbase.h"
 #include "audiosystem.h"
+#include "chrisslyarray.h"
 #include "chrisslymath.h"
 #include "debug.h"
 #include <stdio.h>
@@ -31,10 +32,10 @@ ChannelBase::ChannelBase() :
     index(CHANNEL_FREE),
     attenuationFactor(0.0f),
     propertiesHaveChanged(UNCHANGED),
+    dsps(NULL),
     userData(NULL)
 {
     memset(this->outputBuffer, 0, sizeof(this->outputBuffer));
-    ce_dynamic_array_init(&this->dsps, 1U);
 }
 
 //------------------------------------------------------------------------------
@@ -353,9 +354,9 @@ Result
 ChannelBase::AddDSP(unsigned int idx, DSP* const dsp)
 {
     // only support one dsp at index zero for now
-    if (0U == idx && 0U == this->dsps.size)
+    if (0U == idx && 0U == ce_array_size(this->dsps))
     {
-        ce_dynamic_array_push_back(&this->dsps, dsp);
+        ce_array_push_back(this->dsps, dsp);
     }
 
     return OK;
@@ -439,9 +440,9 @@ ChannelBase::FillOutputBuffer(unsigned int numSamples, unsigned int position)
 
     // apply dsps
     unsigned int i;
-    for (i = 0U; i < this->dsps.size; ++i)
+    for (i = 0U; i < ce_array_size(this->dsps); ++i)
     {
-        DSP* dsp = (DSP*)ce_dynamic_array_get(&this->dsps, i);
+        DSP* dsp = this->dsps[i];
         bool bypass;
         dsp->GetBypass(&bypass);
         if (0U == i && !bypass)
@@ -467,11 +468,11 @@ ChannelBase::ReleaseInternal()
 {
     // release and detach dsps
     unsigned int i;
-    for (i = 0U; i < this->dsps.size; ++i)
+    for (i = 0U; i < ce_array_size(this->dsps); ++i)
     {
-        ((DSP*)ce_dynamic_array_get(&this->dsps, i))->Release();
+        this->dsps[i]->Release();
     }
-    ce_dynamic_array_delete(&this->dsps);
+    ce_array_delete(this->dsps);
     this->isPlaying = false;
     this->index = CHANNEL_FREE;
     this->currentSound->DecrementUseCount();

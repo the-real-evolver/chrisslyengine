@@ -19,6 +19,7 @@ using namespace chrissly::core;
 Entity::Entity(Mesh* const mesh) :
     parentNode(NULL),
     mesh(mesh),
+    subEntities(NULL),
     visible(true),
     castShadows(false),
     receivesShadows(false)
@@ -65,12 +66,11 @@ Entity::Entity(Mesh* const mesh) :
 Entity::~Entity()
 {
     unsigned int i;
-    for (i = 0U; i < this->subEntities.capacity; ++i)
+    for (i = 0U; i < ce_array_size(this->subEntities); ++i)
     {
-        CE_DELETE (SubEntity*)ce_dynamic_array_get(&this->subEntities, i);
+        CE_DELETE this->subEntities[i];
     }
-
-    ce_dynamic_array_delete(&this->subEntities);
+    ce_array_delete(this->subEntities);
 
     for (i = 0U; i < this->animationStates.bucket_count; ++i)
     {
@@ -81,7 +81,6 @@ Entity::~Entity()
             it = it->next;
         }
     }
-
     ce_hash_table_clear(&this->animationStates);
 }
 
@@ -100,7 +99,7 @@ Entity::GetMesh() const
 SubEntity* const
 Entity::GetSubEntity(unsigned int index) const
 {
-    return (SubEntity*)ce_dynamic_array_get(&this->subEntities, index);
+    return this->subEntities[index];
 }
 
 //------------------------------------------------------------------------------
@@ -109,7 +108,7 @@ Entity::GetSubEntity(unsigned int index) const
 unsigned int
 Entity::GetNumSubEntities() const
 {
-    return this->subEntities.capacity;
+    return ce_array_size(this->subEntities);
 }
 
 //------------------------------------------------------------------------------
@@ -222,15 +221,15 @@ Entity::_NotifyAttached(SceneNode* const parent)
 void
 Entity::BuildSubEntities()
 {
-    ce_dynamic_array_init(&this->subEntities, this->mesh->GetNumSubMeshes());
+    ce_array_init(this->subEntities, this->mesh->GetNumSubMeshes());
 
     unsigned int i;
-    for (i = 0U; i < this->subEntities.capacity; ++i)
+    for (i = 0U; i < ce_array_header(this->subEntities)->capacity; ++i)
     {
         SubMesh* subMesh = this->mesh->GetSubMesh((unsigned short)i);
         SubEntity* subEntity = CE_NEW SubEntity(this, subMesh);
         subEntity->SetMaterialName(subMesh->GetMaterialName());
-        ce_dynamic_array_set(&this->subEntities, i, subEntity);
+        ce_array_push_back(this->subEntities, subEntity);
     }
 }
 

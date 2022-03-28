@@ -11,14 +11,6 @@ namespace chrissly
 //------------------------------------------------------------------------------
 /**
 */
-PSPHardwareVertexBuffer::PSPHardwareVertexBuffer()
-{
-
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
 PSPHardwareVertexBuffer::PSPHardwareVertexBuffer(unsigned int numVertices, unsigned int bytesPerVertex, graphics::Usage usage, bool useShadowBuffer) :
     HardwareVertexBufferBase(numVertices, bytesPerVertex, usage, useShadowBuffer)
 {

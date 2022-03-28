@@ -81,6 +81,9 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <CodeAnalysisRuleSet>NativeMinimumRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <CodeAnalysisRuleSet>NativeMinimumRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
@@ -211,13 +214,13 @@
     <ClInclude Include="..\..\code\audio\vorbiscodec.h" />
     <ClInclude Include="..\..\code\audio\wasapi\wasapiaudiorenderer.h" />
     <ClInclude Include="..\..\code\audio\wavcodec.h" />
+    <ClInclude Include="..\..\code\core\chrisslyarray.h" />
     <ClInclude Include="..\..\code\core\chrisslymath.h" />
     <ClInclude Include="..\..\code\core\chrisslymemory.h" />
     <ClInclude Include="..\..\code\core\chrisslymutex.h" />
     <ClInclude Include="..\..\code\core\chrisslyplatform.h" />
     <ClInclude Include="..\..\code\core\chrisslystring.h" />
     <ClInclude Include="..\..\code\core\debug.h" />
-    <ClInclude Include="..\..\code\core\dynamicarray.h" />
     <ClInclude Include="..\..\code\core\filehandle.h" />
     <ClInclude Include="..\..\code\core\fileio.h" />
     <ClInclude Include="..\..\code\core\fswrapper.h" />

@@ -7,7 +7,6 @@
     (C) 2012 Christian Bleicher
 */
 #include "keyframe.h"
-#include "dynamicarray.h"
 
 //------------------------------------------------------------------------------
 namespace chrissly
@@ -62,7 +61,7 @@ public:
 
 private:
     unsigned char handle;
-    mutable ce_dynamic_array keyFrames;
+    VertexMorphKeyFrame** keyFrames;
     int currentTimeIndex;
 };
 

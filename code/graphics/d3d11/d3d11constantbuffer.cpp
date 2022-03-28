@@ -4,6 +4,7 @@
 //------------------------------------------------------------------------------
 #include "d3d11constantbuffer.h"
 #include "d3d11rendersystem.h"
+#include "chrisslyarray.h"
 #include "debug.h"
 
 namespace chrissly
@@ -14,9 +15,10 @@ namespace chrissly
 */
 D3D11ConstantBuffer::D3D11ConstantBuffer(UINT byteWidth, UINT slot, unsigned int numConstants) :
     buffer(NULL),
-    slot(slot)
+    slot(slot),
+    constants(NULL)
 {
-    ce_dynamic_array_init(&this->constants, numConstants);
+    ce_array_init(this->constants, numConstants);
 
     D3D11_BUFFER_DESC desc;
     ZeroMemory(&desc, sizeof(desc));
@@ -37,7 +39,7 @@ D3D11ConstantBuffer::D3D11ConstantBuffer(UINT byteWidth, UINT slot, unsigned int
 */
 D3D11ConstantBuffer::~D3D11ConstantBuffer()
 {
-    ce_dynamic_array_delete(&this->constants);
+    ce_array_delete(this->constants);
 
     if (this->buffer != NULL)
     {
@@ -68,9 +70,9 @@ D3D11ConstantBuffer::UpdateConstants()
     context->Map(this->buffer, 0U, D3D11_MAP_WRITE_DISCARD, 0U, &mappedResource);
 
     unsigned int i;
-    for (i = 0U; i < this->constants.size; ++i)
+    for (i = 0U; i < ce_array_size(this->constants); ++i)
     {
-        graphics::GpuConstantDefinition* variable = (graphics::GpuConstantDefinition*)ce_dynamic_array_get(&this->constants, i);
+        graphics::GpuConstantDefinition* variable = this->constants[i];
         memcpy((void*)((UINT_PTR)mappedResource.pData + (UINT_PTR)variable->location), variable->buffer, variable->size * variable->arraySize);
     }
 

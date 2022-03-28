@@ -3,6 +3,7 @@
 //  (C) 2010 Christian Bleicher
 //------------------------------------------------------------------------------
 #include "pass.h"
+#include "chrisslyarray.h"
 
 namespace chrissly
 {
@@ -35,9 +36,10 @@ Pass::Pass(unsigned short index) :
     fogStart(0.0f),
     fogEnd(1.0f),
     morphAnimation(false),
+    textureUnitStates(NULL),
     gpuProgram(NULL)
 {
-    ce_dynamic_array_init(&this->textureUnitStates, 1U);
+    ce_array_init(this->textureUnitStates, 1U);
 }
 
 //------------------------------------------------------------------------------
@@ -401,7 +403,7 @@ TextureUnitState* const
 Pass::CreateTextureUnitState()
 {
     TextureUnitState* textureUnitState = CE_NEW TextureUnitState();
-    ce_dynamic_array_push_back(&this->textureUnitStates, textureUnitState);
+    ce_array_push_back(this->textureUnitStates, textureUnitState);
 
     return textureUnitState;
 }
@@ -412,7 +414,7 @@ Pass::CreateTextureUnitState()
 TextureUnitState* const
 Pass::GetTextureUnitState(unsigned short i) const
 {
-    return (TextureUnitState*)ce_dynamic_array_get(&this->textureUnitStates, i);
+    return this->textureUnitStates[i];
 }
 
 //------------------------------------------------------------------------------
@@ -421,7 +423,7 @@ Pass::GetTextureUnitState(unsigned short i) const
 unsigned short
 Pass::GetNumTextureUnitStates() const
 {
-    return (unsigned short)this->textureUnitStates.size;
+    return (unsigned short)ce_array_size(this->textureUnitStates);
 }
 
 //------------------------------------------------------------------------------
@@ -431,12 +433,11 @@ void
 Pass::RemoveAllTextureUnitStates()
 {
     unsigned int i;
-    for (i = 0U; i < this->textureUnitStates.size; ++i)
+    for (i = 0U; i < ce_array_size(this->textureUnitStates); ++i)
     {
-        CE_DELETE (TextureUnitState*)ce_dynamic_array_get(&this->textureUnitStates, i);
+        CE_DELETE this->textureUnitStates[i];
     }
-
-    ce_dynamic_array_delete(&this->textureUnitStates);
+    ce_array_delete(this->textureUnitStates);
 }
 
 //------------------------------------------------------------------------------
@@ -473,9 +474,9 @@ void
 Pass::_Load()
 {
     unsigned int i;
-    for (i = 0U; i < this->textureUnitStates.size; ++i)
+    for (i = 0U; i < ce_array_size(this->textureUnitStates); ++i)
     {
-        ((TextureUnitState*)ce_dynamic_array_get(&this->textureUnitStates, i))->_Load();
+        this->textureUnitStates[i]->_Load();
     }
 }
 

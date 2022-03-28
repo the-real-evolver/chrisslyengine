@@ -94,7 +94,6 @@ MaterialManager::RemoveAll()
             it = it->next;
         }
     }
-
     ce_hash_table_clear(&this->resources);
 }
 

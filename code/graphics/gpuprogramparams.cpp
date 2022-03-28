@@ -38,7 +38,6 @@ GpuNamedConstants::~GpuNamedConstants()
             it = it->next;
         }
     }
-
     ce_hash_table_clear(&this->map);
 }
 

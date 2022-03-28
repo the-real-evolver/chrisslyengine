@@ -7,7 +7,6 @@
     (C) 2012 Christian Bleicher
 */
 #include "texturebase.h"
-#include "dynamicarray.h"
 
 //------------------------------------------------------------------------------
 namespace chrissly
@@ -35,7 +34,7 @@ public:
     MipmapInfo* const GetMipmapInfo(int level) const;
 
 private:
-    mutable ce_dynamic_array mipmapInfos;
+    MipmapInfo* mipmapInfos;
 };
 
 } // namespace chrissly

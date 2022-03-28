@@ -17,9 +17,10 @@ using namespace chrissly::core;
 /**
 */
 Mesh::Mesh() :
+    subMeshes(NULL),
     boundingRadius(0.0f)
 {
-    ce_dynamic_array_init(&this->subMeshes, 1U);
+    ce_array_init(this->subMeshes, 1U);
     ce_hash_table_init(&this->animations, 0U);
 }
 
@@ -31,12 +32,11 @@ Mesh::~Mesh()
     this->RemoveAllAnimations();
 
     unsigned int i;
-    for (i = 0U; i < this->subMeshes.size; ++i)
+    for (i = 0U; i < ce_array_size(this->subMeshes); ++i)
     {
-        CE_DELETE (SubMesh*)ce_dynamic_array_get(&this->subMeshes, i);
+        CE_DELETE this->subMeshes[i];
     }
-
-    ce_dynamic_array_delete(&this->subMeshes);
+    ce_array_delete(this->subMeshes);
 }
 
 //------------------------------------------------------------------------------
@@ -46,7 +46,7 @@ SubMesh* const
 Mesh::CreateSubMesh()
 {
     SubMesh* subMesh = CE_NEW SubMesh();
-    ce_dynamic_array_push_back(&this->subMeshes, subMesh);
+    ce_array_push_back(this->subMeshes, subMesh);
 
     return subMesh;
 }
@@ -57,7 +57,7 @@ Mesh::CreateSubMesh()
 unsigned short
 Mesh::GetNumSubMeshes() const
 {
-    return (unsigned short)this->subMeshes.size;
+    return (unsigned short)ce_array_size(this->subMeshes);
 }
 
 //------------------------------------------------------------------------------
@@ -66,7 +66,7 @@ Mesh::GetNumSubMeshes() const
 SubMesh* const
 Mesh::GetSubMesh(unsigned short index) const
 {
-    return (SubMesh*)ce_dynamic_array_get(&this->subMeshes, index);
+    return this->subMeshes[index];
 }
 
 //------------------------------------------------------------------------------

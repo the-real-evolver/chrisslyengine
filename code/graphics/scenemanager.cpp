@@ -21,6 +21,8 @@ SceneManager* SceneManager::Singleton = NULL;
 /**
 */
 SceneManager::SceneManager() :
+    entities(NULL),
+    sceneNodes(NULL),
     sceneRoot(NULL),
     ambientLight(0x00000000),
     renderQueuesEndedCallback(NULL),
@@ -39,8 +41,8 @@ SceneManager::SceneManager() :
 
     ce_hash_table_init(&this->cameras, 2U);
     ce_hash_table_init(&this->lights, 4U);
-    ce_dynamic_array_init(&this->entities, 256U);
-    ce_dynamic_array_init(&this->sceneNodes, 256U);
+    ce_array_init(this->entities, 256U);
+    ce_array_init(this->sceneNodes, 256U);
 
     this->renderQueueOpaque.Initialise(512U);
     this->renderQueueTransparent.Initialise(256U);
@@ -111,7 +113,6 @@ SceneManager::DestroyAllCameras()
             it = it->next;
         }
     }
-
     ce_hash_table_clear(&this->cameras);
 }
 
@@ -153,7 +154,6 @@ SceneManager::DestroyAllLights()
             it = it->next;
         }
     }
-
     ce_hash_table_clear(&this->lights);
 }
 
@@ -165,7 +165,7 @@ SceneManager::CreateEntity(const char* const meshName)
 {
     Entity* entity = CE_NEW Entity(MeshManager::Instance()->Load(meshName));
 
-    ce_dynamic_array_push_back(&this->entities, entity);
+    ce_array_push_back(this->entities, entity);
 
     return entity;
 }
@@ -177,7 +177,7 @@ void
 SceneManager::DestroyEntity(Entity* const entity)
 {
     CE_ASSERT(entity != NULL, "SceneManager::DestroyEntity(): invalid pointer passed");
-    ce_dynamic_array_erase(&this->entities, entity);
+    ce_array_erase(this->entities, entity);
     CE_DELETE entity;
 }
 
@@ -190,7 +190,7 @@ SceneManager::CreateSceneNode()
     SceneNode* sceneNode = CE_NEW SceneNode();
     sceneNode->SetParent(NULL);
 
-    ce_dynamic_array_push_back(&this->sceneNodes, sceneNode);
+    ce_array_push_back(this->sceneNodes, sceneNode);
 
     return sceneNode;
 }
@@ -202,7 +202,7 @@ void
 SceneManager::DestroySceneNode(SceneNode* const node)
 {
     CE_ASSERT(node != NULL, "SceneManager::DestroySceneNode(): invalid pointer passed");
-    ce_dynamic_array_erase(&this->sceneNodes, node);
+    ce_array_erase(this->sceneNodes, node);
     CE_DELETE node;
 }
 
@@ -233,17 +233,17 @@ SceneManager::ClearScene()
     root->DetachAllObjects();
 
     unsigned int i;
-    for (i = 0U; i < this->sceneNodes.size; ++i)
+    for (i = 0U; i < ce_array_size(this->sceneNodes); ++i)
     {
-        CE_DELETE (SceneNode*)ce_dynamic_array_get(&this->sceneNodes, i);
+        CE_DELETE this->sceneNodes[i];
     }
-    ce_dynamic_array_delete(&this->sceneNodes);
+    ce_array_delete(this->sceneNodes);
 
-    for (i = 0U; i < this->entities.size; ++i)
+    for (i = 0U; i < ce_array_size(this->entities); ++i)
     {
-        CE_DELETE(Entity*)ce_dynamic_array_get(&this->entities, i);
+        CE_DELETE this->entities[i];
     }
-    ce_dynamic_array_delete(&this->entities);
+    ce_array_delete(this->entities);
 }
 
 //------------------------------------------------------------------------------
@@ -380,10 +380,10 @@ SceneManager::_RenderScene(Camera* const camera, Viewport* const vp)
 
     // fill renderqueues
     unsigned int sceneNodeIndex;
-    for (sceneNodeIndex = 0U; sceneNodeIndex < this->sceneNodes.size; ++sceneNodeIndex)
+    for (sceneNodeIndex = 0U; sceneNodeIndex < ce_array_size(this->sceneNodes); ++sceneNodeIndex)
     {
         // for all scenenodes
-        SceneNode* sceneNode = (SceneNode*)ce_dynamic_array_get(&this->sceneNodes, sceneNodeIndex);
+        SceneNode* sceneNode = this->sceneNodes[sceneNodeIndex];
 
         unsigned int entityIndex;
         for (entityIndex = 0U; entityIndex < sceneNode->NumAttachedObjects(); ++entityIndex)
