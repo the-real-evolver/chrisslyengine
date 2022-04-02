@@ -23,7 +23,7 @@ PSPTexture::PSPTexture() :
 */
 PSPTexture::PSPTexture(graphics::RenderTexture* const rt) :
     TextureBase(rt),
-	mipmapInfos(NULL)
+    mipmapInfos(NULL)
 {
 }
 
