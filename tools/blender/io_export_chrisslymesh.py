@@ -29,6 +29,8 @@ M_ANIMATION = b'\x03'
 M_ANIMATION_TRACK = b'\x04'
 M_ANIMATION_MORPH_KEYFRAME = b'\x05'
 
+PF_R8G8B8A8 = b'\x05'
+
 #------------------------------------------------------------------------------
 def ce_get_bounding_radius(objects):
     bounding_radius = 0.0
@@ -72,29 +74,52 @@ def ce_get_longest_extend(objects):
     return longest_extend
 
 #------------------------------------------------------------------------------
+def ce_write_texture(image, file_path):
+    file = open(file_path + "\\" + os.path.splitext(image.name)[0] + ".tex", 'wb')
+    # 1. write format tag
+    file.write(PF_R8G8B8A8)
+    # 2. write width and height
+    byte_array = array('H', [image.size[0], image.size[1]])
+    byte_array.tofile(file)
+    # 3. write number of mipmaps
+    file.write(b'\x00')
+    # 4. write swizzled flag
+    file.write(b'\x00')
+    # 5. write pixel data
+    for p in image.pixels:
+        byte_array = array('B', [int(p * 255.0)])
+        byte_array.tofile(file)
+    file.close()
+
+#------------------------------------------------------------------------------
 def ce_write_material(file_path, materials):
-    file = open(file_path, "wt")
+    file = open(file_path, 'wt')
     for mat in materials:
-        file.write('material %s\n' % (mat.name))
-        file.write('{\n')
-        file.write('    pass\n')
-        file.write('    {\n')
-        file.write('        lighting on\n')
+        file.write("material %s\n" % (mat.name))
+        file.write("{\n")
+        file.write("    pass\n")
+        file.write("    {\n")
+        file.write("        lighting on\n")
         if mat.blend_method == 'BLEND':
-            file.write('        scene_blend src_alpha one_minus_src_alpha\n')
-        file.write('        diffuse %f %f %f %f\n' % (mat.diffuse_color[0], mat.diffuse_color[1], mat.diffuse_color[2], mat.diffuse_color[3]))
-        file.write('        specular %f %f %f 1.0 %f\n' % (mat.specular_color[0], mat.specular_color[1], mat.specular_color[2], mat.specular_intensity * 64.0))
-        file.write('        cull_hardware %s\n' % ('clockwise' if mat.use_backface_culling else 'none'))
-        file.write('        roughness %f\n' % (mat.roughness))
-        file.write('        metallic %f\n' % (mat.metallic))
+            file.write("        scene_blend src_alpha one_minus_src_alpha\n")
+        file.write("        diffuse %f %f %f %f\n" % (mat.diffuse_color[0], mat.diffuse_color[1], mat.diffuse_color[2], mat.diffuse_color[3]))
+        file.write("        specular %f %f %f 1.0 %f\n" % (mat.specular_color[0], mat.specular_color[1], mat.specular_color[2], mat.specular_intensity * 64.0))
+        file.write("        cull_hardware %s\n" % ('clockwise' if mat.use_backface_culling else 'none'))
+        file.write("        roughness %f\n" % (mat.roughness))
+        file.write("        metallic %f\n" % (mat.metallic))
         for tex in mat.node_tree.nodes:
             if tex.type == 'TEX_IMAGE':
-                file.write('        texture_unit\n')
-                file.write('        {\n')
-                file.write('            texture %s\n' % (os.path.splitext(tex.image.name)[0] + ".tex"))
-                file.write('        }\n')
-        file.write('    }\n')
-        file.write('}\n\n')
+                file.write("        texture_unit\n")
+                file.write("        {\n")
+                file.write("            texture %s\n" % (os.path.splitext(tex.image.name)[0] + '.tex'))
+                if tex.projection == 'SPHERE':
+                    file.write("            env_map spherical\n")
+                if tex.interpolation == 'Closest':
+                    file.write("            filtering point point point\n")
+                file.write("        }\n")
+                ce_write_texture(tex.image, os.path.dirname(file_path))
+        file.write("    }\n")
+        file.write("}\n\n")
     file.close()
 
 #------------------------------------------------------------------------------
@@ -104,7 +129,7 @@ def ce_write_mesh(file_path, scale_uniform):
     radius = ce_get_bounding_radius(bpy.context.scene.objects) * scale
 
     # 1. write bounds
-    file = open(file_path, "wb")
+    file = open(file_path, 'wb')
     file.write(M_MESH_BOUNDS)
     byte_array = array('f', [radius])
     byte_array.tofile(file)
