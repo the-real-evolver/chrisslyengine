@@ -33,8 +33,8 @@ public:
     void Initialise();
     /// parse material script and create materials
     void ParseScript(const char* const name);
-    /// create a new material, or retrieve an existing one with the same name if it already exists
-    Material* const CreateOrRetrieve(const char* const name);
+    /// create a new material (name has to be unique)
+    Material* const Create(const char* const name);
     /// retrieves a pointer to a material by name, or null if the resource does not exist
     Material* const GetByName(const char* const name);
     /// removes all resources

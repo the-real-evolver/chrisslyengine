@@ -4,6 +4,7 @@
 //------------------------------------------------------------------------------
 #include "materialmanager.h"
 #include "memoryallocatorconfig.h"
+#include "debug.h"
 
 namespace chrissly
 {
@@ -54,12 +55,13 @@ MaterialManager::ParseScript(const char* const name)
 /**
 */
 Material* const
-MaterialManager::CreateOrRetrieve(const char* const name)
+MaterialManager::Create(const char* const name)
 {
     Material* material = (Material*)ce_hash_table_find(&this->resources, name, strlen(name));
     if (material != NULL)
     {
-        return material;
+        CE_ASSERT(false, "MaterialManager::Create(): material '%s' already exists, duplicates are not allowed\n", name);
+        return NULL;
     }
 
     material = CE_NEW Material();

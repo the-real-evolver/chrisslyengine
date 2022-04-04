@@ -102,7 +102,7 @@ MaterialParser::ParseRoot()
         if ('{' == this->lexer.token)
         {
             this->parserState = StateParseMaterial;
-            this->currentMaterial = MaterialManager::Instance()->CreateOrRetrieve(matName);
+            this->currentMaterial = MaterialManager::Instance()->Create(matName);
         }
     }
 }

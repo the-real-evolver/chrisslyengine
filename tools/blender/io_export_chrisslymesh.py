@@ -14,6 +14,7 @@ bl_info = {
     "category": "Import-Export",
 }
 
+import os
 import bpy
 import bmesh
 import mathutils
@@ -71,6 +72,32 @@ def ce_get_longest_extend(objects):
     return longest_extend
 
 #------------------------------------------------------------------------------
+def ce_write_material(file_path, materials):
+    file = open(file_path, "wt")
+    for mat in materials:
+        file.write('material %s\n' % (mat.name))
+        file.write('{\n')
+        file.write('    pass\n')
+        file.write('    {\n')
+        file.write('        lighting on\n')
+        if mat.blend_method == 'BLEND':
+            file.write('        scene_blend src_alpha one_minus_src_alpha\n')
+        file.write('        diffuse %f %f %f %f\n' % (mat.diffuse_color[0], mat.diffuse_color[1], mat.diffuse_color[2], mat.diffuse_color[3]))
+        file.write('        specular %f %f %f 1.0 %f\n' % (mat.specular_color[0], mat.specular_color[1], mat.specular_color[2], mat.specular_intensity * 64.0))
+        file.write('        cull_hardware %s\n' % ('clockwise' if mat.use_backface_culling else 'none'))
+        file.write('        roughness %f\n' % (mat.roughness))
+        file.write('        metallic %f\n' % (mat.metallic))
+        for tex in mat.node_tree.nodes:
+            if tex.type == 'TEX_IMAGE':
+                file.write('        texture_unit\n')
+                file.write('        {\n')
+                file.write('            texture %s\n' % (os.path.splitext(tex.image.name)[0] + ".tex"))
+                file.write('        }\n')
+        file.write('    }\n')
+        file.write('}\n\n')
+    file.close()
+
+#------------------------------------------------------------------------------
 def ce_write_mesh(file_path, scale_uniform):
     # calculate scale and bounding radius
     scale = (1.0 / ce_get_longest_extend(bpy.context.scene.objects)) if scale_uniform else 1.0
@@ -81,6 +108,9 @@ def ce_write_mesh(file_path, scale_uniform):
     file.write(M_MESH_BOUNDS)
     byte_array = array('f', [radius])
     byte_array.tofile(file)
+
+    # gather all used materials for export of the material file
+    used_materials = []
 
     for ob in bpy.context.scene.objects:
         if ob.type == 'MESH' and len(ob.data.polygons) != 0:
@@ -93,8 +123,7 @@ def ce_write_mesh(file_path, scale_uniform):
             bm.free()
 
             # scaling and axis conversion
-            global_matrix = (Matrix.Scale(scale, 4) @ axis_conversion(to_forward='-Z', to_up='Y').to_4x4())
-            mesh.transform(global_matrix @ ob.matrix_world)
+            mesh.transform((Matrix.Scale(scale, 4) @ axis_conversion(to_forward='-Z', to_up='Y').to_4x4()) @ ob.matrix_world)
 
             for index, mat_slot in enumerate(ob.material_slots):
                 # 2. write submesh chunk id
@@ -104,6 +133,7 @@ def ce_write_mesh(file_path, scale_uniform):
                 byte_array = array('B', [len(mat_slot.name)])
                 byte_array.tofile(file)
                 file.write(mat_slot.name.encode())
+                used_materials.append(mat_slot.material)
 
                 # gather all faces assigned to mat_slot
                 faces_cur_mat = []
@@ -118,9 +148,8 @@ def ce_write_mesh(file_path, scale_uniform):
 
                 # write vertices
                 for face in faces_cur_mat:
-                    #print('-> Triangle:')
                     for vert_idx, loop_idx in zip(face.vertices, face.loop_indices):
-                        # 5. write texture coordinatesp
+                        # 5. write texture coordinates
                         byte_array = array('f', mesh.uv_layers.active.data[loop_idx].uv)
                         byte_array.tofile(file)
                         # 6. write color (just white for now)
@@ -133,6 +162,9 @@ def ce_write_mesh(file_path, scale_uniform):
                         byte_array = array('f', mesh.vertices[vert_idx].co)
                         byte_array.tofile(file)
     file.close()
+
+    # assemble filename for material file and remove duplicates from material list
+    ce_write_material(os.path.splitext(file_path)[0] + ".material", list(dict.fromkeys(used_materials)))
 
 #------------------------------------------------------------------------------
 class Export_ChrisslyEngineMesh(bpy.types.Operator):
