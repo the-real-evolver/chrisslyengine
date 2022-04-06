@@ -77,6 +77,22 @@ PSPFSWrapper::Seek(core::FileHandle fileHandle, int offset, core::SeekOrigin whe
 //------------------------------------------------------------------------------
 /**
 */
+bool
+PSPFSWrapper::FileExists(const char* const fileName)
+{
+    char filePath[128U] = {'\0'};
+    CE_ASSERT(strlen(RootDirectory) + strlen(fileName) < 128U, "FSWrapper::FileExists(): file path too long (limit is 128 characters) '%s%s'\n", RootDirectory, fileName);
+    strcpy(filePath, RootDirectory);
+    strcat(filePath, fileName);
+    SceUID handle = sceIoOpen(filePath, PSP_O_RDONLY, 0777);
+    if (handle < 0) return false;
+    (void)sceIoClose(handle);
+    return true;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
 int
 PSPFSWrapper::Get(core::AccessMode mode)
 {

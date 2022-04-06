@@ -106,6 +106,18 @@ WinAPIFSWrapper::Seek(core::FileHandle fileHandle, int offset, core::SeekOrigin 
 
 //------------------------------------------------------------------------------
 /**
+    See: https://devblogs.microsoft.com/oldnewthing/20071023-00/?p=24713
+*/
+bool
+WinAPIFSWrapper::FileExists(const char* const fileName)
+{
+    DWORD fileAttr = GetFileAttributes(fileName);
+    if (0xffffffff == fileAttr || 0U != (FILE_ATTRIBUTE_DIRECTORY & fileAttr)) return false;
+    return true;
+}
+
+//------------------------------------------------------------------------------
+/**
 */
 DWORD
 WinAPIFSWrapper::Get(core::AccessMode mode)

@@ -63,7 +63,7 @@ StateMaterialTest::Enter()
     cubeSceneNode->SetScale(10.0f, 0.2f, 10.0f);
     cubeSceneNode->SetPosition(2.0f, -2.8f, -2.0f);
     cubeSceneNode->AttachObject(cubeEntity);
-    this->cubeMaterial = MaterialManager::Instance()->CreateOrRetrieve("cube_material");
+    this->cubeMaterial = MaterialManager::Instance()->GetByName("cube_material");
     this->vMod = 0.0f;
 
     Entity* lightConeEntity = SceneManager::Instance()->CreateEntity("cone.mesh");
