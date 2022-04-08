@@ -116,6 +116,11 @@ def ce_write_material(file_path, materials):
                     file.write("            env_map spherical\n")
                 if tex.interpolation == 'Closest':
                     file.write("            filtering point point point\n")
+                for input in tex.inputs:
+                    for link in input.links:
+                        if link.from_node.type == 'MAPPING':
+                            scale = link.from_node.inputs['Scale'].default_value
+                            file.write("            scale %f %f\n" % (scale[0], scale[1]))
                 file.write("        }\n")
                 ce_write_texture(tex.image, os.path.dirname(file_path))
         file.write("    }\n")
@@ -123,10 +128,10 @@ def ce_write_material(file_path, materials):
     file.close()
 
 #------------------------------------------------------------------------------
-def ce_write_mesh(file_path, scale_uniform):
+def ce_write_mesh(file_path, objects, scale_uniform):
     # calculate scale and bounding radius
-    scale = (1.0 / ce_get_longest_extend(bpy.context.scene.objects)) if scale_uniform else 1.0
-    radius = ce_get_bounding_radius(bpy.context.scene.objects) * scale
+    scale = (1.0 / ce_get_longest_extend(objects)) if scale_uniform else 1.0
+    radius = ce_get_bounding_radius(objects) * scale
 
     # 1. write bounds
     file = open(file_path, 'wb')
@@ -136,8 +141,7 @@ def ce_write_mesh(file_path, scale_uniform):
 
     # gather all used materials for export of the material file
     used_materials = []
-
-    for ob in bpy.context.scene.objects:
+    for ob in objects:
         if ob.type == 'MESH' and len(ob.data.polygons) != 0:
             # triangulate mesh
             mesh = ob.data.copy()
@@ -188,8 +192,7 @@ def ce_write_mesh(file_path, scale_uniform):
                         byte_array.tofile(file)
     file.close()
 
-    # assemble filename for material file and remove duplicates from material list
-    ce_write_material(os.path.splitext(file_path)[0] + ".material", list(dict.fromkeys(used_materials)))
+    return used_materials
 
 #------------------------------------------------------------------------------
 class Export_ChrisslyEngineMesh(bpy.types.Operator):
@@ -198,12 +201,21 @@ class Export_ChrisslyEngineMesh(bpy.types.Operator):
 
     # ui elements/properties
     scale_uniform: bpy.props.BoolProperty(name="Scale to uniform size", description="Scale the exported mesh so it's longest extend has size of 1 unit", default=True)
+    separate_objects: bpy.props.BoolProperty(name="Objects as separate files", description="Each object will be saved as separate file, material file is shared", default=False)
 
     filepath: bpy.props.StringProperty(subtype='FILE_PATH')
 
     # export the mesh
     def execute(self, context):
-        ce_write_mesh(self.filepath, self.scale_uniform)
+        used_materials = []
+        if self.separate_objects:
+            for i, ob in enumerate(bpy.context.scene.objects):
+                obj_arr = [ob]
+                used_materials += ce_write_mesh(os.path.splitext(self.filepath)[0] + str(i) + os.path.splitext(self.filepath)[1], obj_arr, self.scale_uniform)
+        else:
+            used_materials += ce_write_mesh(self.filepath, bpy.context.scene.objects, self.scale_uniform)
+        # assemble filename for material file and remove duplicates from material list
+        ce_write_material(os.path.splitext(self.filepath)[0] + ".material", list(dict.fromkeys(used_materials)))
         return {'FINISHED'}
 
     # open the file selector, pressing "Export ChrisslyEngine-Mesh" then calls execute
