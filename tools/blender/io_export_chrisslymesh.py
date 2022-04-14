@@ -111,7 +111,7 @@ def ce_write_material(file_path, materials):
             if tex.type == 'TEX_IMAGE':
                 file.write("        texture_unit\n")
                 file.write("        {\n")
-                file.write("            texture %s\n" % (os.path.splitext(tex.image.name)[0] + '.tex'))
+                file.write("            texture \"%s\"\n" % (ce_export_path(file_path) + os.path.splitext(tex.image.name)[0] + '.tex'))
                 if tex.projection == 'SPHERE':
                     file.write("            env_map spherical\n")
                 if tex.interpolation == 'Closest':
@@ -166,7 +166,6 @@ def ce_write_mesh(file_path, objects, scale_uniform):
 
                 # gather all faces assigned to mat_slot
                 faces_cur_mat = []
-                uv_vtx_map = []
                 for face in mesh.polygons:
                     if face.material_index == index:
                         faces_cur_mat.append(face)
@@ -195,27 +194,93 @@ def ce_write_mesh(file_path, objects, scale_uniform):
     return used_materials
 
 #------------------------------------------------------------------------------
+def ce_write_positions(file_path, objects, scale_uniform):
+    # calculate scale
+    scale = (1.0 / ce_get_longest_extend(objects)) if scale_uniform else 1.0
+
+    file = open(file_path, 'wb')
+
+    for ob in objects:
+        if ob.type == 'MESH' and len(ob.data.polygons) != 0:
+            # triangulate mesh
+            mesh = ob.data.copy()
+            bm = bmesh.new()
+            bm.from_mesh(mesh)
+            bmesh.ops.triangulate(bm, faces=bm.faces[:], quad_method='BEAUTY', ngon_method='BEAUTY')
+            bm.to_mesh(mesh)
+            bm.free()
+
+            # scaling and axis conversion
+            mesh.transform((Matrix.Scale(scale, 4) @ axis_conversion(to_forward='-Z', to_up='Y').to_4x4()) @ ob.matrix_world)
+
+            # write positions
+            for face in mesh.polygons:
+                for vert_idx in face.vertices:
+                    byte_array = array('f', mesh.vertices[vert_idx].co)
+                    byte_array.tofile(file)
+    file.close()
+
+#------------------------------------------------------------------------------
+def ce_export_path(path):
+    # 1. tokenize path
+    tokens = []
+    while 1:
+        token = os.path.split(path)
+        if token[0] == path:  # os.path.split returns drive in tokens[0] for absolute paths
+            tokens.insert(0, token[0])
+            break
+        elif token[1] == path: # os.path.split returns directory in tokens[1] for relative paths
+            tokens.insert(0, token[1])
+            break
+        else:
+            path = token[0]
+            tokens.insert(0, token[1])
+
+    # 2. extract path relative to export folder
+    index = tokens.index("export") if "export" in tokens else -1
+    if index == -1 or index == (len(tokens) - 2):
+        path = ""
+    else:
+        p = tokens[index + 1:len(tokens) - 1]
+        path = os.path.join(*p)
+        path += ("/")
+        path = os.path.normcase(path)
+    return path
+
+#------------------------------------------------------------------------------
 class Export_ChrisslyEngineMesh(bpy.types.Operator):
     bl_idname = "export_scene.chrisslyengine_mesh"
     bl_label = "Export ChrisslyEngine-Mesh"
 
     # ui elements/properties
-    scale_uniform: bpy.props.BoolProperty(name="Scale to uniform size", description="Scale the exported mesh so it's longest extend has size of 1 unit", default=True)
+    scale_uniform: bpy.props.BoolProperty(name="Scale to uniform size", description="Scale the exported mesh so it's longest extend has size of 1 unit", default=False)
     separate_objects: bpy.props.BoolProperty(name="Objects as separate files", description="Each object will be saved as separate file, material file is shared", default=False)
+    selected_only: bpy.props.BoolProperty(name="Selected only", description="Only selected objects will be exported", default=False)
+    position_only: bpy.props.BoolProperty(name="Position coordinates only", description="Only the vertex positions will be written to the file, can be used as collision geometry", default=False)
 
     filepath: bpy.props.StringProperty(subtype='FILE_PATH')
 
     # export the mesh
     def execute(self, context):
         used_materials = []
+        # selected only
+        objects = bpy.context.selected_objects if self.selected_only else bpy.context.scene.objects
+        # separate objects
         if self.separate_objects:
-            for i, ob in enumerate(bpy.context.scene.objects):
+            for i, ob in enumerate(objects):
                 obj_arr = [ob]
-                used_materials += ce_write_mesh(os.path.splitext(self.filepath)[0] + str(i) + os.path.splitext(self.filepath)[1], obj_arr, self.scale_uniform)
+                if self.position_only:
+                    ce_write_positions(os.path.splitext(self.filepath)[0] + str(i) + os.path.splitext(self.filepath)[1], obj_arr, self.scale_uniform)
+                else:
+                    used_materials += ce_write_mesh(os.path.splitext(self.filepath)[0] + str(i) + os.path.splitext(self.filepath)[1], obj_arr, self.scale_uniform)
         else:
-            used_materials += ce_write_mesh(self.filepath, bpy.context.scene.objects, self.scale_uniform)
-        # assemble filename for material file and remove duplicates from material list
-        ce_write_material(os.path.splitext(self.filepath)[0] + ".material", list(dict.fromkeys(used_materials)))
+            if self.position_only:
+                ce_write_positions(self.filepath, objects, self.scale_uniform)
+            else:
+                used_materials += ce_write_mesh(self.filepath, objects, self.scale_uniform)
+        if len(used_materials) > 0:
+            # assemble filename for material file and remove duplicates from material list
+            ce_write_material(os.path.splitext(self.filepath)[0] + ".material", list(dict.fromkeys(used_materials)))
         return {'FINISHED'}
 
     # open the file selector, pressing "Export ChrisslyEngine-Mesh" then calls execute

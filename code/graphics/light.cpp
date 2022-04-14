@@ -18,7 +18,7 @@ Light::Light() :
     lightType(LT_POINT),
     diffuse(0xffffffff),
     specular(0x00000000),
-    range(100.0f),
+    range(1000.0f),
     attenuationConst(1.0f),
     attenuationLinear(0.0f),
     attenuationQuad(0.0f),
