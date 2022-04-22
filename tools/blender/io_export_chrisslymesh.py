@@ -74,6 +74,33 @@ def ce_get_longest_extend(objects):
     return longest_extend
 
 #------------------------------------------------------------------------------
+def ce_export_path(path):
+    # 1. tokenize path
+    tokens = []
+    while 1:
+        token = os.path.split(path)
+        if token[0] == path:  # os.path.split returns drive in tokens[0] for absolute paths
+            tokens.insert(0, token[0])
+            break
+        elif token[1] == path: # os.path.split returns directory in tokens[1] for relative paths
+            tokens.insert(0, token[1])
+            break
+        else:
+            path = token[0]
+            tokens.insert(0, token[1])
+
+    # 2. extract path relative to export folder
+    index = tokens.index("export") if "export" in tokens else -1
+    if index == -1 or index == (len(tokens) - 2):
+        path = ""
+    else:
+        p = tokens[index + 1:len(tokens) - 1]
+        path = os.path.join(*p)
+        path += ("/")
+        path = os.path.normcase(path)
+    return path
+
+#------------------------------------------------------------------------------
 def ce_write_texture(image, file_path):
     file = open(file_path + "\\" + os.path.splitext(image.name)[0] + ".tex", 'wb')
     # 1. write format tag
@@ -221,31 +248,103 @@ def ce_write_positions(file_path, objects, scale_uniform):
     file.close()
 
 #------------------------------------------------------------------------------
-def ce_export_path(path):
-    # 1. tokenize path
-    tokens = []
-    while 1:
-        token = os.path.split(path)
-        if token[0] == path:  # os.path.split returns drive in tokens[0] for absolute paths
-            tokens.insert(0, token[0])
-            break
-        elif token[1] == path: # os.path.split returns directory in tokens[1] for relative paths
-            tokens.insert(0, token[1])
-            break
-        else:
-            path = token[0]
-            tokens.insert(0, token[1])
+def ce_write_morph_animation(file_path):
+    depsgraph = bpy.context.evaluated_depsgraph_get()
 
-    # 2. extract path relative to export folder
-    index = tokens.index("export") if "export" in tokens else -1
-    if index == -1 or index == (len(tokens) - 2):
-        path = ""
-    else:
-        p = tokens[index + 1:len(tokens) - 1]
-        path = os.path.join(*p)
-        path += ("/")
-        path = os.path.normcase(path)
-    return path
+    # gather all used materials
+    used_materials = []
+    scene_frames = range(bpy.context.scene.frame_start, bpy.context.scene.frame_end + 1)
+    for frame in scene_frames:
+        bpy.context.scene.frame_set(frame, subframe = 0.0)
+        for ob in bpy.context.scene.objects:
+            if ob.type == 'MESH' and len(ob.data.polygons) != 0:
+                for index, mat_slot in enumerate(ob.material_slots):
+                    used_materials.append(mat_slot.material)
+    used_materials = list(dict.fromkeys(used_materials))
+
+    file = open(file_path, 'wb')
+
+    # 1. write bounds
+    radius = ce_get_bounding_radius(bpy.context.scene.objects)
+    file.write(M_MESH_BOUNDS)
+    byte_array = array('f', [radius])
+    byte_array.tofile(file)
+
+    # 2. write animation tag and length
+    length = len(scene_frames) / bpy.context.scene.render.fps
+    key_length = length / (len(scene_frames) - 1);
+    file.write(M_ANIMATION)
+    byte_array = array('f', [length])
+    byte_array.tofile(file)
+
+    for track, mat in enumerate(used_materials):
+        # 3. write empty (0 vertices) submesh for animationtrack
+        file.write(M_SUBMESH)
+        byte_array = array('B', [len(mat.name)])
+        byte_array.tofile(file)
+        file.write(mat.name.encode())
+        byte_array = array('I', [0])
+        byte_array.tofile(file)
+
+        # 4. write animationtrack tag and handle
+        file.write(M_ANIMATION_TRACK)
+        byte_array = array('B', [track])
+        byte_array.tofile(file)
+
+        current_time = 0.0;
+
+        for frame in scene_frames:
+            # update state of objects to current frame
+            bpy.context.scene.frame_set(frame, subframe = 0.0)
+            for ob in bpy.context.scene.objects: # only one object for now
+                if ob.type == 'MESH' and len(ob.data.polygons) != 0:
+                    # get object instance for this frame
+                    ob_instance = ob.evaluated_get(depsgraph)
+
+                    # triangulate mesh
+                    mesh = ob_instance.data.copy()
+                    bm = bmesh.new()
+                    bm.from_mesh(mesh)
+                    bmesh.ops.triangulate(bm, faces=bm.faces[:], quad_method='FIXED', ngon_method='BEAUTY')
+                    bm.to_mesh(mesh)
+                    bm.free()
+
+                    # scaling and axis conversion
+                    mesh.transform((Matrix.Scale(1.0, 4) @ axis_conversion(to_forward='-Z', to_up='Y').to_4x4()) @ ob_instance.matrix_world)
+
+                    # gather all faces assigned to track
+                    faces_cur_mat = []
+                    for face in mesh.polygons:
+                        if face.material_index == track:
+                            faces_cur_mat.append(face)
+
+                    # 5. write key tag, keytime and vertexdata of the key
+                    file.write(M_ANIMATION_MORPH_KEYFRAME)
+                    byte_array = array('f', [current_time])
+                    byte_array.tofile(file)
+                    byte_array = array('I', [len(faces_cur_mat) * 3])
+                    byte_array.tofile(file)
+
+                    current_time += key_length;
+
+                    # write vertices
+                    for face in faces_cur_mat:
+                        for vert_idx, loop_idx in zip(face.vertices, face.loop_indices):
+                            # 6. write texture coordinates
+                            byte_array = array('f', mesh.uv_layers.active.data[loop_idx].uv)
+                            byte_array.tofile(file)
+                            # 7. write color (just white for now)
+                            byte_array = array('I', [0xffffffff])
+                            byte_array.tofile(file)
+                            # 8. write normal
+                            byte_array = array('f', mesh.vertices[vert_idx].normal)
+                            byte_array.tofile(file)
+                            # 9. write position
+                            byte_array = array('f', mesh.vertices[vert_idx].co)
+                            byte_array.tofile(file)
+    file.close()
+
+    return used_materials
 
 #------------------------------------------------------------------------------
 class Export_ChrisslyEngineMesh(bpy.types.Operator):
@@ -257,27 +356,33 @@ class Export_ChrisslyEngineMesh(bpy.types.Operator):
     separate_objects: bpy.props.BoolProperty(name="Objects as separate files", description="Each object will be saved as separate file, material file is shared", default=False)
     selected_only: bpy.props.BoolProperty(name="Selected only", description="Only selected objects will be exported", default=False)
     position_only: bpy.props.BoolProperty(name="Position coordinates only", description="Only the vertex positions will be written to the file, can be used as collision geometry", default=False)
+    export_morph_animation: bpy.props.BoolProperty(name="Export morph animation", description="Export scene frames as morph animation keyframes", default=False)
 
     filepath: bpy.props.StringProperty(subtype='FILE_PATH')
 
     # export the mesh
     def execute(self, context):
         used_materials = []
-        # selected only
-        objects = bpy.context.selected_objects if self.selected_only else bpy.context.scene.objects
-        # separate objects
-        if self.separate_objects:
-            for i, ob in enumerate(objects):
-                obj_arr = [ob]
-                if self.position_only:
-                    ce_write_positions(os.path.splitext(self.filepath)[0] + str(i) + os.path.splitext(self.filepath)[1], obj_arr, self.scale_uniform)
-                else:
-                    used_materials += ce_write_mesh(os.path.splitext(self.filepath)[0] + str(i) + os.path.splitext(self.filepath)[1], obj_arr, self.scale_uniform)
+        # export morph animation
+        if self.export_morph_animation:
+            used_materials += ce_write_morph_animation(self.filepath)
         else:
-            if self.position_only:
-                ce_write_positions(self.filepath, objects, self.scale_uniform)
+            # selected only
+            objects = bpy.context.selected_objects if self.selected_only else bpy.context.scene.objects
+            # separate objects
+            if self.separate_objects:
+                for i, ob in enumerate(objects):
+                    obj_arr = [ob]
+                    if self.position_only:
+                        ce_write_positions(os.path.splitext(self.filepath)[0] + str(i) + os.path.splitext(self.filepath)[1], obj_arr, self.scale_uniform)
+                    else:
+                        used_materials += ce_write_mesh(os.path.splitext(self.filepath)[0] + str(i) + os.path.splitext(self.filepath)[1], obj_arr, self.scale_uniform)
             else:
-                used_materials += ce_write_mesh(self.filepath, objects, self.scale_uniform)
+                if self.position_only:
+                    ce_write_positions(self.filepath, objects, self.scale_uniform)
+                else:
+                    used_materials += ce_write_mesh(self.filepath, objects, self.scale_uniform)
+
         if len(used_materials) > 0:
             # assemble filename for material file and remove duplicates from material list
             ce_write_material(os.path.splitext(self.filepath)[0] + ".material", list(dict.fromkeys(used_materials)))
@@ -305,3 +410,4 @@ def unregister():
 
 if __name__ == "__main__":
     register()
+
