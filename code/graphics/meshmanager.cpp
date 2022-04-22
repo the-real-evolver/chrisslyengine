@@ -128,6 +128,7 @@ MeshManager::Load(const char* const filename)
 
                     // read vertex count
                     FSWrapper::Read(fd, &vertexCount, 4U);
+                    CE_ASSERT(vertexCount > 0, "MeshManager::Load(): vertex count of morph keyframe is zero\n");
 
                     // create the vertexbuffer
                     vertexBuffer = CE_NEW HardwareVertexBuffer(vertexCount, bytesPerVertex, HBU_STATIC, true);

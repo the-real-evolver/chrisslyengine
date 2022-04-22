@@ -122,7 +122,7 @@ def ce_write_texture(image, file_path):
 def ce_write_material(file_path, materials):
     file = open(file_path, 'wt')
     for mat in materials:
-        file.write("material %s\n" % (mat.name))
+        file.write("material \"%s\"\n" % (mat.name))
         file.write("{\n")
         file.write("    pass\n")
         file.write("    {\n")
@@ -135,7 +135,7 @@ def ce_write_material(file_path, materials):
         file.write("        roughness %f\n" % (mat.roughness))
         file.write("        metallic %f\n" % (mat.metallic))
         for tex in mat.node_tree.nodes:
-            if tex.type == 'TEX_IMAGE':
+            if tex.type == 'TEX_IMAGE' and hasattr(tex.image, 'name'):
                 file.write("        texture_unit\n")
                 file.write("        {\n")
                 file.write("            texture \"%s\"\n" % (ce_export_path(file_path) + os.path.splitext(tex.image.name)[0] + '.tex'))
@@ -257,8 +257,9 @@ def ce_write_morph_animation(file_path):
     for frame in scene_frames:
         bpy.context.scene.frame_set(frame, subframe = 0.0)
         for ob in bpy.context.scene.objects:
-            if ob.type == 'MESH' and len(ob.data.polygons) != 0:
-                for index, mat_slot in enumerate(ob.material_slots):
+            ob_instance = ob.evaluated_get(depsgraph)
+            if ob_instance.type == 'MESH' and len(ob_instance.data.polygons) != 0:
+                for index, mat_slot in enumerate(ob_instance.material_slots):
                     used_materials.append(mat_slot.material)
     used_materials = list(dict.fromkeys(used_materials))
 
@@ -296,52 +297,54 @@ def ce_write_morph_animation(file_path):
         for frame in scene_frames:
             # update state of objects to current frame
             bpy.context.scene.frame_set(frame, subframe = 0.0)
-            for ob in bpy.context.scene.objects: # only one object for now
-                if ob.type == 'MESH' and len(ob.data.polygons) != 0:
-                    # get object instance for this frame
-                    ob_instance = ob.evaluated_get(depsgraph)
+            for ob in bpy.context.scene.objects:
+                # get object instance for this frame
+                ob_instance = ob.evaluated_get(depsgraph)
+                if ob_instance.type == 'MESH' and len(ob_instance.data.polygons) != 0:
+                    # find mat_slot for material
+                    for mat_index, mat_slot in enumerate(ob_instance.material_slots):
+                        if mat_slot.material == mat:
+                            # triangulate mesh
+                            mesh = ob_instance.data.copy()
+                            bm = bmesh.new()
+                            bm.from_mesh(mesh)
+                            bmesh.ops.triangulate(bm, faces=bm.faces[:], quad_method='FIXED', ngon_method='BEAUTY')
+                            bm.to_mesh(mesh)
+                            bm.free()
 
-                    # triangulate mesh
-                    mesh = ob_instance.data.copy()
-                    bm = bmesh.new()
-                    bm.from_mesh(mesh)
-                    bmesh.ops.triangulate(bm, faces=bm.faces[:], quad_method='FIXED', ngon_method='BEAUTY')
-                    bm.to_mesh(mesh)
-                    bm.free()
+                            # scaling and axis conversion
+                            mesh.transform((Matrix.Scale(1.0, 4) @ axis_conversion(to_forward='-Z', to_up='Y').to_4x4()) @ ob_instance.matrix_world)
 
-                    # scaling and axis conversion
-                    mesh.transform((Matrix.Scale(1.0, 4) @ axis_conversion(to_forward='-Z', to_up='Y').to_4x4()) @ ob_instance.matrix_world)
+                            # gather all faces assigned to track
+                            faces_cur_mat = []
+                            for face in mesh.polygons:
+                                if face.material_index == mat_index:
+                                    faces_cur_mat.append(face)
 
-                    # gather all faces assigned to track
-                    faces_cur_mat = []
-                    for face in mesh.polygons:
-                        if face.material_index == track:
-                            faces_cur_mat.append(face)
-
-                    # 5. write key tag, keytime and vertexdata of the key
-                    file.write(M_ANIMATION_MORPH_KEYFRAME)
-                    byte_array = array('f', [current_time])
-                    byte_array.tofile(file)
-                    byte_array = array('I', [len(faces_cur_mat) * 3])
-                    byte_array.tofile(file)
-
-                    current_time += key_length;
-
-                    # write vertices
-                    for face in faces_cur_mat:
-                        for vert_idx, loop_idx in zip(face.vertices, face.loop_indices):
-                            # 6. write texture coordinates
-                            byte_array = array('f', mesh.uv_layers.active.data[loop_idx].uv)
+                            # 5. write key tag, keytime and vertexdata of the key
+                            file.write(M_ANIMATION_MORPH_KEYFRAME)
+                            byte_array = array('f', [current_time])
                             byte_array.tofile(file)
-                            # 7. write color (just white for now)
-                            byte_array = array('I', [0xffffffff])
+                            byte_array = array('I', [len(faces_cur_mat) * 3])
                             byte_array.tofile(file)
-                            # 8. write normal
-                            byte_array = array('f', mesh.vertices[vert_idx].normal)
-                            byte_array.tofile(file)
-                            # 9. write position
-                            byte_array = array('f', mesh.vertices[vert_idx].co)
-                            byte_array.tofile(file)
+
+                            current_time += key_length;
+
+                            # write vertices
+                            for face in faces_cur_mat:
+                                for vert_idx, loop_idx in zip(face.vertices, face.loop_indices):
+                                    # 6. write texture coordinates
+                                    byte_array = array('f', mesh.uv_layers.active.data[loop_idx].uv)
+                                    byte_array.tofile(file)
+                                    # 7. write color (just white for now)
+                                    byte_array = array('I', [0xffffffff])
+                                    byte_array.tofile(file)
+                                    # 8. write normal
+                                    byte_array = array('f', mesh.vertices[vert_idx].normal)
+                                    byte_array.tofile(file)
+                                    # 9. write position
+                                    byte_array = array('f', mesh.vertices[vert_idx].co)
+                                    byte_array.tofile(file)
     file.close()
 
     return used_materials
