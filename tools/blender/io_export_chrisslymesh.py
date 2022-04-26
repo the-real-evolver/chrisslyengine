@@ -21,6 +21,7 @@ import mathutils
 from mathutils import Vector, Matrix
 from array import array
 from bpy_extras.io_utils import axis_conversion
+from bpy_extras.io_utils import ExportHelper
 
 #------------------------------------------------------------------------------
 M_SUBMESH = b'\x01'
@@ -350,7 +351,7 @@ def ce_write_morph_animation(file_path):
     return used_materials
 
 #------------------------------------------------------------------------------
-class Export_ChrisslyEngineMesh(bpy.types.Operator):
+class Export_ChrisslyEngineMesh(bpy.types.Operator, ExportHelper):
     bl_idname = "export_scene.chrisslyengine_mesh"
     bl_label = "Export ChrisslyEngine-Mesh"
 
@@ -361,7 +362,7 @@ class Export_ChrisslyEngineMesh(bpy.types.Operator):
     position_only: bpy.props.BoolProperty(name="Position coordinates only", description="Only the vertex positions will be written to the file, can be used as collision geometry", default=False)
     export_morph_animation: bpy.props.BoolProperty(name="Export morph animation", description="Export scene frames as morph animation keyframes", default=False)
 
-    filepath: bpy.props.StringProperty(subtype='FILE_PATH')
+    filename_ext = ".mesh"
 
     # export the mesh
     def execute(self, context):
@@ -390,11 +391,6 @@ class Export_ChrisslyEngineMesh(bpy.types.Operator):
             # assemble filename for material file and remove duplicates from material list
             ce_write_material(os.path.splitext(self.filepath)[0] + ".material", list(dict.fromkeys(used_materials)))
         return {'FINISHED'}
-
-    # open the file selector, pressing "Export ChrisslyEngine-Mesh" then calls execute
-    def invoke(self, context, event):
-        context.window_manager.fileselect_add(self)
-        return {'RUNNING_MODAL'}
 
 #------------------------------------------------------------------------------
 # entry in the "File -> Export" list
