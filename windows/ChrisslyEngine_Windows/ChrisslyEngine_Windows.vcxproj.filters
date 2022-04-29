@@ -167,6 +167,9 @@
     <ClCompile Include="..\..\code\audio\dsp\filters.cpp">
       <Filter>audio\dsp</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\code\input\windows\windowsinput.cpp">
+      <Filter>input\windows</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="core">
@@ -198,6 +201,12 @@
     </Filter>
     <Filter Include="graphics\d3d11">
       <UniqueIdentifier>{0ac22231-a789-4ce7-8ed0-f347e5a28efc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="input">
+      <UniqueIdentifier>{80cd973f-6bf6-47dc-81e7-8bb8a5e86c65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="input\windows">
+      <UniqueIdentifier>{1992b071-82be-486a-86e8-c62aef5477f1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -467,6 +476,12 @@
     </ClInclude>
     <ClInclude Include="..\..\code\core\chrisslyarray.h">
       <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\input\chrisslyinput.h">
+      <Filter>input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\input\chrisslyinputplatform.h">
+      <Filter>input</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

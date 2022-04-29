@@ -90,11 +90,11 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>__CE_DEBUG__;__CE_WINDOWS__;__CE_D3D11__;__CE_WASAPI__;_CRT_SECURE_NO_WARNINGS;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\code;..\..\code\core;..\..\code\core\standard;..\..\code\core\windows;..\..\code\graphics;..\..\code\audio;..\..\code\thirdparty\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\code;..\..\code\core;..\..\code\core\standard;..\..\code\core\windows;..\..\code\graphics;..\..\code\audio;..\..\code\input;..\..\code\thirdparty\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <FloatingPointModel>Fast</FloatingPointModel>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;d3d11.lib;d3dcompiler.lib;dxguid.lib;MMDevAPI.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;d3d11.lib;d3dcompiler.lib;dxguid.lib;MMDevAPI.lib;Xinput.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -111,13 +111,13 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\..\code;..\..\code\core;..\..\code\core\standard;..\..\code\core\windows;..\..\code\graphics;..\..\code\audio;..\..\code\thirdparty\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\code;..\..\code\core;..\..\code\core\standard;..\..\code\core\windows;..\..\code\graphics;..\..\code\audio;..\..\code\thirdparty\stb;..\..\code\input;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>__CE_WINDOWS__;__CE_D3D11__;__CE_WASAPI__;_CRT_SECURE_NO_WARNINGS;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;dxguid.lib;MMDevAPI.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;dxguid.lib;MMDevAPI.lib;Xinput.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -128,12 +128,12 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>__CE_DEBUG__;__CE_WINDOWS__;__CE_D3D11__;__CE_WASAPI__;_CRT_SECURE_NO_WARNINGS;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\code;..\..\code\core;..\..\code\core\standard;..\..\code\core\windows;..\..\code\graphics;..\..\code\audio;..\..\code\thirdparty\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\code\input;..\..\code;..\..\code\core;..\..\code\core\standard;..\..\code\core\windows;..\..\code\graphics;..\..\code\audio;..\..\code\thirdparty\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;dxguid.lib;MMDevAPI.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;dxguid.lib;MMDevAPI.lib;Xinput.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -191,6 +191,7 @@
     <ClCompile Include="..\..\code\graphics\texturemanager.cpp" />
     <ClCompile Include="..\..\code\graphics\textureunitstate.cpp" />
     <ClCompile Include="..\..\code\graphics\viewport.cpp" />
+    <ClCompile Include="..\..\code\input\windows\windowsinput.cpp" />
     <ClCompile Include="..\..\code\thirdparty\stb\stb_vorbis.c" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
@@ -282,6 +283,8 @@
     <ClInclude Include="..\..\code\graphics\textureunitstate.h" />
     <ClInclude Include="..\..\code\graphics\vertexdata.h" />
     <ClInclude Include="..\..\code\graphics\viewport.h" />
+    <ClInclude Include="..\..\code\input\chrisslyinput.h" />
+    <ClInclude Include="..\..\code\input\chrisslyinputplatform.h" />
     <ClInclude Include="..\..\code\thirdparty\stb\stb_c_lexer.h" />
     <ClInclude Include="..\..\code\thirdparty\stb\stb_vorbis.h" />
   </ItemGroup>
