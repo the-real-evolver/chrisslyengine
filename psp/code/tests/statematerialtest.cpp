@@ -7,7 +7,7 @@
 #include "statemanager.h"
 #include "graphicssystem.h"
 #include "scenemanager.h"
-#include <psputils.h>
+#include "chrisslyinput.h"
 
 using namespace chrissly::core;
 using namespace chrissly::graphics;
@@ -27,7 +27,6 @@ StateMaterialTest::StateMaterialTest() :
     vMod(0.0f)
 {
     Singleton = this;
-    memset(&this->pad, 0, sizeof(this->pad));
 }
 
 //------------------------------------------------------------------------------
@@ -110,53 +109,29 @@ StateMaterialTest::Exit()
 void
 StateMaterialTest::Trigger()
 {
+    ce_gamepad_state pad;
+    ce_input_gamepad_get_state(&pad);
+
     // camera fps controls
-    sceCtrlReadBufferPositive(&this->pad, 1);
-    float tx = (this->pad.Lx - 128) / 127.0f;
-    if (tx > 0.2f)
-    {
-        tx -= 0.2f;
-    }
-    else if (tx < -0.2f)
-    {
-        tx += 0.2f;
-    }
-    else
-    {
-        tx = 0.0f;
-    }
-    this->camera->Yaw(2.0f * -tx * (GU_PI / 180.0f));
+    this->camera->Yaw(2.0f * -pad.leftStickX * (GU_PI / 180.0f));
+    this->camera->Pitch(2.0f * pad.leftStickY * (GU_PI / 180.0f));
+    if (pad.buttons & GAMEPAD_TRIANGLE) this->camera->MoveRelative(Vector3(0.0f, 0.0f, -0.1f));
+    if (pad.buttons & GAMEPAD_SQUARE)   this->camera->MoveRelative(Vector3(0.0f, 0.0f, 0.1f));
 
-    float ty = (this->pad.Ly - 128) / 127.0f;
-    if (ty > 0.2f)
-    {
-        ty -= 0.2f;
-    }
-    else if (ty < -0.2f)
-    {
-        ty += 0.2f;
-    }
-    else
-    {
-        ty = 0.0f;
-    }
-    this->camera->Pitch(2.0f * ty * (GU_PI / 180.0f));
-
-    if (this->pad.Buttons & PSP_CTRL_TRIANGLE) this->camera->MoveRelative(Vector3(0.0f, 0.0f, -0.1f));
-    if (this->pad.Buttons & PSP_CTRL_SQUARE)   this->camera->MoveRelative(Vector3(0.0f, 0.0f, 0.1f));
-
+    // move object
     const chrissly::core::Vector3& pos = this->gothSceneNode->GetPosition();
-    if (this->pad.Buttons & PSP_CTRL_LEFT)  this->gothSceneNode->SetPosition(pos.x - 0.05f, pos.y, pos.z);
-    if (this->pad.Buttons & PSP_CTRL_RIGHT) this->gothSceneNode->SetPosition(pos.x + 0.05f, pos.y, pos.z);
-    if (this->pad.Buttons & PSP_CTRL_UP)    this->gothSceneNode->SetPosition(pos.x, pos.y, pos.z - 0.05f);
-    if (this->pad.Buttons & PSP_CTRL_DOWN)  this->gothSceneNode->SetPosition(pos.x, pos.y, pos.z + 0.05f);
+    if (pad.buttons & GAMEPAD_DPAD_LEFT)  this->gothSceneNode->SetPosition(pos.x - 0.05f, pos.y, pos.z);
+    if (pad.buttons & GAMEPAD_DPAD_RIGHT) this->gothSceneNode->SetPosition(pos.x + 0.05f, pos.y, pos.z);
+    if (pad.buttons & GAMEPAD_DPAD_UP)    this->gothSceneNode->SetPosition(pos.x, pos.y, pos.z - 0.05f);
+    if (pad.buttons & GAMEPAD_DPAD_DOWN)  this->gothSceneNode->SetPosition(pos.x, pos.y, pos.z + 0.05f);
 
-    if (this->pad.Buttons & PSP_CTRL_LTRIGGER)
+    // rotate light
+    if (pad.buttons & GAMEPAD_LEFT_SHOULDER)
     {
         this->lightConeSceneNode->Pitch(0.01f);
         this->spotLight->SetDirection(this->lightConeSceneNode->GetOrientation() * Vector3(0.0f, 0.0f, -1.0f));
     }
-    if (this->pad.Buttons & PSP_CTRL_RTRIGGER)
+    if (pad.buttons & GAMEPAD_RIGHT_SHOULDER)
     {
         this->lightConeSceneNode->Pitch(-0.01f);
         this->spotLight->SetDirection(this->lightConeSceneNode->GetOrientation() * Vector3(0.0f, 0.0f, -1.0f));
@@ -171,5 +146,5 @@ StateMaterialTest::Trigger()
 
     GraphicsSystem::Instance()->RenderOneFrame();
 
-    if (this->pad.Buttons & PSP_CTRL_CROSS) StateManager::Instance()->ChangeState(StateAnimationTest::Instance());
+    if (pad.buttons & GAMEPAD_CROSS) StateManager::Instance()->ChangeState(StateAnimationTest::Instance());
 }

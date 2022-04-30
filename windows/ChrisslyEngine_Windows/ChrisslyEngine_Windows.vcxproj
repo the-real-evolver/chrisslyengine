@@ -90,7 +90,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>__CE_DEBUG__;__CE_WINDOWS__;__CE_D3D11__;__CE_WASAPI__;_CRT_SECURE_NO_WARNINGS;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\code;..\..\code\core;..\..\code\core\standard;..\..\code\core\windows;..\..\code\graphics;..\..\code\audio;..\..\code\input;..\..\code\thirdparty\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\code;..\..\code\core;..\..\code\graphics;..\..\code\audio;..\..\code\input;..\..\code\thirdparty\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <FloatingPointModel>Fast</FloatingPointModel>
     </ClCompile>
     <Link>
@@ -111,7 +111,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\..\code;..\..\code\core;..\..\code\core\standard;..\..\code\core\windows;..\..\code\graphics;..\..\code\audio;..\..\code\thirdparty\stb;..\..\code\input;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\code;..\..\code\core;..\..\code\graphics;..\..\code\audio;..\..\code\input;..\..\code\thirdparty\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>__CE_WINDOWS__;__CE_D3D11__;__CE_WASAPI__;_CRT_SECURE_NO_WARNINGS;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -128,7 +128,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>__CE_DEBUG__;__CE_WINDOWS__;__CE_D3D11__;__CE_WASAPI__;_CRT_SECURE_NO_WARNINGS;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\code\input;..\..\code;..\..\code\core;..\..\code\core\standard;..\..\code\core\windows;..\..\code\graphics;..\..\code\audio;..\..\code\thirdparty\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\code;..\..\code\core;..\..\code\graphics;..\..\code\audio;..\..\code\input;..\..\code\thirdparty\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -191,6 +191,7 @@
     <ClCompile Include="..\..\code\graphics\texturemanager.cpp" />
     <ClCompile Include="..\..\code\graphics\textureunitstate.cpp" />
     <ClCompile Include="..\..\code\graphics\viewport.cpp" />
+    <ClCompile Include="..\..\code\input\common\commoninput.cpp" />
     <ClCompile Include="..\..\code\input\windows\windowsinput.cpp" />
     <ClCompile Include="..\..\code\thirdparty\stb\stb_vorbis.c" />
     <ClCompile Include="main.cpp" />
@@ -285,6 +286,7 @@
     <ClInclude Include="..\..\code\graphics\viewport.h" />
     <ClInclude Include="..\..\code\input\chrisslyinput.h" />
     <ClInclude Include="..\..\code\input\chrisslyinputplatform.h" />
+    <ClInclude Include="..\..\code\input\common\commoninput.h" />
     <ClInclude Include="..\..\code\thirdparty\stb\stb_c_lexer.h" />
     <ClInclude Include="..\..\code\thirdparty\stb\stb_vorbis.h" />
   </ItemGroup>

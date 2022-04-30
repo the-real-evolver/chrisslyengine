@@ -170,6 +170,9 @@
     <ClCompile Include="..\..\code\input\windows\windowsinput.cpp">
       <Filter>input\windows</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\code\input\common\commoninput.cpp">
+      <Filter>input\common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="core">
@@ -207,6 +210,9 @@
     </Filter>
     <Filter Include="input\windows">
       <UniqueIdentifier>{1992b071-82be-486a-86e8-c62aef5477f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="input\common">
+      <UniqueIdentifier>{45557616-0074-4fba-bbc0-995ae57fa0eb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -482,6 +488,9 @@
     </ClInclude>
     <ClInclude Include="..\..\code\input\chrisslyinputplatform.h">
       <Filter>input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\input\common\commoninput.h">
+      <Filter>input\common</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

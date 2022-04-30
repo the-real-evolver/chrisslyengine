@@ -13,7 +13,7 @@ CE = ../code
 # includes
 # PSPSDK = C:/dev/devkitpro/devkitPSP/psp/sdk
 #------------------------------------------------------------------------------ 
-INCDIR = $(PSPSDK) $(CE)/core $(CE)/graphics $(CE)/audio $(CE)/thirdparty/stb $(CE)/application code/tests
+INCDIR = $(PSPSDK) $(CE) $(CE)/core $(CE)/graphics $(CE)/audio $(CE)/input $(CE)/thirdparty/stb $(CE)/application code/tests
 
 #------------------------------------------------------------------------------
 # object files
@@ -39,6 +39,7 @@ OBJS = $(CE)/core/quaternion.o $(CE)/core/vector3.o $(CE)/core/matrix3.o $(CE)/c
        $(CE)/audio/wavcodec.o $(CE)/audio/vorbiscodec.o $(CE)/audio/soundbase.o $(CE)/audio/dsp.o $(CE)/audio/audiosystem.o $(CE)/audio/channelbase.o \
        $(CE)/audio/dsp/mixer.o $(CE)/audio/dsp/filters.o \
        $(CE)/audio/psp/pspaudiorenderer.o $(CE)/audio/psp/pspchannel.o \
+       $(CE)/input/common/commoninput.o $(CE)/input/psp/pspinput.o \
        $(CE)/application/statemanager.o \
        code/main.o \
        code/tests/stateanimationtest.o code/tests/statematerialtest.o

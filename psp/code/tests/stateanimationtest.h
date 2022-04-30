@@ -8,7 +8,6 @@
 */
 #include "state.h"
 #include "scenenode.h"
-#include <pspctrl.h>
 
 //------------------------------------------------------------------------------
 class StateAnimationTest : public chrissly::application::State
@@ -42,8 +41,6 @@ private:
 
     bool loop;
     bool pause;
-
-    SceCtrlData pad;
 };
 
 //------------------------------------------------------------------------------

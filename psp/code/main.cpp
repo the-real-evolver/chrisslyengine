@@ -7,6 +7,7 @@
 #include "scenemanager.h"
 #include "renderwindow.h"
 #include "camera.h"
+#include "chrisslyinput.h"
 #include "statemanager.h"
 #include "stateanimationtest.h"
 #include "statematerialtest.h"
@@ -58,9 +59,7 @@ main(int argc, char* argv[])
     sm->ChangeState(sat);
 
     // initialise input
-    sceCtrlSetSamplingCycle(100);
-    sceCtrlSetSamplingMode(PSP_CTRL_MODE_ANALOG);
-    sceKernelDcacheWritebackAll();
+    ce_input_initialise();
 
     while (sm->IsRunning() && !exitRequest)
     {

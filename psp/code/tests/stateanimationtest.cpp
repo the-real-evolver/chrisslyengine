@@ -6,6 +6,7 @@
 #include "statematerialtest.h"
 #include "statemanager.h"
 #include "graphicssystem.h"
+#include "chrisslyinput.h"
 
 using namespace chrissly::core;
 using namespace chrissly::graphics;
@@ -23,7 +24,6 @@ StateAnimationTest::StateAnimationTest() :
     pause(false)
 {
     Singleton = this;
-    memset(&this->pad, 0, sizeof(this->pad));
 }
 
 //------------------------------------------------------------------------------
@@ -78,30 +78,18 @@ void
 StateAnimationTest::Trigger()
 {
     // controls
-    sceCtrlReadBufferPositive(&this->pad, 1);
-    float tx = (this->pad.Lx - 128) / 127.0f;
-    if (tx > 0.2f)
-    {
-        tx -= 0.2f;
-    }
-    else if (tx < -0.2f)
-    {
-        tx += 0.2f;
-    }
-    else
-    {
-        tx = 0.0f;
-    }
-    if (this->pad.Buttons & PSP_CTRL_SQUARE) this->pause = !this->pause;
-    if (this->pad.Buttons & PSP_CTRL_TRIANGLE) this->loop = !this->loop;
+	ce_gamepad_state pad;
+    ce_input_gamepad_get_state(&pad);
+    if (pad.buttons & GAMEPAD_SQUARE) this->pause = !this->pause;
+    if (pad.buttons & GAMEPAD_TRIANGLE) this->loop = !this->loop;
 
     // update animation
     this->animState->SetLoop(this->loop);
     if (!this->pause) this->animState->AddTime(0.016f);
 
-    this->sceneNode->Yaw(tx * 0.05f);
+    this->sceneNode->Yaw(pad.leftStickX * 0.05f);
 
     GraphicsSystem::Instance()->RenderOneFrame();
 
-    if (this->pad.Buttons & PSP_CTRL_CROSS) StateManager::Instance()->ChangeState(StateMaterialTest::Instance());
+    if (pad.buttons & GAMEPAD_CROSS) StateManager::Instance()->ChangeState(StateMaterialTest::Instance());
 }

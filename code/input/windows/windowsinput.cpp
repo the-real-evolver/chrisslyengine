@@ -3,7 +3,8 @@
 //  (C) 2022 Christian Bleicher
 //------------------------------------------------------------------------------
 #include "input/chrisslyinput.h"
-#include "core/chrisslymath.h"
+#include "input/common/commoninput.h"
+#include "debug.h"
 #include <xinput.h>
 #include <Dbt.h>
 
@@ -19,6 +20,9 @@ static bool gamepad_connected = false;
 void
 ce_input_wnd_proc_handler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
+    CE_UNREFERENCED_PARAMETER(hwnd);
+    CE_UNREFERENCED_PARAMETER(lParam);
+
     switch (msg)
     {
         case WM_DEVICECHANGE:
@@ -86,33 +90,6 @@ ce_input_gamepad_connected()
 
 //------------------------------------------------------------------------------
 /**
-    A nice explanation on the topic can be found here:
-    https://www.gamedeveloper.com/disciplines/doing-thumbstick-dead-zones-right
-*/
-static void
-apply_dead_zone(float x, float y, float* const x_out, float* const y_out)
-{
-    const float deadzone = (float)XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE;
-    float mag = chrissly::core::Math::Sqrt(x * x + y * y);
-    if (mag > deadzone)
-    {
-        float normMag = (mag - deadzone) / (32768.0f - deadzone);
-        x = (x / mag) * normMag;
-        if (x < -1.0f) x = -1.0f;
-        *x_out = x > 1.0f ? 1.0f : x;
-        y = (y / mag) * normMag;
-        if (y < -1.0f) y = -1.0f;
-        *y_out = y > 1.0f ? 1.0f : y;
-    }
-    else
-    {
-        *x_out = 0.0f;
-        *y_out = 0.0f;
-    }
-}
-
-//------------------------------------------------------------------------------
-/**
 */
 void
 ce_input_gamepad_get_state(ce_gamepad_state* const gps)
@@ -149,8 +126,8 @@ ce_input_gamepad_get_state(ce_gamepad_state* const gps)
             if (wButtons & XINPUT_GAMEPAD_Y) gps->buttons |= GAMEPAD_Y;
 
             // Analog sticks
-            apply_dead_zone((float)state.Gamepad.sThumbLX, (float)state.Gamepad.sThumbLY, &gps->leftStickX, &gps->leftStickY);
-            apply_dead_zone((float)state.Gamepad.sThumbRX, (float)state.Gamepad.sThumbRY, &gps->rightStickX, &gps->rightStickY);
+            ce_input_filter_dead_zone((float)state.Gamepad.sThumbLX, (float)state.Gamepad.sThumbLY, &gps->leftStickX, &gps->leftStickY, (float)XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE, 32768.0f);
+            ce_input_filter_dead_zone((float)state.Gamepad.sThumbRX, (float)state.Gamepad.sThumbRY, &gps->rightStickX, &gps->rightStickY, (float)XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE, 32768.0f);
 
             // Trigger
             gps->leftTrigger = (float)state.Gamepad.bLeftTrigger / 255.0f;

@@ -11,7 +11,6 @@
 #include "scenenode.h"
 #include "camera.h"
 #include "light.h"
-#include <pspctrl.h>
 
 //------------------------------------------------------------------------------
 class StateMaterialTest : public chrissly::application::State
@@ -46,8 +45,6 @@ private:
     chrissly::graphics::SceneNode* lightConeSceneNode;
     chrissly::graphics::Light* spotLight;
     float vMod;
-
-    SceCtrlData pad;
 };
 
 //------------------------------------------------------------------------------
