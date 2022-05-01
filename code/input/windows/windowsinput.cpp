@@ -127,11 +127,11 @@ ce_input_gamepad_get_state(ce_gamepad_state* const gps)
 
             // Analog sticks
             ce_input_filter_dead_zone((float)state.Gamepad.sThumbLX, (float)state.Gamepad.sThumbLY, &gps->leftStickX, &gps->leftStickY, (float)XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE, 32768.0f);
-            ce_input_filter_dead_zone((float)state.Gamepad.sThumbRX, (float)state.Gamepad.sThumbRY, &gps->rightStickX, &gps->rightStickY, (float)XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE, 32768.0f);
+            ce_input_filter_dead_zone((float)state.Gamepad.sThumbRX, (float)state.Gamepad.sThumbRY, &gps->rightStickX, &gps->rightStickY, (float)XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE, 32768.0f);
 
             // Trigger
-            gps->leftTrigger = (float)state.Gamepad.bLeftTrigger / 255.0f;
-            gps->rightTrigger = (float)state.Gamepad.bRightTrigger / 255.0f;
+            ce_input_filter_dead_zone(0.0f, (float)state.Gamepad.bLeftTrigger, &gps->leftTrigger, &gps->leftTrigger, (float)XINPUT_GAMEPAD_TRIGGER_THRESHOLD, 256.0f);
+            ce_input_filter_dead_zone(0.0f, (float)state.Gamepad.bRightTrigger, &gps->rightTrigger, &gps->rightTrigger, (float)XINPUT_GAMEPAD_TRIGGER_THRESHOLD, 256.0f);
         }
         else
         {
