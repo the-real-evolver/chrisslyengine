@@ -492,5 +492,8 @@
     <ClInclude Include="..\..\code\input\common\commoninput.h">
       <Filter>input\common</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\code\core\chrisslylocale.h">
+      <Filter>core</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

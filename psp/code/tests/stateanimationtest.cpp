@@ -78,7 +78,7 @@ void
 StateAnimationTest::Trigger()
 {
     // controls
-	ce_gamepad_state pad;
+    ce_gamepad_state pad;
     ce_input_gamepad_get_state(&pad);
     if (pad.buttons & GAMEPAD_SQUARE) this->pause = !this->pause;
     if (pad.buttons & GAMEPAD_TRIANGLE) this->loop = !this->loop;
