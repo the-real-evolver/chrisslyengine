@@ -55,7 +55,7 @@ StateAnimationTest::Enter()
     this->sceneNode->AttachObject(entity);
 
     Camera* camera = SceneManager::Instance()->GetCamera("MainCamera");
-    camera->SetPosition(0.0f, 0.2f, 2.0f);
+    camera->SetPosition(0.0f, -0.2f, 4.0f);
     camera->SetOrientation(Quaternion());
 }
 

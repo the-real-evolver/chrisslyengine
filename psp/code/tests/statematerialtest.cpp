@@ -46,7 +46,7 @@ StateMaterialTest::Enter()
     MaterialManager::Instance()->Initialise();
 
     this->camera = SceneManager::Instance()->GetCamera("MainCamera");
-    this->camera->SetPosition(0.0f, 0.0f, 5.0f);
+    this->camera->SetPosition(0.0f, 0.0f, 10.0f);
     this->camera->SetOrientation(Quaternion());
 
     Entity* gothEntity = SceneManager::Instance()->CreateEntity("gothic_woman.mesh");

@@ -62,7 +62,7 @@ WinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prevInstance, _In_ LPSTR cmd
     GraphicsSystem* graphicsSystem = new GraphicsSystem();
     RenderWindow* window = graphicsSystem->Initialise((void*)&config);
     Camera* camera = SceneManager::Instance()->CreateCamera("MainCamera");
-    camera->SetPosition(-0.5f, -0.25f, 1.0f);
+    camera->SetPosition(-0.5f, -0.25f, 1.7f);
     camera->SetOrientation(Quaternion());
     window->AddViewport(camera, 0, 0, window->GetWidth(), window->GetHeight());
 

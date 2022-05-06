@@ -20,7 +20,7 @@ Camera::Camera() :
     viewMatrix(Matrix4::IDENTITY),
     recalcView(true),
     recalcFrustum(true),
-    FOVy(90.0f),
+    FOVy(45.0f),
     farDist(1000.0f),
     nearDist(0.01f),
     aspect(1.7777f),

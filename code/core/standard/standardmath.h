@@ -8,6 +8,7 @@
 
     (C) 2012 Christian Bleicher
 */
+#define _USE_MATH_DEFINES
 #include <math.h>
 #include <limits.h>
 
