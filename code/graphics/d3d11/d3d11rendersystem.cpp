@@ -30,9 +30,14 @@ D3D11RenderSystem::D3D11RenderSystem() :
     defaultGpuProgramFog(NULL),
     defaultGpuProgramLit(NULL),
     defaultGpuProgramLitFog(NULL),
+    defaultGpuProgramMorphAnim(NULL),
+    defaultGpuProgramNoTexture(NULL),
+    defaultGpuProgramFogNoTexture(NULL),
+    defaultGpuProgramLitNoTexture(NULL),
+    defaultGpuProgramLitFogNoTexture(NULL),
+    defaultGpuProgramMorphAnimNoTexture(NULL),
     defaultGpuProgramShadowCaster(NULL),
     defaultGpuProgramShadowReceiver(NULL),
-    defaultGpuProgramMorphAnim(NULL),
     defaultGpuProgramShadowCasterMorphAnim(NULL),
     currentGpuProgram(NULL),
     device(NULL),
@@ -143,9 +148,15 @@ D3D11RenderSystem::Initialise(void* const customParams)
     this->defaultGpuProgramFog = CE_NEW D3D11GpuProgram(DefaultGpuProgramFog, "defaultshaderfog.fx", "DefaultVertexShader", "DefaultFragmentShader");
     this->defaultGpuProgramLit = CE_NEW D3D11GpuProgram(DefaultGpuProgramLit, "defaultshaderlit.fx", "DefaultVertexShader", "DefaultFragmentShader");
     this->defaultGpuProgramLitFog = CE_NEW D3D11GpuProgram(DefaultGpuProgramLitFog, "defaultshaderlitfog.fx", "DefaultVertexShader", "DefaultFragmentShader");
+    this->defaultGpuProgramMorphAnim = CE_NEW D3D11GpuProgram(DefaultGpuProgramMorphAnim, "defaultshadermorphanim.fx", "DefaultVertexShader", "DefaultFragmentShader");
+    const char* shaderMacros[] = {"NO_TEXTURE", "1", NULL, NULL};
+    this->defaultGpuProgramNoTexture = CE_NEW D3D11GpuProgram(DefaultGpuProgram, "defaultshadernotexture.fx", "DefaultVertexShader", "DefaultFragmentShader", shaderMacros);
+    this->defaultGpuProgramFogNoTexture = CE_NEW D3D11GpuProgram(DefaultGpuProgramFog, "defaultshaderfognotexture.fx", "DefaultVertexShader", "DefaultFragmentShader", shaderMacros);
+    this->defaultGpuProgramLitNoTexture = CE_NEW D3D11GpuProgram(DefaultGpuProgramLit, "defaultshaderlitnotexture.fx", "DefaultVertexShader", "DefaultFragmentShader", shaderMacros);
+    this->defaultGpuProgramLitFogNoTexture = CE_NEW D3D11GpuProgram(DefaultGpuProgramLitFog, "defaultshaderlitfognotexture.fx", "DefaultVertexShader", "DefaultFragmentShader", shaderMacros);
+    this->defaultGpuProgramMorphAnimNoTexture = CE_NEW D3D11GpuProgram(DefaultGpuProgramMorphAnim, "defaultshadermorphanimnotexture.fx", "DefaultVertexShader", "DefaultFragmentShader", shaderMacros);
     this->defaultGpuProgramShadowCaster = CE_NEW D3D11GpuProgram(DefaultGpuProgramShadowCaster, "defaultshadershadowcaster.fx", "DefaultVertexShader", "DefaultFragmentShader");
     this->defaultGpuProgramShadowReceiver = CE_NEW D3D11GpuProgram(DefaultGpuProgramShadowReceiver, "defaultshadershadowreceiver.fx", "DefaultVertexShader", "DefaultFragmentShader");
-    this->defaultGpuProgramMorphAnim = CE_NEW D3D11GpuProgram(DefaultGpuProgramMorphAnim, "defaultshadermorphanim.fx", "DefaultVertexShader", "DefaultFragmentShader");
     this->defaultGpuProgramShadowCasterMorphAnim = CE_NEW D3D11GpuProgram(DefaultGpuProgramShadowCasterMorphAnim, "defaultshadershadowcastermorphanim.fx", "DefaultVertexShader", "DefaultFragmentShader");
     this->currentGpuProgram = this->defaultGpuProgram;
 
@@ -209,12 +220,22 @@ D3D11RenderSystem::Shutdown()
     this->defaultGpuProgramLit = NULL;
     CE_DELETE this->defaultGpuProgramLitFog;
     this->defaultGpuProgramLitFog = NULL;
+    CE_DELETE this->defaultGpuProgramMorphAnim;
+    this->defaultGpuProgramMorphAnim = NULL;
+    CE_DELETE this->defaultGpuProgramNoTexture;
+    this->defaultGpuProgramNoTexture = NULL;
+    CE_DELETE this->defaultGpuProgramFogNoTexture;
+    this->defaultGpuProgramFogNoTexture = NULL;
+    CE_DELETE this->defaultGpuProgramLitNoTexture;
+    this->defaultGpuProgramLitNoTexture = NULL;
+    CE_DELETE this->defaultGpuProgramLitFogNoTexture;
+    this->defaultGpuProgramLitFogNoTexture = NULL;
+    CE_DELETE this->defaultGpuProgramMorphAnimNoTexture;
+    this->defaultGpuProgramMorphAnimNoTexture = NULL;
     CE_DELETE this->defaultGpuProgramShadowCaster;
     this->defaultGpuProgramShadowCaster = NULL;
     CE_DELETE this->defaultGpuProgramShadowReceiver;
     this->defaultGpuProgramShadowReceiver = NULL;
-    CE_DELETE this->defaultGpuProgramMorphAnim;
-    this->defaultGpuProgramMorphAnim = NULL;
     CE_DELETE this->defaultGpuProgramShadowCasterMorphAnim;
     this->defaultGpuProgramShadowCasterMorphAnim = NULL;
     this->currentGpuProgram = NULL;
@@ -499,25 +520,26 @@ D3D11RenderSystem::SetPass(graphics::Pass* const pass)
     {
         bool lit = pass->GetLightingEnabled();
         bool fog = (graphics::FOG_LINEAR == pass->GetFogMode());
+        bool textured = pass->GetNumTextureUnitStates() > 0U;
         if (pass->IsMorphAnimationIncluded())
         {
-            this->currentGpuProgram = this->defaultGpuProgramMorphAnim;
+            this->currentGpuProgram = textured ? this->defaultGpuProgramMorphAnim : this->defaultGpuProgramMorphAnimNoTexture;
         }
         else if (!fog && !lit)
         {
-            this->currentGpuProgram = this->defaultGpuProgram;
+            this->currentGpuProgram = textured ? this->defaultGpuProgram : this->defaultGpuProgramNoTexture;
         }
         else if (fog && !lit)
         {
-            this->currentGpuProgram = this->defaultGpuProgramFog;
+            this->currentGpuProgram = textured ? this->defaultGpuProgramFog : this->defaultGpuProgramFogNoTexture;
         }
         else if (!fog && lit)
         {
-            this->currentGpuProgram = this->defaultGpuProgramLit;
+            this->currentGpuProgram = textured ? this->defaultGpuProgramLit : this->defaultGpuProgramLitNoTexture;
         }
         else if (fog && lit)
         {
-            this->currentGpuProgram = this->defaultGpuProgramLitFog;
+            this->currentGpuProgram = textured ? this->defaultGpuProgramLitFog : this->defaultGpuProgramLitFogNoTexture;
         }
 
         graphics::GpuProgramParameters* params = this->currentGpuProgram->GetDefaultParameters();
@@ -553,6 +575,13 @@ D3D11RenderSystem::SetPass(graphics::Pass* const pass)
             this->defaultLightShaderParams[2U][2U][3U] = shininess;
             this->defaultLightShaderParams[3U][2U][3U] = shininess;
             params->SetNamedConstant("lightParams", this->defaultLightShaderParams, MaxLights);
+        }
+
+        if (!textured)
+        {
+            core::Quaternion ambient;
+            D3D11Mappings::Get(pass->GetDiffuse(), ambient.w, ambient.x, ambient.y, ambient.z);
+            params->SetNamedConstant("ambient", ambient);
         }
 
         params->SetAutoConstant(graphics::GpuProgramParameters::ACT_VIEW_MATRIX, this->viewMatrix);

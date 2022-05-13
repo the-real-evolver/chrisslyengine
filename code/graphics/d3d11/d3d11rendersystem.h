@@ -97,9 +97,14 @@ private:
     D3D11GpuProgram* defaultGpuProgramFog;
     D3D11GpuProgram* defaultGpuProgramLit;
     D3D11GpuProgram* defaultGpuProgramLitFog;
+    D3D11GpuProgram* defaultGpuProgramMorphAnim;
+    D3D11GpuProgram* defaultGpuProgramNoTexture;
+    D3D11GpuProgram* defaultGpuProgramFogNoTexture;
+    D3D11GpuProgram* defaultGpuProgramLitNoTexture;
+    D3D11GpuProgram* defaultGpuProgramLitFogNoTexture;
+    D3D11GpuProgram* defaultGpuProgramMorphAnimNoTexture;
     D3D11GpuProgram* defaultGpuProgramShadowCaster;
     D3D11GpuProgram* defaultGpuProgramShadowReceiver;
-    D3D11GpuProgram* defaultGpuProgramMorphAnim;
     D3D11GpuProgram* defaultGpuProgramShadowCasterMorphAnim;
     D3D11GpuProgram* currentGpuProgram;
 

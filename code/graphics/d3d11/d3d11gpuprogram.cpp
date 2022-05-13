@@ -16,7 +16,7 @@ namespace chrissly
 //------------------------------------------------------------------------------
 /**
 */
-D3D11GpuProgram::D3D11GpuProgram(const char* const source, const char* const fileName, const char* const vertexShaderFunctionName, const char* const fragmentShaderFunctionName) :
+D3D11GpuProgram::D3D11GpuProgram(const char* const source, const char* const fileName, const char* const vertexShaderFunctionName, const char* const fragmentShaderFunctionName, const char* const* const macros) :
     defaultParams(NULL),
     constantDefs(NULL),
     constantBuffersPerObject(NULL),
@@ -32,7 +32,7 @@ D3D11GpuProgram::D3D11GpuProgram(const char* const source, const char* const fil
         source,                             /* _In_reads_bytes_(SrcDataSize)                            LPCVOID pSrcData                    */
         strlen(source),                     /* _In_                                                     SIZE_T SrcDataSize                  */
         fileName,                           /* _In_opt_                                                 LPCSTR pSourceName                  */
-        NULL,                               /* _In_reads_opt_(_Inexpressible_(pDefines->Name != NULL))  CONST D3D_SHADER_MACRO* pDefines    */
+        (D3D_SHADER_MACRO*)macros,          /* _In_reads_opt_(_Inexpressible_(pDefines->Name != NULL))  CONST D3D_SHADER_MACRO* pDefines    */
         NULL,                               /* _In_opt_                                                 ID3DInclude* pInclude               */
         vertexShaderFunctionName,           /* _In_opt_                                                 LPCSTR pEntrypoint                  */
         "vs_4_0",                           /* _In_                                                     LPCSTR pTarget                      */
@@ -68,7 +68,7 @@ D3D11GpuProgram::D3D11GpuProgram(const char* const source, const char* const fil
         source,                             /* _In_reads_bytes_(SrcDataSize)                            LPCVOID pSrcData                    */
         strlen(source),                     /* _In_                                                     SIZE_T SrcDataSize                  */
         fileName,                           /* _In_opt_                                                 LPCSTR pSourceName                  */
-        NULL,                               /* _In_reads_opt_(_Inexpressible_(pDefines->Name != NULL))  CONST D3D_SHADER_MACRO* pDefines    */
+        (D3D_SHADER_MACRO*)macros,          /* _In_reads_opt_(_Inexpressible_(pDefines->Name != NULL))  CONST D3D_SHADER_MACRO* pDefines    */
         NULL,                               /* _In_opt_                                                 ID3DInclude* pInclude               */
         fragmentShaderFunctionName,         /* _In_opt_                                                 LPCSTR pEntrypoint                  */
         "ps_4_0",                           /* _In_                                                     LPCSTR pTarget                      */

@@ -18,7 +18,7 @@ class D3D11GpuProgram
 {
 public:
     /// construct from source
-    D3D11GpuProgram(const char* const source, const char* const fileName, const char* const vertexShaderFunctionName, const char* const fragmentShaderFunctionName);
+    D3D11GpuProgram(const char* const source, const char* const fileName, const char* const vertexShaderFunctionName, const char* const fragmentShaderFunctionName, const char* const* const macros = NULL);
     /// destructor
     ~D3D11GpuProgram();
     /// get a reference to the default parameters which are to be used for all uses of this program
