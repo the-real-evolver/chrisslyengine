@@ -30,6 +30,8 @@ public:
     ~MeshManager();
     /// loads a mesh from a file, making it immediately available for use
     Mesh* const Load(const char* const filename);
+    /// creates an empty mesh and registers it with the given name, intended for programmatically mesh creation (like particlesystems etc.)
+    Mesh* const CreateManual(const char* const name);
     /// removes all resources
     void RemoveAll();
 

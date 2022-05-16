@@ -161,6 +161,24 @@ MeshManager::Load(const char* const filename)
 //------------------------------------------------------------------------------
 /**
 */
+Mesh* const
+MeshManager::CreateManual(const char* const name)
+{
+    Mesh* mesh = (Mesh*)ce_hash_table_find(&this->resources, name, strlen(name));
+    if (mesh != NULL)
+    {
+        return mesh;
+    }
+
+    mesh = CE_NEW Mesh();
+    ce_hash_table_insert(&this->resources, name, strlen(name), mesh);
+
+    return mesh;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
 void
 MeshManager::RemoveAll()
 {

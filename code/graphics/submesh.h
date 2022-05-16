@@ -6,6 +6,7 @@
 
     (C) 2011 Christian Bleicher
 */
+#include "common.h"
 #include "vertexdata.h"
 #include "animationtrack.h"
 #include "chrisslystring.h"
@@ -34,6 +35,8 @@ public:
 
     /// dedicated vertex data
     VertexData* vertexData;
+    /// type of primitive used when rendering this mesh
+    PrimitiveTopology topology;
 
 private:
     /// name of the material this SubMesh uses

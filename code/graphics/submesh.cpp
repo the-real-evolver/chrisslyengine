@@ -18,6 +18,7 @@ using namespace chrissly::core;
 */
 SubMesh::SubMesh() :
     vertexData(NULL),
+    topology(PT_TRIANGLELIST),
     vertexAnimationType(VAT_NONE)
 {
 

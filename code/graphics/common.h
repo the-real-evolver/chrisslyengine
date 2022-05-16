@@ -12,6 +12,16 @@ namespace chrissly
 {
 namespace graphics
 {
+    /// primitive topology
+    enum PrimitiveTopology
+    {
+        PT_POINTLIST,
+        PT_LINELIST,
+        PT_LINESTRIP,
+        PT_TRIANGLELIST,
+        PT_TRIANGLESTRIP
+    };
+
     /**
         hardware culling modes based on vertex winding. This setting applies to
         how the hardware API culls triangles it is sent

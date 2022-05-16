@@ -20,6 +20,8 @@ namespace chrissly
 class D3D11Mappings
 {
 public:
+    /// return a D3D11 equivalent for a PrimitiveTopology value
+    static D3D_PRIMITIVE_TOPOLOGY Get(graphics::PrimitiveTopology top);
     /// return a D3D11 equivalent for a SceneBlendOperation value
     static D3D11_BLEND_OP Get(graphics::SceneBlendOperation op);
     /// return a D3D11 equivalent for a SceneBlendFactor value

@@ -7,6 +7,24 @@
 
 namespace chrissly
 {
+//------------------------------------------------------------------------------
+/**
+*/
+D3D_PRIMITIVE_TOPOLOGY
+D3D11Mappings::Get(graphics::PrimitiveTopology top)
+{
+    switch (top)
+    {
+        case graphics::PT_POINTLIST:        return D3D_PRIMITIVE_TOPOLOGY_POINTLIST;
+        case graphics::PT_LINELIST:         return D3D_PRIMITIVE_TOPOLOGY_LINELIST;
+        case graphics::PT_LINESTRIP:        return D3D_PRIMITIVE_TOPOLOGY_LINESTRIP;
+        case graphics::PT_TRIANGLELIST:     return D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+        case graphics::PT_TRIANGLESTRIP:    return D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
+        default: CE_ASSERT(false, "D3D11Mappings::Get(): illegal PrimitiveTopology '%i'\n", top);
+    }
+
+    return D3D_PRIMITIVE_TOPOLOGY();
+}
 
 //------------------------------------------------------------------------------
 /**

@@ -197,7 +197,7 @@ D3D11RenderSystem::Initialise(void* const customParams)
     CE_ASSERT(SUCCEEDED(result), "D3D11RenderSystem::Initialise(): failed to create input layout\n");
 
     /* setup default context states */
-    this->context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    this->context->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
     /* create default render window */
     graphics::RenderWindow* renderWindow = CE_NEW graphics::RenderWindow((D3D11ConfigOptions*)customParams, this->device);
@@ -422,6 +422,7 @@ D3D11RenderSystem::Render(graphics::SubEntity* const renderable)
     this->currentGpuProgram->UpdatePerObjectConstantBuffers();
     ID3D11Buffer* d3d11Buffer = vertexBuffer->GetD3D11Buffer();
     UINT stride = vertexBuffer->GetBytesPerVertex(), offset = 0U;
+    this->context->IASetPrimitiveTopology(D3D11Mappings::Get(renderable->GetSubMesh()->topology));
     this->context->IASetVertexBuffers(0U, 1U, &d3d11Buffer, &stride, &offset);
     this->context->Draw(vertexBuffer->GetNumVertices(), 0U);
 }
