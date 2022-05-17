@@ -29,6 +29,25 @@ PSPMappings::MakePSPMatrix(const core::Matrix4& mat)
 /**
 */
 int
+PSPMappings::Get(graphics::PrimitiveTopology top)
+{
+    switch (top)
+    {
+        case graphics::PT_POINTLIST:        return GU_POINTS;
+        case graphics::PT_LINELIST:         return GU_LINES;
+        case graphics::PT_LINESTRIP:        return GU_LINE_STRIP;
+        case graphics::PT_TRIANGLELIST:     return GU_TRIANGLES;
+        case graphics::PT_TRIANGLESTRIP:    return GU_TRIANGLE_STRIP;
+        default: CE_ASSERT(false, "PSPMappings::Get(): illegal PrimitiveTopology '%i'\n", top);
+    }
+
+    return -1;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+int
 PSPMappings::Get(graphics::SceneBlendOperation op)
 {
     switch (op)

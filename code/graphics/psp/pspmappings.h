@@ -22,6 +22,8 @@ class PSPMappings
 public:
     /// convert matrix to PSP style
     static ScePspFMatrix4 MakePSPMatrix(const core::Matrix4& mat);
+    /// return a PSP equivalent for a PrimitiveTopology value
+    static int Get(graphics::PrimitiveTopology top);
     /// return a PSP equivalent for a SceneBlendOperation value
     static int Get(graphics::SceneBlendOperation op);
     /// return a PSP equivalent for a SceneBlendFactor value

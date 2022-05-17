@@ -173,7 +173,7 @@ PSPRenderSystem::Render(graphics::SubEntity* const renderable)
         sceGuMorphWeight(1, morphWeight);
 
         graphics::HardwareVertexBuffer* vertexBuffer = renderable->GetMorphVertexData()->vertexBuffer;
-        sceGumDrawArray(GU_TRIANGLES,
+        sceGumDrawArray(PSPMappings::Get(renderable->GetSubMesh()->topology),
                         GU_TEXTURE_32BITF | GU_COLOR_8888 | GU_NORMAL_32BITF | GU_VERTEX_32BITF | GU_TRANSFORM_3D | GU_VERTICES(2) | GU_WEIGHTS(2),
                         vertexBuffer->GetNumVertices(), 0,
                         vertexBuffer->Map());
@@ -181,7 +181,7 @@ PSPRenderSystem::Render(graphics::SubEntity* const renderable)
     else
     {
         graphics::HardwareVertexBuffer* vertexBuffer = renderable->GetSubMesh()->vertexData->vertexBuffer;
-        sceGumDrawArray(GU_TRIANGLES,
+        sceGumDrawArray(PSPMappings::Get(renderable->GetSubMesh()->topology),
                         GU_TEXTURE_32BITF | GU_COLOR_8888 | GU_NORMAL_32BITF | GU_VERTEX_32BITF | GU_TRANSFORM_3D,
                         vertexBuffer->GetNumVertices(), 0,
                         vertexBuffer->Map());
