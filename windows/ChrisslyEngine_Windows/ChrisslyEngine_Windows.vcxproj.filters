@@ -173,6 +173,9 @@
     <ClCompile Include="..\..\code\input\common\commoninput.cpp">
       <Filter>input\common</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\code\core\intersection.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="core">
@@ -493,6 +496,9 @@
       <Filter>input\common</Filter>
     </ClInclude>
     <ClInclude Include="..\..\code\core\chrisslylocale.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\core\intersection.h">
       <Filter>core</Filter>
     </ClInclude>
   </ItemGroup>

@@ -18,7 +18,7 @@ INCDIR = $(PSPSDK) $(CE) $(CE)/core $(CE)/graphics $(CE)/audio $(CE)/input $(CE)
 #------------------------------------------------------------------------------
 # object files
 #------------------------------------------------------------------------------
-OBJS = $(CE)/core/quaternion.o $(CE)/core/vector3.o $(CE)/core/matrix3.o $(CE)/core/matrix4.o $(CE)/core/plane.o\
+OBJS = $(CE)/core/quaternion.o $(CE)/core/vector3.o $(CE)/core/matrix3.o $(CE)/core/matrix4.o $(CE)/core/plane.o $(CE)/core/intersection.o \
        $(CE)/core/chrisslymemory.o $(CE)/core/chrisslystring.o $(CE)/core/timer.o \
        $(CE)/core/psp/pspfswrapper.o $(CE)/core/psp/pspdebug.o \
        $(CE)/graphics/psp/pspmappings.o $(CE)/graphics/psp/psphardwarebuffermanager.o $(CE)/graphics/psp/psprendersystem.o \
