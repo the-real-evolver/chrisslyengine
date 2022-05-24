@@ -7,6 +7,7 @@ _private/
 **/*.mesh
 
 # ignore Visual Studio temporary files, build results etc.
+.vs
 windows/.vs
 windows/Debug/
 windows/Release/

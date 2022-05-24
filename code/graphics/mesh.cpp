@@ -123,6 +123,15 @@ Mesh::HasVertexAnimation() const
 //------------------------------------------------------------------------------
 /**
 */
+void
+Mesh::SetBoundingSphereRadius(float radius)
+{
+    this->boundingRadius = radius;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
 float
 Mesh::GetBoundingSphereRadius() const
 {

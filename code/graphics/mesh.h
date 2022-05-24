@@ -39,6 +39,8 @@ public:
     void RemoveAllAnimations();
     /// returns whether or not this mesh has some kind of vertex animation
     bool HasVertexAnimation() const;
+    /// sets the radius of the bounding sphere surrounding this mesh (useful for manual created meshes)
+    void SetBoundingSphereRadius(float radius);
     /// gets the radius of the bounding sphere surrounding this mesh
     float GetBoundingSphereRadius() const;
 
