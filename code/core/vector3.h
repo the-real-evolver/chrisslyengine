@@ -85,6 +85,8 @@ public:
     float Length() const;
     /// get the maximum absolute value of the vector's components
     float GetAbsMax() const;
+    /// performs a linear interpolation between two vectors, t ranges from 0 - 1
+    static Vector3 Lerp(const Vector3& a, const Vector3& b, float t);
 
     float x;
     float y;

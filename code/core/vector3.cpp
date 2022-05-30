@@ -242,5 +242,19 @@ Vector3::GetAbsMax() const
     return max;
 }
 
+//------------------------------------------------------------------------------
+/**
+*/
+Vector3
+Vector3::Lerp(const Vector3& a, const Vector3& b, float t)
+{
+    return Vector3
+    (
+        ce_math_lerp(a.x, b.x, t),
+        ce_math_lerp(a.y, b.y, t),
+        ce_math_lerp(a.z, b.z, t)
+    );
+}
+
 } // namespace core
 } // namespace chrissly
