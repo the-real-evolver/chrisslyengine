@@ -8,6 +8,9 @@
 */
 
 //------------------------------------------------------------------------------
+/// constants
+#define CE_2_M_PI 6.28318548f
+
 /// computes a + t * (b - a), i.e. the linear interpolation between a and b for the parameter t (or extrapolation, when t is outside the range [0,1])
 inline float ce_math_lerp(float a, float b, float t)
 {
