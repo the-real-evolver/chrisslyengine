@@ -26,6 +26,8 @@ public:
     PSPTexture();
     /// construct from rendertexture
     PSPTexture(graphics::RenderTexture* const rt);
+    /// construct cubemap
+    PSPTexture(void* faces[6U]);
     /// destructor
     ~PSPTexture();
     /// create mipmap infos

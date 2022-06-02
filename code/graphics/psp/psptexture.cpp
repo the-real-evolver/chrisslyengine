@@ -30,6 +30,16 @@ PSPTexture::PSPTexture(graphics::RenderTexture* const rt) :
 //------------------------------------------------------------------------------
 /**
 */
+PSPTexture::PSPTexture(void* faces[6U]) :
+    TextureBase(faces),
+    mipmapInfos(NULL)
+{
+    this->textureBuffer = faces[0U]; // workaround to avoid crash and at least render something (PSP does not support cubemaps)
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
 PSPTexture::~PSPTexture()
 {
     if (!this->isRenderTarget)

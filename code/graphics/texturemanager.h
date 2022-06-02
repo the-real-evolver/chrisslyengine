@@ -29,7 +29,7 @@ public:
     /// destructor
     ~TextureManager();
     /// loads a texture from a file
-    Texture* const Load(const char* const name);
+    Texture* const Load(const char* const name, TextureType type = TEX_TYPE_2D);
     /// removes all resources
     void RemoveAll();
 

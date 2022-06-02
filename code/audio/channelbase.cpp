@@ -283,7 +283,7 @@ ChannelBase::Get3DAttributes(Vector3* const position)
 Result
 ChannelBase::Set3DMinMaxDistance(float mindistance, float maxdistance)
 {
-    CE_ASSERT(mindistance >= 0.0f && maxdistance > mindistance, "Channel::Set3DMinMaxDistance: invalid parameters\n");
+    CE_ASSERT(mindistance >= 0.0f && maxdistance > mindistance, "Channel::Set3DMinMaxDistance(): invalid parameters\n");
 
     this->minDistance = mindistance;
     this->maxDistance = maxdistance;

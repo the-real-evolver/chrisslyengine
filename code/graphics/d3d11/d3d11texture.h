@@ -20,6 +20,8 @@ public:
     D3D11Texture();
     /// construct from rendertexture
     D3D11Texture(graphics::RenderTexture* const rt);
+    /// construct cubemap
+    D3D11Texture(void* faces[6U]);
     /// destructor
     ~D3D11Texture();
     /// create d3d11 tetxure and shader resource view

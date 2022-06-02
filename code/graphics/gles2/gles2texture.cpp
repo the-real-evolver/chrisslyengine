@@ -31,6 +31,16 @@ GLES2Texture::GLES2Texture(graphics::RenderTexture* const rt) :
 //------------------------------------------------------------------------------
 /**
 */
+GLES2Texture::GLES2Texture(void* faces[6U]) :
+    TextureBase(faces),
+    textureName(0)
+{
+    this->textureBuffer = faces[0U]; // temporary workaround to avoid crash and at least render something
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
 GLES2Texture::~GLES2Texture()
 {
     if (!this->isRenderTarget)

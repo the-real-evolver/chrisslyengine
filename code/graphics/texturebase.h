@@ -15,6 +15,14 @@ namespace chrissly
 namespace graphics
 {
 
+enum TextureType
+{
+    /// 2D texture, used in combination with 2D texture coordinates (default)
+    TEX_TYPE_2D,
+    /// 3D cube map, used in combination with 3D texture coordinates
+    TEX_TYPE_CUBE_MAP
+};
+
 class TextureBase
 {
 public:
@@ -22,6 +30,8 @@ public:
     TextureBase();
     /// construct from rendertexture
     TextureBase(RenderTexture* const rt);
+    /// construct cubemap
+    TextureBase(void* faces[6U]);
     /// destructor
     virtual ~TextureBase();
 
@@ -53,13 +63,15 @@ public:
     bool GetSwizzleEnabled() const;
 
 protected:
+    TextureType type;
     PixelFormat format;
     int height;
     int width;
     int numMipmaps;
-    void* textureBuffer;
     bool swizzled;
     bool isRenderTarget;
+    void* textureBuffer;
+    void* cubeFaces[6U];
 };
 
 } // namespace graphics

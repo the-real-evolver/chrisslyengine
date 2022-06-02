@@ -20,6 +20,8 @@ public:
     GLES2Texture();
     /// construct from rendertexture
     GLES2Texture(graphics::RenderTexture* const rt);
+    /// construct cubemap
+    GLES2Texture(void* faces[6U]);
     /// destructor
     ~GLES2Texture();
     /// generate gl texture name

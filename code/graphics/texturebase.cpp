@@ -15,13 +15,15 @@ namespace graphics
 /**
 */
 TextureBase::TextureBase() :
+    type(TEX_TYPE_2D),
     format(PF_UNKNOWN),
     height(0),
     width(0),
     numMipmaps(0),
-    textureBuffer(NULL),
     swizzled(true),
-    isRenderTarget(false)
+    isRenderTarget(false),
+    textureBuffer(NULL),
+    cubeFaces()
 {
 
 }
@@ -30,15 +32,37 @@ TextureBase::TextureBase() :
 /**
 */
 TextureBase::TextureBase(RenderTexture* const rt) :
+    type(TEX_TYPE_2D),
     format(rt->GetFormat()),
     height(rt->GetHeight()),
     width(rt->GetWidth()),
     numMipmaps(0),
-    textureBuffer(rt->GetBuffer()),
     swizzled(false),
-    isRenderTarget(true)
+    isRenderTarget(true),
+    textureBuffer(rt->GetBuffer()),
+    cubeFaces()
 {
 
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+TextureBase::TextureBase(void* faces[6U]) :
+    type(TEX_TYPE_CUBE_MAP),
+    format(PF_UNKNOWN),
+    height(0),
+    width(0),
+    numMipmaps(0),
+    swizzled(true),
+    isRenderTarget(false),
+    textureBuffer(NULL)
+{
+    unsigned int i;
+    for (i = 0U; i < 6U; ++i)
+    {
+        this->cubeFaces[i] = faces[i];
+    }
 }
 
 //------------------------------------------------------------------------------
@@ -51,6 +75,14 @@ TextureBase::~TextureBase()
         if (this->textureBuffer != NULL)
         {
             CE_FREE(this->textureBuffer);
+        }
+        if (TEX_TYPE_CUBE_MAP == this->type)
+        {
+            unsigned int i;
+            for (i = 0U; i < 6U; ++i)
+            {
+                CE_FREE(this->cubeFaces[i]);
+            }
         }
     }
 }

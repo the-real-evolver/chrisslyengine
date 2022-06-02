@@ -5,6 +5,7 @@
 #include "texturemanager.h"
 #include "fswrapper.h"
 #include "memoryallocatorconfig.h"
+#include "debug.h"
 #include <string.h>
 #include <stdio.h>
 
@@ -39,7 +40,7 @@ TextureManager::~TextureManager()
 /**
 */
 Texture* const
-TextureManager::Load(const char* const name)
+TextureManager::Load(const char* const name, TextureType type)
 {
     Texture* texture = (Texture*)ce_hash_table_find(&this->resources, name, strlen(name));
     if (texture != NULL)
@@ -47,33 +48,63 @@ TextureManager::Load(const char* const name)
         return texture;
     }
 
-    FileHandle fd = FSWrapper::Open(name, ReadAccess, Random, 0777);
-    unsigned int fileSize = FSWrapper::GetFileSize(fd);
     const unsigned int headerSizeBytes = 7U;
+    unsigned short width = 0U, height = 0U;
+    unsigned char format = PF_UNKNOWN, numMipmaps = 0U, swizzled = 0U;
+    unsigned int numImages = (TEX_TYPE_CUBE_MAP == type) ? 6U : 1U;
+    void* imageBuffers[6U] = {NULL};
+    char fileNames[6U][256U] = {{'\0'}};
 
-    unsigned char format = PF_UNKNOWN;
-    unsigned short width = 0U;
-    unsigned short height = 0U;
-    unsigned char numMipmaps = 0U;
-    unsigned char swizzled = 0U;
+    if (TEX_TYPE_2D == type)
+    {
+        strcpy(fileNames[0U], name);
+    }
+    else if (TEX_TYPE_CUBE_MAP == type)
+    {
+        char* ext = (char*)strrchr(name, '.');
+        strncpy(fileNames[0U], name, ext - name); strcat(strcat(fileNames[0U], "_px"), ext);
+        strncpy(fileNames[1U], name, ext - name); strcat(strcat(fileNames[1U], "_nx"), ext);
+        strncpy(fileNames[2U], name, ext - name); strcat(strcat(fileNames[2U], "_py"), ext);
+        strncpy(fileNames[3U], name, ext - name); strcat(strcat(fileNames[3U], "_ny"), ext);
+        strncpy(fileNames[4U], name, ext - name); strcat(strcat(fileNames[4U], "_pz"), ext);
+        strncpy(fileNames[5U], name, ext - name); strcat(strcat(fileNames[5U], "_nz"), ext);
+    }
+    else
+    {
+        CE_ASSERT(false, "TextureManager::Load(): unsupported texture type\n");
+        return NULL;
+    }
 
-    FSWrapper::Read(fd, &format, 1U);
-    FSWrapper::Read(fd, &width, 2U);
-    FSWrapper::Read(fd, &height, 2U);
-    FSWrapper::Read(fd, &numMipmaps, 1U);
-    FSWrapper::Read(fd, &swizzled, 1U);
+    unsigned int i;
+    for (i = 0U; i < numImages; ++i)
+    {
+        FileHandle fd = FSWrapper::Open(fileNames[i], ReadAccess, Random, 0777);
+        unsigned int fileSize = FSWrapper::GetFileSize(fd);
+        FSWrapper::Read(fd, &format, 1U);
+        FSWrapper::Read(fd, &width, 2U);
+        FSWrapper::Read(fd, &height, 2U);
+        FSWrapper::Read(fd, &numMipmaps, 1U);
+        FSWrapper::Read(fd, &swizzled, 1U);
+        imageBuffers[i] = CE_MALLOC_ALIGN(CE_CACHE_LINE_SIZE, fileSize - headerSizeBytes);
+        FSWrapper::Read(fd, imageBuffers[i], fileSize - headerSizeBytes);
+        FSWrapper::Close(fd);
+    }
 
-    void* textureBuffer = CE_MALLOC_ALIGN(CE_CACHE_LINE_SIZE, fileSize - headerSizeBytes);
-    FSWrapper::Read(fd, textureBuffer, fileSize - headerSizeBytes);
-    FSWrapper::Close(fd);
+    if (TEX_TYPE_2D == type)
+    {
+        texture = CE_NEW Texture();
 
-    texture = CE_NEW Texture();
+    }
+    else if (TEX_TYPE_CUBE_MAP == type)
+    {
+        texture = CE_NEW Texture(imageBuffers);
+    }
     texture->SetFormat((PixelFormat)format);
     texture->SetWidth(width);
     texture->SetHeight(height);
     texture->SetNumMipmaps(numMipmaps);
     texture->SetSwizzleEnabled(1U == swizzled);
-    texture->SetBuffer(textureBuffer);
+    texture->SetBuffer((TEX_TYPE_CUBE_MAP == type) ? NULL : imageBuffers[0U]);
     texture->CreateInternalResources();
 
     ce_hash_table_insert(&this->resources, name, strlen(name), texture);
