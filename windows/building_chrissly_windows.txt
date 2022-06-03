@@ -1,7 +1,7 @@
 Building Chrissly for Windows
 ========================================================================
-- install Visual Studio 2015 (note: on Windows 7 you may also need to install the DirectX SDK (see: https://www.microsoft.com/en-us/download/details.aspx?id=6812))
-- open 'windows/ChrisslyEngine_Windows.sln', right click 'ChrisslyEngine_Windows' in the project explorer and click 'Build' (note: when using the legacy "DXSDK_Jun10" on Windows 7, add __CE_USE_LEGACY_DIRECTX_SDK__ to "Preprocessor Definitions")
+- install Visual Studio 2015 or higher
+- open 'windows/ChrisslyEngine_Windows.sln', right click 'ChrisslyEngine_Windows' in the project explorer and click 'Build'
 - run 'windows/exportassets.cmd'
 
 Running the sample

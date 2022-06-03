@@ -346,6 +346,11 @@ MaterialParser::ParseTextureUnitState()
         if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
         this->currentTextureUnitState->SetTextureName(this->lexer.string);
     }
+    else if (0 == strcmp(this->lexer.string, "cubic_texture"))
+    {
+        if (0 == stb_c_lexer_get_token(&this->lexer)) { return; }
+        this->currentTextureUnitState->SetTextureName(this->lexer.string, TEX_TYPE_CUBE_MAP);
+    }
     else if (0 == strcmp(this->lexer.string, "colour_op"))
     {
         if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}

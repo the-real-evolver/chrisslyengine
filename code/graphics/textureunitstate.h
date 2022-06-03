@@ -137,7 +137,7 @@ public:
     TextureProjectionMappingMode GetTextureProjectionMappingMode() const;
 
     /// set the name of the texture to use
-    void SetTextureName(const char* const name);
+    void SetTextureName(const char* const name, TextureType type = TEX_TYPE_2D);
     /// gets the name of the texture to use
     const core::String& GetTextureName() const;
 
@@ -164,6 +164,7 @@ private:
     TextureProjectionMappingMode projectionMappingMode;
     core::String textureName;
     Texture* texture;
+    TextureType textureType;
 };
 
 } // namespace graphics

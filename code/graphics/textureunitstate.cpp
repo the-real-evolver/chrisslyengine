@@ -26,7 +26,8 @@ TextureUnitState::TextureUnitState() :
     lbt(LBT_COLOUR),
     mappingMode(TMM_TEXTURE_COORDS),
     projectionMappingMode(TPM_UV),
-    texture(NULL)
+    texture(NULL),
+    textureType(TEX_TYPE_2D)
 {
     this->addressMode.u = TAM_WRAP;
     this->addressMode.v = TAM_WRAP;
@@ -208,9 +209,10 @@ TextureUnitState::GetTextureProjectionMappingMode() const
 /**
 */
 void
-TextureUnitState::SetTextureName(const char* const name)
+TextureUnitState::SetTextureName(const char* const name, TextureType type)
 {
     this->textureName = name;
+    this->textureType = type;
 }
 
 //------------------------------------------------------------------------------
@@ -248,7 +250,7 @@ TextureUnitState::_Load()
 {
     if (this->textureName.Size() > 0U)
     {
-        this->texture = TextureManager::Instance()->Load(this->textureName.C_Str());
+        this->texture = TextureManager::Instance()->Load(this->textureName.C_Str(), this->textureType);
     }
 }
 
