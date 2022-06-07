@@ -93,7 +93,6 @@ TextureManager::Load(const char* const name, TextureType type)
     if (TEX_TYPE_2D == type)
     {
         texture = CE_NEW Texture();
-
     }
     else if (TEX_TYPE_CUBE_MAP == type)
     {

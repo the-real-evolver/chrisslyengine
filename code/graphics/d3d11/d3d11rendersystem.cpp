@@ -513,9 +513,11 @@ D3D11RenderSystem::SetPass(graphics::Pass* const pass)
     }
 
     /* set gpu program to use */
+    graphics::GpuProgramParameters* params = NULL;
     if (pass->IsProgrammable())
     {
         this->currentGpuProgram = pass->GetGpuProgram();
+        params = this->currentGpuProgram->GetDefaultParameters();
     }
     else
     {
@@ -543,7 +545,7 @@ D3D11RenderSystem::SetPass(graphics::Pass* const pass)
             this->currentGpuProgram = textured ? this->defaultGpuProgramLitFog : this->defaultGpuProgramLitFogNoTexture;
         }
 
-        graphics::GpuProgramParameters* params = this->currentGpuProgram->GetDefaultParameters();
+        params = this->currentGpuProgram->GetDefaultParameters();
 
         if (pass->GetNumTextureUnitStates() > 0U)
         {
@@ -584,9 +586,12 @@ D3D11RenderSystem::SetPass(graphics::Pass* const pass)
             D3D11Mappings::Get(pass->GetDiffuse(), ambient.w, ambient.x, ambient.y, ambient.z);
             params->SetNamedConstant("ambient", ambient);
         }
-
-        params->SetAutoConstant(graphics::GpuProgramParameters::ACT_VIEW_MATRIX, this->viewMatrix);
     }
+
+    /* set auto params */
+    params->SetAutoConstant(graphics::GpuProgramParameters::ACT_VIEW_MATRIX, this->viewMatrix);
+    params->SetAutoConstant(graphics::GpuProgramParameters::ACT_PROJECTION_MATRIX, this->projectionMatrix);
+
     this->currentGpuProgram->Bind();
     this->currentGpuProgram->BindConstantBuffers();
     this->currentGpuProgram->UpdatePerPassConstantBuffers();
