@@ -5,6 +5,7 @@
 #include "mesh.h"
 #include "memoryallocatorconfig.h"
 #include "animationstate.h"
+#include <float.h>
 
 namespace chrissly
 {
@@ -18,7 +19,7 @@ using namespace chrissly::core;
 */
 Mesh::Mesh() :
     subMeshes(NULL),
-    boundingRadius(0.0f)
+    boundingRadius(FLT_MAX)
 {
     ce_array_init(this->subMeshes, 1U);
     ce_hash_table_init(&this->animations, 0U);

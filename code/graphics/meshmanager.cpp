@@ -9,6 +9,7 @@
 #include "debug.h"
 #include <string.h>
 #include <stdio.h>
+#include <float.h>
 
 namespace chrissly
 {
@@ -98,7 +99,7 @@ MeshManager::Load(const char* const filename)
             case M_MESH_BOUNDS:
                 {
                     // read bounding radius
-                    float boundingRadius = 0.0f;
+                    float boundingRadius = FLT_MAX;
                     FSWrapper::Read(fd, &boundingRadius, 4U);
                     mesh->boundingRadius = boundingRadius;
                 }
