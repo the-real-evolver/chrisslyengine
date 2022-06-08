@@ -22,6 +22,7 @@ MaterialManager::MaterialManager()
 {
     Singleton = this;
     ce_hash_table_init(&this->resources, 4U);
+    ce_hash_table_init(&this->scripts, 4U);
 }
 
 //------------------------------------------------------------------------------
@@ -39,7 +40,7 @@ MaterialManager::~MaterialManager()
 void
 MaterialManager::Initialise()
 {
-    this->parser.ParseScript("materials.material");
+    this->ParseScript("materials.material");
 }
 
 //------------------------------------------------------------------------------
@@ -48,7 +49,15 @@ MaterialManager::Initialise()
 void
 MaterialManager::ParseScript(const char* const name)
 {
+    void* script = ce_hash_table_find(&this->scripts, name, strlen(name));
+    if (script != NULL)
+    {
+        return;
+    }
+
     this->parser.ParseScript(name);
+
+    ce_hash_table_insert(&this->scripts, name, strlen(name), (void*)(uintptr_t)0x12345678);
 }
 
 //------------------------------------------------------------------------------
@@ -97,6 +106,8 @@ MaterialManager::RemoveAll()
         }
     }
     ce_hash_table_clear(&this->resources);
+
+    ce_hash_table_clear(&this->scripts);
 }
 
 } // namespace graphics

@@ -49,6 +49,7 @@ private:
     static MaterialManager* Singleton;
 
     ce_hash_table resources;
+    ce_hash_table scripts;
     MaterialParser parser;
 };
 
