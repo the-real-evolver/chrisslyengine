@@ -35,6 +35,10 @@ public:
     void Exit();
     /// returns if the statemanger is running
     bool IsRunning() const;
+    /// returns pointer to the previous state
+    State const* const GetPreviousState() const;
+    /// returns pointer to the next state we transfering to
+    State const* const GetNextState() const;
 
 private:
     /// copy constructor
@@ -43,7 +47,9 @@ private:
     StateManager& operator = (const StateManager&);
 
     static StateManager* Singleton;
+    State* previousState;
     State* currentState;
+    State* nextState;
     bool isRunning;
 };
 

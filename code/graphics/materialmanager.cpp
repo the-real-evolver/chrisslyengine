@@ -57,7 +57,7 @@ MaterialManager::ParseScript(const char* const name)
 
     this->parser.ParseScript(name);
 
-    ce_hash_table_insert(&this->scripts, name, strlen(name), (void*)(uintptr_t)0x12345678);
+    ce_hash_table_insert(&this->scripts, name, strlen(name), (void*)1U);
 }
 
 //------------------------------------------------------------------------------

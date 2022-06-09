@@ -17,7 +17,9 @@ StateManager* StateManager::Singleton = NULL;
 /**
 */
 StateManager::StateManager() :
+    previousState(NULL),
     currentState(NULL),
+    nextState(NULL),
     isRunning(false)
 {
     Singleton = this;
@@ -49,6 +51,8 @@ StateManager::Trigger()
 void
 StateManager::ChangeState(State* const state)
 {
+    this->nextState = state;
+    this->previousState = this->currentState;
     if (state != this->currentState)
     {
         if (this->currentState != NULL)
@@ -85,6 +89,24 @@ bool
 StateManager::IsRunning() const
 {
     return this->isRunning;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+State const* const
+StateManager::GetPreviousState() const
+{
+    return this->previousState;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+State const* const
+StateManager::GetNextState() const
+{
+    return this->nextState;
 }
 
 } // namespace application
