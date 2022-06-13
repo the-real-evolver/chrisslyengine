@@ -14,7 +14,7 @@
 #include <windows.h>
 
 /// processes windows messages and updates states of the input devices
-void ce_input_wnd_proc_handler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+void ce_input_wnd_proc_handler(HWND hwnd, UINT msg, WPARAM w_param, LPARAM l_param);
 //------------------------------------------------------------------------------
 #endif
 #endif
