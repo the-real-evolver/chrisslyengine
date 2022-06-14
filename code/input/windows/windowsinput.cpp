@@ -10,7 +10,6 @@
 #include <windowsx.h>
 
 static const float ANALOG_STICK_EMULATED_DEFAULT_VALUE = 0.7f;
-
 static ce_gamepad_state gamepad_state = {0U, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
 static bool gamepad_check_availability = true;
 static bool gamepad_connected = false;
@@ -18,7 +17,9 @@ static bool gamepad_connected = false;
 static ce_mouse_state current_mouse_state = {0U, 0, 0, 0, 0};
 static ce_mouse_state last_mouse_state = {0U, 0, 0, 0, 0};
 
-unsigned char keyboard_state[256U] = {0U};
+static unsigned char keyboard_state[256U] = {0U};
+
+static HWND window_handle = NULL;
 
 //------------------------------------------------------------------------------
 /**
@@ -26,7 +27,7 @@ unsigned char keyboard_state[256U] = {0U};
 void
 ce_input_wnd_proc_handler(HWND hwnd, UINT msg, WPARAM w_param, LPARAM l_param)
 {
-    CE_UNREFERENCED_PARAMETER(hwnd);
+    window_handle = hwnd;
 
     switch (msg)
     {
@@ -257,10 +258,6 @@ ce_input_wnd_proc_handler(HWND hwnd, UINT msg, WPARAM w_param, LPARAM l_param)
                 case VK_RMENU:      keyboard_state[KEY_RALT] = 0U; break;
             }
             break;
-        case WM_MOUSEMOVE:
-            current_mouse_state.x = GET_X_LPARAM(l_param);
-            current_mouse_state.y = GET_Y_LPARAM(l_param);
-            break;
         case WM_MOUSEWHEEL:
             current_mouse_state.wheel = GET_WHEEL_DELTA_WPARAM(w_param);
             break;
@@ -376,6 +373,16 @@ ce_input_gamepad_get_state(ce_gamepad_state* const gps)
 void
 ce_input_mouse_get_state(ce_mouse_state* const ms)
 {
+    POINT p = {};
+    if (GetCursorPos(&p))
+    {
+        if (ScreenToClient(window_handle, &p))
+        {
+            current_mouse_state.x = (int)p.x;
+            current_mouse_state.y = (int)p.y;
+        }
+    }
+
     ms->buttons = current_mouse_state.buttons;
     ms->x = current_mouse_state.x;
     ms->y = current_mouse_state.y;
