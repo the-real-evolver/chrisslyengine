@@ -113,8 +113,8 @@ StateMaterialTest::Trigger()
     ce_input_gamepad_get_state(&pad);
 
     // camera fps controls
-    this->camera->Yaw(2.0f * -pad.leftStickX * (GU_PI / 180.0f));
-    this->camera->Pitch(2.0f * pad.leftStickY * (GU_PI / 180.0f));
+    this->camera->Yaw(2.0f * -pad.left_stick_x * (GU_PI / 180.0f));
+    this->camera->Pitch(2.0f * pad.left_stick_y * (GU_PI / 180.0f));
     if (pad.buttons & GAMEPAD_TRIANGLE) this->camera->MoveRelative(Vector3(0.0f, 0.0f, -0.1f));
     if (pad.buttons & GAMEPAD_SQUARE)   this->camera->MoveRelative(Vector3(0.0f, 0.0f, 0.1f));
 

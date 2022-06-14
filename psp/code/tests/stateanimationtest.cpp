@@ -87,7 +87,7 @@ StateAnimationTest::Trigger()
     this->animState->SetLoop(this->loop);
     if (!this->pause) this->animState->AddTime(0.016f);
 
-    this->sceneNode->Yaw(pad.leftStickX * 0.05f);
+    this->sceneNode->Yaw(pad.left_stick_x * 0.05f);
 
     GraphicsSystem::Instance()->RenderOneFrame();
 

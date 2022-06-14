@@ -70,5 +70,5 @@ ce_input_gamepad_get_state(ce_gamepad_state* const gps)
     if (gamepad_state.Buttons & PSP_CTRL_VOLDOWN) gps->buttons |= GAMEPAD_VOLDOWN;
 
     // Analog stick
-    ce_input_filter_dead_zone((gamepad_state.Lx - 128) / 127.0f, (gamepad_state.Ly - 128) / 127.0f, &gps->leftStickX, &gps->leftStickY, PSP_ANALOGUE_STICK_DEADZONE, 1.0f);
+    ce_input_filter_dead_zone((gamepad_state.Lx - 128) / 127.0f, (gamepad_state.Ly - 128) / 127.0f, &gps->left_stick_x, &gps->left_stick_y, PSP_ANALOGUE_STICK_DEADZONE, 1.0f);
 }
