@@ -141,6 +141,16 @@ RenderTarget::GetFrameTime() const
 //------------------------------------------------------------------------------
 /**
 */
+void
+RenderTarget::ResetFrameTime()
+{
+    this->frameTime = 0.0;
+    this->timer.Reset();
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
 unsigned int
 RenderTarget::GetType() const
 {
