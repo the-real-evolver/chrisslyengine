@@ -215,6 +215,8 @@ ce_input_gamepad_connected()
 void
 ce_input_gamepad_get_state(ce_gamepad_state* const gps)
 {
+    ZeroMemory(gps, sizeof(*gps));
+
     if (gamepad_check_availability)
     {
         XINPUT_CAPABILITIES caps = {};
@@ -224,7 +226,6 @@ ce_input_gamepad_get_state(ce_gamepad_state* const gps)
 
     if (gamepad_connected)
     {
-        ZeroMemory(gps, sizeof(*gps));
         XINPUT_STATE state = {};
         DWORD result = XInputGetState(0U, &state);
         if (result == ERROR_SUCCESS)
