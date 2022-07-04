@@ -101,14 +101,20 @@ D3D11Texture::CreateInternalResources()
         HRESULT result = D3D11RenderSystem::Instance()->GetDevice()->CreateTexture2D(&desc, data, &this->texture);
         CE_ASSERT(SUCCEEDED(result), "D3D11Texture::CreateInternalResources(): failed to create 2d texture\n");
 
-        D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
-        ZeroMemory(&srvDesc, sizeof(srvDesc));
-        srvDesc.Format = desc.Format;
-        srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBE;
-        srvDesc.TextureCube.MipLevels = desc.MipLevels;
-        srvDesc.TextureCube.MostDetailedMip = 0U;
-
-        result = D3D11RenderSystem::Instance()->GetDevice()->CreateShaderResourceView(this->texture, (graphics::TEX_TYPE_CUBE_MAP == this->type) ? &srvDesc : NULL, &this->shaderResourceView);
+        if (graphics::TEX_TYPE_CUBE_MAP == type)
+        {
+            D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+            ZeroMemory(&srvDesc, sizeof(srvDesc));
+            srvDesc.Format = desc.Format;
+            srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBE;
+            srvDesc.TextureCube.MipLevels = desc.MipLevels;
+            srvDesc.TextureCube.MostDetailedMip = 0U;
+            result = D3D11RenderSystem::Instance()->GetDevice()->CreateShaderResourceView(this->texture, &srvDesc, &this->shaderResourceView);
+        }
+        else
+        {
+            result = D3D11RenderSystem::Instance()->GetDevice()->CreateShaderResourceView(this->texture, NULL, &this->shaderResourceView);
+        }
         CE_ASSERT(SUCCEEDED(result), "D3D11Texture::CreateInternalResources(): failed to create resource view\n");
     }
 }

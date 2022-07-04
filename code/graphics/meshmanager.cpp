@@ -168,7 +168,8 @@ MeshManager::CreateManual(const char* const name)
     Mesh* mesh = (Mesh*)ce_hash_table_find(&this->resources, name, strlen(name));
     if (mesh != NULL)
     {
-        return mesh;
+        CE_ASSERT(false, "MeshManager::CreateManual(): manual mesh '%s' already exists, duplicates are not allowed\n", name);
+        return NULL;
     }
 
     mesh = CE_NEW Mesh();

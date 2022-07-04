@@ -547,13 +547,19 @@ D3D11RenderSystem::SetPass(graphics::Pass* const pass)
 
         params = this->currentGpuProgram->GetDefaultParameters();
 
-        if (pass->GetNumTextureUnitStates() > 0U)
+        if (textured)
         {
             graphics::TextureUnitState* tus = pass->GetTextureUnitState(0U);
             params->SetNamedConstant("uMod", tus->GetTextureUScroll());
             params->SetNamedConstant("vMod", tus->GetTextureVScroll());
             params->SetNamedConstant("uScale", tus->GetTextureUScale());
             params->SetNamedConstant("vScale", tus->GetTextureVScale());
+        }
+        else
+        {
+            core::Quaternion ambient;
+            D3D11Mappings::Get(pass->GetDiffuse(), ambient.w, ambient.x, ambient.y, ambient.z);
+            params->SetNamedConstant("ambient", ambient);
         }
 
         if (fog)
@@ -578,13 +584,6 @@ D3D11RenderSystem::SetPass(graphics::Pass* const pass)
             this->defaultLightShaderParams[2U][2U][3U] = shininess;
             this->defaultLightShaderParams[3U][2U][3U] = shininess;
             params->SetNamedConstant("lightParams", this->defaultLightShaderParams, MaxLights);
-        }
-
-        if (!textured)
-        {
-            core::Quaternion ambient;
-            D3D11Mappings::Get(pass->GetDiffuse(), ambient.w, ambient.x, ambient.y, ambient.z);
-            params->SetNamedConstant("ambient", ambient);
         }
     }
 
