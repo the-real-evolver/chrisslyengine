@@ -20,13 +20,13 @@ WinAPIFSWrapper::Open(const char* const fileName, core::AccessMode mode, core::A
 
     core::FileHandle fileHandle;
     fileHandle.handle = CreateFile(
-        fileName,                       /* _In_     LPCTSTR lpFileName                          */
-        WinAPIFSWrapper::Get(mode),     /* _In_     DWORD dwDesiredAccess                       */
-        FILE_SHARE_READ,                /* _In_     DWORD dwShareMode                           */
-        NULL,                           /* _In_opt_ LPSECURITY_ATTRIBUTES lpSecurityAttributes  */
-        OPEN_EXISTING,                  /* _In_     DWORD dwCreationDisposition                 */
-        FILE_ATTRIBUTE_NORMAL,          /* _In_     DWORD dwFlagsAndAttributes                  */
-        NULL                            /* _In_opt_ HANDLE hTemplateFile                        */
+        fileName,                                   /* _In_     LPCTSTR lpFileName                          */
+        WinAPIFSWrapper::Get(mode),                 /* _In_     DWORD dwDesiredAccess                       */
+        FILE_SHARE_READ,                            /* _In_     DWORD dwShareMode                           */
+        NULL,                                       /* _In_opt_ LPSECURITY_ATTRIBUTES lpSecurityAttributes  */
+        WinAPIFSWrapper::GetDispositionFlag(mode),  /* _In_     DWORD dwCreationDisposition                 */
+        FILE_ATTRIBUTE_NORMAL,                      /* _In_     DWORD dwFlagsAndAttributes                  */
+        NULL                                        /* _In_opt_ HANDLE hTemplateFile                        */
     );
     CE_ASSERT(fileHandle.handle != INVALID_HANDLE_VALUE, "FSWrapper::Open(): failed to open file '%s'\n", fileName);
 
@@ -106,6 +106,26 @@ WinAPIFSWrapper::Seek(core::FileHandle fileHandle, int offset, core::SeekOrigin 
 
 //------------------------------------------------------------------------------
 /**
+*/
+void
+WinAPIFSWrapper::Write(core::FileHandle fileHandle, const void* buf, unsigned int numBytes)
+{
+    DWORD bytesWritten;
+#if __CE_DEBUG__
+    BOOL result =
+#endif
+    WriteFile(
+        fileHandle.handle,  /* _In_                                         HANDLE hFile                    */
+        buf,                /* _In_reads_bytes_opt_(nNumberOfBytesToWrite)  LPCVOID lpBuffer                */
+        (DWORD)numBytes,    /* _In_                                         DWORD nNumberOfBytesToWrite     */
+        &bytesWritten,      /* _Out_opt_                                    LPDWORD lpNumberOfBytesWritten  */
+        NULL                /* _Inout_opt_                                  LPOVERLAPPED lpOverlapped       */
+    );
+    CE_ASSERT(result != FALSE, "FSWrapper::Write(): failed to write to file '%p'\n", fileHandle.handle);
+}
+
+//------------------------------------------------------------------------------
+/**
     See: https://devblogs.microsoft.com/oldnewthing/20071023-00/?p=24713
 */
 bool
@@ -127,7 +147,7 @@ WinAPIFSWrapper::Get(core::AccessMode mode)
         case core::ReadAccess:      return GENERIC_READ;
         case core::WriteAccess:     return GENERIC_WRITE;
         case core::ReadWriteAccess: return GENERIC_READ | GENERIC_WRITE;
-        case core::AppendAccess:    return GENERIC_ALL;
+        case core::AppendAccess:    return FILE_APPEND_DATA;
         default: CE_ASSERT(false, "FSWrapper::Get(): illegal AccessMode '%i'\n", mode);
     }
 
@@ -146,6 +166,24 @@ WinAPIFSWrapper::Get(core::SeekOrigin origin)
         case core::Current: return FILE_CURRENT;
         case core::End:     return FILE_END;
         default: CE_ASSERT(false, "FSWrapper::Get(): illegal SeekOrigin '%i'\n", origin);
+    }
+
+    return 0U;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+DWORD
+WinAPIFSWrapper::GetDispositionFlag(core::AccessMode mode)
+{
+    switch (mode)
+    {
+        case core::ReadAccess:      return OPEN_EXISTING;
+        case core::WriteAccess:     return CREATE_ALWAYS;
+        case core::ReadWriteAccess:
+        case core::AppendAccess:    return OPEN_ALWAYS;
+        default: CE_ASSERT(false, "FSWrapper::GetDispositionFlag(): illegal AccessMode '%i'\n", mode);
     }
 
     return 0U;

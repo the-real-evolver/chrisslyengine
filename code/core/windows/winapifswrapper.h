@@ -28,6 +28,8 @@ public:
     static int Read(core::FileHandle fileHandle, void* const buf, unsigned int numBytes);
     /// seek in a file
     static void Seek(core::FileHandle fileHandle, int offset, core::SeekOrigin whence);
+    /// write to a file
+    static void Write(core::FileHandle fileHandle, const void* buf, unsigned int numBytes);
     /// return true if a file exists
     static bool FileExists(const char* const fileName);
 
@@ -36,6 +38,8 @@ private:
     static DWORD Get(core::AccessMode mode);
     /// return a WinAPI equivalent for a SeekOrigin value
     static DWORD Get(core::SeekOrigin origin);
+    /// return WinAPI disposition flag for a AccessMode value
+    static DWORD GetDispositionFlag(core::AccessMode mode);
 };
 
 } // namespace chrissly

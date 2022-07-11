@@ -25,6 +25,8 @@ class Entity
 public:
     /// destructor
     ~Entity();
+    /// returns the scene node to which this object is attached
+    SceneNode* const GetParentSceneNode() const;
     /// gets the Mesh that this Entity is based on
     const Mesh* const GetMesh() const;
     /// gets a pointer to a SubEntity, ie a part of an Entity

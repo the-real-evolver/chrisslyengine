@@ -63,6 +63,33 @@ SceneNode::GetParentSceneNode() const
 //------------------------------------------------------------------------------
 /**
 */
+ce_linked_list* const
+SceneNode::GetAllChildren() const
+{
+    return this->children;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+SceneNode::RemoveChild(SceneNode* const node)
+{
+    ce_linked_list* it = this->children;
+    while (it != NULL)
+    {
+        if ((SceneNode*)it->data == node)
+        {
+            ce_linked_list_remove(&this->children, it);
+            break;
+        }
+        it = it->next;
+    }
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
 void
 SceneNode::RemoveAllChildren()
 {
@@ -72,9 +99,8 @@ SceneNode::RemoveAllChildren()
         ((SceneNode*)it->data)->SetParent(NULL);
         ce_linked_list* node = it;
         it = it->next;
-        ce_linked_list_remove(node);
+        ce_linked_list_remove(&this->children, node);
     }
-    this->children = NULL;
 }
 
 //------------------------------------------------------------------------------
@@ -98,9 +124,8 @@ SceneNode::RemoveAndDestroyAllChildren()
         SceneManager::Instance()->DestroySceneNode(sceneNode);
         ce_linked_list* node = it;
         it = it->next;
-        ce_linked_list_remove(node);
+        ce_linked_list_remove(&this->children, node);
     }
-    this->children = NULL;
 }
 
 //------------------------------------------------------------------------------

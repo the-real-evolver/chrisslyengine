@@ -58,6 +58,8 @@ public:
     Light* const CreateLight(const char* const name);
     /// returns a pointer to the named Light which has previously been added to the scene
     Light* const GetLight(const char* const name) const;
+    /// returns a pointer to the hashtable that contains all lights
+    ce_hash_table* const GetAllLights() const;
     /// removes and destroys all lights in the scene
     void DestroyAllLights();
 

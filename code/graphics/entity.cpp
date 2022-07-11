@@ -87,6 +87,15 @@ Entity::~Entity()
 //------------------------------------------------------------------------------
 /**
 */
+SceneNode* const
+Entity::GetParentSceneNode() const
+{
+    return this->parentNode;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
 const Mesh* const
 Entity::GetMesh() const
 {

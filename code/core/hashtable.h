@@ -89,7 +89,7 @@ ce_hash_table_clear(ce_hash_table* const table)
             CE_FREE(kvp->key);
             CE_FREE(kvp);
             it = it->next;
-            ce_linked_list_remove(node);
+            ce_linked_list_remove(&table->buckets[i], node);
         }
     }
 

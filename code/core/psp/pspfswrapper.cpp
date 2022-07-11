@@ -77,6 +77,16 @@ PSPFSWrapper::Seek(core::FileHandle fileHandle, int offset, core::SeekOrigin whe
 //------------------------------------------------------------------------------
 /**
 */
+void
+PSPFSWrapper::Write(core::FileHandle fileHandle, const void* buf, unsigned int numBytes)
+{
+    int bytesWritten = sceIoWrite(fileHandle.handle, buf, numBytes);
+    CE_ASSERT(bytesWritten == numBytes, "FSWrapper::Write(): failed to write to file '%i', bytes supplied '%i', bytes written '%i'\n", fileHandle.handle, numBytes, bytesWritten);
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
 bool
 PSPFSWrapper::FileExists(const char* const fileName)
 {
@@ -99,9 +109,9 @@ PSPFSWrapper::Get(core::AccessMode mode)
     switch (mode)
     {
         case core::ReadAccess:      return PSP_O_RDONLY;
-        case core::WriteAccess:     return PSP_O_WRONLY;
-        case core::ReadWriteAccess: return PSP_O_RDWR;
-        case core::AppendAccess:    return PSP_O_APPEND;
+        case core::WriteAccess:     return PSP_O_WRONLY | PSP_O_CREAT;
+        case core::ReadWriteAccess: return PSP_O_RDWR | PSP_O_CREAT;
+        case core::AppendAccess:    return PSP_O_APPEND | PSP_O_CREAT | PSP_O_WRONLY;
         default: CE_ASSERT(false, "FSWrapper::Get(): illegal AccessMode '%i'\n", mode);
     }
 

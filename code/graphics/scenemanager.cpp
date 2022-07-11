@@ -141,6 +141,15 @@ SceneManager::GetLight(const char* const name) const
 //------------------------------------------------------------------------------
 /**
 */
+ce_hash_table* const
+SceneManager::GetAllLights() const
+{
+    return &this->lights;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
 void
 SceneManager::DestroyAllLights()
 {

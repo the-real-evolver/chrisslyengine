@@ -29,7 +29,11 @@ public:
     SceneNode* const CreateChildSceneNode();
     /// gets the parent of this scenenode
     SceneNode* const GetParentSceneNode() const;
-    /// removes all child Nodes attached to this node
+    /// gets list of all child nodes
+    ce_linked_list* const GetAllChildren() const;
+    /// removes/detaches the specified child from this node
+    void RemoveChild(SceneNode* const node);
+    /// removes all child nodes attached to this node
     /**
         Does not delete the nodes, just detaches them from
         this parent, potentially to be reattached elsewhere.

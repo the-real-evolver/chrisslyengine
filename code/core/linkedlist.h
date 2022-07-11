@@ -56,7 +56,7 @@ ce_linked_list_add(ce_linked_list** front, void* const data)
     \param node The node you want to remove.
 */
 inline void
-ce_linked_list_remove(ce_linked_list* const node)
+ce_linked_list_remove(ce_linked_list** front, ce_linked_list* const node)
 {
     if (NULL == node)
     {
@@ -71,6 +71,11 @@ ce_linked_list_remove(ce_linked_list* const node)
     if (node->next != NULL)
     {
         node->next->prev = node->prev;
+    }
+
+    if (*front == node)
+    {
+        *front = node->next;
     }
 
     CE_FREE(node);
