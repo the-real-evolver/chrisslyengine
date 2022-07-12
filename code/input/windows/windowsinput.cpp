@@ -145,6 +145,8 @@ ce_input_update_keyboard_state(WPARAM w_param, unsigned char state)
 void
 ce_input_wnd_proc_handler(HWND hwnd, UINT msg, WPARAM w_param, LPARAM l_param)
 {
+    CE_UNREFERENCED_PARAMETER(l_param);
+
     window_handle = hwnd;
 
     switch (msg)

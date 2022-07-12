@@ -150,6 +150,7 @@
     <ClCompile Include="..\..\code\audio\wavcodec.cpp" />
     <ClCompile Include="..\..\code\core\chrisslymemory.cpp" />
     <ClCompile Include="..\..\code\core\chrisslystring.cpp" />
+    <ClCompile Include="..\..\code\core\damping.cpp" />
     <ClCompile Include="..\..\code\core\intersection.cpp" />
     <ClCompile Include="..\..\code\core\matrix3.cpp" />
     <ClCompile Include="..\..\code\core\matrix4.cpp" />
@@ -225,6 +226,7 @@
     <ClInclude Include="..\..\code\core\chrisslymutex.h" />
     <ClInclude Include="..\..\code\core\chrisslyplatform.h" />
     <ClInclude Include="..\..\code\core\chrisslystring.h" />
+    <ClInclude Include="..\..\code\core\damping.h" />
     <ClInclude Include="..\..\code\core\debug.h" />
     <ClInclude Include="..\..\code\core\filehandle.h" />
     <ClInclude Include="..\..\code\core\fileio.h" />

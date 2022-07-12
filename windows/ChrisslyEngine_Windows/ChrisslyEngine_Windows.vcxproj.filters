@@ -176,6 +176,9 @@
     <ClCompile Include="..\..\code\core\intersection.cpp">
       <Filter>core</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\code\core\damping.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="core">
@@ -499,6 +502,9 @@
       <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\code\core\intersection.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\core\damping.h">
       <Filter>core</Filter>
     </ClInclude>
   </ItemGroup>

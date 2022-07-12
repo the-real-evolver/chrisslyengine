@@ -134,6 +134,37 @@ ce_hash_table_insert(ce_hash_table* const table, const char* const key, unsigned
 //------------------------------------------------------------------------------
 /**
 */
+inline void
+ce_hash_table_erase(ce_hash_table* const table, void* const value)
+{
+    if (NULL == table)
+    {
+        return;
+    }
+
+    unsigned int i;
+    for (i = 0U; i < table->bucket_count; ++i)
+    {
+        ce_linked_list* it = table->buckets[i];
+        while (it != NULL)
+        {
+            ce_key_value_pair* kvp = (ce_key_value_pair*)it->data;
+            if (kvp->value == value)
+            {
+                CE_FREE(kvp->key);
+                CE_FREE(kvp);
+                ce_linked_list_remove(&table->buckets[i], it);
+                --table->size;
+                return;
+            }
+            it = it->next;
+        }
+    }
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
 inline void*
 ce_hash_table_find(ce_hash_table* const table, const char* const key, unsigned int key_length)
 {

@@ -151,6 +151,16 @@ SceneManager::GetAllLights() const
 /**
 */
 void
+SceneManager::DestroyLight(Light* const light)
+{
+    ce_hash_table_erase(&this->lights, light);
+    CE_DELETE light;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
 SceneManager::DestroyAllLights()
 {
     unsigned int i;

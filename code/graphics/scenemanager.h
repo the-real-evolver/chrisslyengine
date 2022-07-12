@@ -60,6 +60,8 @@ public:
     Light* const GetLight(const char* const name) const;
     /// returns a pointer to the hashtable that contains all lights
     ce_hash_table* const GetAllLights() const;
+    /// removes the light from the scene and destroys it
+    void DestroyLight(Light* const light);
     /// removes and destroys all lights in the scene
     void DestroyAllLights();
 

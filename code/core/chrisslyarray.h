@@ -93,14 +93,14 @@ ce_array_grow(void* a, unsigned int item_size, unsigned int n)
     unsigned int doubled_capacity = 2U * old_capacity;
     unsigned int requested_capacity = ce_array_size(a) + n;
     unsigned int capacity = doubled_capacity > requested_capacity ? doubled_capacity : requested_capacity;
-    ce_array_header_t* newMemory = (ce_array_header_t*)CE_REALLOC(a ? ce_array_header(a) : 0U, item_size * capacity + sizeof(ce_array_header_t));
-    if (newMemory)
+    ce_array_header_t* new_memory = (ce_array_header_t*)CE_REALLOC(a ? ce_array_header(a) : 0U, item_size * capacity + sizeof(ce_array_header_t));
+    if (new_memory)
     {
-        if (!a) newMemory->size = 0U;
-        newMemory->capacity = capacity;
-        ++newMemory;
-        memset((char*)(newMemory) + old_capacity * item_size, 0, (capacity - old_capacity) * item_size);
-        return newMemory;
+        if (!a) new_memory->size = 0U;
+        new_memory->capacity = capacity;
+        ++new_memory;
+        memset((char*)(new_memory) + old_capacity * item_size, 0, (capacity - old_capacity) * item_size);
+        return new_memory;
     }
 
     return NULL;
