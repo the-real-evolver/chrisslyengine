@@ -321,6 +321,15 @@ SceneNode::GetAttachedObject(unsigned short index) const
 {
     return this->objects[index];
 }
+//------------------------------------------------------------------------------
+/**
+*/
+void
+SceneNode::DetachObject(Entity* const obj)
+{
+    obj->_NotifyAttached(NULL);
+    ce_array_erase(this->objects, obj);
+}
 
 //------------------------------------------------------------------------------
 /**

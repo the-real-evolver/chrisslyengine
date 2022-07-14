@@ -25,6 +25,8 @@ public:
     static inline float Sqrt(float fValue);
     /// returns the sine of the given value
     static inline float Sin(float fValue);
+    /// returns the arc sine of the given value
+    static inline float ASin(float fValue);
     /// returns the cosine of the given value
     static inline float Cos(float fValue);
     /// returns the tangent of the given value (measured in radians)
@@ -88,6 +90,25 @@ PSPMath::Sin(float fValue)
         : "r"(fValue)
     );
     return sine;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline float
+PSPMath::ASin(float fValue)
+{
+    float asine;
+    __asm__ volatile (
+        "mtv     %1, S000\n"
+        "vcst.s  S001, VFPU_PI_2\n"
+        "vasin.s S000, S000\n"
+        "vmul.s  S000, S000, S001\n"
+        "mfv     %0, S000\n"
+        : "=r"(asine)
+        : "r"(fValue)
+    );
+    return asine;
 }
 
 //------------------------------------------------------------------------------

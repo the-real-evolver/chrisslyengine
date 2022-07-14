@@ -24,6 +24,8 @@ public:
     static inline float Sqrt(float fValue);
     /// returns the sine of the given value
     static inline float Sin(float fValue);
+    /// returns the arc sine of the given value
+    static inline float ASin(float fValue);
     /// returns the cosine of the given value
     static inline float Cos(float fValue);
     /// returns the tangent of the given value (measured in radians)
@@ -69,6 +71,15 @@ inline float
 StandardMath::Sin(float fValue)
 {
     return sinf(fValue);
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline float
+StandardMath::ASin(float fValue)
+{
+    return asinf(fValue);
 }
 
 //------------------------------------------------------------------------------

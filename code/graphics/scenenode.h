@@ -115,6 +115,8 @@ public:
         of an object may change as other objects are added / removed.
     */
     Entity* const GetAttachedObject(unsigned short index) const;
+    /// detaches the specified entity from this node
+    void DetachObject(Entity* const obj);
     /// detaches all objects attached to this node
     void DetachAllObjects();
 

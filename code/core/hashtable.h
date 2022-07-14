@@ -153,11 +153,15 @@ ce_hash_table_erase(ce_hash_table* const table, void* const value)
             {
                 CE_FREE(kvp->key);
                 CE_FREE(kvp);
-                ce_linked_list_remove(&table->buckets[i], it);
+                ce_linked_list* node = it;
+                it = it->next;
+                ce_linked_list_remove(&table->buckets[i], node);
                 --table->size;
-                return;
             }
-            it = it->next;
+            else
+            {
+                it = it->next;
+            }
         }
     }
 }
