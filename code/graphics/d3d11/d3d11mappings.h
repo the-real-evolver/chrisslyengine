@@ -36,6 +36,8 @@ public:
     static UINT Get(unsigned int fbt);
     /// return the distance (in bytes) from the beginning of one line of a texture to the next line
     static UINT GetSysMemPitch(unsigned int width, graphics::PixelFormat pf);
+    /// get the memory a buffer with the given width, height and format requires
+    static unsigned int GetMemorySize(unsigned int width, unsigned int height, graphics::PixelFormat pf);
     /// get GpuConstantType from the given d3d11 shader type description
     static graphics::GpuConstantType Get(const D3D11_SHADER_TYPE_DESC& typeDesc);
     /// get rgba components of the given color (Format: AABBGGRR) as float value

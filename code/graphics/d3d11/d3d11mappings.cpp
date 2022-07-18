@@ -223,6 +223,32 @@ D3D11Mappings::GetSysMemPitch(unsigned int width, graphics::PixelFormat pf)
 //------------------------------------------------------------------------------
 /**
 */
+unsigned int
+D3D11Mappings::GetMemorySize(unsigned int width, unsigned int height, graphics::PixelFormat pf)
+{
+    switch (pf)
+    {
+        case graphics::PF_R8G8B8A8:      return (width * height) << 2U;
+        case graphics::PF_DXT1:          return (width * height) >> 1U;
+        case graphics::PF_DXT3:
+        case graphics::PF_DXT5:          return width * height;
+        case graphics::PF_FLOAT32_RGBA:  return (width * height) << 4U;
+        case graphics::PF_R5G6B5:
+        case graphics::PF_A1R5G5B5:
+        case graphics::PF_A4R4G4B4:
+        case graphics::PF_COLOR_INDEX4:
+        case graphics::PF_COLOR_INDEX8:
+        case graphics::PF_COLOR_INDEX16:
+        case graphics::PF_COLOR_INDEX32:
+        default: CE_ASSERT(false, "D3D11Mappings::GetMemorySize(): illegal or unsupported PixelFormat '%i'\n", pf);
+    }
+
+    return 0U;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
 graphics::GpuConstantType
 D3D11Mappings::Get(const D3D11_SHADER_TYPE_DESC& typeDesc)
 {
