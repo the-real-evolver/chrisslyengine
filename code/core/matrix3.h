@@ -31,6 +31,8 @@ public:
     Vector3 operator * (const Vector3& rkPoint) const;
     /// mirrors the matrix at their main diagonal
     Matrix3 Transpose() const;
+    /// decompose matrix into yaw-pitch-roll angles
+    bool ToEulerAngles(float& yaw, float& pitch, float& roll) const;
 
 private:
     float m[3U][3U];

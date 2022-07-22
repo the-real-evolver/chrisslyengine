@@ -3,6 +3,7 @@
 //  (C) 2011 Christian Bleicher
 //------------------------------------------------------------------------------
 #include "matrix3.h"
+#include "chrisslymath.h"
 
 namespace chrissly
 {
@@ -84,6 +85,40 @@ Matrix3::Transpose() const
     kTranspose[2U][2U] = this->m[2U][2U];
 
     return kTranspose;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+bool
+Matrix3::ToEulerAngles(float& yaw, float& pitch, float& roll) const
+{
+    pitch = Math::ASin(-this->m[1U][2U]);
+    if (pitch < (float)M_PI_2)
+    {
+        if (pitch > (float)-M_PI_2)
+        {
+            yaw = Math::ATan2(this->m[0U][2U], this->m[2U][2U]);
+            roll = Math::ATan2(this->m[1U][0U], this->m[1U][1U]);
+            return true;
+        }
+        else
+        {
+            // no unique solution
+            float fRmY = Math::ATan2(-this->m[0U][1U], this->m[0U][0U]);
+            roll = 0.0f; // any angle works
+            yaw = roll - fRmY;
+            return false;
+        }
+    }
+    else
+    {
+        // no unique solution
+        float fRpY = Math::ATan2(-this->m[0U][1U], this->m[0U][0U]);
+        roll = 0.0f; // any angle works
+        yaw = fRpY - roll;
+        return false;
+    }
 }
 
 } // namespace core

@@ -40,6 +40,9 @@ public:
     Vector3 operator * (const Vector3 &v) const;
     /// member access, allows use of construct mat[r][c]
     float* const operator[] (unsigned int iRow) const;
+    /// mirrors the matrix at their main diagonal
+    Matrix4 Transpose() const;
+
     /// identity matrix
     static const Matrix4 IDENTITY;
     /// zero initialised matrix

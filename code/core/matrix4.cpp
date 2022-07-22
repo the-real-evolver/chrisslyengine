@@ -31,9 +31,9 @@ Matrix4::Matrix4()
 /**
 */
 Matrix4::Matrix4(float m00, float m01, float m02, float m03,
-                    float m10, float m11, float m12, float m13,
-                    float m20, float m21, float m22, float m23,
-                    float m30, float m31, float m32, float m33)
+                 float m10, float m11, float m12, float m13,
+                 float m20, float m21, float m22, float m23,
+                 float m30, float m31, float m32, float m33)
 {
     this->m[0U][0U] = m00;
     this->m[0U][1U] = m01;
@@ -122,11 +122,10 @@ Matrix4::Inverse() const
     float d23 = -(v4 * m00 - v2 * m01 + v0 * m03) * invDet;
     float d33 = (v3 * m00 - v1 * m01 + v0 * m02) * invDet;
 
-    return Matrix4(
-        d00, d01, d02, d03,
-        d10, d11, d12, d13,
-        d20, d21, d22, d23,
-        d30, d31, d32, d33);
+    return Matrix4(d00, d01, d02, d03,
+                   d10, d11, d12, d13,
+                   d20, d21, d22, d23,
+                   d30, d31, d32, d33);
 }
 
 //------------------------------------------------------------------------------
@@ -192,6 +191,18 @@ float* const
 Matrix4::operator[] (unsigned int iRow) const
 {
     return (float*)this->m[iRow];
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+Matrix4
+Matrix4::Transpose() const
+{
+    return Matrix4(this->m[0U][0U], this->m[1U][0U], this->m[2U][0U], this->m[3U][0U],
+                   this->m[0U][1U], this->m[1U][1U], this->m[2U][1U], this->m[3U][1U],
+                   this->m[0U][2U], this->m[1U][2U], this->m[2U][2U], this->m[3U][2U],
+                   this->m[0U][3U], this->m[1U][3U], this->m[2U][3U], this->m[3U][3U]);
 }
 
 } // namespace core
