@@ -106,7 +106,7 @@ SceneManager::DestroyAllCameras()
     unsigned int i;
     for (i = 0U; i < this->cameras.bucket_count; ++i)
     {
-        ce_linked_list* it = ce_hash_table_begin(&this->cameras, i);
+        ce_linked_list* it = this->cameras.buckets[i];
         while (it != NULL)
         {
             CE_DELETE (Camera*)((ce_key_value_pair*)it->data)->value;
@@ -166,7 +166,7 @@ SceneManager::DestroyAllLights()
     unsigned int i;
     for (i = 0U; i < this->lights.bucket_count; ++i)
     {
-        ce_linked_list* it = ce_hash_table_begin(&this->lights, i);
+        ce_linked_list* it = this->lights.buckets[i];
         while (it != NULL)
         {
             CE_DELETE (Light*)((ce_key_value_pair*)it->data)->value;
@@ -565,7 +565,7 @@ SceneManager::PrepareShadowTextures()
     unsigned int i;
     for (i = 0U; i < this->lights.bucket_count && shadowCameraDirty; ++i)
     {
-        ce_linked_list* it = ce_hash_table_begin(&this->lights, i);
+        ce_linked_list* it = this->lights.buckets[i];
         while (it != NULL && shadowCameraDirty)
         {
             Light* light = (graphics::Light*)((ce_key_value_pair*)it->data)->value;

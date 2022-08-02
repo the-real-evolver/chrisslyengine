@@ -28,7 +28,7 @@ public:
     /// returns the scene node to which this object is attached
     SceneNode* const GetParentSceneNode() const;
     /// gets the Mesh that this Entity is based on
-    const Mesh* const GetMesh() const;
+    Mesh* const GetMesh() const;
     /// gets a pointer to a SubEntity, ie a part of an Entity
     SubEntity* const GetSubEntity(unsigned int index) const;
     /// retrieves the number of SubEntity objects making up this entity

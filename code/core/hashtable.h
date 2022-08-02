@@ -197,15 +197,25 @@ ce_hash_table_find(ce_hash_table* const table, const char* const key, unsigned i
 //------------------------------------------------------------------------------
 /**
 */
-inline ce_linked_list*
-ce_hash_table_begin(ce_hash_table* const table, unsigned int index)
+inline ce_key_value_pair*
+ce_hash_table_get_key(ce_hash_table* const table, void* const value)
 {
-    if (NULL == table)
+    unsigned int i;
+    for (i = 0U; i < table->bucket_count; ++i)
     {
-        return NULL;
+        ce_linked_list* it = table->buckets[i];
+        while (it != NULL)
+        {
+            ce_key_value_pair* kvp = (ce_key_value_pair*)it->data;
+            if (kvp->value == value)
+            {
+                return kvp;
+            }
+            it = it->next;
+        }
     }
 
-    return table->buckets[index];
+    return NULL;
 }
 
 //------------------------------------------------------------------------------

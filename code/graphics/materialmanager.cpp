@@ -98,7 +98,7 @@ MaterialManager::RemoveAll()
     unsigned int i;
     for (i = 0U; i < this->resources.bucket_count; ++i)
     {
-        ce_linked_list* it = ce_hash_table_begin(&this->resources, i);
+        ce_linked_list* it = this->resources.buckets[i];
         while (it != NULL)
         {
             CE_DELETE (Material*)((ce_key_value_pair*)it->data)->value;
@@ -108,6 +108,15 @@ MaterialManager::RemoveAll()
     ce_hash_table_clear(&this->resources);
 
     ce_hash_table_clear(&this->scripts);
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+ce_hash_table* const
+MaterialManager::GetAllScripts() const
+{
+    return &this->scripts;
 }
 
 } // namespace graphics

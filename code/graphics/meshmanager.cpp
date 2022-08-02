@@ -187,7 +187,7 @@ MeshManager::RemoveAll()
     unsigned int i;
     for (i = 0U; i < this->resources.bucket_count; ++i)
     {
-        ce_linked_list* it = ce_hash_table_begin(&this->resources, i);
+        ce_linked_list* it = this->resources.buckets[i];
         while (it != NULL)
         {
             CE_DELETE (Mesh*)((ce_key_value_pair*)it->data)->value;
@@ -195,6 +195,15 @@ MeshManager::RemoveAll()
         }
     }
     ce_hash_table_clear(&this->resources);
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+ce_hash_table* const
+MeshManager::GetAllMeshes() const
+{
+    return &this->resources;
 }
 
 } // namespace graphics

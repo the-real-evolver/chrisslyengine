@@ -35,7 +35,7 @@ Entity::Entity(Mesh* const mesh) :
         unsigned int i;
         for (i = 0U; i < this->animationStates.bucket_count; ++i)
         {
-            ce_linked_list* it = ce_hash_table_begin(&this->animationStates, i);
+            ce_linked_list* it = this->animationStates.buckets[i];
             while (it != NULL)
             {
                 AnimationState* state = (AnimationState*)((ce_key_value_pair*)it->data)->value;
@@ -74,7 +74,7 @@ Entity::~Entity()
 
     for (i = 0U; i < this->animationStates.bucket_count; ++i)
     {
-        ce_linked_list* it = ce_hash_table_begin(&this->animationStates, i);
+        ce_linked_list* it = this->animationStates.buckets[i];
         while (it != NULL)
         {
             CE_DELETE (AnimationState*)((ce_key_value_pair*)it->data)->value;
@@ -96,7 +96,7 @@ Entity::GetParentSceneNode() const
 //------------------------------------------------------------------------------
 /**
 */
-const Mesh* const
+Mesh* const
 Entity::GetMesh() const
 {
     return this->mesh;
@@ -201,7 +201,7 @@ Entity::UpdateAnimation()
     unsigned int i;
     for (i = 0U; i < this->animationStates.bucket_count; ++i)
     {
-        ce_linked_list* it = ce_hash_table_begin(&this->animationStates, i);
+        ce_linked_list* it = this->animationStates.buckets[i];
         while (it != NULL)
         {
             AnimationState* state = (AnimationState*)((ce_key_value_pair*)it->data)->value;

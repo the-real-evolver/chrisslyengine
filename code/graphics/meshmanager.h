@@ -34,6 +34,8 @@ public:
     Mesh* const CreateManual(const char* const name);
     /// removes all resources
     void RemoveAll();
+    /// returns a pointer to the hashtable that contains all meshes
+    ce_hash_table* const GetAllMeshes() const;
 
 private:
     /// copy constructor
@@ -43,7 +45,7 @@ private:
 
     static MeshManager* Singleton;
 
-    ce_hash_table resources;
+    mutable ce_hash_table resources;
 
     enum MeshChunkID
     {

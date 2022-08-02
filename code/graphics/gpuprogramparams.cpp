@@ -28,7 +28,7 @@ GpuNamedConstants::~GpuNamedConstants()
     unsigned int i;
     for (i = 0U; i < this->map.bucket_count; ++i)
     {
-        ce_linked_list* it = ce_hash_table_begin(&this->map, i);
+        ce_linked_list* it = this->map.buckets[i];
         while (it != NULL)
         {
             CE_LOG("GpuNamedConstants::~GpuNamedConstants(): remove constant definition\n");

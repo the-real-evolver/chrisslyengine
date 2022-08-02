@@ -606,7 +606,7 @@ D3D11RenderSystem::ProcessLights(ce_hash_table* const lights)
     unsigned int i;
     for (i = 0U; i < lights->bucket_count; ++i)
     {
-        ce_linked_list* it = ce_hash_table_begin(lights, i);
+        ce_linked_list* it = lights->buckets[i];
         while (it != NULL)
         {
             graphics::Light* light = (graphics::Light*)((ce_key_value_pair*)it->data)->value;

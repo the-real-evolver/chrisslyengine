@@ -39,6 +39,8 @@ public:
     Material* const GetByName(const char* const name);
     /// removes all resources
     void RemoveAll();
+    /// returns a pointer to the hashtable that contains all registered scripts
+    ce_hash_table* const GetAllScripts() const;
 
 private:
     /// copy constructor
@@ -49,7 +51,7 @@ private:
     static MaterialManager* Singleton;
 
     ce_hash_table resources;
-    ce_hash_table scripts;
+    mutable ce_hash_table scripts;
     MaterialParser parser;
 };
 

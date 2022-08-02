@@ -101,7 +101,7 @@ Mesh::RemoveAllAnimations()
     unsigned int i;
     for (i = 0U; i < this->animations.bucket_count; ++i)
     {
-        ce_linked_list* it = ce_hash_table_begin(&this->animations, i);
+        ce_linked_list* it = this->animations.buckets[i];
         while (it != NULL)
         {
             CE_DELETE (Animation*)((ce_key_value_pair*)it->data)->value;
@@ -148,7 +148,7 @@ Mesh::_InitAnimationState(ce_hash_table* const animSet)
     unsigned int i;
     for (i = 0U; i < this->animations.bucket_count; ++i)
     {
-        ce_linked_list* it = ce_hash_table_begin(&this->animations, i);
+        ce_linked_list* it = this->animations.buckets[i];
         while (it != NULL)
         {
             Animation* animation = (Animation*)((ce_key_value_pair*)it->data)->value;
