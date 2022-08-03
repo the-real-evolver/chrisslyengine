@@ -21,6 +21,7 @@ GraphicsSystem::GraphicsSystem() :
 {
     Singleton = this;
     this->activeRenderer = CE_NEW RenderSystem();
+    this->gpuProgramManager = CE_NEW GpuProgramManager();
     this->meshManager = CE_NEW MeshManager();
     this->textureManager = CE_NEW TextureManager();
     this->materialManager = CE_NEW MaterialManager();
@@ -46,6 +47,7 @@ GraphicsSystem::~GraphicsSystem()
     CE_DELETE this->materialManager;
     CE_DELETE this->textureManager;
     CE_DELETE this->meshManager;
+    CE_DELETE this->gpuProgramManager;
 
     this->activeRenderer->Shutdown();
     CE_DELETE this->activeRenderer;

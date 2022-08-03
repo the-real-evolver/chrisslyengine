@@ -135,6 +135,8 @@ def ce_write_material(file_path, materials):
         file.write("        cull_hardware %s\n" % ('clockwise' if mat.use_backface_culling else 'none'))
         file.write("        roughness %f\n" % (mat.roughness))
         file.write("        metallic %f\n" % (mat.metallic))
+        if 'gpu_program' in mat:
+            file.write("        gpu_program \"%s\"\n" % (mat.get('gpu_program', "default")))
         for tex in mat.node_tree.nodes:
             if tex.type == 'TEX_IMAGE' and hasattr(tex.image, 'name'):
                 file.write("        texture_unit\n")

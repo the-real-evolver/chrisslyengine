@@ -6,6 +6,7 @@
 
     (C) 2010 Christian Bleicher
 */
+#include "gpuprogrammanager.h"
 #include "meshmanager.h"
 #include "texturemanager.h"
 #include "scenemanager.h"
@@ -50,6 +51,7 @@ private:
     static GraphicsSystem* Singleton;
 
     RenderSystem* activeRenderer;
+    GpuProgramManager* gpuProgramManager;
     MeshManager* meshManager;
     TextureManager* textureManager;
     MaterialManager* materialManager;

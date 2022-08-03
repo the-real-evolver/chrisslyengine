@@ -6,6 +6,7 @@
 
 #include "materialparser.h"
 #include "materialmanager.h"
+#include "gpuprogrammanager.h"
 #include "memoryallocatorconfig.h"
 #include "debug.h"
 #include "fswrapper.h"
@@ -327,6 +328,11 @@ MaterialParser::ParsePass()
         {
             this->currentPass->SetDepthWriteEnabled(false);
         }
+    }
+    else if (0 == strcmp(this->lexer.string, "gpu_program"))
+    {
+        if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
+        this->currentPass->SetGpuProgram(GpuProgramManager::Instance()->GetByName(this->lexer.string));
     }
 }
 

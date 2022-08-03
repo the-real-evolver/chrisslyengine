@@ -179,6 +179,9 @@
     <ClCompile Include="..\..\code\core\damping.cpp">
       <Filter>core</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\code\graphics\gpuprogrammanager.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="core">
@@ -506,6 +509,9 @@
     </ClInclude>
     <ClInclude Include="..\..\code\core\damping.h">
       <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\graphics\gpuprogrammanager.h">
+      <Filter>graphics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

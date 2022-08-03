@@ -23,6 +23,7 @@ LOCAL_SRC_FILES := $(CE_SRC_FILES)/core/android/androiddebug.cpp $(CE_SRC_FILES)
                    $(CE_SRC_FILES)/graphics/pass.cpp $(CE_SRC_FILES)/graphics/material.cpp $(CE_SRC_FILES)/graphics/materialmanager.cpp $(CE_SRC_FILES)/graphics/materialparser.cpp \
                    $(CE_SRC_FILES)/graphics/graphicssystem.cpp \
                    $(CE_SRC_FILES)/graphics/hardwarevertexbufferbase.cpp \
+                   $(CE_SRC_FILES)/graphics/graphics/gpuprogrammanager.cpp \
                    $(CE_SRC_FILES)/graphics/meshmanager.cpp $(CE_SRC_FILES)/graphics/mesh.cpp $(CE_SRC_FILES)/graphics/submesh.cpp \
                    $(CE_SRC_FILES)/graphics/subentity.cpp  $(CE_SRC_FILES)/graphics/entity.cpp \
                    $(CE_SRC_FILES)/graphics/renderqueue.cpp \

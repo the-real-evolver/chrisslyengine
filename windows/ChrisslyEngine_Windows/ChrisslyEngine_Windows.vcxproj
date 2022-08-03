@@ -173,6 +173,7 @@
     <ClCompile Include="..\..\code\graphics\d3d11\d3d11texture.cpp" />
     <ClCompile Include="..\..\code\graphics\d3d11\dxgirenderwindow.cpp" />
     <ClCompile Include="..\..\code\graphics\entity.cpp" />
+    <ClCompile Include="..\..\code\graphics\gpuprogrammanager.cpp" />
     <ClCompile Include="..\..\code\graphics\gpuprogramparams.cpp" />
     <ClCompile Include="..\..\code\graphics\graphicssystem.cpp" />
     <ClCompile Include="..\..\code\graphics\hardwarevertexbufferbase.cpp" />
@@ -262,6 +263,7 @@
     <ClInclude Include="..\..\code\graphics\d3d11\dxgirenderwindow.h" />
     <ClInclude Include="..\..\code\graphics\entity.h" />
     <ClInclude Include="..\..\code\graphics\gpuprogram.h" />
+    <ClInclude Include="..\..\code\graphics\gpuprogrammanager.h" />
     <ClInclude Include="..\..\code\graphics\gpuprogramparams.h" />
     <ClInclude Include="..\..\code\graphics\graphicssystem.h" />
     <ClInclude Include="..\..\code\graphics\hardwarevertexbuffer.h" />

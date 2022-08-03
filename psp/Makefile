@@ -12,7 +12,7 @@ CE = ../code
 #------------------------------------------------------------------------------
 # includes
 # PSPSDK = C:/dev/devkitpro/devkitPSP/psp/sdk
-#------------------------------------------------------------------------------ 
+#------------------------------------------------------------------------------
 INCDIR = $(PSPSDK) $(CE) $(CE)/core $(CE)/graphics $(CE)/audio $(CE)/input $(CE)/thirdparty/stb $(CE)/application code/tests
 
 #------------------------------------------------------------------------------
@@ -27,6 +27,7 @@ OBJS = $(CE)/core/quaternion.o $(CE)/core/vector3.o $(CE)/core/matrix3.o $(CE)/c
        $(CE)/graphics/texturemanager.o $(CE)/graphics/texturebase.o $(CE)/graphics/psp/psptexture.o \
        $(CE)/graphics/materialmanager.o $(CE)/graphics/materialparser.o $(CE)/graphics/textureunitstate.o $(CE)/graphics/pass.o $(CE)/graphics/material.o \
        $(CE)/graphics/hardwarevertexbufferbase.o \
+       $(CE)/graphics/gpuprogrammanager.o \
        $(CE)/graphics/meshmanager.o $(CE)/graphics/mesh.o $(CE)/graphics/submesh.o \
        $(CE)/graphics/subentity.o $(CE)/graphics/entity.o \
        $(CE)/graphics/renderqueue.o \
