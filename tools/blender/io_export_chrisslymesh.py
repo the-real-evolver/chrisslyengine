@@ -15,6 +15,7 @@ bl_info = {
 }
 
 import os
+import re
 import bpy
 import bmesh
 import mathutils
@@ -99,6 +100,7 @@ def ce_export_path(path):
         path = os.path.join(*p)
         path += ("/")
         path = os.path.normcase(path)
+        path = re.escape(path)
     return path
 
 #------------------------------------------------------------------------------
@@ -137,22 +139,23 @@ def ce_write_material(file_path, materials):
         file.write("        metallic %f\n" % (mat.metallic))
         if 'gpu_program' in mat:
             file.write("        gpu_program \"%s\"\n" % (mat.get('gpu_program', "default")))
-        for tex in mat.node_tree.nodes:
-            if tex.type == 'TEX_IMAGE' and hasattr(tex.image, 'name'):
-                file.write("        texture_unit\n")
-                file.write("        {\n")
-                file.write("            texture \"%s\"\n" % (ce_export_path(file_path) + os.path.splitext(tex.image.name)[0] + '.tex'))
-                if tex.projection == 'SPHERE':
-                    file.write("            env_map spherical\n")
-                if tex.interpolation == 'Closest':
-                    file.write("            filtering point point point\n")
-                for input in tex.inputs:
-                    for link in input.links:
-                        if link.from_node.type == 'MAPPING':
-                            scale = link.from_node.inputs['Scale'].default_value
-                            file.write("            scale %f %f\n" % (scale[0], scale[1]))
-                file.write("        }\n")
-                ce_write_texture(tex.image, os.path.dirname(file_path))
+        if hasattr(mat.node_tree, 'nodes'):
+            for tex in mat.node_tree.nodes:
+                if tex.type == 'TEX_IMAGE' and hasattr(tex.image, 'name'):
+                    file.write("        texture_unit\n")
+                    file.write("        {\n")
+                    file.write("            texture \"%s\"\n" % (ce_export_path(file_path) + os.path.splitext(tex.image.name)[0] + '.tex'))
+                    if tex.projection == 'SPHERE':
+                        file.write("            env_map spherical\n")
+                    if tex.interpolation == 'Closest':
+                        file.write("            filtering point point point\n")
+                    for input in tex.inputs:
+                        for link in input.links:
+                            if link.from_node.type == 'MAPPING':
+                                scale = link.from_node.inputs['Scale'].default_value
+                                file.write("            scale %f %f\n" % (scale[0], scale[1]))
+                    file.write("        }\n")
+                    ce_write_texture(tex.image, os.path.dirname(file_path))
         file.write("    }\n")
         file.write("}\n\n")
     file.close()
