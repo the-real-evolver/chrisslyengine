@@ -42,6 +42,10 @@ public:
     void SetMorphWeight(float weight);
     /// get vertex morph weight value
     float GetMorphWeight() const;
+    /// set time index of the current morphkeyframe
+    void SetCurrentTimeIndex(int index);
+    /// get time index of the current morphkeyframe
+    int GetCurrentTimeIndex() const;
 
 private:
     /// private constructor - don't allow creation by anybody else
@@ -58,6 +62,8 @@ private:
     VertexData* morphVertexData;
     /// vertex morph weight
     float morphWeight;
+    /// time index of the current morphkeyframe
+    int currentTimeIndex;
     /// cached distance to camera
     float distanceToCamera;
 };

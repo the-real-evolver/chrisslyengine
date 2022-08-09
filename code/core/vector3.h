@@ -14,6 +14,8 @@ namespace chrissly
 namespace core
 {
 
+class Quaternion;
+
 class Vector3
 {
 public:
@@ -83,10 +85,21 @@ public:
     float DotProduct(const Vector3& vec) const;
     /// returns the length (magnitude) of the vector
     float Length() const;
+    /// returns the square of the length (magnitude) of the vector
+    float SquaredLength() const;
     /// get the maximum absolute value of the vector's components
     float GetAbsMax() const;
     /// performs a linear interpolation between two vectors, t ranges from 0 - 1
     static Vector3 Lerp(const Vector3& a, const Vector3& b, float t);
+    /// gets the shortest arc quaternion to rotate this vector to the destination vector
+    /**
+        @remarks
+            If you call this with a dest vector that is close to the inverse
+            of this vector, we will rotate 180 degrees around the 'fallbackAxis'
+            (if specified, or a generated axis if not) since in this case
+            ANY axis of rotation is valid.
+    */
+    Quaternion GetRotationTo(const Vector3& dest, const Vector3& fallbackAxis = Vector3::ZERO) const;
 
     float x;
     float y;

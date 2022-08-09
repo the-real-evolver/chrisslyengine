@@ -27,6 +27,8 @@ SceneManager::SceneManager() :
     ambientLight(0x00000000),
     renderQueuesEndedCallback(NULL),
     suppressRenderStateChanges(false),
+    entityCreatedCallback(NULL),
+    entityDestroyedCallback(NULL),
     illuminationStage(IRS_NONE),
     shadowTechnique(SHADOWTYPE_NONE),
     shadowTextureConfigDirty(true),
@@ -64,15 +66,7 @@ SceneManager::~SceneManager()
 
     this->DestroyAllCameras();
 
-    if (!this->shadowTextureConfigDirty)
-    {
-        CE_DELETE this->shadowTexture;
-        CE_DELETE this->shadowRenderTexture;
-        CE_DELETE this->shadowCamera;
-        CE_DELETE this->shadowRttPass;
-        CE_DELETE this->shadowRttMorphAnimPass;
-        CE_DELETE this->shadowPass;
-    }
+    this->DestroyShadowTextures();
 }
 
 //------------------------------------------------------------------------------
@@ -184,6 +178,11 @@ SceneManager::CreateEntity(const char* const meshName)
 {
     Entity* entity = CE_NEW Entity(MeshManager::Instance()->Load(meshName));
 
+    if (this->entityCreatedCallback != NULL)
+    {
+        this->entityCreatedCallback(entity);
+    }
+
     ce_array_push_back(this->entities, entity);
 
     return entity;
@@ -196,6 +195,12 @@ void
 SceneManager::DestroyEntity(Entity* const entity)
 {
     CE_ASSERT(entity != NULL, "SceneManager::DestroyEntity(): invalid pointer passed");
+
+    if (this->entityDestroyedCallback != NULL)
+    {
+        this->entityDestroyedCallback(entity);
+    }
+
     ce_array_erase(this->entities, entity);
     CE_DELETE entity;
 }
@@ -290,15 +295,19 @@ SceneManager::GetAmbientLight() const
 void
 SceneManager::SetShadowTechnique(ShadowTechnique technique)
 {
-    this->shadowTechnique = technique;
-
-    if (SHADOWTYPE_TEXTURE_ADDITIVE == technique)
+    if (SHADOWTYPE_NONE == technique)
+    {
+        this->DestroyShadowTextures();
+    }
+    else if (SHADOWTYPE_TEXTURE_ADDITIVE == technique)
     {
         // setup texture shadowing
         if (this->shadowTextureConfigDirty)
         {
             this->shadowCamera = CE_NEW Camera();
+            this->shadowCamera->SetFixedYawAxis(false);
             this->shadowCamera->SetAspectRatio(1.0f);
+            this->shadowCamera->SetFOVy(90.0f);
 
             this->shadowTextureProjScaleTrans = Matrix4::IDENTITY;
             this->shadowTextureProjScaleTrans[0U][0U] = 0.5f;
@@ -349,6 +358,8 @@ SceneManager::SetShadowTechnique(ShadowTechnique technique)
             this->shadowTextureConfigDirty = false;
         }
     }
+
+    this->shadowTechnique = technique;
 }
 
 //------------------------------------------------------------------------------
@@ -553,6 +564,48 @@ void
 SceneManager::_SetRenderQueuesEndedCallback(RenderQueuesEndedCallback callback)
 {
     this->renderQueuesEndedCallback = callback;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+SceneManager::_SetEntityCreatedCallback(EntityCallback callback)
+{
+    this->entityCreatedCallback = callback;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+SceneManager::_SetEntityDestroyedCallback(EntityCallback callback)
+{
+    this->entityDestroyedCallback = callback;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+SceneManager::DestroyShadowTextures()
+{
+    if (!this->shadowTextureConfigDirty)
+    {
+        CE_DELETE this->shadowTexture;
+        this->shadowTexture = NULL;
+        CE_DELETE this->shadowRenderTexture;
+        this->shadowRenderTexture = NULL;
+        CE_DELETE this->shadowCamera;
+        this->shadowCamera = NULL;
+        CE_DELETE this->shadowRttPass;
+        this->shadowRttPass = NULL;
+        CE_DELETE this->shadowRttMorphAnimPass;
+        this->shadowRttMorphAnimPass = NULL;
+        CE_DELETE this->shadowPass;
+        this->shadowPass = NULL;
+        this->shadowTextureConfigDirty = true;
+    }
 }
 
 //------------------------------------------------------------------------------

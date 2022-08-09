@@ -22,6 +22,7 @@ SubEntity::SubEntity(Entity* parent, SubMesh* subMeshBasis) :
     visible(true),
     morphVertexData(NULL),
     morphWeight(0.0f),
+    currentTimeIndex(-1),
     distanceToCamera(0.0f)
 {
 
@@ -131,6 +132,24 @@ float
 SubEntity::GetMorphWeight() const
 {
     return this->morphWeight;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+SubEntity::SetCurrentTimeIndex(int index)
+{
+    this->currentTimeIndex = index;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+int
+SubEntity::GetCurrentTimeIndex() const
+{
+    return this->currentTimeIndex;
 }
 
 } // namespace graphics

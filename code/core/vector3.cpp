@@ -3,6 +3,7 @@
 //  (C) 2011 Christian Bleicher
 //------------------------------------------------------------------------------
 #include "vector3.h"
+#include "quaternion.h"
 #include "chrisslymath.h"
 #include "debug.h"
 
@@ -232,6 +233,15 @@ Vector3::Length() const
 /**
 */
 float
+Vector3::SquaredLength() const
+{
+    return this->x * this->x + this->y * this->y + this->z * this->z;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+float
 Vector3::GetAbsMax() const
 {
     float xAbs = Math::Fabs(this->x);
@@ -254,6 +264,60 @@ Vector3::Lerp(const Vector3& a, const Vector3& b, float t)
         ce_math_lerp(a.y, b.y, t),
         ce_math_lerp(a.z, b.z, t)
     );
+}
+
+//------------------------------------------------------------------------------
+/**
+    Based on Stan Melax's article in Game Programming Gems.
+*/
+Quaternion
+Vector3::GetRotationTo(const Vector3& dest, const Vector3& fallbackAxis) const
+{
+    Quaternion q;
+
+    Vector3 v0 = *this;
+    v0.Normalise();
+    Vector3 v1 = dest;
+    v1.Normalise();
+
+    float d = v0.DotProduct(v1);
+    // if dot == 1.0f, vectors are identical
+    if (d >= 1.0f)
+    {
+        return Quaternion(1.0f, 0.0f, 0.0f, 0.0f);
+    }
+    if (d < (1e-6f - 1.0f))
+    {
+        if (fallbackAxis.x != 0.0f || fallbackAxis.y != 0.0f || fallbackAxis.z != 0.0f)
+        {
+            // rotate 180 degrees about the fallback axis
+            q.FromAngleAxis(M_PI, fallbackAxis);
+        }
+        else
+        {
+            // generate an axis
+            Vector3 axis = Vector3::UNIT_POSITIVE_X.CrossProduct(*this);
+            if (axis.SquaredLength() < (1e-06 * 1e-06)) // pick another if colinear
+            {
+                axis = Vector3::UNIT_POSITIVE_Y.CrossProduct(*this);
+            }
+            axis.Normalise();
+            q.FromAngleAxis(M_PI, axis);
+        }
+    }
+    else
+    {
+        float s = Math::Sqrt((1.0f + d) * 2.0f);
+        float invs = 1.0f / s;
+        Vector3 c = v0.CrossProduct(v1);
+        q.x = c.x * invs;
+        q.y = c.y * invs;
+        q.z = c.z * invs;
+        q.w = s * 0.5f;
+        q.Normalise();
+    }
+
+    return q;
 }
 
 } // namespace core

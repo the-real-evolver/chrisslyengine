@@ -32,7 +32,9 @@ public:
     void SetPosition(const core::Vector3& vec);
     /// Retrieves the camera's position.
     const core::Vector3& GetPosition() const;
-     /// sets the camera's orientation
+    /// tells the camera whether to yaw around it's own local Y axis or a fixed axis of choice
+    void SetFixedYawAxis(bool useFixed, const core::Vector3& fixedAxis = core::Vector3::UNIT_POSITIVE_Y);
+    /// sets the camera's orientation
     void SetOrientation(const core::Quaternion& q);
     /// returns the camera's current orientation
     const core::Quaternion& GetOrientation() const;
@@ -120,6 +122,10 @@ private:
     mutable core::Plane frustumPlanes[FRUSTUM_PLANE_COUNT];
     /// near and far plane dimensions
     mutable float nearHeight, nearWidth, farHeight, farWidth;
+    /// whether to yaw around a fixed axis
+    bool yawFixed;
+    /// fixed axis to yaw around
+    core::Vector3 yawFixedAxis;
 };
 
 } // namespace graphics

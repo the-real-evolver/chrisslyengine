@@ -19,8 +19,7 @@ using namespace chrissly::core;
 */
 VertexAnimationTrack::VertexAnimationTrack(unsigned char handle) :
     handle(handle),
-    keyFrames(NULL),
-    currentTimeIndex(-1)
+    keyFrames(NULL)
 {
     ce_array_init(this->keyFrames, 1U);
 }
@@ -92,22 +91,17 @@ VertexAnimationTrack::RemoveAllKeyFrames()
 void
 VertexAnimationTrack::ApplyToVertexData(VertexData* const data, int timeIndex)
 {
-    if (this->currentTimeIndex != timeIndex)
+    if ((unsigned int)timeIndex < ce_array_size(this->keyFrames) - 1U)
     {
-        if ((unsigned int)timeIndex < ce_array_size(this->keyFrames) - 1U)
-        {
-            HardwareVertexBuffer* kf1 = this->keyFrames[timeIndex]->vertexData->vertexBuffer;
-            HardwareVertexBuffer* kf2 = this->keyFrames[timeIndex + 1]->vertexData->vertexBuffer;
-            HardwareVertexBuffer* dst = data->vertexBuffer;
-            ce_memory_fill_interleaved(kf1->Map(), kf2->Map(),
-                                       dst->Map(), (unsigned short)kf1->GetBytesPerVertex(),
-                                       dst->GetBytesPerVertex() * dst->GetNumVertices());
-            kf1->Unmap();
-            kf2->Unmap();
-            dst->Unmap();
-
-            this->currentTimeIndex = timeIndex;
-        }
+        HardwareVertexBuffer* kf1 = this->keyFrames[timeIndex]->vertexData->vertexBuffer;
+        HardwareVertexBuffer* kf2 = this->keyFrames[timeIndex + 1]->vertexData->vertexBuffer;
+        HardwareVertexBuffer* dst = data->vertexBuffer;
+        ce_memory_fill_interleaved(kf1->Map(), kf2->Map(),
+                                   dst->Map(), (unsigned short)kf1->GetBytesPerVertex(),
+                                   dst->GetBytesPerVertex() * dst->GetNumVertices());
+        kf1->Unmap();
+        kf2->Unmap();
+        dst->Unmap();
     }
 }
 

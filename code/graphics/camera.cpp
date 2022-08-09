@@ -28,7 +28,9 @@ Camera::Camera() :
     nearHeight(0.0f),
     nearWidth(0.0f),
     farHeight(0.0f),
-    farWidth(0.0f)
+    farWidth(0.0f),
+    yawFixed(true),
+    yawFixedAxis(Vector3::UNIT_POSITIVE_Y)
 {
 
 }
@@ -76,6 +78,16 @@ Camera::GetPosition() const
 /**
 */
 void
+Camera::SetFixedYawAxis(bool useFixed, const core::Vector3& fixedAxis)
+{
+    this->yawFixed = useFixed;
+    this->yawFixedAxis = fixedAxis;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
 Camera::SetOrientation(const Quaternion& q)
 {
     this->orientation = q;
@@ -101,11 +113,43 @@ Camera::SetDirection(const Vector3& direction)
     Vector3 zAxis = direction;
     zAxis *= -1.0f;
     zAxis.Normalise();
-    Vector3 xAxis = Vector3::UNIT_POSITIVE_Y.CrossProduct(zAxis);
-    xAxis.Normalise();
-    Vector3 yAxis = zAxis.CrossProduct(xAxis);
-    yAxis.Normalise();
-    this->orientation.FromAxes(xAxis, yAxis, zAxis);
+
+    if (this->yawFixed)
+    {
+        Vector3 xAxis = this->yawFixedAxis.CrossProduct(zAxis);
+        xAxis.Normalise();
+        Vector3 yAxis = zAxis.CrossProduct(xAxis);
+        yAxis.Normalise();
+        this->orientation.FromAxes(xAxis, yAxis, zAxis);
+    }
+    else
+    {
+        Matrix3 kRot;
+        this->orientation.ToRotationMatrix(kRot);
+        Vector3 axes[3U];
+        for (unsigned int i = 0U; i < 3U; i++)
+        {
+            axes[i].x = kRot[0U][i];
+            axes[i].y = kRot[1U][i];
+            axes[i].z = kRot[2U][i];
+        }
+
+        Quaternion rotQuat;
+        if ((axes[2U] + zAxis).SquaredLength() < 0.00005f)
+        {
+            // a 180 degree turn (infinite possible rotation axes)
+            // default to yaw i.e. use current UP
+            rotQuat.FromAngleAxis((float)M_PI, axes[1U]);
+        }
+        else
+        {
+            // derive shortest arc to new direction
+            rotQuat = axes[2U].GetRotationTo(zAxis);
+        }
+        this->orientation = rotQuat * this->orientation;
+    }
+
+    this->recalcView = true;
 }
 
 //------------------------------------------------------------------------------

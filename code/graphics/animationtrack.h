@@ -62,7 +62,6 @@ public:
 private:
     unsigned char handle;
     VertexMorphKeyFrame** keyFrames;
-    int currentTimeIndex;
 };
 
 } // namespace graphics

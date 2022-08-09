@@ -72,7 +72,7 @@ public:
         mesh will be loaded if it is not already.
     */
     Entity* const CreateEntity(const char* const meshName);
-    /// destroys the given entity Entity instance
+    /// destroys the given Entity instance
     void DestroyEntity(Entity* const entity);
 
     /// creates an instance of a SceneNode
@@ -151,12 +151,19 @@ public:
     /// sets a callback which will be notified when render queues are finished processing
     typedef void(*RenderQueuesEndedCallback)();
     void _SetRenderQueuesEndedCallback(RenderQueuesEndedCallback callback);
+    /// sets a callback which will be notified when an entity was created
+    typedef void(*EntityCallback)(Entity*);
+    void _SetEntityCreatedCallback(EntityCallback callback);
+    /// sets a callback which will be notified when an entity was destroyed
+    void _SetEntityDestroyedCallback(EntityCallback callback);
 
 private:
     /// copy constructor
     SceneManager(const SceneManager&);
     /// prevent copy by assignment
     SceneManager& operator = (const SceneManager&);
+    /// destroys all Texture-based shadow related objects
+    void DestroyShadowTextures();
     /// method for preparing shadow textures ready for use in a regular render
     void PrepareShadowTextures();
     /// render the objects in a given queue group 
@@ -178,6 +185,8 @@ private:
     RenderQueue renderQueueShadowReceiver;
     RenderQueuesEndedCallback renderQueuesEndedCallback;
     bool suppressRenderStateChanges;
+    EntityCallback entityCreatedCallback;
+    EntityCallback entityDestroyedCallback;
 
     IlluminationRenderStage illuminationStage;
     ShadowTechnique shadowTechnique;
