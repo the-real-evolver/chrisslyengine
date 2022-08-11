@@ -33,6 +33,9 @@ ce_input_update_keyboard_state(WPARAM w_param, unsigned char state)
         case VK_TAB:        keyboard_state[KEY_TAB] = state; break;
         case VK_CLEAR:      keyboard_state[KEY_CLEAR] = state; break;
         case VK_RETURN:     keyboard_state[KEY_RETURN] = state; break;
+        case VK_SHIFT:      keyboard_state[KEY_RSHIFT] = state; keyboard_state[KEY_LSHIFT] = state; break;
+        case VK_CONTROL:    keyboard_state[KEY_RCONTROL] = state; keyboard_state[KEY_LCONTROL] = state; break;
+        case VK_MENU:       keyboard_state[KEY_RALT] = state; keyboard_state[KEY_LALT] = state; break;
         case VK_PAUSE:      keyboard_state[KEY_PAUSE] = state; break;
         case VK_CAPITAL:    keyboard_state[KEY_CAPS_LOCK] = state; break;
         case VK_ESCAPE:     keyboard_state[KEY_ESCAPE] = state; break;
