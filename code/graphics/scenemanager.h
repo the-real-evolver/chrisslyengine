@@ -168,6 +168,8 @@ private:
     void PrepareShadowTextures();
     /// render the objects in a given queue group 
     void RenderQueueGroupObjects(RenderQueue* const queue);
+    /// render a group rendering only transparent shadow casters
+    void RenderTransparentTextureShadowCasterQueueGroupObjects(RenderQueue* const queue);
     /// render a group rendering only shadow receivers
     void RenderTextureShadowReceiverQueueGroupObjects(RenderQueue* const queue);
 
@@ -182,6 +184,7 @@ private:
     RenderSystem* destRenderSystem;
     RenderQueue renderQueueOpaque;
     RenderQueue renderQueueTransparent;
+    RenderQueue renderQueueTransparentShadowCaster;
     RenderQueue renderQueueShadowReceiver;
     RenderQueuesEndedCallback renderQueuesEndedCallback;
     bool suppressRenderStateChanges;

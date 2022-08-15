@@ -48,6 +48,7 @@ SceneManager::SceneManager() :
 
     this->renderQueueOpaque.Initialise(512U);
     this->renderQueueTransparent.Initialise(256U);
+    this->renderQueueTransparentShadowCaster.Initialise(256U);
     this->renderQueueShadowReceiver.Initialise(256U);
 
     this->destRenderSystem = GraphicsSystem::Instance()->GetRenderSystem();
@@ -343,8 +344,8 @@ SceneManager::SetShadowTechnique(ShadowTechnique technique)
             tus->SetTextureMappingMode(TextureUnitState::TMM_TEXTURE_MATRIX);
             tus->SetTextureProjectionMappingMode(TextureUnitState::TPM_POSITION);
 #elif __CE_D3D11__
-            this->shadowRenderTexture->Create(512, 512, PF_R8G8B8A8);
-            Viewport* vp = this->shadowRenderTexture->AddViewport(this->shadowCamera, 0, 0, 511, 511);
+            this->shadowRenderTexture->Create(1024, 1024, PF_R8G8B8A8);
+            Viewport* vp = this->shadowRenderTexture->AddViewport(this->shadowCamera, 0, 0, 1023, 1023);
             vp->SetClearEveryFrame(true, FBT_COLOUR);
             vp->SetBackgroundColour(0xffffffff);
             this->shadowRttPass->SetGpuProgram(this->destRenderSystem->GetDefaultShadowCasterGpuProgram());
@@ -466,7 +467,14 @@ SceneManager::_RenderScene(Camera* const camera, Viewport* const vp)
                 if (this->IsShadowTechniqueInUse() && this->illuminationStage == IRS_RENDER_TO_TEXTURE)
                 {
 #if __CE_D3D11__
-                    this->renderQueueOpaque.AddRenderable(subEntity, (VAT_MORPH == subEntity->GetSubMesh()->GetVertexAnimationType()) ? this->shadowRttMorphAnimPass : this->shadowRttPass);
+                    if (material->GetNumPasses() > 0U && material->GetPass(0U)->GetSceneBlendingEnabled() && material->GetPass(0U)->GetNumTextureUnitStates() > 0U)
+                    {
+                        this->renderQueueTransparentShadowCaster.AddRenderable(subEntity, material->GetPass(0U));
+                    }
+                    else
+                    {
+                        this->renderQueueOpaque.AddRenderable(subEntity, (VAT_MORPH == subEntity->GetSubMesh()->GetVertexAnimationType()) ? this->shadowRttMorphAnimPass : this->shadowRttPass);
+                    }
 #else
                     this->renderQueueOpaque.AddRenderable(subEntity, this->shadowRttPass);
 #endif
@@ -515,6 +523,7 @@ SceneManager::_RenderScene(Camera* const camera, Viewport* const vp)
     if (this->IsShadowTechniqueInUse() && this->illuminationStage == IRS_RENDER_TO_TEXTURE)
     {
         this->RenderQueueGroupObjects(&this->renderQueueOpaque);
+        this->RenderTransparentTextureShadowCasterQueueGroupObjects(&this->renderQueueTransparentShadowCaster);
     }
     else
     {
@@ -669,6 +678,48 @@ SceneManager::RenderQueueGroupObjects(RenderQueue* const queue)
         SubEntity* renderable = renderablePass->renderable;
         this->destRenderSystem->SetWorldMatrix(renderable->parentEntity->parentNode->_GetFullTransform());
         this->destRenderSystem->Render(renderable);
+    }
+
+    queue->Clear();
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+SceneManager::RenderTransparentTextureShadowCasterQueueGroupObjects(RenderQueue* const queue)
+{
+    unsigned short numRenderablePasses = queue->GetNumRenderablePasses();
+    unsigned short i;
+    for (i = 0U; i < numRenderablePasses; ++i)
+    {
+        RenderablePass* renderablePass = queue->GetRenderablePass(i);
+
+        // modify pass
+        Pass* pass = renderablePass->pass;
+        CullingMode cullMode = pass->GetCullingMode();
+        GpuProgram* program = pass->GetGpuProgram();
+        pass->SetCullingMode(CULL_NONE);
+#if __CE_D3D11__
+        if (graphics::VAT_MORPH == renderablePass->renderable->GetSubMesh()->GetVertexAnimationType())
+        {
+            pass->SetGpuProgram(this->destRenderSystem->GetDefaultTransparentShadowCasterMorphAnimGpuProgram());
+        }
+        else
+        {
+            pass->SetGpuProgram(this->destRenderSystem->GetDefaultTransparentShadowCasterGpuProgram());
+        }
+#endif
+        this->destRenderSystem->SetPass(pass);
+
+        // render entity
+        SubEntity* renderable = renderablePass->renderable;
+        this->destRenderSystem->SetWorldMatrix(renderable->parentEntity->parentNode->_GetFullTransform());
+        this->destRenderSystem->Render(renderable);
+
+        // restore pass
+        pass->SetCullingMode(cullMode);
+        pass->SetGpuProgram(program);
     }
 
     queue->Clear();

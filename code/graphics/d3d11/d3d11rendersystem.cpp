@@ -156,8 +156,10 @@ D3D11RenderSystem::Initialise(void* const customParams)
     this->defaultGpuProgramLitFogNoTexture = CE_NEW D3D11GpuProgram(DefaultGpuProgramLitFog, "defaultshaderlitfognotexture.fx", "DefaultVertexShader", "DefaultFragmentShader", shaderMacros);
     this->defaultGpuProgramMorphAnimNoTexture = CE_NEW D3D11GpuProgram(DefaultGpuProgramMorphAnim, "defaultshadermorphanimnotexture.fx", "DefaultVertexShader", "DefaultFragmentShader", shaderMacros);
     this->defaultGpuProgramShadowCaster = CE_NEW D3D11GpuProgram(DefaultGpuProgramShadowCaster, "defaultshadershadowcaster.fx", "DefaultVertexShader", "DefaultFragmentShader");
+    this->defaultGpuProgramTransparentShadowCaster = CE_NEW D3D11GpuProgram(DefaultGpuProgramTransparentShadowCaster, "defaultshadertransparentshadowcaster.fx", "DefaultVertexShader", "DefaultFragmentShader");
     this->defaultGpuProgramShadowReceiver = CE_NEW D3D11GpuProgram(DefaultGpuProgramShadowReceiver, "defaultshadershadowreceiver.fx", "DefaultVertexShader", "DefaultFragmentShader");
     this->defaultGpuProgramShadowCasterMorphAnim = CE_NEW D3D11GpuProgram(DefaultGpuProgramShadowCasterMorphAnim, "defaultshadershadowcastermorphanim.fx", "DefaultVertexShader", "DefaultFragmentShader");
+    this->defaultGpuProgramTransparentShadowCasterMorphAnim = CE_NEW D3D11GpuProgram(DefaultGpuProgramTransparentShadowCasterMorphAnim, "defaultshadertransparentshadowcastermorphanim.fx", "DefaultVertexShader", "DefaultFragmentShader");
     this->currentGpuProgram = this->defaultGpuProgram;
 
     /* create default input layout */
@@ -234,10 +236,15 @@ D3D11RenderSystem::Shutdown()
     this->defaultGpuProgramMorphAnimNoTexture = NULL;
     CE_DELETE this->defaultGpuProgramShadowCaster;
     this->defaultGpuProgramShadowCaster = NULL;
+    CE_DELETE this->defaultGpuProgramTransparentShadowCaster;
+    this->defaultGpuProgramTransparentShadowCaster = NULL;
     CE_DELETE this->defaultGpuProgramShadowReceiver;
     this->defaultGpuProgramShadowReceiver = NULL;
     CE_DELETE this->defaultGpuProgramShadowCasterMorphAnim;
     this->defaultGpuProgramShadowCasterMorphAnim = NULL;
+    CE_DELETE this->defaultGpuProgramTransparentShadowCasterMorphAnim;
+    this->defaultGpuProgramTransparentShadowCasterMorphAnim = NULL;
+
     this->currentGpuProgram = NULL;
 
     if (this->inputLayout != NULL)
@@ -668,10 +675,28 @@ D3D11RenderSystem::GetDefaultShadowCasterGpuProgram() const
 /**
 */
 D3D11GpuProgram* const
+D3D11RenderSystem::GetDefaultTransparentShadowCasterGpuProgram() const
+{
+    return this->defaultGpuProgramTransparentShadowCaster;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+D3D11GpuProgram* const
 D3D11RenderSystem::GetDefaultShadowCasterMorphAnimGpuProgram() const
 {
     CE_ASSERT(this->defaultGpuProgramShadowCasterMorphAnim != NULL, "D3D11RenderSystem::GetDefaultShadowCasterMorphAnimGpuProgram(): gpu program not valid\n");
     return this->defaultGpuProgramShadowCasterMorphAnim;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+D3D11GpuProgram* const
+D3D11RenderSystem::GetDefaultTransparentShadowCasterMorphAnimGpuProgram() const
+{
+    return this->defaultGpuProgramTransparentShadowCasterMorphAnim;
 }
 
 //------------------------------------------------------------------------------

@@ -31,6 +31,8 @@ public:
     void Trigger();
     /// changes the state
     void ChangeState(State* const state);
+    /// changes the state after the current cycle was completed (Trigger() of the current state returned)
+    void ChangeStateDeferred(State* const state);
     /// shutdown the statemanger
     void Exit();
     /// returns if the statemanger is running
@@ -51,6 +53,7 @@ private:
     State* currentState;
     State* nextState;
     bool isRunning;
+    bool deferredChange;
 };
 
 } // namespace application

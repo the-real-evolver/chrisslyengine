@@ -20,7 +20,8 @@ StateManager::StateManager() :
     previousState(NULL),
     currentState(NULL),
     nextState(NULL),
-    isRunning(false)
+    isRunning(false),
+    deferredChange(false)
 {
     Singleton = this;
 }
@@ -42,6 +43,11 @@ StateManager::Trigger()
     if (this->currentState != NULL)
     {
         this->currentState->Trigger();
+        if (this->deferredChange)
+        {
+            this->ChangeState(this->nextState);
+            this->deferredChange = false;
+        }
     }
 }
 
@@ -65,6 +71,16 @@ StateManager::ChangeState(State* const state)
         this->currentState->Enter();
         this->isRunning = true;
     }
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+StateManager::ChangeStateDeferred(State* const state)
+{
+    this->nextState = state;
+    this->deferredChange = true;
 }
 
 //------------------------------------------------------------------------------
