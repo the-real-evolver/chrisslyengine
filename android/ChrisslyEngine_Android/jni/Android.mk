@@ -28,7 +28,7 @@ LOCAL_SRC_FILES := $(CE_SRC_FILES)/core/android/androiddebug.cpp $(CE_SRC_FILES)
                    $(CE_SRC_FILES)/graphics/subentity.cpp  $(CE_SRC_FILES)/graphics/entity.cpp \
                    $(CE_SRC_FILES)/graphics/renderqueue.cpp \
                    $(CE_SRC_FILES)/graphics/light.cpp \
-                   $(CE_SRC_FILES)/graphics/scenemanager.cpp $(CE_SRC_FILES)/graphics/scenenode.cpp \
+                   $(CE_SRC_FILES)/graphics/scenemanager.cpp $(CE_SRC_FILES)/graphics/scenenode.cpp $(CE_SRC_FILES)/graphics/node.cpp \
                    $(CE_SRC_FILES)/graphics/camera.cpp $(CE_SRC_FILES)/graphics/viewport.cpp \
                    $(CE_SRC_FILES)/graphics/animation.cpp $(CE_SRC_FILES)/graphics/animationtrack.cpp $(CE_SRC_FILES)/graphics/keyframe.cpp $(CE_SRC_FILES)/graphics/animationstate.cpp \
                    $(CE_SRC_FILES)/graphics/rendertarget.cpp $(CE_SRC_FILES)/graphics/gles2/gles2rendertexture.cpp $(CE_SRC_FILES)/graphics/egl/eglrenderwindow.cpp \

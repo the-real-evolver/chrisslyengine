@@ -184,6 +184,7 @@
     <ClCompile Include="..\..\code\graphics\materialparser.cpp" />
     <ClCompile Include="..\..\code\graphics\mesh.cpp" />
     <ClCompile Include="..\..\code\graphics\meshmanager.cpp" />
+    <ClCompile Include="..\..\code\graphics\node.cpp" />
     <ClCompile Include="..\..\code\graphics\pass.cpp" />
     <ClCompile Include="..\..\code\graphics\renderqueue.cpp" />
     <ClCompile Include="..\..\code\graphics\rendertarget.cpp" />
@@ -275,6 +276,7 @@
     <ClInclude Include="..\..\code\graphics\materialparser.h" />
     <ClInclude Include="..\..\code\graphics\mesh.h" />
     <ClInclude Include="..\..\code\graphics\meshmanager.h" />
+    <ClInclude Include="..\..\code\graphics\node.h" />
     <ClInclude Include="..\..\code\graphics\pass.h" />
     <ClInclude Include="..\..\code\graphics\pixelformat.h" />
     <ClInclude Include="..\..\code\graphics\renderqueue.h" />

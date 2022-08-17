@@ -291,7 +291,7 @@ Vector3::GetRotationTo(const Vector3& dest, const Vector3& fallbackAxis) const
         if (fallbackAxis.x != 0.0f || fallbackAxis.y != 0.0f || fallbackAxis.z != 0.0f)
         {
             // rotate 180 degrees about the fallback axis
-            q.FromAngleAxis(M_PI, fallbackAxis);
+            q.FromAngleAxis((float)M_PI, fallbackAxis);
         }
         else
         {
@@ -302,7 +302,7 @@ Vector3::GetRotationTo(const Vector3& dest, const Vector3& fallbackAxis) const
                 axis = Vector3::UNIT_POSITIVE_Y.CrossProduct(*this);
             }
             axis.Normalise();
-            q.FromAngleAxis(M_PI, axis);
+            q.FromAngleAxis((float)M_PI, axis);
         }
     }
     else

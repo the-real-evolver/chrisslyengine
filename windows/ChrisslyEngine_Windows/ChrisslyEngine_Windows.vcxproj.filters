@@ -182,6 +182,9 @@
     <ClCompile Include="..\..\code\graphics\gpuprogrammanager.cpp">
       <Filter>graphics</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\code\graphics\node.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="core">
@@ -511,6 +514,9 @@
       <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\code\graphics\gpuprogrammanager.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\graphics\node.h">
       <Filter>graphics</Filter>
     </ClInclude>
   </ItemGroup>
