@@ -33,6 +33,8 @@ M_ANIMATION_MORPH_KEYFRAME = b'\x05'
 
 PF_R8G8B8A8 = b'\x05'
 
+BYTES_PER_VERTEX = 36
+
 #------------------------------------------------------------------------------
 def ce_get_bounding_radius(objects):
     bounding_radius = 0.0
@@ -207,6 +209,10 @@ def ce_write_mesh(file_path, objects, scale_uniform):
                 byte_array = array('I', [len(faces_cur_mat) * 3])
                 byte_array.tofile(file)
 
+                # 5. write bytes per vertex
+                byte_array = array('I', [BYTES_PER_VERTEX])
+                byte_array.tofile(file)
+
                 # write vertices
                 for face in faces_cur_mat:
                     for vert_idx, loop_idx in zip(face.vertices, face.loop_indices):
@@ -292,6 +298,8 @@ def ce_write_morph_animation(file_path):
         file.write(mat.name.encode())
         byte_array = array('I', [0])
         byte_array.tofile(file)
+        byte_array = array('I', [BYTES_PER_VERTEX])
+        byte_array.tofile(file)
 
         # 4. write animationtrack tag and handle
         file.write(M_ANIMATION_TRACK)
@@ -332,6 +340,8 @@ def ce_write_morph_animation(file_path):
                             byte_array = array('f', [current_time])
                             byte_array.tofile(file)
                             byte_array = array('I', [len(faces_cur_mat) * 3])
+                            byte_array.tofile(file)
+                            byte_array = array('I', [BYTES_PER_VERTEX])
                             byte_array.tofile(file)
 
                             current_time += key_length;

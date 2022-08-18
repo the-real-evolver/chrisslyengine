@@ -53,7 +53,7 @@ MeshManager::Load(const char* const filename)
     mesh = CE_NEW Mesh();
     ce_hash_table_insert(&this->resources, filename, strlen(filename), mesh);
 
-    const unsigned int bytesPerVertex = 36U;
+    unsigned int bytesPerVertex = 0U;
     unsigned char currentChunk = 0U;
     unsigned int vertexCount = 0U;
     HardwareVertexBuffer* vertexBuffer = NULL;
@@ -78,6 +78,9 @@ MeshManager::Load(const char* const filename)
 
                     // read vertex count
                     FSWrapper::Read(fd, &vertexCount, 4U);
+
+                    // read bytes per vertex
+                    FSWrapper::Read(fd, &bytesPerVertex, 4U);
 
                     // create the vertexbuffer
                     vertexBuffer = CE_NEW HardwareVertexBuffer(vertexCount, bytesPerVertex, HBU_STATIC, false);
@@ -130,6 +133,9 @@ MeshManager::Load(const char* const filename)
                     // read vertex count
                     FSWrapper::Read(fd, &vertexCount, 4U);
                     CE_ASSERT(vertexCount > 0, "MeshManager::Load(): vertex count of morph keyframe is zero\n");
+
+                    // read bytes per vertex
+                    FSWrapper::Read(fd, &bytesPerVertex, 4U);
 
                     // create the vertexbuffer
                     vertexBuffer = CE_NEW HardwareVertexBuffer(vertexCount, bytesPerVertex, HBU_STATIC, true);
