@@ -26,7 +26,7 @@ public:
     void SetEnabled(bool enable);
     /**
         sets whether or not an animation loops at the start and end of
-        the animation if the time continues to be altereds
+        the animation if the time continues to be altered
     */
     void SetLoop(bool looped);
     /// sets the time position for this animation

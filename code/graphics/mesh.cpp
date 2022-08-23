@@ -5,6 +5,7 @@
 #include "mesh.h"
 #include "memoryallocatorconfig.h"
 #include "animationstate.h"
+#include "debug.h"
 #include <float.h>
 
 namespace chrissly
@@ -73,9 +74,34 @@ Mesh::GetSubMesh(unsigned short index) const
 //------------------------------------------------------------------------------
 /**
 */
+void
+Mesh::SetBoundingSphereRadius(float radius)
+{
+    this->boundingRadius = radius;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+float
+Mesh::GetBoundingSphereRadius() const
+{
+    return this->boundingRadius;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
 Animation* const
 Mesh::CreateAnimation(const char* const name, float length)
 {
+    Animation* anim = (Animation*)ce_hash_table_find(&this->animations, name, strlen(name));
+    if (anim != NULL)
+    {
+        CE_ASSERT(false, "Mesh::CreateAnimation(): animation '%s' already exists, duplicates are not allowed\n", name);
+        return NULL;
+    }
+
     Animation* animation = CE_NEW Animation(name, length);
 
     ce_hash_table_insert(&this->animations, name, strlen(name), animation);
@@ -118,25 +144,21 @@ Mesh::RemoveAllAnimations()
 bool
 Mesh::HasVertexAnimation() const
 {
-    return this->animations.size > 0U;
-}
+    if (this->animations.size > 0U)
+    {
+        unsigned int i;
+        for (i = 0U; i < this->animations.bucket_count; ++i)
+        {
+            ce_linked_list* it = this->animations.buckets[i];
+            while (it != NULL)
+            {
+                if (((Animation*)((ce_key_value_pair*)it->data)->value)->GetNumVertexTracks() > 0U) return true;
+                it = it->next;
+            }
+        }
+    }
 
-//------------------------------------------------------------------------------
-/**
-*/
-void
-Mesh::SetBoundingSphereRadius(float radius)
-{
-    this->boundingRadius = radius;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-float
-Mesh::GetBoundingSphereRadius() const
-{
-    return this->boundingRadius;
+    return false;
 }
 
 //------------------------------------------------------------------------------

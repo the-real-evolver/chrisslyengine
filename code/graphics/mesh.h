@@ -31,6 +31,11 @@ public:
     /// gets a pointer to the submesh indicated by the index
     SubMesh* const GetSubMesh(unsigned short index) const;
 
+    /// sets the radius of the bounding sphere surrounding this mesh (useful for manual created meshes)
+    void SetBoundingSphereRadius(float radius);
+    /// gets the radius of the bounding sphere surrounding this mesh
+    float GetBoundingSphereRadius() const;
+
     /// creates a new Animation object for vertex animating this mesh
     Animation* const CreateAnimation(const char* const name, float length);
     /// returns the named vertex Animation object
@@ -39,11 +44,6 @@ public:
     void RemoveAllAnimations();
     /// returns whether or not this mesh has some kind of vertex animation
     bool HasVertexAnimation() const;
-    /// sets the radius of the bounding sphere surrounding this mesh (useful for manual created meshes)
-    void SetBoundingSphereRadius(float radius);
-    /// gets the radius of the bounding sphere surrounding this mesh
-    float GetBoundingSphereRadius() const;
-
     /// initialise an animation set suitable for use with this mesh
     void _InitAnimationState(ce_hash_table* const animSet);
 
