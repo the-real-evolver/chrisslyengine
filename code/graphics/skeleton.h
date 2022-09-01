@@ -1,0 +1,55 @@
+#ifndef SKELETON_H_
+#define SKELETON_H_
+//------------------------------------------------------------------------------
+/**
+    @class chrissly::graphics::Skeleton
+
+    The bone hierarchy tree is flattened into multiple arrays. This means that
+    the parent index of a bone always has to be lower than its own index.
+
+    Datalayout: A "Bone" consists basically of a 4x4 transform matrix and an
+    index to its parent bone. A Matrix4 is 64 bytes wich is the common size of a
+    cacheline. They should be stored next to each other in memory. For this
+    reason they are noted packed in a struct together with the parent index.
+    Instead a SOA (struct of arrays) approach is used where every component of
+    a bone is just an array and the index is the bone id.
+
+    (C) 2022 Christian Bleicher
+*/
+#include "matrix4.h"
+
+//------------------------------------------------------------------------------
+namespace chrissly
+{
+namespace graphics
+{
+
+class Skeleton
+{
+public:
+    /// constructor with the number of bones
+    Skeleton(unsigned int numBones);
+    /// destructor
+    ~Skeleton();
+    /// set bone parameters
+    void SetBone(int index, int parentIndex, chrissly::core::Matrix4 const& local, chrissly::core::Matrix4 const& invModel);
+    /// gets the list of local transform matrices
+    chrissly::core::Matrix4* const GetLocalTransformMatrices() const;
+    /// gets the list of inverse model transform matrices
+    chrissly::core::Matrix4* const GetInverseModelTransformMatrices() const;
+    /// gets the list of transform matrices
+    int* const GetParentIndicies() const;
+
+private:
+    /// index of the parent bone
+    int* parentIndex;
+    /// transformation relative to parent bone
+    chrissly::core::Matrix4* localMatrix;
+    /// inverse transformation relative to skeleton
+    chrissly::core::Matrix4* inverseModelMatrix;
+};
+
+} // namespace graphics
+} // namespace chrissly
+//------------------------------------------------------------------------------
+#endif

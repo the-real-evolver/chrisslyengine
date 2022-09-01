@@ -7,6 +7,7 @@
     (C) 2010 Christian Bleicher
 */
 #include "submesh.h"
+#include "skeleton.h"
 #include "animation.h"
 #include "hashtable.h"
 
@@ -36,20 +37,27 @@ public:
     /// gets the radius of the bounding sphere surrounding this mesh
     float GetBoundingSphereRadius() const;
 
+    /// set the skeleton this mesh uses for animation
+    void SetSkeleton(Skeleton* const skel);
+    /// gets a pointer to the linked skeleton
+    Skeleton* const GetSkeleton() const;
+
     /// creates a new Animation object for vertex animating this mesh
     Animation* const CreateAnimation(const char* const name, float length);
     /// returns the named vertex Animation object
     Animation* const GetAnimation(const char* const name);
     /// removes all morph Animations from this mesh
     void RemoveAllAnimations();
-    /// returns whether or not this mesh has some kind of vertex animation
-    bool HasVertexAnimation() const;
+    /// returns whether or not this mesh has some kind of animation
+    bool HasAnimation() const;
     /// initialise an animation set suitable for use with this mesh
     void _InitAnimationState(ce_hash_table* const animSet);
 
 private:
     /// a list of submeshes which make up this mesh
     SubMesh** subMeshes;
+    /// pointer to a skeleton
+    Skeleton* skeleton;
     /// storage of morph animations, lookup by name
     ce_hash_table animations;
     /// local bounding sphere radius (centered on object)

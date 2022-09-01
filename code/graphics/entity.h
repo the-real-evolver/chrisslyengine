@@ -10,6 +10,7 @@
 #include "mesh.h"
 #include "scenenode.h"
 #include "animationstate.h"
+#include "matrix4.h"
 
 //------------------------------------------------------------------------------
 namespace chrissly
@@ -51,8 +52,8 @@ public:
     void SetReceivesShadows(bool enabled);
     /// returns whether the Material of any Renderable that this MovableObject will add to the render queue will receive shadows 
     bool GetReceivesShadows() const;
-    /// returns whether or not this entity is morph animated
-    bool HasVertexAnimation() const;
+    /// returns whether or not this entity is animated
+    bool HasAnimation() const;
     /// for entities based on animated meshes, gets the AnimationState object for a single animation
     /**
         @remarks
@@ -63,6 +64,8 @@ public:
     AnimationState* const GetAnimationState(const char* const name) const;
     /// perform all the updates required for an animated entity
     void UpdateAnimation();
+    /// gets the bone matrices
+    chrissly::core::Matrix4* const GetBoneMatrices() const;
     /// internal method called to notify the object that it has been attached to a node
     void _NotifyAttached(SceneNode* const parent);
 
@@ -86,6 +89,8 @@ private:
     bool receivesShadows;
     /// state of animation for animable meshes
     mutable ce_hash_table animationStates;
+    /// bone matrices that wll be send to the shader
+    chrissly::core::Matrix4* boneMatrices;
 };
 
 } // namespace graphics

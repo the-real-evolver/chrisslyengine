@@ -36,6 +36,7 @@ Pass::Pass(unsigned short index) :
     fogStart(0.0f),
     fogEnd(1.0f),
     morphAnimation(false),
+    skeletalAnimation(false),
     textureUnitStates(NULL),
     gpuProgram(NULL)
 {
@@ -394,6 +395,24 @@ bool
 Pass::IsMorphAnimationIncluded() const
 {
     return this->morphAnimation;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+Pass::SetSkeletalAnimationIncluded(bool included)
+{
+    this->skeletalAnimation = included;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+bool
+Pass::IsSkeletalAnimationIncluded() const
+{
+    return this->skeletalAnimation;
 }
 
 //------------------------------------------------------------------------------

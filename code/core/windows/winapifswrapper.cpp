@@ -82,6 +82,7 @@ WinAPIFSWrapper::Read(core::FileHandle fileHandle, void* const buf, unsigned int
         NULL                /* _Inout_opt_  LPOVERLAPPED lpOverlapped   */
     );
     CE_ASSERT(result != FALSE, "FSWrapper::Read(): failed to read from file '%p'\n", fileHandle.handle);
+    CE_ASSERT((bytesRead != 0U && numBytes == bytesRead) || bytesRead == 0U, "FSWrapper::Read(): could not read the requested number of bytes (requested: '%d' read: '%d')\n", numBytes, bytesRead);
 
     return (int)bytesRead;
 }

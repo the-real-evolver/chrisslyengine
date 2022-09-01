@@ -53,7 +53,8 @@ private:
         M_MESH_BOUNDS = 0x02,
         M_ANIMATION = 0x03,
         M_ANIMATION_TRACK = 0x04,
-        M_ANIMATION_MORPH_KEYFRAME = 0x05
+        M_ANIMATION_MORPH_KEYFRAME = 0x05,
+        M_MESH_SKELETON_FILE = 0x06
     };
 };
 

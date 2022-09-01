@@ -28,11 +28,11 @@ OBJS = $(CE)/core/quaternion.o $(CE)/core/vector3.o $(CE)/core/matrix3.o $(CE)/c
        $(CE)/graphics/materialmanager.o $(CE)/graphics/materialparser.o $(CE)/graphics/textureunitstate.o $(CE)/graphics/pass.o $(CE)/graphics/material.o \
        $(CE)/graphics/hardwarevertexbufferbase.o \
        $(CE)/graphics/gpuprogrammanager.o \
-       $(CE)/graphics/meshmanager.o $(CE)/graphics/mesh.o $(CE)/graphics/submesh.o \
+       $(CE)/graphics/meshmanager.o $(CE)/graphics/mesh.o $(CE)/graphics/submesh.o $(CE)/graphics/skeleton.o $(CE)/graphics/skeletonserialiser.o \
        $(CE)/graphics/subentity.o $(CE)/graphics/entity.o \
        $(CE)/graphics/renderqueue.o \
        $(CE)/graphics/light.o \
-       $(CE)/graphics/scenemanager.o $(CE)/graphics/scenenode.o $(CE)/graphics/node.o \
+       $(CE)/graphics/scenemanager.o $(CE)/graphics/scenenode.o \
        $(CE)/graphics/camera.o $(CE)/graphics/viewport.o \
        $(CE)/graphics/animation.o $(CE)/graphics/animationtrack.o $(CE)/graphics/keyframe.o $(CE)/graphics/animationstate.o \
        $(CE)/graphics/rendertarget.o $(CE)/graphics/psp/psprendertexture.o $(CE)/graphics/psp/psprenderwindow.o \

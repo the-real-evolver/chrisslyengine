@@ -3,6 +3,7 @@
 //  (C) 2010 Christian Bleicher
 //------------------------------------------------------------------------------
 #include "subentity.h"
+#include "entity.h"
 #include "materialmanager.h"
 
 namespace chrissly
@@ -67,6 +68,16 @@ SubEntity::SetMaterial(Material* const mat)
                 this->material->GetPass(i)->SetMorphAnimationIncluded(true);
             }
         }
+
+        if (this->parentEntity->GetMesh()->GetSkeleton() != NULL)
+        {
+            unsigned short i;
+            for (i = 0U; i < this->material->GetNumPasses(); ++i)
+            {
+                this->material->GetPass(i)->SetSkeletalAnimationIncluded(true);
+            }
+        }
+
         this->material->Load();
     }
 }
@@ -105,6 +116,15 @@ SubMesh* const
 SubEntity::GetSubMesh() const
 {
     return this->subMesh;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+Entity* const
+SubEntity::GetParent() const
+{
+    return this->parentEntity;
 }
 
 //------------------------------------------------------------------------------

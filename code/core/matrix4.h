@@ -8,6 +8,7 @@
 */
 #include <stddef.h>
 #include "vector3.h"
+#include "matrix3.h"
 
 //------------------------------------------------------------------------------
 namespace chrissly
@@ -42,6 +43,8 @@ public:
     float* const operator[] (unsigned int iRow) const;
     /// mirrors the matrix at their main diagonal
     Matrix4 Transpose() const;
+    /// get the upper 3x3 elements of this matrix (usually representing rotation and scaling) as 3x3 matrix
+    Matrix3 To3x3() const;
 
     /// identity matrix
     static const Matrix4 IDENTITY;

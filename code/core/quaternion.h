@@ -34,18 +34,28 @@ public:
     void FromAngleAxis(float rfAngle, const Vector3& rkAxis);
     /// assign operator
     Quaternion& operator = (const Quaternion& rkQ);
+    /// quaternion addition
+    Quaternion operator + (const Quaternion& rkQ) const;
+    /// quaternion subtraction
+    Quaternion operator - (const Quaternion& rkQ) const;
     /// quaternion multiplication
     Quaternion operator * (const Quaternion& rkQ) const;
     /// rotation of a vector by a quaternion
     Vector3 operator * (const Vector3& rkVector) const;
     /// multiply by a scalar
     Quaternion operator * (float fScalar) const;
+    /// unary minus operator
+    Quaternion operator - () const;
+    /// returns the dot product between this and the given quaternion
+    float Dot(const Quaternion& rkQ) const;
     /// normalises this quaternion
     void Normalise();
     /// squared-length
     float Norm() const;
     /// returns a Quaternion with the inverse orientation of this Quaternion
     Quaternion Inverse() const;
+    /// returns normalised linear interpolation between the two given quaternions
+    static Quaternion Nlerp(const Quaternion& rkP, const Quaternion& rkQ, float t, bool shortestPath = false);
 
     float w;
     float x;

@@ -30,6 +30,7 @@ M_MESH_BOUNDS = b'\x02'
 M_ANIMATION = b'\x03'
 M_ANIMATION_TRACK = b'\x04'
 M_ANIMATION_MORPH_KEYFRAME = b'\x05'
+M_MESH_SKELETON_FILE = b'\x06'
 
 PF_R8G8B8A8 = b'\x05'
 
@@ -163,7 +164,7 @@ def ce_write_material(file_path, materials):
     file.close()
 
 #------------------------------------------------------------------------------
-def ce_write_mesh(file_path, objects, scale_uniform):
+def ce_write_mesh(file_path, objects, scale_uniform, bind_pose = False, num_weights = 0):
     # calculate scale and bounding radius
     scale = (1.0 / ce_get_longest_extend(objects)) if scale_uniform else 1.0
     radius = ce_get_bounding_radius(objects) * scale
@@ -187,7 +188,8 @@ def ce_write_mesh(file_path, objects, scale_uniform):
             bm.free()
 
             # scaling and axis conversion
-            mesh.transform((Matrix.Scale(scale, 4) @ axis_conversion(to_forward='-Z', to_up='Y').to_4x4()) @ ob.matrix_world)
+            if not bind_pose:
+                mesh.transform((Matrix.Scale(scale, 4) @ axis_conversion(to_forward='-Z', to_up='Y').to_4x4()) @ ob.matrix_world)
 
             for index, mat_slot in enumerate(ob.material_slots):
                 # 2. write submesh chunk id
@@ -210,12 +212,22 @@ def ce_write_mesh(file_path, objects, scale_uniform):
                 byte_array.tofile(file)
 
                 # 5. write bytes per vertex
-                byte_array = array('I', [BYTES_PER_VERTEX])
+                byte_array = array('I', [BYTES_PER_VERTEX + 4 * num_weights])
                 byte_array.tofile(file)
 
                 # write vertices
                 for face in faces_cur_mat:
                     for vert_idx, loop_idx in zip(face.vertices, face.loop_indices):
+                        # write vertex weights
+                        if bind_pose:
+                            weights = []
+                            for w in range(num_weights):
+                                weights.append(0.0)
+                            for g in mesh.vertices[vert_idx].groups:
+                                weights[g.group] = g.weight
+                            for weight in weights:
+                                byte_array = array('f', [weight])
+                                byte_array.tofile(file)
                         # 5. write texture coordinates
                         byte_array = array('f', mesh.uv_layers.active.data[loop_idx].uv)
                         byte_array.tofile(file)
@@ -228,6 +240,15 @@ def ce_write_mesh(file_path, objects, scale_uniform):
                         # 8. write position
                         byte_array = array('f', mesh.vertices[vert_idx].co)
                         byte_array.tofile(file)
+
+    # write filename of skeleton definition
+    if bind_pose:
+        file.write(M_MESH_SKELETON_FILE)
+        skeleton_file_path = ce_export_path(file_path) + os.path.splitext(os.path.basename(file_path))[0] + '.skeleton'
+        byte_array = array('B', [len(skeleton_file_path)])
+        byte_array.tofile(file)
+        file.write(skeleton_file_path.encode())
+
     file.close()
 
     return used_materials
@@ -366,6 +387,92 @@ def ce_write_morph_animation(file_path):
     return used_materials
 
 #------------------------------------------------------------------------------
+def ce_write_skeletal_animation(file_path):
+    used_materials = []
+    # find armature
+    armature = None
+    for ob in bpy.context.scene.objects:
+        if ob.type == 'ARMATURE':
+            armature = ob.data
+    if armature == None:
+        return used_materials
+
+    # write bindpose mesh
+    used_materials = ce_write_mesh(file_path, bpy.context.scene.objects, False, True, len(armature.bones))
+
+    # write bones
+    file = open(os.path.splitext(file_path)[0] + ".skeleton", 'wt')
+    file.write("skeleton\n{\n")
+    file.write("    num_bones %i\n"%(len(armature.bones)))
+    for bone in armature.bones:
+        file.write("    bone \"%s\"\n" % (bone.name))
+        file.write("    {\n")
+        file.write("        index %i\n"%(armature.bones.find(bone.name)))
+        file.write("        parent %i\n"%(armature.bones.find(bone.parent.name) if bone.parent else -1))
+        m = bone.parent.matrix_local.inverted() @ bone.matrix_local if bone.parent else bone.matrix_local
+        file.write("        local_matrix %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f\n"%(\
+        m[0][0], m[0][1], m[0][2], m[0][3], m[1][0], m[1][1], m[1][2], m[1][3], m[2][0], m[2][1], m[2][2], m[2][3], m[3][0], m[3][1], m[3][2], m[3][3]))
+        m = bone.matrix_local.inverted()
+        file.write("        inv_model_matrix %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f\n"%(\
+        m[0][0], m[0][1], m[0][2], m[0][3], m[1][0], m[1][1], m[1][2], m[1][3], m[2][0], m[2][1], m[2][2], m[2][3], m[3][0], m[3][1], m[3][2], m[3][3]))
+        file.write("    }\n")
+    file.write("}\n")
+
+    # write animations
+    for action in bpy.data.actions:
+        num_keyframes = 0
+        animation_length = 0.0
+        for fcu in action.fcurves:
+            num_keyframes = len(fcu.keyframe_points)
+            animation_length = fcu.keyframe_points[-1].co.x
+
+        file.write("animation \"%s\"\n{\n"%(action.name))
+        file.write("    length %f\n"%(animation_length / bpy.context.scene.render.fps))
+        file.write("    num_keyframes %i\n"%(num_keyframes))
+        for bone_index in range(len(armature.bones)):
+            # track
+            file.write("    track \"%s\"\n    {\n"%(armature.bones[bone_index].name))
+            file.write("        index %i\n"%(bone_index))
+            for key_index in range(num_keyframes):
+                # keyframe
+                file.write("        key\n        {\n")
+                time = 0.0
+                position = mathutils.Vector((0.0, 0.0, 0.0))
+                orientation = mathutils.Quaternion((1.0, 0.0, 0.0, 0.0))
+                for curve in action.fcurves:
+                    for index, keyframe in enumerate(curve.keyframe_points):
+                        bone_name = curve.data_path.split("[", maxsplit = 1)[1].split("]", maxsplit = 1)[0][1:-1]
+                        if index == key_index and bone_name == armature.bones[bone_index].name:
+                            if curve.data_path.find("location") != -1:
+                                if curve.array_index == 0:
+                                    time = keyframe.co.x / bpy.context.scene.render.fps
+                                    position.x = keyframe.co.y
+                                if curve.array_index == 1:
+                                    position.y = keyframe.co.y
+                                if curve.array_index == 2:
+                                    position.z = keyframe.co.y
+                            if curve.data_path.find("rotation_quaternion") != -1:
+                                if curve.array_index == 0:
+                                    orientation.w = keyframe.co.y
+                                if curve.array_index == 1:
+                                    orientation.x = keyframe.co.y
+                                if curve.array_index == 2:
+                                    orientation.y = keyframe.co.y
+                                if curve.array_index == 3:
+                                    orientation.z = keyframe.co.y
+                file.write("            time %f\n"%(time))
+                m = orientation.to_matrix().to_4x4() @ mathutils.Matrix.Translation(position)
+                file.write("            local_matrix %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f\n"%(\
+                m[0][0], m[0][1], m[0][2], m[0][3], m[1][0], m[1][1], m[1][2], m[1][3], m[2][0], m[2][1], m[2][2], m[2][3], m[3][0], m[3][1], m[3][2], m[3][3]))
+                file.write("        }\n")
+            file.write("    }\n")
+        file.write("}\n")
+
+    file.close()
+
+    return used_materials
+
+#------------------------------------------------------------------------------
 class Export_ChrisslyEngineMesh(bpy.types.Operator, ExportHelper):
     bl_idname = "export_scene.chrisslyengine_mesh"
     bl_label = "Export ChrisslyEngine-Mesh"
@@ -376,14 +483,19 @@ class Export_ChrisslyEngineMesh(bpy.types.Operator, ExportHelper):
     selected_only: bpy.props.BoolProperty(name="Selected only", description="Only selected objects will be exported", default=False)
     position_only: bpy.props.BoolProperty(name="Position coordinates only", description="Only the vertex positions will be written to the file, can be used as collision geometry", default=False)
     export_morph_animation: bpy.props.BoolProperty(name="Export morph animation", description="Export scene frames as morph animation keyframes", default=False)
+    export_skeletal_animation: bpy.props.BoolProperty(name="Export skeletal animation", description="Export bindpose, skeleton and animations", default=False)
 
     filename_ext = ".mesh"
 
     # export the mesh
     def execute(self, context):
         used_materials = []
-        # export morph animation
-        if self.export_morph_animation:
+
+        if self.export_skeletal_animation:
+            # export skeletal animation
+            used_materials = ce_write_skeletal_animation(self.filepath)
+        elif self.export_morph_animation:
+            # export morph animation
             used_materials += ce_write_morph_animation(self.filepath)
         else:
             # selected only
@@ -424,4 +536,3 @@ def unregister():
 
 if __name__ == "__main__":
     register()
-

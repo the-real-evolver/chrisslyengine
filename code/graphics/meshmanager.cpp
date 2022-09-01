@@ -3,6 +3,7 @@
 //  (C) 2010 Christian Bleicher
 //------------------------------------------------------------------------------
 #include "meshmanager.h"
+#include "skeletonserialiser.h"
 #include "animation.h"
 #include "fswrapper.h"
 #include "memoryallocatorconfig.h"
@@ -62,6 +63,8 @@ MeshManager::Load(const char* const filename)
     char stringBuffer[256U] = {'\0'};
     String materialName;
     unsigned char materialNameLength = 0U;
+    String skeletonPath;
+    unsigned char skeletonPathLength = 0U;
 
     FileHandle fd = FSWrapper::Open(filename, ReadAccess, Random, 0777);
 
@@ -156,6 +159,12 @@ MeshManager::Load(const char* const filename)
                     subMesh->vertexAnimationType = VAT_MORPH;
                     subMesh->vertexData->vertexBuffer->SetNumVertices(vertexCount);
                 }
+                break;
+            case M_MESH_SKELETON_FILE:
+                FSWrapper::Read(fd, &skeletonPathLength, 1U);
+                FSWrapper::Read(fd, &stringBuffer, skeletonPathLength);
+                skeletonPath.Set(stringBuffer, skeletonPathLength);
+                ce_graphics_import_skeleton(skeletonPath.C_Str(), mesh);
                 break;
         }
     }

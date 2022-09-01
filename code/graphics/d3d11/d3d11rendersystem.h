@@ -108,6 +108,7 @@ private:
     D3D11GpuProgram* defaultGpuProgramLitNoTexture;
     D3D11GpuProgram* defaultGpuProgramLitFogNoTexture;
     D3D11GpuProgram* defaultGpuProgramMorphAnimNoTexture;
+    D3D11GpuProgram* defaultGpuProgramSkeletalAnimNoTexture;
     D3D11GpuProgram* defaultGpuProgramShadowCaster;
     D3D11GpuProgram* defaultGpuProgramTransparentShadowCaster;
     D3D11GpuProgram* defaultGpuProgramShadowReceiver;
@@ -120,6 +121,7 @@ private:
     D3D11_VIEWPORT viewPort;
     ID3D11InputLayout* inputLayout;
     ID3D11InputLayout* inputLayoutMorphAnim;
+    ID3D11InputLayout* inputLayoutSkeletalAnim;
 
     D3D11_RASTERIZER_DESC currentRasterState;
     D3D11_DEPTH_STENCIL_DESC currentDepthStencilState;

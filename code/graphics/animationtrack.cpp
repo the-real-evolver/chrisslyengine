@@ -105,5 +105,51 @@ VertexAnimationTrack::ApplyToVertexData(VertexData* const data, int timeIndex)
     }
 }
 
+//------------------------------------------------------------------------------
+/**
+*/
+BoneAnimationTrack::BoneAnimationTrack(unsigned int numKeyFrames)
+{
+    ce_array_init(this->timeIndex, numKeyFrames);
+    ce_array_init(this->localMatrix, numKeyFrames);
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+BoneAnimationTrack::~BoneAnimationTrack()
+{
+    ce_array_delete(this->timeIndex);
+    ce_array_delete(this->localMatrix);
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+BoneAnimationTrack::CreateKeyFrame(float timePos, chrissly::core::Matrix4 const& transform)
+{
+    ce_array_push_back(this->timeIndex, timePos);
+    ce_array_push_back(this->localMatrix, transform);
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+chrissly::core::Matrix4* const
+BoneAnimationTrack::GetTransformMatrices() const
+{
+    return this->localMatrix;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+float* const
+BoneAnimationTrack::GetTimeIndicies() const
+{
+    return this->timeIndex;
+}
+
 } // namespace graphics
 } // namespace chrissly

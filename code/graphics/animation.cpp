@@ -20,7 +20,8 @@ using namespace chrissly::core;
 */
 Animation::Animation(const char* const name, float length) :
     length(length),
-    vertexTracks(NULL)
+    vertexTracks(NULL),
+    boneTracks(NULL)
 {
     this->name = name;
     ce_array_init(this->vertexTracks, 1U);
@@ -32,6 +33,7 @@ Animation::Animation(const char* const name, float length) :
 Animation::~Animation()
 {
     this->DestroyAllVertexTracks();
+    this->DestroyAllBoneTracks();
 }
 
 //------------------------------------------------------------------------------
@@ -99,6 +101,50 @@ Animation::DestroyAllVertexTracks()
 //------------------------------------------------------------------------------
 /**
 */
+BoneAnimationTrack* const
+Animation::CreateBoneTrack(unsigned int numKeyFrames)
+{
+    BoneAnimationTrack* boneAnimationTrack = CE_NEW BoneAnimationTrack(numKeyFrames);
+    ce_array_push_back(this->boneTracks, boneAnimationTrack);
+
+    return boneAnimationTrack;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+unsigned short
+Animation::GetNumBoneTracks() const
+{
+    return (unsigned short)ce_array_size(this->boneTracks);
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+BoneAnimationTrack* const
+Animation::GetBoneTrack(unsigned short index) const
+{
+    return this->boneTracks[index];
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+Animation::DestroyAllBoneTracks()
+{
+    unsigned int i;
+    for (i = 0U; i < ce_array_size(this->boneTracks); ++i)
+    {
+        CE_DELETE this->boneTracks[i];
+    }
+    ce_array_delete(this->boneTracks);
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
 void
 Animation::Apply(Entity* const entity, float timePos)
 {
@@ -107,6 +153,7 @@ Animation::Apply(Entity* const entity, float timePos)
         timePos = Math::Fmod(timePos, this->length);
     }
 
+    // update morph animation
     unsigned int i;
     for (i = 0U; i < ce_array_size(this->vertexTracks); ++i)
     {
@@ -128,6 +175,74 @@ Animation::Apply(Entity* const entity, float timePos)
                 }
                 break;
             }
+        }
+    }
+
+    // update skeletal animation
+    Skeleton* skeleton = entity->GetMesh()->GetSkeleton();
+    if (skeleton != NULL && ce_array_size(this->boneTracks) > 0U)
+    {
+        static Matrix4 localTransform[16U] = {};
+        static Matrix4 modelTransform[16U] = {};
+
+        // calc current keyframe and t
+        float t = 0.0f;
+        unsigned int currentKeyframe = 0U;
+        float* times = this->boneTracks[0U]->GetTimeIndicies();
+        unsigned int numKeys = ce_array_size(times) - 1U;
+        for (i = 0U; i < numKeys; ++i)
+        {
+            if (timePos >= times[i] && timePos < times[i + 1U])
+            {
+                currentKeyframe = i;
+                t = (timePos - times[i]) / (times[i + 1U] - times[i]);
+                break;
+            }
+        }
+
+        int* parentIndex = skeleton->GetParentIndicies();
+        Matrix4* boneLocalMatrix = skeleton->GetLocalTransformMatrices();
+        Matrix4* bonesInverseModelMatrix = skeleton->GetInverseModelTransformMatrices();
+        unsigned int numBones = ce_array_size(boneLocalMatrix);
+        Matrix4* boneMatrix = entity->GetBoneMatrices();
+
+        // 1. bindpose * animation keyframe local matrix
+        for (i = 0U; i < numBones; ++i)
+        {
+            Matrix4* animKeyMatrix = this->boneTracks[i]->GetTransformMatrices();
+
+            // interpolate position
+            Vector3 p(animKeyMatrix[currentKeyframe][0U][3U], animKeyMatrix[currentKeyframe][1U][3U], animKeyMatrix[currentKeyframe][2U][3U]);
+            Vector3 pn(animKeyMatrix[currentKeyframe + 1U][0U][3U], animKeyMatrix[currentKeyframe + 1U][1U][3U], animKeyMatrix[currentKeyframe + 1U][2U][3U]);
+            Vector3 pos = Vector3::Lerp(p, pn, t);
+
+            // interpolate rotation
+            Quaternion q, qNext;
+            q.FromRotationMatrix(animKeyMatrix[currentKeyframe].To3x3());
+            qNext.FromRotationMatrix(animKeyMatrix[currentKeyframe + 1U].To3x3());
+            Matrix3 rm;
+            Quaternion::Nlerp(q, qNext, t).ToRotationMatrix(rm);
+
+            // assemble transform matrix
+            Matrix4 transform(rm[0U][0U], rm[0U][1U], rm[0U][2U], pos.x,
+                              rm[1U][0U], rm[1U][1U], rm[1U][2U], pos.y,
+                              rm[2U][0U], rm[2U][1U], rm[2U][2U], pos.z,
+                              0.0f,       0.0f,       0.0f,       1.0f);
+
+            localTransform[i] = boneLocalMatrix[i] * transform;
+        }
+
+        // 2. propagate animation transform from rootbone to children
+        modelTransform[0U] = localTransform[0U];
+        for (i = 1U; i < numBones; ++i)
+        {
+            modelTransform[i] = modelTransform[parentIndex[i]] * localTransform[i];
+        }
+
+        // 3. model matrix * inverse bone matrix
+        for (i = 0U; i < numBones; ++i)
+        {
+            boneMatrix[i] = modelTransform[i] * bonesInverseModelMatrix[i];
         }
     }
 }

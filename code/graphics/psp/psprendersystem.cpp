@@ -6,6 +6,7 @@
 #include "pspmappings.h"
 #include "psphardwarebuffermanager.h"
 #include "common.h"
+#include "entity.h"
 #include "animationtrack.h"
 #include "vertexdata.h"
 #include <stdio.h>
@@ -166,7 +167,24 @@ PSPRenderSystem::SetTextureMatrix(const core::Matrix4& xform)
 void
 PSPRenderSystem::Render(graphics::SubEntity* const renderable)
 {
-    if (graphics::VAT_MORPH == renderable->GetSubMesh()->GetVertexAnimationType())
+    if (renderable->GetParent()->GetMesh()->GetSkeleton() != NULL)
+    {
+        static ScePspFMatrix4 boneMatrices[2U] = {};
+        core::Matrix4* m = renderable->GetParent()->GetBoneMatrices();
+        unsigned int i;
+        for (i = 0U; i < 2U; ++i)
+        {
+            boneMatrices[i] = PSPMappings::MakePSPMatrix(m[i]);
+            sceGuBoneMatrix(i, &boneMatrices[i]);
+            sceGuMorphWeight(i, 1.0f);
+        }
+        graphics::HardwareVertexBuffer* vertexBuffer = renderable->GetSubMesh()->vertexData->vertexBuffer;
+        sceGumDrawArray(PSPMappings::Get(renderable->GetSubMesh()->topology),
+                        GU_TEXTURE_32BITF | GU_COLOR_8888 | GU_NORMAL_32BITF | GU_VERTEX_32BITF | GU_WEIGHT_32BITF | GU_TRANSFORM_3D | GU_WEIGHTS(2),
+                        vertexBuffer->GetNumVertices(), 0,
+                        vertexBuffer->Map());
+    }
+    else if (graphics::VAT_MORPH == renderable->GetSubMesh()->GetVertexAnimationType())
     {
         float morphWeight = renderable->GetMorphWeight();
         sceGuMorphWeight(0, 1.0f - morphWeight);

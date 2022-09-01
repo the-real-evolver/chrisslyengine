@@ -184,12 +184,13 @@
     <ClCompile Include="..\..\code\graphics\materialparser.cpp" />
     <ClCompile Include="..\..\code\graphics\mesh.cpp" />
     <ClCompile Include="..\..\code\graphics\meshmanager.cpp" />
-    <ClCompile Include="..\..\code\graphics\node.cpp" />
     <ClCompile Include="..\..\code\graphics\pass.cpp" />
     <ClCompile Include="..\..\code\graphics\renderqueue.cpp" />
     <ClCompile Include="..\..\code\graphics\rendertarget.cpp" />
     <ClCompile Include="..\..\code\graphics\scenemanager.cpp" />
     <ClCompile Include="..\..\code\graphics\scenenode.cpp" />
+    <ClCompile Include="..\..\code\graphics\skeleton.cpp" />
+    <ClCompile Include="..\..\code\graphics\skeletonserialiser.cpp" />
     <ClCompile Include="..\..\code\graphics\subentity.cpp" />
     <ClCompile Include="..\..\code\graphics\submesh.cpp" />
     <ClCompile Include="..\..\code\graphics\texturebase.cpp" />
@@ -276,7 +277,6 @@
     <ClInclude Include="..\..\code\graphics\materialparser.h" />
     <ClInclude Include="..\..\code\graphics\mesh.h" />
     <ClInclude Include="..\..\code\graphics\meshmanager.h" />
-    <ClInclude Include="..\..\code\graphics\node.h" />
     <ClInclude Include="..\..\code\graphics\pass.h" />
     <ClInclude Include="..\..\code\graphics\pixelformat.h" />
     <ClInclude Include="..\..\code\graphics\renderqueue.h" />
@@ -286,6 +286,8 @@
     <ClInclude Include="..\..\code\graphics\renderwindow.h" />
     <ClInclude Include="..\..\code\graphics\scenemanager.h" />
     <ClInclude Include="..\..\code\graphics\scenenode.h" />
+    <ClInclude Include="..\..\code\graphics\skeleton.h" />
+    <ClInclude Include="..\..\code\graphics\skeletonserialiser.h" />
     <ClInclude Include="..\..\code\graphics\subentity.h" />
     <ClInclude Include="..\..\code\graphics\submesh.h" />
     <ClInclude Include="..\..\code\graphics\texture.h" />

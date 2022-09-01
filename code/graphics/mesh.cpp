@@ -20,6 +20,7 @@ using namespace chrissly::core;
 */
 Mesh::Mesh() :
     subMeshes(NULL),
+    skeleton(NULL),
     boundingRadius(FLT_MAX)
 {
     ce_array_init(this->subMeshes, 1U);
@@ -32,6 +33,11 @@ Mesh::Mesh() :
 Mesh::~Mesh()
 {
     this->RemoveAllAnimations();
+
+    if (this->skeleton != NULL)
+    {
+        CE_DELETE(this->skeleton);
+    }
 
     unsigned int i;
     for (i = 0U; i < ce_array_size(this->subMeshes); ++i)
@@ -92,6 +98,24 @@ Mesh::GetBoundingSphereRadius() const
 //------------------------------------------------------------------------------
 /**
 */
+void
+Mesh::SetSkeleton(Skeleton* const skel)
+{
+    this->skeleton = skel;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+Skeleton* const
+Mesh::GetSkeleton() const
+{
+    return this->skeleton;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
 Animation* const
 Mesh::CreateAnimation(const char* const name, float length)
 {
@@ -142,23 +166,9 @@ Mesh::RemoveAllAnimations()
 /**
 */
 bool
-Mesh::HasVertexAnimation() const
+Mesh::HasAnimation() const
 {
-    if (this->animations.size > 0U)
-    {
-        unsigned int i;
-        for (i = 0U; i < this->animations.bucket_count; ++i)
-        {
-            ce_linked_list* it = this->animations.buckets[i];
-            while (it != NULL)
-            {
-                if (((Animation*)((ce_key_value_pair*)it->data)->value)->GetNumVertexTracks() > 0U) return true;
-                it = it->next;
-            }
-        }
-    }
-
-    return false;
+    return this->animations.size > 0U;
 }
 
 //------------------------------------------------------------------------------

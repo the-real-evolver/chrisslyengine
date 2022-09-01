@@ -36,11 +36,21 @@ public:
     VertexAnimationTrack* const GetVertexTrack(unsigned short index) const;
     /// removes and destroys all vertex tracks making up this animation
     void DestroyAllVertexTracks();
-    /// applies all vertex tracks given a specific time point and weight to a given entity
+
+    /// creates a BoneAnimationTrack for animating the skeleton
+    BoneAnimationTrack* const CreateBoneTrack(unsigned int numKeyFrames);
+    /// gets the number of BoneAnimationTrack objects contained in this animation
+    unsigned short GetNumBoneTracks() const;
+    /// gets a Bone track by it's index
+    BoneAnimationTrack* const GetBoneTrack(unsigned short index) const;
+    /// removes and destroys all bone tracks making up this animation
+    void DestroyAllBoneTracks();
+
+    /// applies all tracks given a specific time point to a given entity
     /**
         @remarks
         @param entity The Entity to which this animation should be applied
-        @param timePos The time position in the animation to apply.
+        @param timePos The time position in the animation to apply
     */
     void Apply(Entity* const entity, float timePos);
 
@@ -48,6 +58,7 @@ private:
     core::String name;
     float length;
     VertexAnimationTrack** vertexTracks;
+    BoneAnimationTrack** boneTracks;
 };
 
 } // namespace graphics

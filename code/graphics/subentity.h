@@ -36,6 +36,8 @@ public:
     bool IsVisible() const;
     /// accessor method to read mesh data 
     SubMesh* const GetSubMesh() const;
+    /// get the parent entity of this subentity
+    Entity* const GetParent() const;
     /// advanced method to get the hardware morph vertex information
     VertexData* const GetMorphVertexData() const;
     /// set vertex morph weight value

@@ -198,6 +198,11 @@ public:
     /// returns whether the attached or the default gpu-program includes the required instructions to perform morph animation
     bool IsMorphAnimationIncluded() const;
 
+    /// sets whether the attached or the default gpu-program includes the required instructions to perform skeletal animation
+    void SetSkeletalAnimationIncluded(bool included);
+    /// returns whether the attached or the default gpu-program includes the required instructions to perform skeletal animation
+    bool IsSkeletalAnimationIncluded() const;
+
     /// inserts a new TextureUnitState object into the Pass
     TextureUnitState* const CreateTextureUnitState();
     /// retrieves a pointer to a texture unit state so it may be modified
@@ -240,6 +245,7 @@ private:
     float fogStart;
     float fogEnd;
     bool morphAnimation;
+    bool skeletalAnimation;
 
     TextureUnitState** textureUnitStates;
 

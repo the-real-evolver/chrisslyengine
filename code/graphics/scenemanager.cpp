@@ -441,7 +441,7 @@ SceneManager::_RenderScene(Camera* const camera, Viewport* const vp)
             }
 
             // update animation
-            if (entity->HasVertexAnimation())
+            if (entity->HasAnimation())
             {
                 entity->UpdateAnimation();
             }

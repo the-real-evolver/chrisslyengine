@@ -7,6 +7,7 @@
     (C) 2012 Christian Bleicher
 */
 #include "keyframe.h"
+#include "matrix4.h"
 
 //------------------------------------------------------------------------------
 namespace chrissly
@@ -62,6 +63,27 @@ public:
 private:
     unsigned char handle;
     VertexMorphKeyFrame** keyFrames;
+};
+
+class BoneAnimationTrack
+{
+public:
+    /// constructor with number of keyframes
+    BoneAnimationTrack(unsigned int numKeyFrames);
+    /// destructor
+    ~BoneAnimationTrack();
+    /// creates a new keyframe and adds it to this animation at the given time
+    void CreateKeyFrame(float timePos, chrissly::core::Matrix4 const& transform);
+    /// gets the list of transform matrices of all keyframes
+    chrissly::core::Matrix4* const GetTransformMatrices() const;
+    /// gets the list of time positions of all keyframes
+    float* const GetTimeIndicies() const;
+
+private:
+    /// index of the parent bone
+    float* timeIndex;
+    /// transformation relative to parent bone
+    chrissly::core::Matrix4* localMatrix;
 };
 
 } // namespace graphics

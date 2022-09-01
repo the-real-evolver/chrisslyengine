@@ -182,7 +182,10 @@
     <ClCompile Include="..\..\code\graphics\gpuprogrammanager.cpp">
       <Filter>graphics</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\code\graphics\node.cpp">
+    <ClCompile Include="..\..\code\graphics\skeletonserialiser.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\graphics\skeleton.cpp">
       <Filter>graphics</Filter>
     </ClCompile>
   </ItemGroup>
@@ -516,7 +519,10 @@
     <ClInclude Include="..\..\code\graphics\gpuprogrammanager.h">
       <Filter>graphics</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\code\graphics\node.h">
+    <ClInclude Include="..\..\code\graphics\skeletonserialiser.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\graphics\skeleton.h">
       <Filter>graphics</Filter>
     </ClInclude>
   </ItemGroup>

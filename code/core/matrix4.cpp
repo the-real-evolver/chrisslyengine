@@ -205,5 +205,18 @@ Matrix4::Transpose() const
                    this->m[0U][3U], this->m[1U][3U], this->m[2U][3U], this->m[3U][3U]);
 }
 
+//------------------------------------------------------------------------------
+/**
+*/
+Matrix3
+Matrix4::To3x3() const
+{
+    Matrix3 r;
+    r[0U][0U] = this->m[0U][0U]; r[0U][1U] = this->m[0U][1U]; r[0U][2U] = this->m[0U][2U];
+    r[1U][0U] = this->m[1U][0U]; r[1U][1U] = this->m[1U][1U]; r[1U][2U] = this->m[1U][2U];
+    r[2U][0U] = this->m[2U][0U]; r[2U][1U] = this->m[2U][1U]; r[2U][2U] = this->m[2U][2U];
+    return r;
+}
+
 } // namespace core
 } // namespace chrissly

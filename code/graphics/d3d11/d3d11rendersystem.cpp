@@ -6,6 +6,7 @@
 #include "d3d11mappings.h"
 #include "d3d11defaultshaders.h"
 #include "light.h"
+#include "entity.h"
 #include "common.h"
 #include "debug.h"
 #include <float.h>
@@ -36,6 +37,7 @@ D3D11RenderSystem::D3D11RenderSystem() :
     defaultGpuProgramLitNoTexture(NULL),
     defaultGpuProgramLitFogNoTexture(NULL),
     defaultGpuProgramMorphAnimNoTexture(NULL),
+    defaultGpuProgramSkeletalAnimNoTexture(NULL),
     defaultGpuProgramShadowCaster(NULL),
     defaultGpuProgramShadowReceiver(NULL),
     defaultGpuProgramShadowCasterMorphAnim(NULL),
@@ -43,7 +45,8 @@ D3D11RenderSystem::D3D11RenderSystem() :
     device(NULL),
     context(NULL),
     inputLayout(NULL),
-    inputLayoutMorphAnim(NULL)
+    inputLayoutMorphAnim(NULL),
+    inputLayoutSkeletalAnim(NULL)
 {
     Singleton = this;
     this->viewPort = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
@@ -155,6 +158,7 @@ D3D11RenderSystem::Initialise(void* const customParams)
     this->defaultGpuProgramLitNoTexture = CE_NEW D3D11GpuProgram(DefaultGpuProgramLit, "defaultshaderlitnotexture.fx", "DefaultVertexShader", "DefaultFragmentShader", shaderMacros);
     this->defaultGpuProgramLitFogNoTexture = CE_NEW D3D11GpuProgram(DefaultGpuProgramLitFog, "defaultshaderlitfognotexture.fx", "DefaultVertexShader", "DefaultFragmentShader", shaderMacros);
     this->defaultGpuProgramMorphAnimNoTexture = CE_NEW D3D11GpuProgram(DefaultGpuProgramMorphAnim, "defaultshadermorphanimnotexture.fx", "DefaultVertexShader", "DefaultFragmentShader", shaderMacros);
+    this->defaultGpuProgramSkeletalAnimNoTexture = CE_NEW D3D11GpuProgram(DefaultGpuProgramSkeletalAnim, "defaultshaderskeletalanimnotexture.fx", "DefaultVertexShader", "DefaultFragmentShader", shaderMacros);
     this->defaultGpuProgramShadowCaster = CE_NEW D3D11GpuProgram(DefaultGpuProgramShadowCaster, "defaultshadershadowcaster.fx", "DefaultVertexShader", "DefaultFragmentShader");
     this->defaultGpuProgramTransparentShadowCaster = CE_NEW D3D11GpuProgram(DefaultGpuProgramTransparentShadowCaster, "defaultshadertransparentshadowcaster.fx", "DefaultVertexShader", "DefaultFragmentShader");
     this->defaultGpuProgramShadowReceiver = CE_NEW D3D11GpuProgram(DefaultGpuProgramShadowReceiver, "defaultshadershadowreceiver.fx", "DefaultVertexShader", "DefaultFragmentShader");
@@ -172,8 +176,8 @@ D3D11RenderSystem::Initialise(void* const customParams)
     };
     result = this->device->CreateInputLayout(
         inputDesc, _countof(inputDesc),
-        this->currentGpuProgram->GetVertexShaderCode()->GetBufferPointer(),
-        this->currentGpuProgram->GetVertexShaderCode()->GetBufferSize(),
+        this->defaultGpuProgram->GetVertexShaderCode()->GetBufferPointer(),
+        this->defaultGpuProgram->GetVertexShaderCode()->GetBufferSize(),
         &this->inputLayout
     );
     CE_ASSERT(SUCCEEDED(result), "D3D11RenderSystem::Initialise(): failed to create input layout\n");
@@ -195,6 +199,23 @@ D3D11RenderSystem::Initialise(void* const customParams)
         this->defaultGpuProgramMorphAnim->GetVertexShaderCode()->GetBufferPointer(),
         this->defaultGpuProgramMorphAnim->GetVertexShaderCode()->GetBufferSize(),
         &this->inputLayoutMorphAnim
+    );
+    CE_ASSERT(SUCCEEDED(result), "D3D11RenderSystem::Initialise(): failed to create input layout\n");
+
+    /* create default input layout for skeletal animation */
+    D3D11_INPUT_ELEMENT_DESC inputDescSkeletalAnim[] =
+    {
+        {"BLENDWEIGHT", 0U, DXGI_FORMAT_R32G32_FLOAT,    0U, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0U},
+        {"TEXCOORD",    0U, DXGI_FORMAT_R32G32_FLOAT,    0U, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0U},
+        {"COLOR",       0U, DXGI_FORMAT_R8G8B8A8_UNORM,  0U, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0U},
+        {"NORMAL",      0U, DXGI_FORMAT_R32G32B32_FLOAT, 0U, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0U},
+        {"POSITION",    0U, DXGI_FORMAT_R32G32B32_FLOAT, 0U, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0U}
+    };
+    result = this->device->CreateInputLayout(
+        inputDescSkeletalAnim, _countof(inputDescSkeletalAnim),
+        this->defaultGpuProgramSkeletalAnimNoTexture->GetVertexShaderCode()->GetBufferPointer(),
+        this->defaultGpuProgramSkeletalAnimNoTexture->GetVertexShaderCode()->GetBufferSize(),
+        &this->inputLayoutSkeletalAnim
     );
     CE_ASSERT(SUCCEEDED(result), "D3D11RenderSystem::Initialise(): failed to create input layout\n");
 
@@ -234,6 +255,8 @@ D3D11RenderSystem::Shutdown()
     this->defaultGpuProgramLitFogNoTexture = NULL;
     CE_DELETE this->defaultGpuProgramMorphAnimNoTexture;
     this->defaultGpuProgramMorphAnimNoTexture = NULL;
+    CE_DELETE this->defaultGpuProgramSkeletalAnimNoTexture;
+    this->defaultGpuProgramSkeletalAnimNoTexture = NULL;
     CE_DELETE this->defaultGpuProgramShadowCaster;
     this->defaultGpuProgramShadowCaster = NULL;
     CE_DELETE this->defaultGpuProgramTransparentShadowCaster;
@@ -256,6 +279,11 @@ D3D11RenderSystem::Shutdown()
     {
         this->inputLayoutMorphAnim->Release();
         this->inputLayoutMorphAnim = NULL;
+    }
+    if (this->inputLayoutSkeletalAnim != NULL)
+    {
+        this->inputLayoutSkeletalAnim->Release();
+        this->inputLayoutSkeletalAnim = NULL;
     }
     if (this->context != NULL)
     {
@@ -415,7 +443,13 @@ D3D11RenderSystem::Render(graphics::SubEntity* const renderable)
     params->SetAutoConstant(graphics::GpuProgramParameters::ACT_TEXTURE_MATRIX, this->textureMatrix);
 
     graphics::HardwareVertexBuffer* vertexBuffer = NULL;
-    if (graphics::VAT_MORPH == renderable->GetSubMesh()->GetVertexAnimationType())
+    if (renderable->GetParent()->GetMesh()->GetSkeleton() != NULL)
+    {
+        this->context->IASetInputLayout(this->inputLayoutSkeletalAnim);
+        vertexBuffer = renderable->GetSubMesh()->vertexData->vertexBuffer;
+        params->SetNamedConstant("boneMatrices", renderable->GetParent()->GetBoneMatrices(), 2U);
+    }
+    else if (graphics::VAT_MORPH == renderable->GetSubMesh()->GetVertexAnimationType())
     {
         this->context->IASetInputLayout(this->inputLayoutMorphAnim);
         vertexBuffer = renderable->GetMorphVertexData()->vertexBuffer;
@@ -531,7 +565,11 @@ D3D11RenderSystem::SetPass(graphics::Pass* const pass)
         bool lit = pass->GetLightingEnabled();
         bool fog = (graphics::FOG_LINEAR == pass->GetFogMode());
         bool textured = pass->GetNumTextureUnitStates() > 0U;
-        if (pass->IsMorphAnimationIncluded())
+        if (pass->IsSkeletalAnimationIncluded())
+        {
+            this->currentGpuProgram = this->defaultGpuProgramSkeletalAnimNoTexture;
+        }
+        else if (pass->IsMorphAnimationIncluded())
         {
             this->currentGpuProgram = textured ? this->defaultGpuProgramMorphAnim : this->defaultGpuProgramMorphAnimNoTexture;
         }

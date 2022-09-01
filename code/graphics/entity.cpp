@@ -22,13 +22,14 @@ Entity::Entity(Mesh* const mesh) :
     subEntities(NULL),
     visible(true),
     castShadows(false),
-    receivesShadows(false)
+    receivesShadows(false),
+    boneMatrices(NULL)
 {
     ce_hash_table_init(&this->animationStates, 0U);
 
     this->BuildSubEntities();
 
-    if (this->HasVertexAnimation())
+    if (this->HasAnimation())
     {
         this->mesh->_InitAnimationState(&this->animationStates);
 
@@ -58,6 +59,12 @@ Entity::Entity(Mesh* const mesh) :
             }
         }
     }
+
+    Skeleton* skeleton = this->mesh->GetSkeleton();
+    if (skeleton != NULL)
+    {
+        ce_array_init(this->boneMatrices, ce_array_size(skeleton->GetParentIndicies()));
+    }
 }
 
 //------------------------------------------------------------------------------
@@ -82,6 +89,8 @@ Entity::~Entity()
         }
     }
     ce_hash_table_clear(&this->animationStates);
+
+    ce_array_delete(this->boneMatrices);
 }
 
 //------------------------------------------------------------------------------
@@ -177,9 +186,9 @@ Entity::GetReceivesShadows() const
 /**
 */
 bool
-Entity::HasVertexAnimation() const
+Entity::HasAnimation() const
 {
-    return this->mesh->HasVertexAnimation();
+    return this->mesh->HasAnimation();
 }
 
 //------------------------------------------------------------------------------
@@ -213,6 +222,16 @@ Entity::UpdateAnimation()
             it = it->next;
         }
     }
+}
+
+
+//------------------------------------------------------------------------------
+/**
+*/
+chrissly::core::Matrix4* const
+Entity::GetBoneMatrices() const
+{
+    return this->boneMatrices;
 }
 
 //------------------------------------------------------------------------------

@@ -185,6 +185,24 @@ Quaternion::operator = (const Quaternion& rkQ)
 /**
 */
 Quaternion
+Quaternion::operator + (const Quaternion& rkQ) const
+{
+    return Quaternion(this->w + rkQ.w, this->x + rkQ.x, this->y + rkQ.y, this->z + rkQ.z);
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+Quaternion
+Quaternion::operator - (const Quaternion& rkQ) const
+{
+    return Quaternion(this->w - rkQ.w, this->x - rkQ.x, this->y - rkQ.y, this->z - rkQ.z);
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+Quaternion
 Quaternion::operator * (const Quaternion& rkQ) const
 {
     return Quaternion
@@ -221,6 +239,24 @@ Quaternion
 Quaternion::operator * (float fScalar) const
 {
     return Quaternion(fScalar * this->w, fScalar * this->x, fScalar * this->y, fScalar * this->z);
+}
+
+
+//------------------------------------------------------------------------------
+/**
+*/
+Quaternion Quaternion::operator - () const
+{
+    return Quaternion(-this->w, -this->x, -this->y, -this->z);
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+float
+Quaternion::Dot(const Quaternion& rkQ) const
+{
+    return this->w * rkQ.w + this->x * rkQ.x + this->y * rkQ.y + this->z * rkQ.z;
 }
 
 //------------------------------------------------------------------------------
@@ -260,6 +296,26 @@ Quaternion::Inverse() const
         // return an invalid result to flag the error
         return Quaternion(0.0f, 0.0f, 0.0f, 0.0f);
     }
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+Quaternion
+Quaternion::Nlerp(const Quaternion& rkP, const Quaternion& rkQ, float t, bool shortestPath)
+{
+    Quaternion result;
+    float fCos = rkP.Dot(rkQ);
+    if (fCos < 0.0f && shortestPath)
+    {
+        result = rkP + ((-rkQ) - rkP) * t;
+    }
+    else
+    {
+        result = rkP + (rkQ - rkP) * t;
+    }
+    result.Normalise();
+    return result;
 }
 
 } // namespace core
