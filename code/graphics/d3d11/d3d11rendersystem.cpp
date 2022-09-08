@@ -205,11 +205,13 @@ D3D11RenderSystem::Initialise(void* const customParams)
     /* create default input layout for skeletal animation */
     D3D11_INPUT_ELEMENT_DESC inputDescSkeletalAnim[] =
     {
-        {"BLENDWEIGHT", 0U, DXGI_FORMAT_R32G32_FLOAT,    0U, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0U},
-        {"TEXCOORD",    0U, DXGI_FORMAT_R32G32_FLOAT,    0U, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0U},
-        {"COLOR",       0U, DXGI_FORMAT_R8G8B8A8_UNORM,  0U, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0U},
-        {"NORMAL",      0U, DXGI_FORMAT_R32G32B32_FLOAT, 0U, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0U},
-        {"POSITION",    0U, DXGI_FORMAT_R32G32B32_FLOAT, 0U, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0U}
+        {"BLENDWEIGHT", 0U, DXGI_FORMAT_R32G32B32A32_FLOAT,    0U, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0U},
+        {"BLENDWEIGHT", 1U, DXGI_FORMAT_R32G32B32A32_FLOAT,    0U, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0U},
+        {"BLENDWEIGHT", 2U, DXGI_FORMAT_R32G32B32A32_FLOAT,    0U, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0U},
+        {"TEXCOORD",    0U, DXGI_FORMAT_R32G32_FLOAT,          0U, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0U},
+        {"COLOR",       0U, DXGI_FORMAT_R8G8B8A8_UNORM,        0U, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0U},
+        {"NORMAL",      0U, DXGI_FORMAT_R32G32B32_FLOAT,       0U, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0U},
+        {"POSITION",    0U, DXGI_FORMAT_R32G32B32_FLOAT,       0U, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0U}
     };
     result = this->device->CreateInputLayout(
         inputDescSkeletalAnim, _countof(inputDescSkeletalAnim),
@@ -447,7 +449,7 @@ D3D11RenderSystem::Render(graphics::SubEntity* const renderable)
     {
         this->context->IASetInputLayout(this->inputLayoutSkeletalAnim);
         vertexBuffer = renderable->GetSubMesh()->vertexData->vertexBuffer;
-        params->SetNamedConstant("boneMatrices", renderable->GetParent()->GetBoneMatrices(), 2U);
+        params->SetNamedConstant("boneMatrices", renderable->GetParent()->GetBoneMatrices(), 12U);
     }
     else if (graphics::VAT_MORPH == renderable->GetSubMesh()->GetVertexAnimationType())
     {

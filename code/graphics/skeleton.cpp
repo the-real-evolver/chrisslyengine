@@ -38,9 +38,9 @@ Skeleton::~Skeleton()
 /**
 */
 void
-Skeleton::SetBone(int index, int parentIndex, Matrix4 const& local, Matrix4 const& invModel)
+Skeleton::SetBone(int index, int parent, Matrix4 const& local, Matrix4 const& invModel)
 {
-    this->parentIndex[index] = parentIndex;
+    this->parentIndex[index] = parent;
     ce_array_header(this->parentIndex)->size++;
     this->localMatrix[index] = local;
     ce_array_header(this->localMatrix)->size++;

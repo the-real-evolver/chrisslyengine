@@ -81,7 +81,7 @@ void
 PSPFSWrapper::Write(core::FileHandle fileHandle, const void* buf, unsigned int numBytes)
 {
     int bytesWritten = sceIoWrite(fileHandle.handle, buf, numBytes);
-    CE_ASSERT(bytesWritten == numBytes, "FSWrapper::Write(): failed to write to file '%i', bytes supplied '%i', bytes written '%i'\n", fileHandle.handle, numBytes, bytesWritten);
+    CE_ASSERT((unsigned int)bytesWritten == numBytes, "FSWrapper::Write(): failed to write to file '%i', bytes supplied '%i', bytes written '%i'\n", fileHandle.handle, numBytes, bytesWritten);
 }
 
 //------------------------------------------------------------------------------

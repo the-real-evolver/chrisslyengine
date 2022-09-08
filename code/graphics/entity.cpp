@@ -64,6 +64,11 @@ Entity::Entity(Mesh* const mesh) :
     if (skeleton != NULL)
     {
         ce_array_init(this->boneMatrices, ce_array_size(skeleton->GetParentIndicies()));
+        unsigned int i;
+        for (i = 0U; i < ce_array_size(skeleton->GetParentIndicies()); ++i)
+        {
+            ce_array_push_back(this->boneMatrices, Matrix4::IDENTITY);
+        }
     }
 }
 

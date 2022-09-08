@@ -241,11 +241,20 @@ Quaternion::operator * (float fScalar) const
     return Quaternion(fScalar * this->w, fScalar * this->x, fScalar * this->y, fScalar * this->z);
 }
 
+//------------------------------------------------------------------------------
+/**
+*/
+Quaternion
+operator * (float fScalar, const Quaternion& rkQ)
+{
+    return Quaternion(fScalar * rkQ.w, fScalar * rkQ.x, fScalar * rkQ.y, fScalar * rkQ.z);
+}
 
 //------------------------------------------------------------------------------
 /**
 */
-Quaternion Quaternion::operator - () const
+Quaternion
+Quaternion::operator - () const
 {
     return Quaternion(-this->w, -this->x, -this->y, -this->z);
 }
@@ -316,6 +325,51 @@ Quaternion::Nlerp(const Quaternion& rkP, const Quaternion& rkQ, float t, bool sh
     }
     result.Normalise();
     return result;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+Quaternion
+Quaternion::Slerp(const Quaternion& rkP, const Quaternion& rkQ, float t, bool shortestPath)
+{
+    float fCos = rkP.Dot(rkQ);
+    Quaternion rkT;
+
+    // do we need to invert rotation?
+    if (fCos < 0.0f && shortestPath)
+    {
+        fCos = -fCos;
+        rkT = -rkQ;
+    }
+    else
+    {
+        rkT = rkQ;
+    }
+
+    if (Math::Fabs(fCos) < 1.0f - 1e-03f)
+    {
+        // standard case (slerp)
+        float fSin = Math::Sqrt(1.0f - Math::Sqrt(fCos));
+        float fAngle = Math::ATan2(fSin, fCos);
+        float fInvSin = 1.0f / fSin;
+        float fCoeff0 = Math::Sin((1.0f - t) * fAngle) * fInvSin;
+        float fCoeff1 = Math::Sin(t * fAngle) * fInvSin;
+        return fCoeff0 * rkP + fCoeff1 * rkT;
+    }
+    else
+    {
+        // There are two situations:
+        // 1. "rkP" and "rkQ" are very close (fCos ~= +1), so we can do a linear
+        //    interpolation safely
+        // 2. "rkP" and "rkQ" are almost inverse of each other (fCos ~= -1), there
+        //    are an infinite number of possibilities interpolation. but we haven't
+        //    have method to fix this case, so just use linear interpolation here
+        Quaternion qt = (1.0f - t) * rkP + t * rkT;
+        // taking the complement requires renormalisation
+        qt.Normalise();
+        return qt;
+    }
 }
 
 } // namespace core

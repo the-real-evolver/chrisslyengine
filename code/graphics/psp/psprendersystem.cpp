@@ -9,6 +9,7 @@
 #include "entity.h"
 #include "animationtrack.h"
 #include "vertexdata.h"
+#include "debug.h"
 #include <stdio.h>
 #include <pspgum.h>
 #include <psputils.h>
@@ -169,10 +170,11 @@ PSPRenderSystem::Render(graphics::SubEntity* const renderable)
 {
     if (renderable->GetParent()->GetMesh()->GetSkeleton() != NULL)
     {
-        static ScePspFMatrix4 boneMatrices[2U] = {};
+        static ScePspFMatrix4 boneMatrices[8U] = {};
         core::Matrix4* m = renderable->GetParent()->GetBoneMatrices();
-        unsigned int i;
-        for (i = 0U; i < 2U; ++i)
+        unsigned int i, numBones = ce_array_size(m);
+        CE_ASSERT(numBones <= 8U, "PSPRenderSystem::Render(): PSP only supports up to 8 bones for skeletal animation, number of bones requested: %i", numBones);
+        for (i = 0U; i < numBones; ++i)
         {
             boneMatrices[i] = PSPMappings::MakePSPMatrix(m[i]);
             sceGuBoneMatrix(i, &boneMatrices[i]);
@@ -180,7 +182,7 @@ PSPRenderSystem::Render(graphics::SubEntity* const renderable)
         }
         graphics::HardwareVertexBuffer* vertexBuffer = renderable->GetSubMesh()->vertexData->vertexBuffer;
         sceGumDrawArray(PSPMappings::Get(renderable->GetSubMesh()->topology),
-                        GU_TEXTURE_32BITF | GU_COLOR_8888 | GU_NORMAL_32BITF | GU_VERTEX_32BITF | GU_WEIGHT_32BITF | GU_TRANSFORM_3D | GU_WEIGHTS(2),
+                        GU_TEXTURE_32BITF | GU_COLOR_8888 | GU_NORMAL_32BITF | GU_VERTEX_32BITF | GU_WEIGHT_32BITF | GU_TRANSFORM_3D | GU_WEIGHTS(numBones),
                         vertexBuffer->GetNumVertices(), 0,
                         vertexBuffer->Map());
     }

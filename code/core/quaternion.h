@@ -44,6 +44,7 @@ public:
     Vector3 operator * (const Vector3& rkVector) const;
     /// multiply by a scalar
     Quaternion operator * (float fScalar) const;
+    friend Quaternion operator * (float fScalar, const Quaternion& rkQ);
     /// unary minus operator
     Quaternion operator - () const;
     /// returns the dot product between this and the given quaternion
@@ -56,6 +57,8 @@ public:
     Quaternion Inverse() const;
     /// returns normalised linear interpolation between the two given quaternions
     static Quaternion Nlerp(const Quaternion& rkP, const Quaternion& rkQ, float t, bool shortestPath = false);
+    /// spherical linear interpolation between two quaternions
+    static Quaternion Slerp(const Quaternion& rkP, const Quaternion& rkQ, float t, bool shortestPath = false);
 
     float w;
     float x;

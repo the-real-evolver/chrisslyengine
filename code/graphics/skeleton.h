@@ -32,7 +32,7 @@ public:
     /// destructor
     ~Skeleton();
     /// set bone parameters
-    void SetBone(int index, int parentIndex, chrissly::core::Matrix4 const& local, chrissly::core::Matrix4 const& invModel);
+    void SetBone(int index, int parent, chrissly::core::Matrix4 const& local, chrissly::core::Matrix4 const& invModel);
     /// gets the list of local transform matrices
     chrissly::core::Matrix4* const GetLocalTransformMatrices() const;
     /// gets the list of inverse model transform matrices
