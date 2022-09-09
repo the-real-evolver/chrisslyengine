@@ -23,7 +23,8 @@ Entity::Entity(Mesh* const mesh) :
     visible(true),
     castShadows(false),
     receivesShadows(false),
-    boneMatrices(NULL)
+    boneMatrices(NULL),
+    blendMatrices(NULL)
 {
     ce_hash_table_init(&this->animationStates, 0U);
 
@@ -64,10 +65,12 @@ Entity::Entity(Mesh* const mesh) :
     if (skeleton != NULL)
     {
         ce_array_init(this->boneMatrices, ce_array_size(skeleton->GetParentIndicies()));
+        ce_array_init(this->blendMatrices, ce_array_size(skeleton->GetParentIndicies()));
         unsigned int i;
         for (i = 0U; i < ce_array_size(skeleton->GetParentIndicies()); ++i)
         {
             ce_array_push_back(this->boneMatrices, Matrix4::IDENTITY);
+            ce_array_push_back(this->blendMatrices, Matrix4::ZERO);
         }
     }
 }
@@ -211,8 +214,31 @@ Entity::GetAnimationState(const char* const name) const
 void
 Entity::UpdateAnimation()
 {
+    // reset blend matrices
+    unsigned int i, numMatrices = ce_array_size(this->blendMatrices);
+    for (i = 0U; i < numMatrices; ++i)
+    {
+        this->blendMatrices[i] = Matrix4::ZERO;
+    }
+
+    // calculate scaling factor for weights so all weights sum up to 1
+    float weightSum = 0.0f;
+    for (i = 0U; i < this->animationStates.bucket_count; ++i)
+    {
+        ce_linked_list* it = this->animationStates.buckets[i];
+        while (it != NULL)
+        {
+            AnimationState* state = (AnimationState*)((ce_key_value_pair*)it->data)->value;
+            if (state->GetEnabled())
+            {
+                weightSum += state->GetWeight();
+            }
+            it = it->next;
+        }
+    }
+    float blendWeightScale = 1.0f / (weightSum > 0.0f ? weightSum : 1.0f);
+
     // loop trough all animstates, update enabled ones
-    unsigned int i;
     for (i = 0U; i < this->animationStates.bucket_count; ++i)
     {
         ce_linked_list* it = this->animationStates.buckets[i];
@@ -222,13 +248,12 @@ Entity::UpdateAnimation()
             if (state->GetEnabled())
             {
                 Animation* anim = this->mesh->GetAnimation(state->GetAnimationName());
-                anim->Apply(this, state->GetTimePosition());
+                anim->Apply(this, state->GetTimePosition(), state->GetWeight() * blendWeightScale);
             }
             it = it->next;
         }
     }
 }
-
 
 //------------------------------------------------------------------------------
 /**
@@ -237,6 +262,15 @@ chrissly::core::Matrix4* const
 Entity::GetBoneMatrices() const
 {
     return this->boneMatrices;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+chrissly::core::Matrix4* const
+Entity::GetBlendMatrices() const
+{
+    return this->blendMatrices;
 }
 
 //------------------------------------------------------------------------------

@@ -162,6 +162,37 @@ Matrix4::Concatenate(const Matrix4& m2) const
 /**
 */
 Matrix4
+Matrix4::operator + (const Matrix4& m2) const
+{
+    Matrix4 r;
+
+    r.m[0U][0U] = this->m[0U][0U] + m2.m[0U][0U];
+    r.m[0U][1U] = this->m[0U][1U] + m2.m[0U][1U];
+    r.m[0U][2U] = this->m[0U][2U] + m2.m[0U][2U];
+    r.m[0U][3U] = this->m[0U][3U] + m2.m[0U][3U];
+
+    r.m[1U][0U] = this->m[1U][0U] + m2.m[1U][0U];
+    r.m[1U][1U] = this->m[1U][1U] + m2.m[1U][1U];
+    r.m[1U][2U] = this->m[1U][2U] + m2.m[1U][2U];
+    r.m[1U][3U] = this->m[1U][3U] + m2.m[1U][3U];
+
+    r.m[2U][0U] = this->m[2U][0U] + m2.m[2U][0U];
+    r.m[2U][1U] = this->m[2U][1U] + m2.m[2U][1U];
+    r.m[2U][2U] = this->m[2U][2U] + m2.m[2U][2U];
+    r.m[2U][3U] = this->m[2U][3U] + m2.m[2U][3U];
+
+    r.m[3U][0U] = this->m[3U][0U] + m2.m[3U][0U];
+    r.m[3U][1U] = this->m[3U][1U] + m2.m[3U][1U];
+    r.m[3U][2U] = this->m[3U][2U] + m2.m[3U][2U];
+    r.m[3U][3U] = this->m[3U][3U] + m2.m[3U][3U];
+
+    return r;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+Matrix4
 Matrix4::operator * (const Matrix4 &m2) const
 {
     return this->Concatenate(m2);
@@ -182,6 +213,18 @@ Matrix4::operator * (const Vector3 &v) const
     r.z = (this->m[2U][0U] * v.x + this->m[2U][1U] * v.y + this->m[2U][2U] * v.z + this->m[2U][3U]) * fInvW;
 
     return r;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+Matrix4
+Matrix4::operator * (float s) const
+{
+    return Matrix4(this->m[0U][0U] * s, this->m[0U][1U] * s, this->m[0U][2U] * s, this->m[0U][3U] * s,
+                   this->m[1U][0U] * s, this->m[1U][1U] * s, this->m[1U][2U] * s, this->m[1U][3U] * s,
+                   this->m[2U][0U] * s, this->m[2U][1U] * s, this->m[2U][2U] * s, this->m[2U][3U] * s,
+                   this->m[3U][0U] * s, this->m[3U][1U] * s, this->m[3U][2U] * s, this->m[3U][3U] * s);
 }
 
 //------------------------------------------------------------------------------

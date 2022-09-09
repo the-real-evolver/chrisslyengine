@@ -49,6 +49,10 @@ public:
     float GetTimePosition() const;
     /// sets the total length of this animation (may be shorter than whole animation)
     void SetLength(float len);
+    /// sets the weight of this animation
+    void SetWeight(float w);
+    /// gets the weight of this animation
+    float GetWeight() const;
 
 private:
     core::String animationName;
@@ -56,6 +60,7 @@ private:
     bool enabled;
     bool loop;
     float length;
+    float weight;
 };
 
 } // namespace graphics

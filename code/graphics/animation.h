@@ -52,7 +52,7 @@ public:
         @param entity The Entity to which this animation should be applied
         @param timePos The time position in the animation to apply
     */
-    void Apply(Entity* const entity, float timePos);
+    void Apply(Entity* const entity, float timePos, float blendWeight);
 
 private:
     core::String name;

@@ -146,7 +146,7 @@ Animation::DestroyAllBoneTracks()
 /**
 */
 void
-Animation::Apply(Entity* const entity, float timePos)
+Animation::Apply(Entity* const entity, float timePos, float blendWeight)
 {
     if (timePos > this->length && this->length > 0.0f)
     {
@@ -205,6 +205,7 @@ Animation::Apply(Entity* const entity, float timePos)
         Matrix4* bonesInverseModelMatrix = skeleton->GetInverseModelTransformMatrices();
         unsigned int numBones = ce_array_size(boneLocalMatrix);
         Matrix4* boneMatrix = entity->GetBoneMatrices();
+        Matrix4* blendMatrix = entity->GetBlendMatrices();
 
         // 1. bindpose * animation keyframe local matrix
         for (i = 0U; i < numBones; ++i)
@@ -229,7 +230,9 @@ Animation::Apply(Entity* const entity, float timePos)
                               rm[2U][0U], rm[2U][1U], rm[2U][2U], pos.z,
                               0.0f,       0.0f,       0.0f,       1.0f);
 
-            localTransform[i] = boneLocalMatrix[i] * transform;
+            blendMatrix[i] = blendMatrix[i] + transform * blendWeight;
+
+            localTransform[i] = boneLocalMatrix[i] * blendMatrix[i];
         }
 
         // 2. propagate animation transform from rootbone to children

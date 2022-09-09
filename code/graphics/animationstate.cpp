@@ -19,7 +19,8 @@ AnimationState::AnimationState(const char* const animName, float length, bool en
     timePos(0.0f),
     enabled(enabled),
     loop(false),
-    length(length)
+    length(length),
+    weight(1.0f)
 {
     this->animationName = animName;
 }
@@ -131,6 +132,24 @@ void
 AnimationState::SetLength(float len)
 {
     this->length = len;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+AnimationState::SetWeight(float w)
+{
+    this->weight = w;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+float
+AnimationState::GetWeight() const
+{
+    return this->weight;
 }
 
 } // namespace graphics

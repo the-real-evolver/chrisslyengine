@@ -66,6 +66,8 @@ public:
     void UpdateAnimation();
     /// gets the bone matrices
     chrissly::core::Matrix4* const GetBoneMatrices() const;
+    /// gets the blend matrices
+    chrissly::core::Matrix4* const GetBlendMatrices() const;
     /// internal method called to notify the object that it has been attached to a node
     void _NotifyAttached(SceneNode* const parent);
 
@@ -91,6 +93,8 @@ private:
     mutable ce_hash_table animationStates;
     /// bone matrices that wll be send to the shader
     chrissly::core::Matrix4* boneMatrices;
+    /// blended local bone matrices when multiple animations are enabled
+    chrissly::core::Matrix4* blendMatrices;
 };
 
 } // namespace graphics

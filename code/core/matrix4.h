@@ -35,10 +35,14 @@ public:
     Matrix4 Inverse() const;
     /// concatenate with the given matrix
     Matrix4 Concatenate(const Matrix4& m2) const;
+    /// matrix addition
+    Matrix4 operator + (const Matrix4& m2) const;
     /// matrix concatenation using '*'
     Matrix4 operator * (const Matrix4 &m2) const;
     /// transforms the given 3-D vector by the matrix
     Vector3 operator * (const Vector3 &v) const;
+    /// right scalar multiplication that "scales" the matrix
+    Matrix4 operator * (float s) const;
     /// member access, allows use of construct mat[r][c]
     float* const operator[] (unsigned int iRow) const;
     /// mirrors the matrix at their main diagonal
