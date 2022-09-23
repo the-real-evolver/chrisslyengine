@@ -6,16 +6,7 @@
 
     (C) 2012 Christian Bleicher
 */
-
-//------------------------------------------------------------------------------
-/// constants
-#define CE_2_M_PI 6.28318548f
-
-/// computes a + t * (b - a), i.e. the linear interpolation between a and b for the parameter t (or extrapolation, when t is outside the range [0,1])
-inline float ce_math_lerp(float a, float b, float t)
-{
-    return a + t * (b - a);
-}
+#include <stdlib.h>
 
 //------------------------------------------------------------------------------
 #if __CE_PSP__
@@ -45,4 +36,31 @@ typedef chrissly::StandardMath Math;
 #else
 #error "Math class not implemented on this platform!"
 #endif
+
+//------------------------------------------------------------------------------
+/* constants */
+#define CE_2_M_PI 6.28318548f
+
+/* computes a + t * (b - a), i.e.the linear interpolation between a and b for the parameter t (or extrapolation, when t is outside the range [0, 1]) */
+inline float
+ce_math_lerp(float a, float b, float t)
+{
+    return a + t * (b - a);
+}
+
+/* returns a floating point, pseudo-random number in the range [0, 1] */
+inline float
+ce_math_rand()
+{
+    return (float)(rand() % RAND_MAX) / (float)RAND_MAX;
+}
+
+/* returns value wrapped from min and max */
+inline float
+ce_math_wrap(float x, float min, float max)
+{
+    float d = max - min;
+    return min + chrissly::core::Math::Fmod(d + chrissly::core::Math::Fmod(x - min, d), d);
+}
+//------------------------------------------------------------------------------
 #endif

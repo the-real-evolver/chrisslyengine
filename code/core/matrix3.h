@@ -27,6 +27,8 @@ public:
     float* const operator[] (unsigned int iRow) const;
     /// negation operator
     Matrix3 operator - () const;
+    /// matrix concatenation using '*'
+    Matrix3 operator * (const Matrix3& m2) const;
     /// matrix * vector [3x3 * 3x1 = 3x1]
     Vector3 operator * (const Vector3& rkPoint) const;
     /// mirrors the matrix at their main diagonal

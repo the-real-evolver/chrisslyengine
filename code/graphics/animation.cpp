@@ -222,7 +222,7 @@ Animation::Apply(Entity* const entity, float timePos, float blendWeight)
             q.FromRotationMatrix(animKeyMatrix[currentKeyframe].To3x3());
             qNext.FromRotationMatrix(animKeyMatrix[currentKeyframe + 1U].To3x3());
             Matrix3 rm;
-            Quaternion::Slerp(q, qNext, t).ToRotationMatrix(rm);
+            Quaternion::Nlerp(q, qNext, t).ToRotationMatrix(rm);
 
             // assemble transform matrix
             Matrix4 transform(rm[0U][0U], rm[0U][1U], rm[0U][2U], pos.x,
