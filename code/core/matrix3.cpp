@@ -54,7 +54,7 @@ Matrix3::operator - () const
 /**
 */
 Matrix3
-Matrix3::operator*(const Matrix3& m2) const
+Matrix3::operator * (const Matrix3& m2) const
 {
     Matrix3 r;
     r[0U][0U] = m[0U][0U] * m2[0U][0U] + m[0U][1U] * m2[1U][0U] + m[0U][2U] * m2[2U][0U];

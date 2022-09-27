@@ -72,6 +72,8 @@ public:
     void SetAspectRatio(float ratio);
     /// retreives the current aspect ratio
     float GetAspectRatio() const;
+    /// shift view frustum relative to the camera’s center line so one side is at a smaller angle to the centre line than the opposite side
+    void SetObliqueness(float horizontal, float vertical);
     /// gets the view matrix for this frustum
     const core::Matrix4& GetViewMatrix() const;
     /// gets the projection matrix for this frustum
@@ -116,6 +118,8 @@ private:
     float nearDist;
     /// x/y viewport ratio - default 1.7777
     float aspect;
+    /// obliqueness parameters
+    float horizontalObliqueness, verticalObliqueness;
     /// pre-calced projection matrix
     mutable core::Matrix4 projMatrix;
     /// frustum clipping planes

@@ -27,6 +27,19 @@ namespace graphics
         VES_COUNT
     };
 
+    /// default vertex layout
+    struct Vertex
+    {
+        float u;
+        float v;
+        unsigned int c;
+        float nx;
+        float ny;
+        float nz;
+        float px;
+        float py;
+        float pz;
+    };
 } // namespace graphics
 } // namespace chrissly
 //------------------------------------------------------------------------------

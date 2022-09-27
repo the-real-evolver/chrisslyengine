@@ -24,6 +24,8 @@ Camera::Camera() :
     farDist(1000.0f),
     nearDist(0.01f),
     aspect(1.7777f),
+    horizontalObliqueness(0.0f),
+    verticalObliqueness(0.0f),
     projMatrix(Matrix4::ZERO),
     nearHeight(0.0f),
     nearWidth(0.0f),
@@ -319,6 +321,17 @@ Camera::GetAspectRatio() const
 //------------------------------------------------------------------------------
 /**
 */
+void
+Camera::SetObliqueness(float horizontal, float vertical)
+{
+    this->horizontalObliqueness = horizontal;
+    this->verticalObliqueness = vertical;
+    this->recalcFrustum = true;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
 const Matrix4&
 Camera::GetViewMatrix() const
 {
@@ -456,7 +469,7 @@ Camera::UpdateView() const
 void
 Camera::UpdateFrustum() const
 {
-    static const float DegreeToRadianHalf = 3.141593f / 180.0f * 0.5f;
+    static const float DegreeToRadianHalf = (float)M_PI / 180.0f * 0.5f;
 
     float fovy = this->FOVy * DegreeToRadianHalf;
 
@@ -472,8 +485,8 @@ Camera::UpdateFrustum() const
     this->projMatrix[2U][1U] = 0.0f;
     this->projMatrix[3U][1U] = 0.0f;
 
-    this->projMatrix[0U][2U] = 0.0f;
-    this->projMatrix[1U][2U] = 0.0f;
+    this->projMatrix[0U][2U] = this->horizontalObliqueness;
+    this->projMatrix[1U][2U] = this->verticalObliqueness;
     this->projMatrix[2U][2U] = (this->farDist + this->nearDist) / (this->nearDist - this->farDist);
     this->projMatrix[3U][2U] = -1.0f;
 
