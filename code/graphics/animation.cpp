@@ -207,7 +207,7 @@ Animation::Apply(Entity* const entity, float timePos, float blendWeight)
         Matrix4* boneMatrix = entity->GetBoneMatrices();
         Matrix4* blendMatrix = entity->GetBlendMatrices();
 
-        // 1. bindpose * animation keyframe local matrix
+        // 1. restpose * animation keyframe local matrix
         for (i = 0U; i < numBones; ++i)
         {
             Matrix4* animKeyMatrix = this->boneTracks[i]->GetTransformMatrices();
@@ -230,6 +230,7 @@ Animation::Apply(Entity* const entity, float timePos, float blendWeight)
                               rm[2U][0U], rm[2U][1U], rm[2U][2U], pos.z,
                               0.0f,       0.0f,       0.0f,       1.0f);
 
+            // weight blend this animation with all other enabled animations
             blendMatrix[i] = blendMatrix[i] + transform * blendWeight;
 
             localTransform[i] = boneLocalMatrix[i] * blendMatrix[i];

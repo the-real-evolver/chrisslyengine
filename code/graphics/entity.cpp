@@ -99,6 +99,8 @@ Entity::~Entity()
     ce_hash_table_clear(&this->animationStates);
 
     ce_array_delete(this->boneMatrices);
+
+    ce_array_delete(this->blendMatrices);
 }
 
 //------------------------------------------------------------------------------
