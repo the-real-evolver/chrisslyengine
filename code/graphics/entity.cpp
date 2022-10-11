@@ -213,6 +213,15 @@ Entity::GetAnimationState(const char* const name) const
 //------------------------------------------------------------------------------
 /**
 */
+ce_hash_table* const
+Entity::GetAllAnimationStates() const
+{
+    return &this->animationStates;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
 void
 Entity::UpdateAnimation()
 {

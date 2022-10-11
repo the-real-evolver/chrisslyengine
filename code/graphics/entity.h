@@ -62,6 +62,8 @@ public:
         initialised from the Mesh object.
     */
     AnimationState* const GetAnimationState(const char* const name) const;
+    /// returns a pointer to the hashtable that contains all animation states
+    ce_hash_table* const GetAllAnimationStates() const;
     /// perform all the updates required for an animated entity
     void UpdateAnimation();
     /// gets the bone matrices

@@ -32,15 +32,16 @@
 /* forward declarations */
 #ifdef __cplusplus
 template<class T> static T* ce_array_grow_wrapper(T* a, unsigned int item_size, unsigned int n);
+#else
+#define ce_array_grow_wrapper ce_array_grow
 #endif
-void* ce_array_grow(void* a, unsigned int item_size, unsigned int n);
 
 /* Header placed in front of the array data. */
-struct ce_array_header_t
+typedef struct ce_array_header_t
 {
     unsigned int size;
     unsigned int capacity;
-};
+} ce_array_header_t;
 
 /* Initialises a with the supplied initial size. */
 #define ce_array_init(a, initial_size) \
