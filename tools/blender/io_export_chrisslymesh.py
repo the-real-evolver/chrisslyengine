@@ -183,7 +183,7 @@ def ce_write_mesh(file_path, objects, scale_uniform, bind_pose = False, num_weig
             mesh = ob.data.copy()
             bm = bmesh.new()
             bm.from_mesh(mesh)
-            bmesh.ops.triangulate(bm, faces=bm.faces[:], quad_method='BEAUTY', ngon_method='BEAUTY')
+            bmesh.ops.triangulate(bm, faces=bm.faces[:], quad_method='FIXED', ngon_method='BEAUTY')
             bm.to_mesh(mesh)
             bm.free()
 
@@ -387,7 +387,7 @@ def ce_write_morph_animation(file_path):
     return used_materials
 
 #------------------------------------------------------------------------------
-def ce_write_skeletal_animation(file_path):
+def ce_write_skeletal_animation(file_path, objects):
     used_materials = []
     # find armature
     armature = None
@@ -398,7 +398,7 @@ def ce_write_skeletal_animation(file_path):
         return used_materials
 
     # write bindpose mesh
-    used_materials = ce_write_mesh(file_path, bpy.context.scene.objects, False, True, len(armature.bones))
+    used_materials = ce_write_mesh(file_path, objects, False, True, len(armature.bones))
 
     # write bones
     file = open(os.path.splitext(file_path)[0] + ".skeleton", 'wt')
@@ -491,15 +491,16 @@ class Export_ChrisslyEngineMesh(bpy.types.Operator, ExportHelper):
     def execute(self, context):
         used_materials = []
 
+        # selected only
+        objects = bpy.context.selected_objects if self.selected_only else bpy.context.scene.objects
+
         if self.export_skeletal_animation:
             # export skeletal animation
-            used_materials = ce_write_skeletal_animation(self.filepath)
+            used_materials = ce_write_skeletal_animation(self.filepath, objects)
         elif self.export_morph_animation:
             # export morph animation
             used_materials += ce_write_morph_animation(self.filepath)
         else:
-            # selected only
-            objects = bpy.context.selected_objects if self.selected_only else bpy.context.scene.objects
             # separate objects
             if self.separate_objects:
                 for i, ob in enumerate(objects):
