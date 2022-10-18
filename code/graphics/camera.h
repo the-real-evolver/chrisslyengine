@@ -72,7 +72,7 @@ public:
     void SetAspectRatio(float ratio);
     /// retreives the current aspect ratio
     float GetAspectRatio() const;
-    /// shift view frustum relative to the camera’s center line so one side is at a smaller angle to the centre line than the opposite side
+    /// shift view frustum relative to the camera's center line so one side is at a smaller angle to the centre line than the opposite side
     void SetObliqueness(float horizontal, float vertical);
     /// gets the view matrix for this frustum
     const core::Matrix4& GetViewMatrix() const;

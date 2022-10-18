@@ -70,7 +70,7 @@ Entity::Entity(Mesh* const mesh) :
         for (i = 0U; i < ce_array_size(skeleton->GetParentIndicies()); ++i)
         {
             ce_array_push_back(this->boneMatrices, Matrix4::IDENTITY);
-            ce_array_push_back(this->blendMatrices, Matrix4::ZERO);
+            ce_array_push_back(this->blendMatrices, Matrix4::IDENTITY);
         }
     }
 }
@@ -229,7 +229,7 @@ Entity::UpdateAnimation()
     unsigned int i, numMatrices = ce_array_size(this->blendMatrices);
     for (i = 0U; i < numMatrices; ++i)
     {
-        this->blendMatrices[i] = Matrix4::ZERO;
+        this->blendMatrices[i] = Matrix4::IDENTITY;
     }
 
     // calculate scaling factor for weights so all weights sum up to 1

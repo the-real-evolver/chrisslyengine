@@ -212,26 +212,22 @@ Animation::Apply(Entity* const entity, float timePos, float blendWeight)
         {
             Matrix4* animKeyMatrix = this->boneTracks[i]->GetTransformMatrices();
 
-            // interpolate position
+            // interpolate keyframe and weight blend with keyframes from other active animations
             Vector3 p(animKeyMatrix[currentKeyframe][0U][3U], animKeyMatrix[currentKeyframe][1U][3U], animKeyMatrix[currentKeyframe][2U][3U]);
             Vector3 pn(animKeyMatrix[currentKeyframe + 1U][0U][3U], animKeyMatrix[currentKeyframe + 1U][1U][3U], animKeyMatrix[currentKeyframe + 1U][2U][3U]);
-            Vector3 pos = Vector3::Lerp(p, pn, t);
+            Vector3 pos = Vector3(blendMatrix[i][0U][3U], blendMatrix[i][1U][3U], blendMatrix[i][2U][3U]) + Vector3::Lerp(p, pn, t) * blendWeight;
 
-            // interpolate rotation
-            Quaternion q, qNext;
+            Quaternion q, qn, qBlend;
             q.FromRotationMatrix(animKeyMatrix[currentKeyframe].To3x3());
-            qNext.FromRotationMatrix(animKeyMatrix[currentKeyframe + 1U].To3x3());
+            qn.FromRotationMatrix(animKeyMatrix[currentKeyframe + 1U].To3x3());
+            qBlend.FromRotationMatrix(blendMatrix[i].To3x3());
             Matrix3 rm;
-            Quaternion::Nlerp(q, qNext, t).ToRotationMatrix(rm);
+            (qBlend * Quaternion::Nlerp(Quaternion(), Quaternion::Nlerp(q, qn, t), blendWeight)).ToRotationMatrix(rm);
 
-            // assemble transform matrix
-            Matrix4 transform(rm[0U][0U], rm[0U][1U], rm[0U][2U], pos.x,
-                              rm[1U][0U], rm[1U][1U], rm[1U][2U], pos.y,
-                              rm[2U][0U], rm[2U][1U], rm[2U][2U], pos.z,
-                              0.0f,       0.0f,       0.0f,       1.0f);
-
-            // weight blend this animation with all other enabled animations
-            blendMatrix[i] = blendMatrix[i] + transform * blendWeight;
+            blendMatrix[i] = Matrix4(rm[0U][0U], rm[0U][1U], rm[0U][2U], pos.x,
+                                     rm[1U][0U], rm[1U][1U], rm[1U][2U], pos.y,
+                                     rm[2U][0U], rm[2U][1U], rm[2U][2U], pos.z,
+                                     0.0f,       0.0f,       0.0f,       1.0f);
 
             localTransform[i] = boneLocalMatrix[i] * blendMatrix[i];
         }
