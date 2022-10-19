@@ -53,8 +53,6 @@ public:
     void Normalise();
     /// squared-length
     float Norm() const;
-    /// returns a Quaternion with the inverse orientation of this Quaternion
-    Quaternion Inverse() const;
     /// returns normalised linear interpolation between the two given quaternions
     static Quaternion Nlerp(const Quaternion& rkP, const Quaternion& rkQ, float t, bool shortestPath = false);
     /// spherical linear interpolation between two quaternions
