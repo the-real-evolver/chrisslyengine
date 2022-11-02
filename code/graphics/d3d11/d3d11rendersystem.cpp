@@ -208,6 +208,9 @@ D3D11RenderSystem::Initialise(void* const customParams)
         {"BLENDWEIGHT", 0U, DXGI_FORMAT_R32G32B32A32_FLOAT,    0U, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0U},
         {"BLENDWEIGHT", 1U, DXGI_FORMAT_R32G32B32A32_FLOAT,    0U, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0U},
         {"BLENDWEIGHT", 2U, DXGI_FORMAT_R32G32B32A32_FLOAT,    0U, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0U},
+        {"BLENDWEIGHT", 3U, DXGI_FORMAT_R32G32B32A32_FLOAT,    0U, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0U},
+        {"BLENDWEIGHT", 4U, DXGI_FORMAT_R32G32B32A32_FLOAT,    0U, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0U},
+        {"BLENDWEIGHT", 5U, DXGI_FORMAT_R32G32B32A32_FLOAT,    0U, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0U},
         {"TEXCOORD",    0U, DXGI_FORMAT_R32G32_FLOAT,          0U, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0U},
         {"COLOR",       0U, DXGI_FORMAT_R8G8B8A8_UNORM,        0U, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0U},
         {"NORMAL",      0U, DXGI_FORMAT_R32G32B32_FLOAT,       0U, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0U},
@@ -450,7 +453,7 @@ D3D11RenderSystem::Render(graphics::SubEntity* const renderable)
         this->context->IASetInputLayout(this->inputLayoutSkeletalAnim);
         vertexBuffer = renderable->GetSubMesh()->vertexData->vertexBuffer;
         unsigned int numBones = ce_array_size(renderable->GetParent()->GetBoneMatrices());
-        CE_ASSERT(numBones == 12U, "D3D11RenderSystem::Render(): right now only 12 bones are supported for skeletal animation, number of bones requested: %i", numBones);
+        CE_ASSERT(numBones == 24U, "D3D11RenderSystem::Render(): right now only 24 bones are supported for skeletal animation, number of bones requested: %i", numBones);
         params->SetNamedConstant("boneMatrices", renderable->GetParent()->GetBoneMatrices(), numBones);
     }
     else if (graphics::VAT_MORPH == renderable->GetSubMesh()->GetVertexAnimationType())
