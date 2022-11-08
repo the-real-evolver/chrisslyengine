@@ -14,6 +14,7 @@ bl_info = {
     "category": "Import-Export",
 }
 
+import operator
 import os
 import re
 import bpy
@@ -35,6 +36,8 @@ M_MESH_SKELETON_FILE = b'\x06'
 PF_R8G8B8A8 = b'\x05'
 
 BYTES_PER_VERTEX = 36
+
+BONE_WEIGHTS_PER_VERTEX = 4
 
 #------------------------------------------------------------------------------
 def ce_get_bounding_radius(objects):
@@ -164,7 +167,7 @@ def ce_write_material(file_path, materials):
     file.close()
 
 #------------------------------------------------------------------------------
-def ce_write_mesh(file_path, objects, scale_uniform, bind_pose = False, num_weights = 0):
+def ce_write_mesh(file_path, objects, scale_uniform, bind_pose = False, num_weights = 0, write_all_weights = False):
     # calculate scale and bounding radius
     scale = (1.0 / ce_get_longest_extend(objects)) if scale_uniform else 1.0
     radius = ce_get_bounding_radius(objects) * scale
@@ -212,7 +215,13 @@ def ce_write_mesh(file_path, objects, scale_uniform, bind_pose = False, num_weig
                 byte_array.tofile(file)
 
                 # 5. write bytes per vertex
-                byte_array = array('I', [BYTES_PER_VERTEX + 4 * num_weights])
+                if bind_pose:
+                    if write_all_weights:
+                        byte_array = array('I', [BYTES_PER_VERTEX + 4 * num_weights])
+                    else:
+                        byte_array = array('I', [BYTES_PER_VERTEX + 32])
+                else:
+                    byte_array = array('I', [BYTES_PER_VERTEX])
                 byte_array.tofile(file)
 
                 # write vertices
@@ -220,14 +229,38 @@ def ce_write_mesh(file_path, objects, scale_uniform, bind_pose = False, num_weig
                     for vert_idx, loop_idx in zip(face.vertices, face.loop_indices):
                         # write vertex weights
                         if bind_pose:
-                            weights = []
-                            for w in range(num_weights):
-                                weights.append(0.0)
-                            for g in mesh.vertices[vert_idx].groups:
-                                weights[g.group] = g.weight
-                            for weight in weights:
-                                byte_array = array('f', [weight])
-                                byte_array.tofile(file)
+                            if write_all_weights:
+                                # all weights
+                                weights = []
+                                for w in range(num_weights):
+                                    weights.append(0.0)
+                                for g in mesh.vertices[vert_idx].groups:
+                                    weights[g.group] = g.weight
+                                for weight in weights:
+                                    byte_array = array('f', [weight])
+                                    byte_array.tofile(file)
+                            else:
+                                # only the 4 most influencial weights and the index to their matrix
+                                vertex_group_elements = []
+                                for g in mesh.vertices[vert_idx].groups:
+                                    vertex_group_elements.append(g)
+                                vertex_group_elements.sort(key=operator.attrgetter('weight'), reverse=True)
+                                weights = []
+                                indices = []
+                                for i in range(BONE_WEIGHTS_PER_VERTEX):
+                                    if len(vertex_group_elements) > i:
+                                        weights.append(vertex_group_elements[i].weight)
+                                        indices.append(vertex_group_elements[i].group)
+                                    else:
+                                        weights.append(0.0)
+                                        indices.append(0)
+                                for weight in weights:
+                                    byte_array = array('f', [weight])
+                                    byte_array.tofile(file)
+                                for index in indices:
+                                    byte_array = array('I', [index])
+                                    byte_array.tofile(file)
+
                         # 5. write texture coordinates
                         byte_array = array('f', mesh.uv_layers.active.data[loop_idx].uv)
                         byte_array.tofile(file)
@@ -387,7 +420,7 @@ def ce_write_morph_animation(file_path):
     return used_materials
 
 #------------------------------------------------------------------------------
-def ce_write_skeletal_animation(file_path, objects):
+def ce_write_skeletal_animation(file_path, objects, write_all_weights):
     used_materials = []
     # find armature
     armature = None
@@ -398,7 +431,7 @@ def ce_write_skeletal_animation(file_path, objects):
         return used_materials
 
     # write bindpose mesh
-    used_materials = ce_write_mesh(file_path, objects, False, True, len(armature.bones))
+    used_materials = ce_write_mesh(file_path, objects, False, True, len(armature.bones), write_all_weights)
 
     # write bones
     file = open(os.path.splitext(file_path)[0] + ".skeleton", 'wt')
@@ -484,6 +517,7 @@ class Export_ChrisslyEngineMesh(bpy.types.Operator, ExportHelper):
     position_only: bpy.props.BoolProperty(name="Position coordinates only", description="Only the vertex positions will be written to the file, can be used as collision geometry", default=False)
     export_morph_animation: bpy.props.BoolProperty(name="Export morph animation", description="Export scene frames as morph animation keyframes", default=False)
     export_skeletal_animation: bpy.props.BoolProperty(name="Export skeletal animation", description="Export bindpose, skeleton and animations", default=False)
+    export_all_bone_weights: bpy.props.BoolProperty(name="Export all bone weights", description="By default only the 4 most influencial bone weights and the index to their matrix are stored per vertex, enalbe this if you want to store all weights per vertex (mandatory on the PSP since there is no support for blend indices)", default=False)
 
     filename_ext = ".mesh"
 
@@ -496,7 +530,7 @@ class Export_ChrisslyEngineMesh(bpy.types.Operator, ExportHelper):
 
         if self.export_skeletal_animation:
             # export skeletal animation
-            used_materials = ce_write_skeletal_animation(self.filepath, objects)
+            used_materials = ce_write_skeletal_animation(self.filepath, objects, self.export_all_bone_weights)
         elif self.export_morph_animation:
             # export morph animation
             used_materials += ce_write_morph_animation(self.filepath)

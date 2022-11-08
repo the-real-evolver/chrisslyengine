@@ -10,7 +10,7 @@
     Datalayout: A "Bone" consists basically of a 4x4 transform matrix and an
     index to its parent bone. A Matrix4 is 64 bytes wich is the common size of a
     cacheline. They should be stored next to each other in memory. For this
-    reason they are noted packed in a struct together with the parent index.
+    reason they are not packed in a struct together with the parent index.
     Instead a SOA (struct of arrays) approach is used where every component of
     a bone is just an array and the index is the bone id.
 
