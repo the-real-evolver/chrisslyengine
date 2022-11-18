@@ -167,7 +167,7 @@ def ce_write_material(file_path, materials):
     file.close()
 
 #------------------------------------------------------------------------------
-def ce_write_mesh(file_path, objects, scale_uniform, bind_pose = False, num_weights = 0, write_all_weights = False):
+def ce_write_mesh(file_path, objects, scale_uniform, bind_pose = False, num_weights = 0, write_all_weights = False, armature = None):
     # calculate scale and bounding radius
     scale = (1.0 / ce_get_longest_extend(objects)) if scale_uniform else 1.0
     radius = ce_get_bounding_radius(objects) * scale
@@ -227,7 +227,7 @@ def ce_write_mesh(file_path, objects, scale_uniform, bind_pose = False, num_weig
                 # write vertices
                 for face in faces_cur_mat:
                     for vert_idx, loop_idx in zip(face.vertices, face.loop_indices):
-                        # write vertex weights
+                        # 6. write vertex weights
                         if bind_pose:
                             if write_all_weights:
                                 # all weights
@@ -250,7 +250,7 @@ def ce_write_mesh(file_path, objects, scale_uniform, bind_pose = False, num_weig
                                 for i in range(BONE_WEIGHTS_PER_VERTEX):
                                     if len(vertex_group_elements) > i:
                                         weights.append(vertex_group_elements[i].weight)
-                                        indices.append(vertex_group_elements[i].group)
+                                        indices.append(armature.bones.find(ob.vertex_groups[vertex_group_elements[i].group].name))
                                     else:
                                         weights.append(0.0)
                                         indices.append(0)
@@ -261,16 +261,16 @@ def ce_write_mesh(file_path, objects, scale_uniform, bind_pose = False, num_weig
                                     byte_array = array('I', [index])
                                     byte_array.tofile(file)
 
-                        # 5. write texture coordinates
+                        # 7. write texture coordinates
                         byte_array = array('f', mesh.uv_layers.active.data[loop_idx].uv)
                         byte_array.tofile(file)
-                        # 6. write color (just white for now)
+                        # 8. write color (just white for now)
                         byte_array = array('I', [0xffffffff])
                         byte_array.tofile(file)
-                        # 7. write normal
+                        # 9. write normal
                         byte_array = array('f', mesh.vertices[vert_idx].normal)
                         byte_array.tofile(file)
-                        # 8. write position
+                        # 10. write position
                         byte_array = array('f', mesh.vertices[vert_idx].co)
                         byte_array.tofile(file)
 
@@ -431,7 +431,7 @@ def ce_write_skeletal_animation(file_path, objects, write_all_weights):
         return used_materials
 
     # write bindpose mesh
-    used_materials = ce_write_mesh(file_path, objects, False, True, len(armature.bones), write_all_weights)
+    used_materials = ce_write_mesh(file_path, objects, False, True, len(armature.bones), write_all_weights, armature)
 
     # write bones
     file = open(os.path.splitext(file_path)[0] + ".skeleton", 'wt')

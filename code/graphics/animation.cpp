@@ -182,8 +182,8 @@ Animation::Apply(Entity* const entity, float timePos, float blendWeight)
     Skeleton* skeleton = entity->GetMesh()->GetSkeleton();
     if (skeleton != NULL && ce_array_size(this->boneTracks) > 0U)
     {
-        static Matrix4 localTransform[24U] = {};
-        static Matrix4 modelTransform[24U] = {};
+        static Matrix4 localTransform[32U] = {};
+        static Matrix4 modelTransform[32U] = {};
 
         // calc current keyframe and t
         float t = 0.0f;

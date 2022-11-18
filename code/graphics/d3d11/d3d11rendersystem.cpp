@@ -449,7 +449,7 @@ D3D11RenderSystem::Render(graphics::SubEntity* const renderable)
         this->context->IASetInputLayout(this->inputLayoutSkeletalAnim);
         vertexBuffer = renderable->GetSubMesh()->vertexData->vertexBuffer;
         unsigned int numBones = ce_array_size(renderable->GetParent()->GetBoneMatrices());
-        CE_ASSERT(numBones == 24U, "D3D11RenderSystem::Render(): right now only 24 bones are supported for skeletal animation, number of bones requested: %i", numBones);
+        CE_ASSERT(numBones <= 32U, "D3D11RenderSystem::Render(): right now only up to 32 bones are supported for skeletal animation, number of bones requested: %i", numBones);
         params->SetNamedConstant("boneMatrices", renderable->GetParent()->GetBoneMatrices(), numBones);
     }
     else if (graphics::VAT_MORPH == renderable->GetSubMesh()->GetVertexAnimationType())
