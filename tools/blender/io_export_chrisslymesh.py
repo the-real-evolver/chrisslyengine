@@ -186,7 +186,7 @@ def ce_write_mesh(file_path, objects, scale_uniform, bind_pose = False, num_weig
             mesh = ob.data.copy()
             bm = bmesh.new()
             bm.from_mesh(mesh)
-            bmesh.ops.triangulate(bm, faces=bm.faces[:], quad_method='FIXED', ngon_method='BEAUTY')
+            bmesh.ops.triangulate(bm, faces=bm.faces[:], quad_method='BEAUTY', ngon_method='BEAUTY')
             bm.to_mesh(mesh)
             bm.free()
 
@@ -240,17 +240,14 @@ def ce_write_mesh(file_path, objects, scale_uniform, bind_pose = False, num_weig
                                     byte_array = array('f', [weight])
                                     byte_array.tofile(file)
                             else:
-                                # only the 4 most influencial weights and the index to their matrix
-                                vertex_group_elements = []
-                                for g in mesh.vertices[vert_idx].groups:
-                                    vertex_group_elements.append(g)
-                                vertex_group_elements.sort(key=operator.attrgetter('weight'), reverse=True)
+                                if len(mesh.vertices[vert_idx].groups) > BONE_WEIGHTS_PER_VERTEX:
+                                    print("Warning: vertex has more deform weights than allowed (limit is 4)")
                                 weights = []
                                 indices = []
                                 for i in range(BONE_WEIGHTS_PER_VERTEX):
-                                    if len(vertex_group_elements) > i:
-                                        weights.append(vertex_group_elements[i].weight)
-                                        indices.append(armature.bones.find(ob.vertex_groups[vertex_group_elements[i].group].name))
+                                    if len(mesh.vertices[vert_idx].groups) > i:
+                                        weights.append(mesh.vertices[vert_idx].groups[i].weight)
+                                        indices.append(armature.bones.find(ob.vertex_groups[mesh.vertices[vert_idx].groups[i].group].name))
                                     else:
                                         weights.append(0.0)
                                         indices.append(0)

@@ -64,12 +64,29 @@ Entity::Entity(Mesh* const mesh) :
     Skeleton* skeleton = this->mesh->GetSkeleton();
     if (skeleton != NULL)
     {
+        // initialise bone matrices with restpose
         ce_array_init(this->boneMatrices, ce_array_size(skeleton->GetParentIndicies()));
-        ce_array_init(this->blendMatrices, ce_array_size(skeleton->GetParentIndicies()));
+        ce_array_header(this->boneMatrices)->size = ce_array_header(this->boneMatrices)->capacity;
+        unsigned int numBones = ce_array_size(skeleton->GetLocalTransformMatrices());
+        Matrix4* boneLocalMatrix = skeleton->GetLocalTransformMatrices();
+        Matrix4* bonesInverseModelMatrix = skeleton->GetInverseModelTransformMatrices();
+        int* parentIndex = skeleton->GetParentIndicies();
+        static Matrix4 modelTransform[32U] = {};
+        modelTransform[0U] = boneLocalMatrix[0U];
         unsigned int i;
+        for (i = 1U; i < numBones; ++i)
+        {
+            modelTransform[i] = modelTransform[parentIndex[i]] * boneLocalMatrix[i];
+        }
+        for (i = 0U; i < numBones; ++i)
+        {
+            this->boneMatrices[i] = modelTransform[i] * bonesInverseModelMatrix[i];
+        }
+
+        // initialise blend matrices
+        ce_array_init(this->blendMatrices, ce_array_size(skeleton->GetParentIndicies()));
         for (i = 0U; i < ce_array_size(skeleton->GetParentIndicies()); ++i)
         {
-            ce_array_push_back(this->boneMatrices, Matrix4::IDENTITY);
             ce_array_push_back(this->blendMatrices, Matrix4::IDENTITY);
         }
     }
