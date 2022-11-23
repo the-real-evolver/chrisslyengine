@@ -167,7 +167,7 @@ def ce_write_material(file_path, materials):
     file.close()
 
 #------------------------------------------------------------------------------
-def ce_write_mesh(file_path, objects, scale_uniform, bind_pose = False, num_weights = 0, write_all_weights = False, armature = None):
+def ce_write_mesh(file_path, objects, scale_uniform, operator_instance, armature = None, write_all_weights = False):
     # calculate scale and bounding radius
     scale = (1.0 / ce_get_longest_extend(objects)) if scale_uniform else 1.0
     radius = ce_get_bounding_radius(objects) * scale
@@ -191,7 +191,7 @@ def ce_write_mesh(file_path, objects, scale_uniform, bind_pose = False, num_weig
             bm.free()
 
             # scaling and axis conversion
-            if not bind_pose:
+            if armature == None:
                 mesh.transform((Matrix.Scale(scale, 4) @ axis_conversion(to_forward='-Z', to_up='Y').to_4x4()) @ ob.matrix_world)
 
             for index, mat_slot in enumerate(ob.material_slots):
@@ -215,9 +215,9 @@ def ce_write_mesh(file_path, objects, scale_uniform, bind_pose = False, num_weig
                 byte_array.tofile(file)
 
                 # 5. write bytes per vertex
-                if bind_pose:
+                if armature != None:
                     if write_all_weights:
-                        byte_array = array('I', [BYTES_PER_VERTEX + 4 * num_weights])
+                        byte_array = array('I', [BYTES_PER_VERTEX + 4 * len(armature.bones)])
                     else:
                         byte_array = array('I', [BYTES_PER_VERTEX + 32])
                 else:
@@ -228,11 +228,11 @@ def ce_write_mesh(file_path, objects, scale_uniform, bind_pose = False, num_weig
                 for face in faces_cur_mat:
                     for vert_idx, loop_idx in zip(face.vertices, face.loop_indices):
                         # 6. write vertex weights
-                        if bind_pose:
+                        if armature != None:
                             if write_all_weights:
                                 # all weights
                                 weights = []
-                                for w in range(num_weights):
+                                for w in range(len(armature.bones)):
                                     weights.append(0.0)
                                 for g in mesh.vertices[vert_idx].groups:
                                     weights[g.group] = g.weight
@@ -241,7 +241,7 @@ def ce_write_mesh(file_path, objects, scale_uniform, bind_pose = False, num_weig
                                     byte_array.tofile(file)
                             else:
                                 if len(mesh.vertices[vert_idx].groups) > BONE_WEIGHTS_PER_VERTEX:
-                                    print("Warning: vertex has more deform weights than allowed (limit is 4)")
+                                    operator_instance.report({'WARNING'}, "Vertex has more deform weights than allowed (limit is 4)")
                                 weights = []
                                 indices = []
                                 for i in range(BONE_WEIGHTS_PER_VERTEX):
@@ -272,7 +272,7 @@ def ce_write_mesh(file_path, objects, scale_uniform, bind_pose = False, num_weig
                         byte_array.tofile(file)
 
     # write filename of skeleton definition
-    if bind_pose:
+    if armature != None:
         file.write(M_MESH_SKELETON_FILE)
         skeleton_file_path = ce_export_path(file_path) + os.path.splitext(os.path.basename(file_path))[0] + '.skeleton'
         byte_array = array('B', [len(skeleton_file_path)])
@@ -417,7 +417,7 @@ def ce_write_morph_animation(file_path):
     return used_materials
 
 #------------------------------------------------------------------------------
-def ce_write_skeletal_animation(file_path, objects, write_all_weights):
+def ce_write_skeletal_animation(file_path, objects, write_all_weights, operator_instance):
     used_materials = []
     # find armature
     armature = None
@@ -428,7 +428,7 @@ def ce_write_skeletal_animation(file_path, objects, write_all_weights):
         return used_materials
 
     # write bindpose mesh
-    used_materials = ce_write_mesh(file_path, objects, False, True, len(armature.bones), write_all_weights, armature)
+    used_materials = ce_write_mesh(file_path, objects, False, operator_instance, armature, write_all_weights)
 
     # write bones
     file = open(os.path.splitext(file_path)[0] + ".skeleton", 'wt')
@@ -527,7 +527,7 @@ class Export_ChrisslyEngineMesh(bpy.types.Operator, ExportHelper):
 
         if self.export_skeletal_animation:
             # export skeletal animation
-            used_materials = ce_write_skeletal_animation(self.filepath, objects, self.export_all_bone_weights)
+            used_materials = ce_write_skeletal_animation(self.filepath, objects, self.export_all_bone_weights, self)
         elif self.export_morph_animation:
             # export morph animation
             used_materials += ce_write_morph_animation(self.filepath)
@@ -539,12 +539,12 @@ class Export_ChrisslyEngineMesh(bpy.types.Operator, ExportHelper):
                     if self.position_only:
                         ce_write_positions(os.path.splitext(self.filepath)[0] + str(i) + os.path.splitext(self.filepath)[1], obj_arr, self.scale_uniform)
                     else:
-                        used_materials += ce_write_mesh(os.path.splitext(self.filepath)[0] + str(i) + os.path.splitext(self.filepath)[1], obj_arr, self.scale_uniform)
+                        used_materials += ce_write_mesh(os.path.splitext(self.filepath)[0] + str(i) + os.path.splitext(self.filepath)[1], obj_arr, self.scale_uniform, self)
             else:
                 if self.position_only:
                     ce_write_positions(self.filepath, objects, self.scale_uniform)
                 else:
-                    used_materials += ce_write_mesh(self.filepath, objects, self.scale_uniform)
+                    used_materials += ce_write_mesh(self.filepath, objects, self.scale_uniform, self)
 
         if len(used_materials) > 0:
             # assemble filename for material file and remove duplicates from material list
