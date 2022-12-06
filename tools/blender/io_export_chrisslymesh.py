@@ -19,6 +19,7 @@ import os
 import re
 import bpy
 import bmesh
+import math
 import mathutils
 from mathutils import Vector, Matrix
 from array import array
@@ -242,11 +243,18 @@ def ce_write_mesh(file_path, objects, scale_uniform, operator_instance, armature
                             else:
                                 if len(mesh.vertices[vert_idx].groups) > BONE_WEIGHTS_PER_VERTEX:
                                     operator_instance.report({'WARNING'}, "Vertex has more deform weights than allowed (limit is 4)")
+                                sum_weights = 0.0
+                                for w in mesh.vertices[vert_idx].groups:
+                                    sum_weights += w.weight
+                                weight_scale = 1.0
+                                if not math.isclose(sum_weights, 1.0, rel_tol=0.02):
+                                    weight_scale = 1.0 / sum_weights if sum_weights > 0.0 else 1.0
+                                    operator_instance.report({'WARNING'}, "Bone weights will be normalised so they sum up to one")
                                 weights = []
                                 indices = []
                                 for i in range(BONE_WEIGHTS_PER_VERTEX):
                                     if len(mesh.vertices[vert_idx].groups) > i:
-                                        weights.append(mesh.vertices[vert_idx].groups[i].weight)
+                                        weights.append(mesh.vertices[vert_idx].groups[i].weight * weight_scale)
                                         indices.append(armature.bones.find(ob.vertex_groups[mesh.vertices[vert_idx].groups[i].group].name))
                                     else:
                                         weights.append(0.0)
@@ -463,6 +471,7 @@ def ce_write_skeletal_animation(file_path, objects, write_all_weights, operator_
             # track
             file.write("    track \"%s\"\n    {\n"%(armature.bones[bone_index].name))
             file.write("        index %i\n"%(bone_index))
+            has_rotation_quaternion = False
             for key_index in range(num_keyframes):
                 # keyframe
                 file.write("        key\n        {\n")
@@ -482,6 +491,7 @@ def ce_write_skeletal_animation(file_path, objects, write_all_weights, operator_
                                 if curve.array_index == 2:
                                     position.z = keyframe.co.y
                             if curve.data_path.find("rotation_quaternion") != -1:
+                                has_rotation_quaternion = True
                                 if curve.array_index == 0:
                                     orientation.w = keyframe.co.y
                                 if curve.array_index == 1:
@@ -496,6 +506,8 @@ def ce_write_skeletal_animation(file_path, objects, write_all_weights, operator_
                 m[0][0], m[0][1], m[0][2], m[0][3], m[1][0], m[1][1], m[1][2], m[1][3], m[2][0], m[2][1], m[2][2], m[2][3], m[3][0], m[3][1], m[3][2], m[3][3]))
                 file.write("        }\n")
             file.write("    }\n")
+            if not has_rotation_quaternion:
+                operator_instance.report({'WARNING'}, "Bone \"%s\" has to be in rotation mode \"Quaternion (WXYZ)\""%(armature.bones[bone_index].name))
         file.write("}\n")
 
     file.close()
