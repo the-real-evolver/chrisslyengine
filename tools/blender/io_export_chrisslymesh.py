@@ -123,9 +123,11 @@ def ce_write_texture(image, file_path):
     # 4. write swizzled flag
     file.write(b'\x00')
     # 5. write pixel data
-    for p in image.pixels:
-        byte_array = array('B', [int(p * 255.0)])
-        byte_array.tofile(file)
+    byte_array = bytearray(len(image.pixels))
+    for i, p in enumerate(image.pixels):
+        c = int(p * 255.0)
+        byte_array[i] = c if c < 255 else 255
+    file.write(byte_array)
     file.close()
 
 #------------------------------------------------------------------------------

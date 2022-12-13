@@ -71,6 +71,7 @@ Entity::Entity(Mesh* const mesh) :
         Matrix4* boneLocalMatrix = skeleton->GetLocalTransformMatrices();
         Matrix4* bonesInverseModelMatrix = skeleton->GetInverseModelTransformMatrices();
         int* parentIndex = skeleton->GetParentIndicies();
+        CE_ASSERT(numBones <= 32U, "Entity::Entity(): right now only up to 32 bones are supported for skeletal animation, number of bones requested: %i", numBones);
         static Matrix4 modelTransform[32U] = {};
         modelTransform[0U] = boneLocalMatrix[0U];
         unsigned int i;
