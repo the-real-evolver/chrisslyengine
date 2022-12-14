@@ -232,21 +232,22 @@ def ce_write_mesh(file_path, objects, scale_uniform, operator_instance, armature
                     for vert_idx, loop_idx in zip(face.vertices, face.loop_indices):
                         # 6. write vertex weights
                         if armature != None:
+                            vertex_groups = mesh.vertices[vert_idx].groups
                             if write_all_weights:
                                 # all weights
                                 weights = []
                                 for w in range(len(armature.bones)):
                                     weights.append(0.0)
-                                for g in mesh.vertices[vert_idx].groups:
+                                for g in vertex_groups:
                                     weights[g.group] = g.weight
                                 for weight in weights:
                                     byte_array = array('f', [weight])
                                     byte_array.tofile(file)
                             else:
-                                if len(mesh.vertices[vert_idx].groups) > BONE_WEIGHTS_PER_VERTEX:
+                                if len(vertex_groups) > BONE_WEIGHTS_PER_VERTEX:
                                     operator_instance.report({'WARNING'}, "Vertex has more deform weights than allowed (limit is 4)")
                                 sum_weights = 0.0
-                                for w in mesh.vertices[vert_idx].groups:
+                                for w in vertex_groups:
                                     sum_weights += w.weight
                                 weight_scale = 1.0
                                 if not math.isclose(sum_weights, 1.0, rel_tol=0.02):
@@ -255,9 +256,14 @@ def ce_write_mesh(file_path, objects, scale_uniform, operator_instance, armature
                                 weights = []
                                 indices = []
                                 for i in range(BONE_WEIGHTS_PER_VERTEX):
-                                    if len(mesh.vertices[vert_idx].groups) > i:
-                                        weights.append(mesh.vertices[vert_idx].groups[i].weight * weight_scale)
-                                        indices.append(armature.bones.find(ob.vertex_groups[mesh.vertices[vert_idx].groups[i].group].name))
+                                    if len(vertex_groups) > i:
+                                        index = armature.bones.find(ob.vertex_groups[vertex_groups[i].group].name)
+                                        if index >= 0:
+                                            weights.append(vertex_groups[i].weight * weight_scale)
+                                            indices.append(index)
+                                        else:
+                                            weights.append(0.0)
+                                            indices.append(0)
                                     else:
                                         weights.append(0.0)
                                         indices.append(0)
