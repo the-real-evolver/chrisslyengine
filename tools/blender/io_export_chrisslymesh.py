@@ -153,7 +153,7 @@ def ce_write_material(file_path, materials):
                 if tex.type == 'TEX_IMAGE' and hasattr(tex.image, 'name'):
                     file.write("        texture_unit\n")
                     file.write("        {\n")
-                    file.write("            texture \"%s\"\n" % (ce_export_path(file_path) + os.path.splitext(tex.image.name)[0] + '.tex'))
+                    file.write("            texture \"%s\"\n" % (ce_export_path(file_path) + os.path.splitext(tex.image.name)[0] + ".tex"))
                     if tex.projection == 'SPHERE':
                         file.write("            env_map spherical\n")
                     if tex.interpolation == 'Closest':
@@ -290,7 +290,7 @@ def ce_write_mesh(file_path, objects, scale_uniform, operator_instance, armature
     # write filename of skeleton definition
     if armature != None:
         file.write(M_MESH_SKELETON_FILE)
-        skeleton_file_path = ce_export_path(file_path) + os.path.splitext(os.path.basename(file_path))[0] + '.skeleton'
+        skeleton_file_path = ce_export_path(file_path) + os.path.splitext(os.path.basename(file_path))[0] + ".skeleton"
         byte_array = array('B', [len(skeleton_file_path)])
         byte_array.tofile(file)
         file.write(skeleton_file_path.encode())
@@ -537,6 +537,22 @@ class Export_ChrisslyEngineMesh(bpy.types.Operator, ExportHelper):
     export_all_bone_weights: bpy.props.BoolProperty(name="Export all bone weights", description="By default only the 4 most influencial bone weights and the index to their matrix are stored per vertex, enalbe this if you want to store all weights per vertex (mandatory on the PSP since there is no support for blend indices)", default=False)
 
     filename_ext = ".mesh"
+
+    # ui layout description
+    def draw(self, context):
+        box = self.layout.box()
+        box.label(text="Animation")
+        box.prop(self, 'export_skeletal_animation')
+        box.prop(self, 'export_all_bone_weights')
+        box.prop(self, 'export_morph_animation')
+        box = self.layout.box()
+        box.label(text="Objects")
+        box.prop(self, 'separate_objects')
+        box.prop(self, 'selected_only')
+        box = self.layout.box()
+        box.label(text="Misc")
+        box.prop(self, 'scale_uniform')
+        box.prop(self, 'position_only')
 
     # export the mesh
     def execute(self, context):
