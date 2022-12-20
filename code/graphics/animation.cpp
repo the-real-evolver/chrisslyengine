@@ -6,6 +6,7 @@
 #include "entity.h"
 #include "chrisslyarray.h"
 #include "chrisslymath.h"
+#include "chrisslyconfig.h"
 #include "memoryallocatorconfig.h"
 
 namespace chrissly
@@ -182,8 +183,8 @@ Animation::Apply(Entity* const entity, float timePos, float blendWeight)
     Skeleton* skeleton = entity->GetMesh()->GetSkeleton();
     if (skeleton != NULL && ce_array_size(this->boneTracks) > 0U)
     {
-        static Matrix4 localTransform[32U] = {};
-        static Matrix4 modelTransform[32U] = {};
+        static Matrix4 localTransform[CE_MAX_BONES_PER_SKELETON] = {};
+        static Matrix4 modelTransform[CE_MAX_BONES_PER_SKELETON] = {};
 
         // calc current keyframe and t
         float t = 0.0f;

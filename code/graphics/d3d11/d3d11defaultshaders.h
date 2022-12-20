@@ -379,7 +379,7 @@ const char* const DefaultGpuProgramSkeletalAnim =
     "{\n"
     "    matrix worldViewProjMatrix;\n"
     "    matrix worldMatrix;\n"
-    "    matrix boneMatrices[32];\n"
+    "    matrix boneMatrices[CE_MAX_BONES_PER_SKELETON];\n"
     "};\n"
     "cbuffer DefaultConstantBuffer : register(b1)\n"
     "{\n"

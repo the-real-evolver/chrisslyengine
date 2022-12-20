@@ -3,6 +3,7 @@
 //  (C) 2011 Christian Bleicher
 //------------------------------------------------------------------------------
 #include "entity.h"
+#include "chrisslyconfig.h"
 #include "memoryallocatorconfig.h"
 #include "debug.h"
 
@@ -71,8 +72,8 @@ Entity::Entity(Mesh* const mesh) :
         Matrix4* boneLocalMatrix = skeleton->GetLocalTransformMatrices();
         Matrix4* bonesInverseModelMatrix = skeleton->GetInverseModelTransformMatrices();
         int* parentIndex = skeleton->GetParentIndicies();
-        CE_ASSERT(numBones <= 32U, "Entity::Entity(): right now only up to 32 bones are supported for skeletal animation, number of bones requested: %i", numBones);
-        static Matrix4 modelTransform[32U] = {};
+        CE_ASSERT(numBones <= CE_MAX_BONES_PER_SKELETON, "Entity::Entity(): right now only up to %i bones are supported for skeletal animation, number of bones requested: %i", CE_MAX_BONES_PER_SKELETON, numBones);
+        static Matrix4 modelTransform[CE_MAX_BONES_PER_SKELETON] = {};
         modelTransform[0U] = boneLocalMatrix[0U];
         unsigned int i;
         for (i = 1U; i < numBones; ++i)

@@ -525,5 +525,6 @@
     <ClInclude Include="..\..\code\graphics\skeleton.h">
       <Filter>graphics</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\code\chrisslyconfig.h" />
   </ItemGroup>
 </Project>

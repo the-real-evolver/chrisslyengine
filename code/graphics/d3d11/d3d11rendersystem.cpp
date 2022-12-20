@@ -5,6 +5,7 @@
 #include "d3d11rendersystem.h"
 #include "d3d11mappings.h"
 #include "d3d11defaultshaders.h"
+#include "chrisslyconfig.h"
 #include "light.h"
 #include "entity.h"
 #include "common.h"
@@ -158,12 +159,15 @@ D3D11RenderSystem::Initialise(void* const customParams)
     this->defaultGpuProgramLitNoTexture = CE_NEW D3D11GpuProgram(DefaultGpuProgramLit, "defaultshaderlitnotexture.fx", "DefaultVertexShader", "DefaultFragmentShader", shaderMacros);
     this->defaultGpuProgramLitFogNoTexture = CE_NEW D3D11GpuProgram(DefaultGpuProgramLitFog, "defaultshaderlitfognotexture.fx", "DefaultVertexShader", "DefaultFragmentShader", shaderMacros);
     this->defaultGpuProgramMorphAnimNoTexture = CE_NEW D3D11GpuProgram(DefaultGpuProgramMorphAnim, "defaultshadermorphanimnotexture.fx", "DefaultVertexShader", "DefaultFragmentShader", shaderMacros);
-    this->defaultGpuProgramSkeletalAnimNoTexture = CE_NEW D3D11GpuProgram(DefaultGpuProgramSkeletalAnim, "defaultshaderskeletalanimnotexture.fx", "DefaultVertexShader", "DefaultFragmentShader", shaderMacros);
     this->defaultGpuProgramShadowCaster = CE_NEW D3D11GpuProgram(DefaultGpuProgramShadowCaster, "defaultshadershadowcaster.fx", "DefaultVertexShader", "DefaultFragmentShader");
     this->defaultGpuProgramTransparentShadowCaster = CE_NEW D3D11GpuProgram(DefaultGpuProgramTransparentShadowCaster, "defaultshadertransparentshadowcaster.fx", "DefaultVertexShader", "DefaultFragmentShader");
     this->defaultGpuProgramShadowReceiver = CE_NEW D3D11GpuProgram(DefaultGpuProgramShadowReceiver, "defaultshadershadowreceiver.fx", "DefaultVertexShader", "DefaultFragmentShader");
     this->defaultGpuProgramShadowCasterMorphAnim = CE_NEW D3D11GpuProgram(DefaultGpuProgramShadowCasterMorphAnim, "defaultshadershadowcastermorphanim.fx", "DefaultVertexShader", "DefaultFragmentShader");
     this->defaultGpuProgramTransparentShadowCasterMorphAnim = CE_NEW D3D11GpuProgram(DefaultGpuProgramTransparentShadowCasterMorphAnim, "defaultshadertransparentshadowcastermorphanim.fx", "DefaultVertexShader", "DefaultFragmentShader");
+    #define STRINGIFY(str) #str
+    #define EXPAND_AND_STRINGIFY(arg) STRINGIFY(arg)
+    const char* shaderMacrosSkeletalAnimation[] = {"NO_TEXTURE", "1", STRINGIFY(CE_MAX_BONES_PER_SKELETON), EXPAND_AND_STRINGIFY(CE_MAX_BONES_PER_SKELETON), NULL, NULL};
+    this->defaultGpuProgramSkeletalAnimNoTexture = CE_NEW D3D11GpuProgram(DefaultGpuProgramSkeletalAnim, "defaultshaderskeletalanimnotexture.fx", "DefaultVertexShader", "DefaultFragmentShader", shaderMacrosSkeletalAnimation);
     this->currentGpuProgram = this->defaultGpuProgram;
 
     /* create default input layout */
@@ -449,7 +453,7 @@ D3D11RenderSystem::Render(graphics::SubEntity* const renderable)
         this->context->IASetInputLayout(this->inputLayoutSkeletalAnim);
         vertexBuffer = renderable->GetSubMesh()->vertexData->vertexBuffer;
         unsigned int numBones = ce_array_size(renderable->GetParent()->GetBoneMatrices());
-        CE_ASSERT(numBones <= 32U, "D3D11RenderSystem::Render(): right now only up to 32 bones are supported for skeletal animation, number of bones requested: %i", numBones);
+        CE_ASSERT(numBones <= CE_MAX_BONES_PER_SKELETON, "D3D11RenderSystem::Render(): right now only up to %i bones are supported for skeletal animation, number of bones requested: %i", CE_MAX_BONES_PER_SKELETON, numBones);
         params->SetNamedConstant("boneMatrices", renderable->GetParent()->GetBoneMatrices(), numBones);
     }
     else if (graphics::VAT_MORPH == renderable->GetSubMesh()->GetVertexAnimationType())

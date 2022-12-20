@@ -222,6 +222,7 @@
     <ClInclude Include="..\..\code\audio\vorbiscodec.h" />
     <ClInclude Include="..\..\code\audio\wasapi\wasapiaudiorenderer.h" />
     <ClInclude Include="..\..\code\audio\wavcodec.h" />
+    <ClInclude Include="..\..\code\chrisslyconfig.h" />
     <ClInclude Include="..\..\code\core\chrisslyarray.h" />
     <ClInclude Include="..\..\code\core\chrisslylocale.h" />
     <ClInclude Include="..\..\code\core\chrisslymath.h" />
