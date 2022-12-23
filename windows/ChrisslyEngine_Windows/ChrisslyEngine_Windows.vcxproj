@@ -241,6 +241,7 @@
     <ClInclude Include="..\..\code\core\matrix3.h" />
     <ClInclude Include="..\..\code\core\matrix4.h" />
     <ClInclude Include="..\..\code\core\memoryallocatorconfig.h" />
+    <ClInclude Include="..\..\code\core\miscutils.h" />
     <ClInclude Include="..\..\code\core\plane.h" />
     <ClInclude Include="..\..\code\core\quaternion.h" />
     <ClInclude Include="..\..\code\core\standard\standardmath.h" />

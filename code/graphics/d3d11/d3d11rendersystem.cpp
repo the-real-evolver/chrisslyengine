@@ -6,6 +6,7 @@
 #include "d3d11mappings.h"
 #include "d3d11defaultshaders.h"
 #include "chrisslyconfig.h"
+#include "miscutils.h"
 #include "light.h"
 #include "entity.h"
 #include "common.h"
@@ -38,10 +39,10 @@ D3D11RenderSystem::D3D11RenderSystem() :
     defaultGpuProgramLitNoTexture(NULL),
     defaultGpuProgramLitFogNoTexture(NULL),
     defaultGpuProgramMorphAnimNoTexture(NULL),
-    defaultGpuProgramSkeletalAnimNoTexture(NULL),
     defaultGpuProgramShadowCaster(NULL),
     defaultGpuProgramShadowReceiver(NULL),
     defaultGpuProgramShadowCasterMorphAnim(NULL),
+    defaultGpuProgramSkeletalAnimNoTexture(NULL),
     currentGpuProgram(NULL),
     device(NULL),
     context(NULL),
@@ -164,9 +165,7 @@ D3D11RenderSystem::Initialise(void* const customParams)
     this->defaultGpuProgramShadowReceiver = CE_NEW D3D11GpuProgram(DefaultGpuProgramShadowReceiver, "defaultshadershadowreceiver.fx", "DefaultVertexShader", "DefaultFragmentShader");
     this->defaultGpuProgramShadowCasterMorphAnim = CE_NEW D3D11GpuProgram(DefaultGpuProgramShadowCasterMorphAnim, "defaultshadershadowcastermorphanim.fx", "DefaultVertexShader", "DefaultFragmentShader");
     this->defaultGpuProgramTransparentShadowCasterMorphAnim = CE_NEW D3D11GpuProgram(DefaultGpuProgramTransparentShadowCasterMorphAnim, "defaultshadertransparentshadowcastermorphanim.fx", "DefaultVertexShader", "DefaultFragmentShader");
-    #define STRINGIFY(str) #str
-    #define EXPAND_AND_STRINGIFY(arg) STRINGIFY(arg)
-    const char* shaderMacrosSkeletalAnimation[] = {"NO_TEXTURE", "1", STRINGIFY(CE_MAX_BONES_PER_SKELETON), EXPAND_AND_STRINGIFY(CE_MAX_BONES_PER_SKELETON), NULL, NULL};
+    const char* shaderMacrosSkeletalAnimation[] = {"NO_TEXTURE", "1", CE_STRINGIFY(CE_MAX_BONES_PER_SKELETON), CE_EXPAND_AND_STRINGIFY(CE_MAX_BONES_PER_SKELETON), NULL, NULL};
     this->defaultGpuProgramSkeletalAnimNoTexture = CE_NEW D3D11GpuProgram(DefaultGpuProgramSkeletalAnim, "defaultshaderskeletalanimnotexture.fx", "DefaultVertexShader", "DefaultFragmentShader", shaderMacrosSkeletalAnimation);
     this->currentGpuProgram = this->defaultGpuProgram;
 
@@ -260,8 +259,6 @@ D3D11RenderSystem::Shutdown()
     this->defaultGpuProgramLitFogNoTexture = NULL;
     CE_DELETE this->defaultGpuProgramMorphAnimNoTexture;
     this->defaultGpuProgramMorphAnimNoTexture = NULL;
-    CE_DELETE this->defaultGpuProgramSkeletalAnimNoTexture;
-    this->defaultGpuProgramSkeletalAnimNoTexture = NULL;
     CE_DELETE this->defaultGpuProgramShadowCaster;
     this->defaultGpuProgramShadowCaster = NULL;
     CE_DELETE this->defaultGpuProgramTransparentShadowCaster;
@@ -272,6 +269,8 @@ D3D11RenderSystem::Shutdown()
     this->defaultGpuProgramShadowCasterMorphAnim = NULL;
     CE_DELETE this->defaultGpuProgramTransparentShadowCasterMorphAnim;
     this->defaultGpuProgramTransparentShadowCasterMorphAnim = NULL;
+    CE_DELETE this->defaultGpuProgramSkeletalAnimNoTexture;
+    this->defaultGpuProgramSkeletalAnimNoTexture = NULL;
 
     this->currentGpuProgram = NULL;
 

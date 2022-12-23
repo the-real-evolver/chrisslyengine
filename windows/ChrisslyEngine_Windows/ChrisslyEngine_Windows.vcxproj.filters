@@ -526,5 +526,8 @@
       <Filter>graphics</Filter>
     </ClInclude>
     <ClInclude Include="..\..\code\chrisslyconfig.h" />
+    <ClInclude Include="..\..\code\core\miscutils.h">
+      <Filter>core</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -406,7 +406,7 @@ AudioSystem::DistanceFilterCallback(int numChannels, int bits, unsigned int numS
     Channel* channel = (Channel*)dspUserData;
     void* userData;
     channel->GetUserData(&userData);
-    ce_audio_filter_lowpass(bits, numChannels, inBuffer, outBuffer, numSamples, channel->GetAttenuationFactor(), DistanceFilterStore + 4U * (unsigned int)userData);
+    ce_audio_filter_lowpass(bits, numChannels, inBuffer, outBuffer, numSamples, channel->GetAttenuationFactor(), DistanceFilterStore + 4U * (uintptr_t)userData);
     return OK;
 }
 

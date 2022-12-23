@@ -191,9 +191,9 @@ SoundBase::GetSampleBufferPointer(unsigned int position) const
         switch (this->audioFormat)
         {
             case AUDIO_FORMAT_PCM8:
-                return (void*)((uintptr_t)this->sampleBuffer + position * this->numChannels);
+                return (void*)((uintptr_t)this->sampleBuffer + (uintptr_t)position * (uintptr_t)this->numChannels);
             case AUDIO_FORMAT_PCM16:
-                return (void*)((uintptr_t)this->sampleBuffer + (position << 1U) * this->numChannels);
+                return (void*)((uintptr_t)this->sampleBuffer + ((uintptr_t)position << 1U) * (uintptr_t)this->numChannels);
             default:
                 CE_ASSERT(false, "SoundBase::GetSampleBufferPointer(): audio format not supported\n");
         }
