@@ -2,6 +2,7 @@
 //  main.cpp
 //  (C) 2016 Christian Bleicher
 //------------------------------------------------------------------------------
+#include "miscutils.h"
 #include "debug.h"
 #include "graphicssystem.h"
 #include "audiosystem.h"

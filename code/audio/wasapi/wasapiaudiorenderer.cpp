@@ -5,6 +5,7 @@
 #include "wasapiaudiorenderer.h"
 #include "audiosystem.h"
 #include "dsp/samplerateconverter.h"
+#include "miscutils.h"
 
 namespace chrissly
 {

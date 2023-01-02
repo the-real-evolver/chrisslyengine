@@ -3,6 +3,7 @@
 //  (C) 2016 Christian Bleicher
 //------------------------------------------------------------------------------
 #include "winapifswrapper.h"
+#include "miscutils.h"
 #include "debug.h"
 #include <stdio.h>
 

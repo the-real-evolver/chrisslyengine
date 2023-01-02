@@ -4,6 +4,7 @@
 //------------------------------------------------------------------------------
 #include "input/chrisslyinput.h"
 #include "input/common/commoninput.h"
+#include "miscutils.h"
 #include "debug.h"
 #include <xinput.h>
 #include <Dbt.h>
