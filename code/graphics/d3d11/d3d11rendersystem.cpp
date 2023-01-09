@@ -34,15 +34,16 @@ D3D11RenderSystem::D3D11RenderSystem() :
     defaultGpuProgramLit(NULL),
     defaultGpuProgramLitFog(NULL),
     defaultGpuProgramMorphAnim(NULL),
+    defaultGpuProgramSkeletalAnim(NULL),
     defaultGpuProgramNoTexture(NULL),
     defaultGpuProgramFogNoTexture(NULL),
     defaultGpuProgramLitNoTexture(NULL),
     defaultGpuProgramLitFogNoTexture(NULL),
     defaultGpuProgramMorphAnimNoTexture(NULL),
+    defaultGpuProgramSkeletalAnimNoTexture(NULL),
     defaultGpuProgramShadowCaster(NULL),
     defaultGpuProgramShadowReceiver(NULL),
     defaultGpuProgramShadowCasterMorphAnim(NULL),
-    defaultGpuProgramSkeletalAnimNoTexture(NULL),
     currentGpuProgram(NULL),
     device(NULL),
     context(NULL),
@@ -154,19 +155,21 @@ D3D11RenderSystem::Initialise(void* const customParams)
     this->defaultGpuProgramLit = CE_NEW D3D11GpuProgram(DefaultGpuProgramLit, "defaultshaderlit.fx", "DefaultVertexShader", "DefaultFragmentShader");
     this->defaultGpuProgramLitFog = CE_NEW D3D11GpuProgram(DefaultGpuProgramLitFog, "defaultshaderlitfog.fx", "DefaultVertexShader", "DefaultFragmentShader");
     this->defaultGpuProgramMorphAnim = CE_NEW D3D11GpuProgram(DefaultGpuProgramMorphAnim, "defaultshadermorphanim.fx", "DefaultVertexShader", "DefaultFragmentShader");
-    const char* shaderMacros[] = {"NO_TEXTURE", "1", NULL, NULL};
-    this->defaultGpuProgramNoTexture = CE_NEW D3D11GpuProgram(DefaultGpuProgram, "defaultshadernotexture.fx", "DefaultVertexShader", "DefaultFragmentShader", shaderMacros);
-    this->defaultGpuProgramFogNoTexture = CE_NEW D3D11GpuProgram(DefaultGpuProgramFog, "defaultshaderfognotexture.fx", "DefaultVertexShader", "DefaultFragmentShader", shaderMacros);
-    this->defaultGpuProgramLitNoTexture = CE_NEW D3D11GpuProgram(DefaultGpuProgramLit, "defaultshaderlitnotexture.fx", "DefaultVertexShader", "DefaultFragmentShader", shaderMacros);
-    this->defaultGpuProgramLitFogNoTexture = CE_NEW D3D11GpuProgram(DefaultGpuProgramLitFog, "defaultshaderlitfognotexture.fx", "DefaultVertexShader", "DefaultFragmentShader", shaderMacros);
-    this->defaultGpuProgramMorphAnimNoTexture = CE_NEW D3D11GpuProgram(DefaultGpuProgramMorphAnim, "defaultshadermorphanimnotexture.fx", "DefaultVertexShader", "DefaultFragmentShader", shaderMacros);
+    const char* shaderMacrosSkeletalAnimation[] = {CE_STRINGIFY(CE_MAX_BONES_PER_SKELETON), CE_EXPAND_AND_STRINGIFY(CE_MAX_BONES_PER_SKELETON), NULL, NULL};
+    this->defaultGpuProgramSkeletalAnim = CE_NEW D3D11GpuProgram(DefaultGpuProgramSkeletalAnim, "defaultshaderskeletalanimnotexture.fx", "DefaultVertexShader", "DefaultFragmentShader", shaderMacrosSkeletalAnimation);
+    const char* shaderMacrosNoTexture[] = {"NO_TEXTURE", "1", NULL, NULL};
+    this->defaultGpuProgramNoTexture = CE_NEW D3D11GpuProgram(DefaultGpuProgram, "defaultshadernotexture.fx", "DefaultVertexShader", "DefaultFragmentShader", shaderMacrosNoTexture);
+    this->defaultGpuProgramFogNoTexture = CE_NEW D3D11GpuProgram(DefaultGpuProgramFog, "defaultshaderfognotexture.fx", "DefaultVertexShader", "DefaultFragmentShader", shaderMacrosNoTexture);
+    this->defaultGpuProgramLitNoTexture = CE_NEW D3D11GpuProgram(DefaultGpuProgramLit, "defaultshaderlitnotexture.fx", "DefaultVertexShader", "DefaultFragmentShader", shaderMacrosNoTexture);
+    this->defaultGpuProgramLitFogNoTexture = CE_NEW D3D11GpuProgram(DefaultGpuProgramLitFog, "defaultshaderlitfognotexture.fx", "DefaultVertexShader", "DefaultFragmentShader", shaderMacrosNoTexture);
+    this->defaultGpuProgramMorphAnimNoTexture = CE_NEW D3D11GpuProgram(DefaultGpuProgramMorphAnim, "defaultshadermorphanimnotexture.fx", "DefaultVertexShader", "DefaultFragmentShader", shaderMacrosNoTexture);
+    const char* shaderMacrosSkeletalAnimationNoTexture[] = {"NO_TEXTURE", "1", CE_STRINGIFY(CE_MAX_BONES_PER_SKELETON), CE_EXPAND_AND_STRINGIFY(CE_MAX_BONES_PER_SKELETON), NULL, NULL};
+    this->defaultGpuProgramSkeletalAnimNoTexture = CE_NEW D3D11GpuProgram(DefaultGpuProgramSkeletalAnim, "defaultshaderskeletalanimnotexture.fx", "DefaultVertexShader", "DefaultFragmentShader", shaderMacrosSkeletalAnimationNoTexture);
     this->defaultGpuProgramShadowCaster = CE_NEW D3D11GpuProgram(DefaultGpuProgramShadowCaster, "defaultshadershadowcaster.fx", "DefaultVertexShader", "DefaultFragmentShader");
     this->defaultGpuProgramTransparentShadowCaster = CE_NEW D3D11GpuProgram(DefaultGpuProgramTransparentShadowCaster, "defaultshadertransparentshadowcaster.fx", "DefaultVertexShader", "DefaultFragmentShader");
     this->defaultGpuProgramShadowReceiver = CE_NEW D3D11GpuProgram(DefaultGpuProgramShadowReceiver, "defaultshadershadowreceiver.fx", "DefaultVertexShader", "DefaultFragmentShader");
     this->defaultGpuProgramShadowCasterMorphAnim = CE_NEW D3D11GpuProgram(DefaultGpuProgramShadowCasterMorphAnim, "defaultshadershadowcastermorphanim.fx", "DefaultVertexShader", "DefaultFragmentShader");
     this->defaultGpuProgramTransparentShadowCasterMorphAnim = CE_NEW D3D11GpuProgram(DefaultGpuProgramTransparentShadowCasterMorphAnim, "defaultshadertransparentshadowcastermorphanim.fx", "DefaultVertexShader", "DefaultFragmentShader");
-    const char* shaderMacrosSkeletalAnimation[] = {"NO_TEXTURE", "1", CE_STRINGIFY(CE_MAX_BONES_PER_SKELETON), CE_EXPAND_AND_STRINGIFY(CE_MAX_BONES_PER_SKELETON), NULL, NULL};
-    this->defaultGpuProgramSkeletalAnimNoTexture = CE_NEW D3D11GpuProgram(DefaultGpuProgramSkeletalAnim, "defaultshaderskeletalanimnotexture.fx", "DefaultVertexShader", "DefaultFragmentShader", shaderMacrosSkeletalAnimation);
     this->currentGpuProgram = this->defaultGpuProgram;
 
     /* create default input layout */
@@ -249,6 +252,8 @@ D3D11RenderSystem::Shutdown()
     this->defaultGpuProgramLitFog = NULL;
     CE_DELETE this->defaultGpuProgramMorphAnim;
     this->defaultGpuProgramMorphAnim = NULL;
+    CE_DELETE this->defaultGpuProgramSkeletalAnim;
+    this->defaultGpuProgramSkeletalAnim = NULL;
     CE_DELETE this->defaultGpuProgramNoTexture;
     this->defaultGpuProgramNoTexture = NULL;
     CE_DELETE this->defaultGpuProgramFogNoTexture;
@@ -259,6 +264,8 @@ D3D11RenderSystem::Shutdown()
     this->defaultGpuProgramLitFogNoTexture = NULL;
     CE_DELETE this->defaultGpuProgramMorphAnimNoTexture;
     this->defaultGpuProgramMorphAnimNoTexture = NULL;
+    CE_DELETE this->defaultGpuProgramSkeletalAnimNoTexture;
+    this->defaultGpuProgramSkeletalAnimNoTexture = NULL;
     CE_DELETE this->defaultGpuProgramShadowCaster;
     this->defaultGpuProgramShadowCaster = NULL;
     CE_DELETE this->defaultGpuProgramTransparentShadowCaster;
@@ -269,8 +276,6 @@ D3D11RenderSystem::Shutdown()
     this->defaultGpuProgramShadowCasterMorphAnim = NULL;
     CE_DELETE this->defaultGpuProgramTransparentShadowCasterMorphAnim;
     this->defaultGpuProgramTransparentShadowCasterMorphAnim = NULL;
-    CE_DELETE this->defaultGpuProgramSkeletalAnimNoTexture;
-    this->defaultGpuProgramSkeletalAnimNoTexture = NULL;
 
     this->currentGpuProgram = NULL;
 
@@ -573,7 +578,7 @@ D3D11RenderSystem::SetPass(graphics::Pass* const pass)
         bool textured = pass->GetNumTextureUnitStates() > 0U;
         if (pass->IsSkeletalAnimationIncluded())
         {
-            this->currentGpuProgram = this->defaultGpuProgramSkeletalAnimNoTexture;
+            this->currentGpuProgram = textured ? this->defaultGpuProgramSkeletalAnim : this->defaultGpuProgramSkeletalAnimNoTexture;
         }
         else if (pass->IsMorphAnimationIncluded())
         {
