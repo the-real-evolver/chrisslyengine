@@ -66,8 +66,6 @@ public:
     /// sets the colour & strength of the ambient (global directionless) light in the world
     void SetAmbientLight(unsigned int colour);
 
-    /// get pointer to the default shadow receiver gpu program
-    D3D11GpuProgram* const GetDefaultShadowReceiverGpuProgram() const;
     /// get pointer to the default shadow caster gpu program
     D3D11GpuProgram* const GetDefaultShadowCasterGpuProgram() const;
     /// get pointer to the default transparent shadow caster gpu program
@@ -76,6 +74,10 @@ public:
     D3D11GpuProgram* const GetDefaultShadowCasterMorphAnimGpuProgram() const;
     /// get pointer to the default transparent shadow caster morph anim gpu program
     D3D11GpuProgram* const GetDefaultTransparentShadowCasterMorphAnimGpuProgram() const;
+    /// get pointer to the default shadow caster skeletal anim gpu program
+    D3D11GpuProgram* const GetDefaultShadowCasterSkeletalAnimGpuProgram() const;
+    /// get pointer to the default shadow receiver gpu program
+    D3D11GpuProgram* const GetDefaultShadowReceiverGpuProgram() const;
 
     /// get pointer to the d3d11 device
     ID3D11Device* const GetDevice() const;
@@ -115,6 +117,7 @@ private:
     D3D11GpuProgram* defaultGpuProgramShadowReceiver;
     D3D11GpuProgram* defaultGpuProgramShadowCasterMorphAnim;
     D3D11GpuProgram* defaultGpuProgramTransparentShadowCasterMorphAnim;
+    D3D11GpuProgram* defaultGpuProgramShadowCasterSkeletalAnim;
     D3D11GpuProgram* currentGpuProgram;
 
     ID3D11Device* device;

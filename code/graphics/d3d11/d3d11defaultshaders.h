@@ -625,5 +625,46 @@ const char* const DefaultGpuProgramTransparentShadowCasterMorphAnim =
     "{\n"
     "    output = float4(0.5, 0.5, 0.5, texture0.Sample(samplerLinear, input.uv).a);\n"
     "};\n";
+
+//------------------------------------------------------------------------------
+/**
+*/
+const char* const DefaultGpuProgramShadowCasterSkeletalAnim =
+    "cbuffer AutoConstantBuffer : register(b0)\n"
+    "{\n"
+    "    matrix worldViewProjMatrix;\n"
+    "    matrix boneMatrices[CE_MAX_BONES_PER_SKELETON];\n"
+    "};\n"
+    "struct VertexIn\n"
+    "{\n"
+    "    float4 weights0 : BLENDWEIGHT0;\n"
+    "    uint4 indices0 : BLENDINDICES0;\n"
+    "    float2 uv : TEXCOORD0;\n"
+    "    float3 normal : NORMAL0;\n"
+    "    float3 position : POSITION0;\n"
+    "    float4 colour : COLOR0;\n"
+    "};\n"
+    "struct VertexOut\n"
+    "{\n"
+    "    float4 position : SV_Position;\n"
+    "};\n"
+    "void DefaultVertexShader(VertexIn input, out VertexOut output)\n"
+    "{\n"
+    "    float3 P = input.position;\n"
+    "    if (any(input.weights0))\n"
+    "    {\n"
+    "        P = 0.0f;\n"
+    "        for (int i = 0; i < 4; ++i)\n"
+    "        {\n"
+    "            P += mul(float4(input.position, 1.0f), boneMatrices[input.indices0[i]]).xyz * input.weights0[i];\n"
+    "        }\n"
+    "    }\n"
+    "    P = float3(P.x, P.z, -P.y);\n"
+    "    output.position = mul(float4(P, 1.0f), worldViewProjMatrix);\n"
+    "}\n"
+    "void DefaultFragmentShader(VertexOut input, out float4 output : SV_Target)\n"
+    "{\n"
+    "   output = float4(0.5, 0.5, 0.5, 1.0);\n"
+    "};\n";
 //------------------------------------------------------------------------------
 #endif

@@ -44,6 +44,7 @@ D3D11RenderSystem::D3D11RenderSystem() :
     defaultGpuProgramShadowCaster(NULL),
     defaultGpuProgramShadowReceiver(NULL),
     defaultGpuProgramShadowCasterMorphAnim(NULL),
+    defaultGpuProgramShadowCasterSkeletalAnim(NULL),
     currentGpuProgram(NULL),
     device(NULL),
     context(NULL),
@@ -170,6 +171,7 @@ D3D11RenderSystem::Initialise(void* const customParams)
     this->defaultGpuProgramShadowReceiver = CE_NEW D3D11GpuProgram(DefaultGpuProgramShadowReceiver, "defaultshadershadowreceiver.fx", "DefaultVertexShader", "DefaultFragmentShader");
     this->defaultGpuProgramShadowCasterMorphAnim = CE_NEW D3D11GpuProgram(DefaultGpuProgramShadowCasterMorphAnim, "defaultshadershadowcastermorphanim.fx", "DefaultVertexShader", "DefaultFragmentShader");
     this->defaultGpuProgramTransparentShadowCasterMorphAnim = CE_NEW D3D11GpuProgram(DefaultGpuProgramTransparentShadowCasterMorphAnim, "defaultshadertransparentshadowcastermorphanim.fx", "DefaultVertexShader", "DefaultFragmentShader");
+    this->defaultGpuProgramShadowCasterSkeletalAnim = CE_NEW D3D11GpuProgram(DefaultGpuProgramShadowCasterSkeletalAnim, "defaultshadershadowcasterskeletalanim.fx", "DefaultVertexShader", "DefaultFragmentShader", shaderMacrosSkeletalAnimation);
     this->currentGpuProgram = this->defaultGpuProgram;
 
     /* create default input layout */
@@ -276,6 +278,8 @@ D3D11RenderSystem::Shutdown()
     this->defaultGpuProgramShadowCasterMorphAnim = NULL;
     CE_DELETE this->defaultGpuProgramTransparentShadowCasterMorphAnim;
     this->defaultGpuProgramTransparentShadowCasterMorphAnim = NULL;
+    CE_DELETE this->defaultGpuProgramShadowCasterSkeletalAnim;
+    this->defaultGpuProgramShadowCasterSkeletalAnim = NULL;
 
     this->currentGpuProgram = NULL;
 
@@ -726,6 +730,7 @@ D3D11RenderSystem::GetDefaultShadowCasterGpuProgram() const
 D3D11GpuProgram* const
 D3D11RenderSystem::GetDefaultTransparentShadowCasterGpuProgram() const
 {
+    CE_ASSERT(this->defaultGpuProgramTransparentShadowCaster != NULL, "D3D11RenderSystem::GetDefaultTransparentShadowCasterGpuProgram(): gpu program not valid\n");
     return this->defaultGpuProgramTransparentShadowCaster;
 }
 
@@ -745,7 +750,18 @@ D3D11RenderSystem::GetDefaultShadowCasterMorphAnimGpuProgram() const
 D3D11GpuProgram* const
 D3D11RenderSystem::GetDefaultTransparentShadowCasterMorphAnimGpuProgram() const
 {
+    CE_ASSERT(this->defaultGpuProgramTransparentShadowCasterMorphAnim != NULL, "D3D11RenderSystem::GetDefaultTransparentShadowCasterMorphAnimGpuProgram(): gpu program not valid\n");
     return this->defaultGpuProgramTransparentShadowCasterMorphAnim;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+D3D11GpuProgram* const
+D3D11RenderSystem::GetDefaultShadowCasterSkeletalAnimGpuProgram() const
+{
+    CE_ASSERT(this->defaultGpuProgramShadowCasterSkeletalAnim != NULL, "D3D11RenderSystem::GetDefaultShadowCasterSkeletalAnimGpuProgram(): gpu program not valid\n");
+    return this->defaultGpuProgramShadowCasterSkeletalAnim;
 }
 
 //------------------------------------------------------------------------------

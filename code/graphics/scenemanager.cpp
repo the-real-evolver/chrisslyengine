@@ -37,6 +37,7 @@ SceneManager::SceneManager() :
     shadowCamera(NULL),
     shadowRttPass(NULL),
     shadowRttMorphAnimPass(NULL),
+    shadowRttSkeletalAnimPass(NULL),
     shadowPass(NULL)
 {
     Singleton = this;
@@ -322,6 +323,8 @@ SceneManager::SetShadowTechnique(ShadowTechnique technique)
             this->shadowRttPass->SetCullingMode(CULL_NONE);
             this->shadowRttMorphAnimPass = CE_NEW Pass(0U);
             this->shadowRttMorphAnimPass->SetCullingMode(CULL_NONE);
+            this->shadowRttSkeletalAnimPass = CE_NEW Pass(0U);
+            this->shadowRttSkeletalAnimPass->SetCullingMode(CULL_NONE);
             this->shadowPass = CE_NEW Pass(0U);
             this->shadowPass->SetSceneBlendingEnabled(true);
             this->shadowPass->SetSceneBlending(SBF_DEST_COLOUR, SBF_ZERO);
@@ -350,6 +353,7 @@ SceneManager::SetShadowTechnique(ShadowTechnique technique)
             vp->SetBackgroundColour(0xffffffff);
             this->shadowRttPass->SetGpuProgram(this->destRenderSystem->GetDefaultShadowCasterGpuProgram());
             this->shadowRttMorphAnimPass->SetGpuProgram(this->destRenderSystem->GetDefaultShadowCasterMorphAnimGpuProgram());
+            this->shadowRttSkeletalAnimPass->SetGpuProgram(this->destRenderSystem->GetDefaultShadowCasterSkeletalAnimGpuProgram());
             this->shadowPass->SetGpuProgram(this->destRenderSystem->GetDefaultShadowReceiverGpuProgram());
 #endif
 
@@ -467,7 +471,11 @@ SceneManager::_RenderScene(Camera* const camera, Viewport* const vp)
                 if (this->IsShadowTechniqueInUse() && this->illuminationStage == IRS_RENDER_TO_TEXTURE)
                 {
 #if __CE_D3D11__
-                    if (material->GetNumPasses() > 0U && material->GetPass(0U)->GetSceneBlendingEnabled() && material->GetPass(0U)->GetNumTextureUnitStates() > 0U)
+                    if (entity->GetMesh()->GetSkeleton() != NULL)
+                    {
+                        this->renderQueueOpaque.AddRenderable(subEntity, this->shadowRttSkeletalAnimPass);
+                    }
+                    else if (material->GetNumPasses() > 0U && material->GetPass(0U)->GetSceneBlendingEnabled() && material->GetPass(0U)->GetNumTextureUnitStates() > 0U)
                     {
                         this->renderQueueTransparentShadowCaster.AddRenderable(subEntity, material->GetPass(0U));
                     }
@@ -611,6 +619,8 @@ SceneManager::DestroyShadowTextures()
         this->shadowRttPass = NULL;
         CE_DELETE this->shadowRttMorphAnimPass;
         this->shadowRttMorphAnimPass = NULL;
+        CE_DELETE this->shadowRttSkeletalAnimPass;
+        this->shadowRttSkeletalAnimPass = NULL;
         CE_DELETE this->shadowPass;
         this->shadowPass = NULL;
         this->shadowTextureConfigDirty = true;
