@@ -488,6 +488,7 @@ def ce_write_skeletal_animation(file_path, objects, write_all_weights, operator_
                 orientation = mathutils.Quaternion((1.0, 0.0, 0.0, 0.0))
                 for curve in action.fcurves:
                     for index, keyframe in enumerate(curve.keyframe_points):
+                        #print("-> %s %s"%(curve.data_path, action.name))
                         bone_name = curve.data_path.split("[", maxsplit = 1)[1].split("]", maxsplit = 1)[0][1:-1]
                         if index == key_index and bone_name == armature.bones[bone_index].name:
                             if curve.data_path.find("location") != -1:
@@ -585,6 +586,9 @@ class Export_ChrisslyEngineMesh(bpy.types.Operator, ExportHelper):
         if len(used_materials) > 0:
             # assemble filename for material file and remove duplicates from material list
             ce_write_material(os.path.splitext(self.filepath)[0] + ".material", list(dict.fromkeys(used_materials)))
+
+        self.report({'INFO'}, "Export \"%s\" finished"%(self.filepath))
+
         return {'FINISHED'}
 
 #------------------------------------------------------------------------------

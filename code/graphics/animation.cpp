@@ -181,7 +181,7 @@ Animation::Apply(Entity* const entity, float timePos, float blendWeight)
 
     // update skeletal animation
     Skeleton* skeleton = entity->GetMesh()->GetSkeleton();
-    if (skeleton != NULL && ce_array_size(this->boneTracks) > 0U)
+    if (skeleton != NULL && ce_array_size(this->boneTracks) > 0U && ce_array_size(this->boneTracks[0U]->GetTimeIndicies()) > 1U)
     {
         static Matrix4 localTransform[CE_MAX_BONES_PER_SKELETON] = {};
         static Matrix4 modelTransform[CE_MAX_BONES_PER_SKELETON] = {};
