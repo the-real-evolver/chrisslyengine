@@ -72,11 +72,14 @@ TextureBase::~TextureBase()
 {
     if (!this->isRenderTarget)
     {
-        if (this->textureBuffer != NULL)
+        if (TEX_TYPE_2D == this->type)
         {
-            CE_FREE(this->textureBuffer);
+            if (this->textureBuffer != NULL)
+            {
+                CE_FREE(this->textureBuffer);
+            }
         }
-        if (TEX_TYPE_CUBE_MAP == this->type)
+        else if (TEX_TYPE_CUBE_MAP == this->type)
         {
             unsigned int i;
             for (i = 0U; i < 6U; ++i)

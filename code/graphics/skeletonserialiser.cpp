@@ -14,15 +14,15 @@ using namespace chrissly::graphics;
 /// defines the state of the serialiser
 enum skeleton_parser_state
 {
-    parse_root,
-    parse_skeleton,
-    parse_bone,
-    parse_animation,
-    parse_track,
-    parse_keyframe
+    PARSE_ROOT,
+    PARSE_SKELETON,
+    PARSE_BONE,
+    PARSE_ANIMATION,
+    PARSE_TRACK,
+    PARSE_KEYFRAME
 };
 
-static skeleton_parser_state parser_state = parse_root;
+static skeleton_parser_state parser_state = PARSE_ROOT;
 static char text_buffer[65536U] = {'\0'};
 static stb_lexer lexer = {};
 
@@ -88,7 +88,7 @@ ce_graphics_import_skeleton(char const* const file_path, Mesh* const mesh)
     memset(&lexer, 0, sizeof(lexer));
     memset(&text_buffer, 0, sizeof(text_buffer));
     stb_c_lexer_init(&lexer, (char*)file_buffer, (char*)((uintptr_t)file_buffer + file_size), text_buffer, sizeof(text_buffer));
-    parser_state = parse_root;
+    parser_state = PARSE_ROOT;
 
     Matrix4 matrix = Matrix4::ZERO, inverse_model_matrix = Matrix4::ZERO;
     float time = 0.0f;
@@ -109,13 +109,13 @@ ce_graphics_import_skeleton(char const* const file_path, Mesh* const mesh)
 
         switch (parser_state)
         {
-            case parse_root:
+            case PARSE_ROOT:
                 if (0 == strcmp(lexer.string, "skeleton"))
                 {
                     if (0 == stb_c_lexer_get_token(&lexer)) {return;}
                     if ('{' == lexer.token)
                     {
-                        parser_state = parse_skeleton;
+                        parser_state = PARSE_SKELETON;
                     }
                 }
                 else if (0 == strcmp(lexer.string, "animation"))
@@ -125,14 +125,14 @@ ce_graphics_import_skeleton(char const* const file_path, Mesh* const mesh)
                     if (0 == stb_c_lexer_get_token(&lexer)) {return;}
                     if ('{' == lexer.token)
                     {
-                        parser_state = parse_animation;
+                        parser_state = PARSE_ANIMATION;
                     }
                 }
                 break;
-            case parse_skeleton:
+            case PARSE_SKELETON:
                 if ('}' == lexer.token)
                 {
-                    parser_state = parse_root;
+                    parser_state = PARSE_ROOT;
                 }
                 else if (0 == strcmp(lexer.string, "num_bones"))
                 {
@@ -145,15 +145,15 @@ ce_graphics_import_skeleton(char const* const file_path, Mesh* const mesh)
                     if (0 == stb_c_lexer_get_token(&lexer)) {return;}
                     if ('{' == lexer.token)
                     {
-                        parser_state = parse_bone;
+                        parser_state = PARSE_BONE;
                     }
                 }
                 break;
-            case parse_bone:
+            case PARSE_BONE:
                 if ('}' == lexer.token)
                 {
                     skeleton->SetBone(bone_index, parent_bone_index, matrix, inverse_model_matrix);
-                    parser_state = parse_skeleton;
+                    parser_state = PARSE_SKELETON;
                 }
                 else if (0 == strcmp(lexer.string, "index"))
                 {
@@ -172,10 +172,10 @@ ce_graphics_import_skeleton(char const* const file_path, Mesh* const mesh)
                     inverse_model_matrix = parse_matrix4();
                 }
                 break;
-            case parse_animation:
+            case PARSE_ANIMATION:
                 if ('}' == lexer.token)
                 {
-                    parser_state = parse_root;
+                    parser_state = PARSE_ROOT;
                 }
                 else if (0 == strcmp(lexer.string, "length"))
                 {
@@ -192,29 +192,29 @@ ce_graphics_import_skeleton(char const* const file_path, Mesh* const mesh)
                     if ('{' == lexer.token)
                     {
                         bone_track = animation->CreateBoneTrack((unsigned int)num_keyframes);
-                        parser_state = parse_track;
+                        parser_state = PARSE_TRACK;
                     }
                 }
                 break;
-            case parse_track:
+            case PARSE_TRACK:
                 if ('}' == lexer.token)
                 {
-                    parser_state = parse_animation;
+                    parser_state = PARSE_ANIMATION;
                 }
                 else if (0 == strcmp(lexer.string, "key"))
                 {
                     if (0 == stb_c_lexer_get_token(&lexer)) {return;}
                     if ('{' == lexer.token)
                     {
-                        parser_state = parse_keyframe;
+                        parser_state = PARSE_KEYFRAME;
                     }
                 }
                 break;
-            case parse_keyframe:
+            case PARSE_KEYFRAME:
                 if ('}' == lexer.token)
                 {
                     bone_track->CreateKeyFrame(time, matrix);
-                    parser_state = parse_track;
+                    parser_state = PARSE_TRACK;
                 }
                 else if (0 == strcmp(lexer.string, "time"))
                 {
