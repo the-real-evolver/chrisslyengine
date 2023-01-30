@@ -443,7 +443,7 @@ def ce_write_skeletal_animation(file_path, objects, write_all_weights, operator_
     if armature == None:
         return used_materials
 
-    # write bindpose mesh
+    # write restpose mesh
     used_materials = ce_write_mesh(file_path, objects, False, operator_instance, armature, write_all_weights)
 
     # write bones
@@ -488,7 +488,6 @@ def ce_write_skeletal_animation(file_path, objects, write_all_weights, operator_
                 orientation = mathutils.Quaternion((1.0, 0.0, 0.0, 0.0))
                 for curve in action.fcurves:
                     for index, keyframe in enumerate(curve.keyframe_points):
-                        #print("-> %s %s"%(curve.data_path, action.name))
                         bone_name = curve.data_path.split("[", maxsplit = 1)[1].split("]", maxsplit = 1)[0][1:-1]
                         if index == key_index and bone_name == armature.bones[bone_index].name:
                             if curve.data_path.find("location") != -1:
@@ -534,7 +533,7 @@ class Export_ChrisslyEngineMesh(bpy.types.Operator, ExportHelper):
     selected_only: bpy.props.BoolProperty(name="Selected only", description="Only selected objects will be exported", default=False)
     position_only: bpy.props.BoolProperty(name="Position coordinates only", description="Only the vertex positions will be written to the file, can be used as collision geometry", default=False)
     export_morph_animation: bpy.props.BoolProperty(name="Export morph animation", description="Export scene frames as morph animation keyframes", default=False)
-    export_skeletal_animation: bpy.props.BoolProperty(name="Export skeletal animation", description="Export bindpose, skeleton and animations", default=False)
+    export_skeletal_animation: bpy.props.BoolProperty(name="Export skeletal animation", description="Export restpose, skeleton and animations", default=False)
     export_all_bone_weights: bpy.props.BoolProperty(name="Export all bone weights", description="By default only the 4 most influencial bone weights and the index to their matrix are stored per vertex, enalbe this if you want to store all weights per vertex (mandatory on the PSP since there is no support for blend indices)", default=False)
 
     filename_ext = ".mesh"

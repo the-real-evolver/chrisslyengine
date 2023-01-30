@@ -4,6 +4,8 @@
 //------------------------------------------------------------------------------
 #include "animationstate.h"
 #include "chrisslymath.h"
+#include "chrisslyarray.h"
+#include "debug.h"
 
 namespace chrissly
 {
@@ -20,7 +22,8 @@ AnimationState::AnimationState(const char* const animName, float length, bool en
     enabled(enabled),
     loop(false),
     length(length),
-    weight(1.0f)
+    weight(1.0f),
+    blendMask(NULL)
 {
     this->animationName = animName;
 }
@@ -30,7 +33,7 @@ AnimationState::AnimationState(const char* const animName, float length, bool en
 */
 AnimationState::~AnimationState()
 {
-
+    this->DestroyBlendMask();
 }
 
 //------------------------------------------------------------------------------
@@ -150,6 +153,53 @@ float
 AnimationState::GetWeight() const
 {
     return this->weight;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+AnimationState::CreateBlendMask(unsigned int sizeHint, float initialWeight)
+{
+    this->DestroyBlendMask();
+    ce_array_init(this->blendMask, sizeHint);
+    unsigned int i;
+    for (i = 0; i < sizeHint; ++i)
+    {
+        ce_array_push_back(this->blendMask, initialWeight);
+    }
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+AnimationState::DestroyBlendMask()
+{
+    if (this->blendMask != NULL)
+    {
+        ce_array_delete(this->blendMask);
+        this->blendMask = NULL;
+    }
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+float* const
+AnimationState::GetBlendMask() const
+{
+    return this->blendMask;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+AnimationState::SetBlendMaskEntry(unsigned int index, float weight)
+{
+    CE_ASSERT(index < ce_array_size(this->blendMask), "AnimationState::SetBlendMaskEntry(): invalid index");
+    this->blendMask[index] = weight;
 }
 
 } // namespace graphics

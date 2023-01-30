@@ -147,7 +147,7 @@ Animation::DestroyAllBoneTracks()
 /**
 */
 void
-Animation::Apply(Entity* const entity, float timePos, float blendWeight)
+Animation::Apply(Entity* const entity, float timePos, float blendWeight, const float* blendMask)
 {
     if (timePos > this->length && this->length > 0.0f)
     {
@@ -212,18 +212,19 @@ Animation::Apply(Entity* const entity, float timePos, float blendWeight)
         for (i = 0U; i < numBones; ++i)
         {
             Matrix4* animKeyMatrix = this->boneTracks[i]->GetTransformMatrices();
+            float weight = blendMask != NULL ? blendMask[i] : blendWeight;
 
             // interpolate keyframe and weight blend with keyframes from other active animations
             Vector3 p(animKeyMatrix[currentKeyframe][0U][3U], animKeyMatrix[currentKeyframe][1U][3U], animKeyMatrix[currentKeyframe][2U][3U]);
             Vector3 pn(animKeyMatrix[currentKeyframe + 1U][0U][3U], animKeyMatrix[currentKeyframe + 1U][1U][3U], animKeyMatrix[currentKeyframe + 1U][2U][3U]);
-            Vector3 pos = Vector3(blendMatrix[i][0U][3U], blendMatrix[i][1U][3U], blendMatrix[i][2U][3U]) + Vector3::Lerp(p, pn, t) * blendWeight;
+            Vector3 pos = Vector3(blendMatrix[i][0U][3U], blendMatrix[i][1U][3U], blendMatrix[i][2U][3U]) + Vector3::Lerp(p, pn, t) * weight;
 
             Quaternion q, qn, qBlend;
             q.FromRotationMatrix(animKeyMatrix[currentKeyframe].To3x3());
             qn.FromRotationMatrix(animKeyMatrix[currentKeyframe + 1U].To3x3());
             qBlend.FromRotationMatrix(blendMatrix[i].To3x3());
             Matrix3 rm;
-            (qBlend * Quaternion::Nlerp(Quaternion(), Quaternion::Nlerp(q, qn, t), blendWeight)).ToRotationMatrix(rm);
+            (qBlend * Quaternion::Nlerp(Quaternion(), Quaternion::Nlerp(q, qn, t), weight)).ToRotationMatrix(rm);
 
             blendMatrix[i] = Matrix4(rm[0U][0U], rm[0U][1U], rm[0U][2U], pos.x,
                                      rm[1U][0U], rm[1U][1U], rm[1U][2U], pos.y,

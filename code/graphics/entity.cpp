@@ -278,7 +278,7 @@ Entity::UpdateAnimation()
             if (state->GetEnabled())
             {
                 Animation* anim = this->mesh->GetAnimation(state->GetAnimationName());
-                anim->Apply(this, state->GetTimePosition(), state->GetWeight() * blendWeightScale);
+                anim->Apply(this, state->GetTimePosition(), state->GetWeight() * blendWeightScale, state->GetBlendMask());
             }
             it = it->next;
         }

@@ -53,6 +53,23 @@ public:
     void SetWeight(float w);
     /// gets the weight of this animation
     float GetWeight() const;
+    /// create a new blend mask with the given number of entries
+    /**
+        In addition to assigning a single weight value to a skeletal animation,
+        it may be desirable to assign animation weights per bone using a 'blend mask'.
+
+        @param sizeHint
+            the number of bones of the skeleton owning this AnimationState
+        @param initialWeight
+            the value all the blend mask entries will be initialised with
+    */
+    void CreateBlendMask(unsigned int sizeHint, float initialWeight = 1.0f);
+    /// destroy the currently set blend mask
+    void DestroyBlendMask();
+    /// gets the current blend mask
+    float* const GetBlendMask() const;
+    /// sets the absolute (not modulated with the averaged weight) weight for the bone at the given index
+    void SetBlendMaskEntry(unsigned int index, float weight);
 
 private:
     core::String animationName;
@@ -61,6 +78,7 @@ private:
     bool loop;
     float length;
     float weight;
+    float* blendMask;
 };
 
 } // namespace graphics
