@@ -49,6 +49,8 @@ public:
     float GetTimePosition() const;
     /// sets the total length of this animation (may be shorter than whole animation)
     void SetLength(float len);
+    /// gets the total length of this animation (may be shorter than whole animation)
+    float GetLength() const;
     /// sets the weight of this animation
     void SetWeight(float w);
     /// gets the weight of this animation

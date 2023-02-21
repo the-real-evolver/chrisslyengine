@@ -62,5 +62,16 @@ ce_math_wrap(float x, float min, float max)
     float d = max - min;
     return min + chrissly::core::Math::Fmod(d + chrissly::core::Math::Fmod(x - min, d), d);
 }
+
+/* interpolate between start and target in the given interval with ease-in and ease-out using a fixed cubic function */
+inline float
+ce_math_cubic_easing(float start, float target, float interval, float current_time)
+{
+    float t = current_time / interval;
+    float r = t * t * (3.0f - 2.0f * t);
+    r *= chrissly::core::Math::Fabs(target - start);
+    return target < start ? start - r : start + r;
+}
+
 //------------------------------------------------------------------------------
 #endif

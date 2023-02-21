@@ -134,3 +134,17 @@ ce_audio_mix_s16_stereo(int bits, int num_channels, const void* const buffer_to_
             CE_ASSERT(false, "ce_audio_mix_s16_stereo(): unsupported bitrate: '%i'\n", bits);
     }
 }
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+ce_audio_downmix_s16_stereo_s32_mono(const short* src_buffer, int* dst_buffer, unsigned int num_samples)
+{
+    unsigned int i;
+    for (i = 0U; i < num_samples; ++i)
+    {
+        short l = *src_buffer++, r = *src_buffer++;
+        *dst_buffer++ = (r + l) * 32768;
+    }
+}

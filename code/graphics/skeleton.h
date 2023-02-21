@@ -24,6 +24,15 @@ namespace chrissly
 namespace graphics
 {
 
+/// defines how the blend weight is calculated when blending multiple animations
+enum SkeletonAnimationBlendMode
+{
+    /// animations are applied by calculating a weighted average of all animations
+    ANIMBLEND_AVERAGE,
+    /// animations are applied by calculating a cumulative total
+    ANIMBLEND_ADDITIVE
+};
+
 class Skeleton
 {
 public:
@@ -39,6 +48,10 @@ public:
     chrissly::core::Matrix4* const GetInverseModelTransformMatrices() const;
     /// gets the list of transform matrices
     int* const GetParentIndicies() const;
+    /// gets the animation blending mode which this skeleton will use
+    SkeletonAnimationBlendMode GetBlendMode() const;
+    /// sets the animation blending mode this skeleton will use
+    void SetBlendMode(SkeletonAnimationBlendMode state);
 
 private:
     /// index of the parent bone
@@ -47,6 +60,8 @@ private:
     chrissly::core::Matrix4* localMatrix;
     /// inverse transformation relative to skeleton
     chrissly::core::Matrix4* inverseModelMatrix;
+    /// the animation blending mode this skeleton will use
+    SkeletonAnimationBlendMode blendMode;
 };
 
 } // namespace graphics

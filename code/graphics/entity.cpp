@@ -252,21 +252,26 @@ Entity::UpdateAnimation()
     }
 
     // calculate scaling factor for weights so all weights sum up to 1
-    float weightSum = 0.0f;
-    for (i = 0U; i < this->animationStates.bucket_count; ++i)
+    float blendWeightScale = 1.0f;
+    Skeleton* skeleton = this->mesh->GetSkeleton();
+    if (skeleton != NULL && skeleton->GetBlendMode() == ANIMBLEND_AVERAGE)
     {
-        ce_linked_list* it = this->animationStates.buckets[i];
-        while (it != NULL)
+        float weightSum = 0.0f;
+        for (i = 0U; i < this->animationStates.bucket_count; ++i)
         {
-            AnimationState* state = (AnimationState*)((ce_key_value_pair*)it->data)->value;
-            if (state->GetEnabled())
+            ce_linked_list* it = this->animationStates.buckets[i];
+            while (it != NULL)
             {
-                weightSum += state->GetWeight();
+                AnimationState* state = (AnimationState*)((ce_key_value_pair*)it->data)->value;
+                if (state->GetEnabled())
+                {
+                    weightSum += state->GetWeight();
+                }
+                it = it->next;
             }
-            it = it->next;
         }
+        blendWeightScale = 1.0f / (weightSum > 0.0f ? weightSum : 1.0f);
     }
-    float blendWeightScale = 1.0f / (weightSum > 0.0f ? weightSum : 1.0f);
 
     // loop trough all animstates, update enabled ones
     for (i = 0U; i < this->animationStates.bucket_count; ++i)

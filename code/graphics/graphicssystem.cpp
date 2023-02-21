@@ -17,7 +17,8 @@ GraphicsSystem* GraphicsSystem::Singleton = NULL;
 */
 GraphicsSystem::GraphicsSystem() :
     autoWindow(NULL),
-    renderTargets(NULL)
+    renderTargets(NULL),
+    frameNumber(0U)
 {
     Singleton = this;
     this->activeRenderer = CE_NEW RenderSystem();
@@ -89,6 +90,8 @@ GraphicsSystem::RenderOneFrame()
         rt->Update();
         rt->SwapBuffers();
     }
+
+    ++this->frameNumber;
 }
 
 //------------------------------------------------------------------------------
@@ -98,6 +101,15 @@ RenderSystem* const
 GraphicsSystem::GetRenderSystem() const
 {
     return this->activeRenderer;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+unsigned int
+GraphicsSystem::GetFrameNumber() const
+{
+    return this->frameNumber;
 }
 
 } // namespace graphics

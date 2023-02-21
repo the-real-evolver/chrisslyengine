@@ -140,6 +140,15 @@ AnimationState::SetLength(float len)
 //------------------------------------------------------------------------------
 /**
 */
+float
+AnimationState::GetLength() const
+{
+    return this->length;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
 void
 AnimationState::SetWeight(float w)
 {

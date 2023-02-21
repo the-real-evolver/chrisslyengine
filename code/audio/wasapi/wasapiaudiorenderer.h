@@ -66,9 +66,9 @@ private:
     IAudioRenderClient* renderClient;
     UINT32 bufferFrameCount;
 
-    bool resample;
-    double resampleRatio;
+    WAVEFORMATEX deviceFormat;
     int resampleBuffer[1024U];
+    int channelMixBuffer[65536U];
 };
 
 } // namespace chrissly

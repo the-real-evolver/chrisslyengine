@@ -23,4 +23,7 @@ void ce_audio_calculate_stereo_channel_volumes(ce_audio_panning_mode mode, float
 /// mix the given buffer with a signed 16 bit stereo buffer to signed 16 bit stereo output
 void ce_audio_mix_s16_stereo(int bits, int num_channels, const void* const buffer_to_mix, short* const buffer, unsigned int num_samples, float volume, float pan);
 
+/// downmix the given signed 16 bit stereo buffer to signed 32 bit mono output
+void ce_audio_downmix_s16_stereo_s32_mono(const short* src_buffer, int* dst_buffer, unsigned int num_samples);
+
 #endif

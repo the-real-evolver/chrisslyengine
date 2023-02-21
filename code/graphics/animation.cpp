@@ -8,6 +8,7 @@
 #include "chrisslymath.h"
 #include "chrisslyconfig.h"
 #include "memoryallocatorconfig.h"
+#include "debug.h"
 
 namespace chrissly
 {
@@ -208,11 +209,14 @@ Animation::Apply(Entity* const entity, float timePos, float blendWeight, const f
         Matrix4* boneMatrix = entity->GetBoneMatrices();
         Matrix4* blendMatrix = entity->GetBlendMatrices();
 
+        CE_ASSERT(blendMask == NULL || (blendMask != NULL && ce_array_size(blendMask) >= numBones), "Animation::Apply(): blend mask size %u does not match number of bones %u", ce_array_size(blendMask), numBones);
+
         // 1. restpose * animation keyframe local matrix
         for (i = 0U; i < numBones; ++i)
         {
             Matrix4* animKeyMatrix = this->boneTracks[i]->GetTransformMatrices();
             float weight = blendMask != NULL ? blendMask[i] : blendWeight;
+            if (weight == 0.0f) continue;
 
             // interpolate keyframe and weight blend with keyframes from other active animations
             Vector3 p(animKeyMatrix[currentKeyframe][0U][3U], animKeyMatrix[currentKeyframe][1U][3U], animKeyMatrix[currentKeyframe][2U][3U]);
@@ -224,7 +228,7 @@ Animation::Apply(Entity* const entity, float timePos, float blendWeight, const f
             qn.FromRotationMatrix(animKeyMatrix[currentKeyframe + 1U].To3x3());
             qBlend.FromRotationMatrix(blendMatrix[i].To3x3());
             Matrix3 rm;
-            (qBlend * Quaternion::Nlerp(Quaternion(), Quaternion::Nlerp(q, qn, t), weight)).ToRotationMatrix(rm);
+            (qBlend * Quaternion::Nlerp(Quaternion(), Quaternion::Nlerp(q, qn, t, true), weight, true)).ToRotationMatrix(rm);
 
             blendMatrix[i] = Matrix4(rm[0U][0U], rm[0U][1U], rm[0U][2U], pos.x,
                                      rm[1U][0U], rm[1U][1U], rm[1U][2U], pos.y,

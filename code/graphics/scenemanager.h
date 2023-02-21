@@ -135,6 +135,10 @@ public:
     ShadowTechnique GetShadowTechnique() const;
     /// is there any shadowing technique in use?
     bool IsShadowTechniqueInUse() const;
+    /// sets the colour used when rendering to the shadow texture
+    void SetShadowColour(unsigned int colour);
+    /// gets the colour used when rendering to the shadow texture
+    unsigned int GetShadowColour() const;
     /// returns a pointer to the shadow texture currently in use at the given index
     Texture* const GetShadowTexture(size_t index) const;
     /// prompts the class to send its contents to the renderer
@@ -175,6 +179,7 @@ private:
 
     static SceneManager* Singleton;
 
+    unsigned int frameNumber;
     mutable ce_hash_table cameras;
     mutable ce_hash_table lights;
     Entity** entities;
@@ -193,6 +198,7 @@ private:
 
     IlluminationRenderStage illuminationStage;
     ShadowTechnique shadowTechnique;
+    unsigned int shadowColour;
     bool shadowTextureConfigDirty;
 
     Texture* shadowTexture;

@@ -17,7 +17,8 @@ using namespace chrissly::core;
 */
 Skeleton::Skeleton(unsigned int numBones) :
     parentIndex(NULL),
-    localMatrix(NULL)
+    localMatrix(NULL),
+    blendMode(ANIMBLEND_AVERAGE)
 {
     ce_array_init(this->parentIndex, numBones);
     ce_array_init(this->localMatrix, numBones);
@@ -73,6 +74,24 @@ int* const
 Skeleton::GetParentIndicies() const
 {
     return this->parentIndex;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+Skeleton::SetBlendMode(SkeletonAnimationBlendMode mode)
+{
+    this->blendMode = mode;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+SkeletonAnimationBlendMode
+Skeleton::GetBlendMode() const
+{
+    return this->blendMode;
 }
 
 } // namespace graphics

@@ -7,6 +7,9 @@
 #include "meshmanager.h"
 #include "debug.h"
 #include <stdio.h>
+#if __CE_D3D11__
+#include "d3d11/d3d11mappings.h"
+#endif
 
 namespace chrissly
 {
@@ -21,6 +24,7 @@ SceneManager* SceneManager::Singleton = NULL;
 /**
 */
 SceneManager::SceneManager() :
+    frameNumber(1U),
     entities(NULL),
     sceneNodes(NULL),
     sceneRoot(NULL),
@@ -31,6 +35,7 @@ SceneManager::SceneManager() :
     entityDestroyedCallback(NULL),
     illuminationStage(IRS_NONE),
     shadowTechnique(SHADOWTYPE_NONE),
+    shadowColour(0x00808080),
     shadowTextureConfigDirty(true),
     shadowTexture(NULL),
     shadowRenderTexture(NULL),
@@ -355,6 +360,7 @@ SceneManager::SetShadowTechnique(ShadowTechnique technique)
             this->shadowRttMorphAnimPass->SetGpuProgram(this->destRenderSystem->GetDefaultShadowCasterMorphAnimGpuProgram());
             this->shadowRttSkeletalAnimPass->SetGpuProgram(this->destRenderSystem->GetDefaultShadowCasterSkeletalAnimGpuProgram());
             this->shadowPass->SetGpuProgram(this->destRenderSystem->GetDefaultShadowReceiverGpuProgram());
+            this->SetShadowColour(this->shadowColour);
 #endif
 
             this->shadowTexture = CE_NEW Texture(this->shadowRenderTexture);
@@ -388,6 +394,34 @@ SceneManager::IsShadowTechniqueInUse() const
 //------------------------------------------------------------------------------
 /**
 */
+void
+SceneManager::SetShadowColour(unsigned int colour)
+{
+    this->shadowColour = colour;
+#if __CE_D3D11__
+    Vector3 rgb;
+    float alpha;
+    D3D11Mappings::Get(colour, rgb.x, rgb.y, rgb.z, alpha);
+    this->destRenderSystem->GetDefaultShadowCasterGpuProgram()->GetDefaultParameters()->SetNamedConstant("shadowColour", rgb);
+    this->destRenderSystem->GetDefaultTransparentShadowCasterGpuProgram()->GetDefaultParameters()->SetNamedConstant("shadowColour", rgb);
+    this->destRenderSystem->GetDefaultShadowCasterMorphAnimGpuProgram()->GetDefaultParameters()->SetNamedConstant("shadowColour", rgb);
+    this->destRenderSystem->GetDefaultTransparentShadowCasterMorphAnimGpuProgram()->GetDefaultParameters()->SetNamedConstant("shadowColour", rgb);
+    this->destRenderSystem->GetDefaultShadowCasterSkeletalAnimGpuProgram()->GetDefaultParameters()->SetNamedConstant("shadowColour", rgb);
+#endif
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+unsigned int
+SceneManager::GetShadowColour() const
+{
+    return this->shadowColour;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
 Texture* const
 SceneManager::GetShadowTexture(size_t index) const
 {
@@ -401,6 +435,15 @@ SceneManager::GetShadowTexture(size_t index) const
 void
 SceneManager::_RenderScene(Camera* const camera, Viewport* const vp)
 {
+    // only update animation once per frame
+    bool updateAnimation = false;
+    unsigned int currentFrame = GraphicsSystem::Instance()->GetFrameNumber();
+    if (currentFrame != this->frameNumber)
+    {
+        this->frameNumber = currentFrame;
+        updateAnimation = true;
+    }
+
     if (this->illuminationStage != IRS_RENDER_TO_TEXTURE)
     {
         // update transformation
@@ -445,7 +488,7 @@ SceneManager::_RenderScene(Camera* const camera, Viewport* const vp)
             }
 
             // update animation
-            if (entity->HasAnimation())
+            if (entity->HasAnimation() && updateAnimation)
             {
                 entity->UpdateAnimation();
             }

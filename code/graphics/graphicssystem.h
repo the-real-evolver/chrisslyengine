@@ -41,6 +41,8 @@ public:
     void RenderOneFrame();
     /// retrieve a pointer to the currently selected render system
     RenderSystem* const GetRenderSystem() const;
+    /// gets the frame number
+    unsigned int GetFrameNumber() const;
 
 private:
     /// copy constructor
@@ -58,6 +60,7 @@ private:
     SceneManager* sceneManager;
     RenderWindow* autoWindow;
     RenderTarget** renderTargets;
+    unsigned int frameNumber;
 };
 
 } // namespace graphics

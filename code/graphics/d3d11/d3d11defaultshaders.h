@@ -466,6 +466,10 @@ const char* const DefaultGpuProgramShadowCaster =
     "{\n"
     "    matrix worldViewProjMatrix;\n"
     "};\n"
+    "cbuffer DefaultConstantBuffer : register(b1)\n"
+    "{\n"
+    "    float3 shadowColour;\n"
+    "};\n"
     "struct VertexIn\n"
     "{\n"
     "    float2 uv : TEXCOORD0;\n"
@@ -483,7 +487,7 @@ const char* const DefaultGpuProgramShadowCaster =
     "}\n"
     "void DefaultFragmentShader(VertexOut input, out float4 output : SV_Target)\n"
     "{\n"
-    "    output = float4(0.5, 0.5, 0.5, 1.0);\n"
+    "    output = float4(shadowColour, 1.0);\n"
     "};\n";
 
 //------------------------------------------------------------------------------
@@ -495,6 +499,10 @@ const char* const DefaultGpuProgramTransparentShadowCaster =
     "cbuffer AutoConstantBuffer : register(b0)\n"
     "{\n"
     "    matrix worldViewProjMatrix;\n"
+    "};\n"
+    "cbuffer DefaultConstantBuffer : register(b1)\n"
+    "{\n"
+    "    float3 shadowColour;\n"
     "};\n"
     "struct VertexIn\n"
     "{\n"
@@ -515,7 +523,7 @@ const char* const DefaultGpuProgramTransparentShadowCaster =
     "}\n"
     "void DefaultFragmentShader(VertexOut input, out float4 output : SV_Target)\n"
     "{\n"
-    "    output = float4(0.5, 0.5, 0.5, texture0.Sample(samplerLinear, input.uv).a);\n"
+    "    output = float4(shadowColour, texture0.Sample(samplerLinear, input.uv).a);\n"
     "};\n";
 
 //------------------------------------------------------------------------------
@@ -565,6 +573,10 @@ const char* const DefaultGpuProgramShadowCasterMorphAnim =
     "    matrix worldViewProjMatrix;\n"
     "    float1 morphWeight;\n"
     "};\n"
+    "cbuffer DefaultConstantBuffer : register(b1)\n"
+    "{\n"
+    "    float3 shadowColour;\n"
+    "};\n"
     "struct VertexIn\n"
     "{\n"
     "    float2 uv : TEXCOORD0;\n"
@@ -586,7 +598,7 @@ const char* const DefaultGpuProgramShadowCasterMorphAnim =
     "}\n"
     "void DefaultFragmentShader(VertexOut input, out float4 output : SV_Target)\n"
     "{\n"
-    "    output = float4(0.5, 0.5, 0.5, 1.0);\n"
+    "    output = float4(shadowColour, 1.0);\n"
     "};\n";
 
 //------------------------------------------------------------------------------
@@ -599,6 +611,10 @@ const char* const DefaultGpuProgramTransparentShadowCasterMorphAnim =
     "{\n"
     "    matrix worldViewProjMatrix;\n"
     "    float1 morphWeight;\n"
+    "};\n"
+    "cbuffer DefaultConstantBuffer : register(b1)\n"
+    "{\n"
+    "    float3 shadowColour;\n"
     "};\n"
     "struct VertexIn\n"
     "{\n"
@@ -623,7 +639,7 @@ const char* const DefaultGpuProgramTransparentShadowCasterMorphAnim =
     "}\n"
     "void DefaultFragmentShader(VertexOut input, out float4 output : SV_Target)\n"
     "{\n"
-    "    output = float4(0.5, 0.5, 0.5, texture0.Sample(samplerLinear, input.uv).a);\n"
+    "    output = float4(shadowColour, texture0.Sample(samplerLinear, input.uv).a);\n"
     "};\n";
 
 //------------------------------------------------------------------------------
@@ -634,6 +650,10 @@ const char* const DefaultGpuProgramShadowCasterSkeletalAnim =
     "{\n"
     "    matrix worldViewProjMatrix;\n"
     "    matrix boneMatrices[CE_MAX_BONES_PER_SKELETON];\n"
+    "};\n"
+    "cbuffer DefaultConstantBuffer : register(b1)\n"
+    "{\n"
+    "    float3 shadowColour;\n"
     "};\n"
     "struct VertexIn\n"
     "{\n"
@@ -664,7 +684,7 @@ const char* const DefaultGpuProgramShadowCasterSkeletalAnim =
     "}\n"
     "void DefaultFragmentShader(VertexOut input, out float4 output : SV_Target)\n"
     "{\n"
-    "   output = float4(0.5, 0.5, 0.5, 1.0);\n"
+    "   output = float4(shadowColour, 1.0);\n"
     "};\n";
 //------------------------------------------------------------------------------
 #endif
