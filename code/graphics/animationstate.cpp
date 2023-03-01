@@ -205,10 +205,10 @@ AnimationState::GetBlendMask() const
 /**
 */
 void
-AnimationState::SetBlendMaskEntry(unsigned int index, float weight)
+AnimationState::SetBlendMaskEntry(unsigned int index, float entryWeight)
 {
     CE_ASSERT(index < ce_array_size(this->blendMask), "AnimationState::SetBlendMaskEntry(): invalid index");
-    this->blendMask[index] = weight;
+    this->blendMask[index] = entryWeight;
 }
 
 } // namespace graphics

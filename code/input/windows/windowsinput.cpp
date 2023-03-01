@@ -10,7 +10,7 @@
 #include <Dbt.h>
 #include <windowsx.h>
 
-static const float ANALOG_STICK_EMULATED_DEFAULT_VALUE = 0.7f;
+static const float ANALOG_STICK_EMULATED_DEFAULT_VALUE = 1.0f;
 static ce_gamepad_state gamepad_state = {0U, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
 static bool gamepad_check_availability = true;
 static bool gamepad_connected = false;

@@ -16,7 +16,9 @@ namespace chrissly
 D3D11RenderTexture::D3D11RenderTexture() :
     renderTargetView(NULL),
     shaderResourceView(NULL),
-    texture(NULL)
+    texture(NULL),
+    depthStencilBuffer(NULL),
+    depthStencilView(NULL)
 {
 
 }
@@ -40,13 +42,21 @@ D3D11RenderTexture::~D3D11RenderTexture()
     {
         this->texture->Release();
     }
+    if (this->depthStencilBuffer != NULL)
+    {
+        this->depthStencilBuffer->Release();
+    }
+    if (this->depthStencilView != NULL)
+    {
+        this->depthStencilView->Release();
+    }
 }
 
 //------------------------------------------------------------------------------
 /**
 */
 void
-D3D11RenderTexture::Create(int w, int h, graphics::PixelFormat fmt)
+D3D11RenderTexture::Create(int w, int h, graphics::PixelFormat fmt, bool depth)
 {
     D3D11_TEXTURE2D_DESC desc;
     ZeroMemory(&desc, sizeof(desc));
@@ -78,6 +88,11 @@ D3D11RenderTexture::Create(int w, int h, graphics::PixelFormat fmt)
     result = D3D11RenderSystem::Instance()->GetDevice()->CreateShaderResourceView(this->texture, &srvDesc, &this->shaderResourceView);
     CE_ASSERT(SUCCEEDED(result), "D3D11RenderTexture::Create(): failed to create resource view\n");
 
+    if (depth)
+    {
+        D3D11RenderSystem::Instance()->CreateDepthBuffer((UINT)w, (UINT)h, &this->depthStencilBuffer, &this->depthStencilView);
+    }
+
     this->width = w;
     this->height = h;
     this->format = fmt;
@@ -108,6 +123,15 @@ ID3D11RenderTargetView* const
 D3D11RenderTexture::GetRenderTargetView() const
 {
     return this->renderTargetView;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+ID3D11DepthStencilView* const
+D3D11RenderTexture::GetDepthStencilView() const
+{
+    return this->depthStencilView;
 }
 
 //------------------------------------------------------------------------------

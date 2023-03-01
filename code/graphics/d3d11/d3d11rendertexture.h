@@ -21,7 +21,7 @@ public:
     /// destructor
     ~D3D11RenderTexture();
     /// creates a rendertexture from the given parameters
-    void Create(int w, int h, graphics::PixelFormat fmt);
+    void Create(int w, int h, graphics::PixelFormat fmt, bool depth = false);
     /// does nothing no need for doublebuffering when rendering offline
     void SwapBuffers();
     /// get the type of the rendertarget
@@ -31,11 +31,15 @@ public:
     ID3D11ShaderResourceView* const GetShaderResourceView() const;
     /// gets a pointer to the rendertarget view
     ID3D11RenderTargetView* const GetRenderTargetView() const;
+    /// gets a pointer to the depth stencil view
+    ID3D11DepthStencilView* const GetDepthStencilView() const;
 
 private:
     ID3D11RenderTargetView* renderTargetView;
     ID3D11ShaderResourceView* shaderResourceView;
     ID3D11Texture2D* texture;
+    ID3D11Texture2D* depthStencilBuffer;
+    ID3D11DepthStencilView* depthStencilView;
 };
 
 } // namespace chrissly

@@ -330,6 +330,7 @@ D3D11RenderSystem::SetRenderTarget(graphics::RenderTarget* const target)
     {
         D3D11RenderTexture* renderTexture = (D3D11RenderTexture*)target;
         renderTargetView = renderTexture->GetRenderTargetView();
+        depthStencilView = renderTexture->GetDepthStencilView();
     }
     else
     {
@@ -368,6 +369,7 @@ D3D11RenderSystem::SetViewport(graphics::Viewport* const vp)
         {
             D3D11RenderTexture* renderTexture = (D3D11RenderTexture*)target;
             renderTargetView = renderTexture->GetRenderTargetView();
+            depthStencilView = renderTexture->GetDepthStencilView();
         }
         else
         {
@@ -792,6 +794,37 @@ D3D11RenderSystem::GetContext() const
 {
     CE_ASSERT(this->context != NULL, "D3D11RenderSystem::GetContext(): d3d11 device context not valid\n");
     return this->context;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+D3D11RenderSystem::CreateDepthBuffer(UINT width, UINT height, ID3D11Texture2D** bufferOut, ID3D11DepthStencilView** viewOut)
+{
+    D3D11_TEXTURE2D_DESC depthBufferDesc;
+    ZeroMemory(&depthBufferDesc, sizeof(depthBufferDesc));
+    depthBufferDesc.Width = width;
+    depthBufferDesc.Height = height;
+    depthBufferDesc.MipLevels = 1U;
+    depthBufferDesc.ArraySize = 1U;
+    depthBufferDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+    depthBufferDesc.SampleDesc.Count = 1U;
+    depthBufferDesc.SampleDesc.Quality = 0U;
+    depthBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+    depthBufferDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+    depthBufferDesc.CPUAccessFlags = 0U;
+    depthBufferDesc.MiscFlags = 0U;
+    HRESULT result = this->device->CreateTexture2D(&depthBufferDesc, NULL, bufferOut);
+    CE_ASSERT(SUCCEEDED(result), "D3D11RenderSystem::CreateDepthBuffer(): failed to create depth stencil buffer\n");
+
+    D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
+    ZeroMemory(&depthStencilViewDesc, sizeof(depthStencilViewDesc));
+    depthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+    depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+    depthStencilViewDesc.Texture2D.MipSlice = 0U;
+    result = this->device->CreateDepthStencilView(*bufferOut, &depthStencilViewDesc, viewOut);
+    CE_ASSERT(SUCCEEDED(result), "D3D11RenderSystem::CreateDepthBuffer(): failed to create depth stencil view\n");
 }
 
 } // namespace chrissly

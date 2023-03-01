@@ -145,6 +145,6 @@ ce_audio_downmix_s16_stereo_s32_mono(const short* src_buffer, int* dst_buffer, u
     for (i = 0U; i < num_samples; ++i)
     {
         short l = *src_buffer++, r = *src_buffer++;
-        *dst_buffer++ = (r + l) * 32768;
+        *dst_buffer++ = (l + r) * 32768;
     }
 }

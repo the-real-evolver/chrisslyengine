@@ -71,7 +71,7 @@ public:
     /// gets the current blend mask
     float* const GetBlendMask() const;
     /// sets the absolute (not modulated with the averaged weight) weight for the bone at the given index
-    void SetBlendMaskEntry(unsigned int index, float weight);
+    void SetBlendMaskEntry(unsigned int index, float entryWeight);
 
 private:
     core::String animationName;

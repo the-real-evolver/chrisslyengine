@@ -3,6 +3,7 @@
 //  (C) 2016 Christian Bleicher
 //------------------------------------------------------------------------------
 #include "dxgirenderwindow.h"
+#include "d3d11rendersystem.h"
 #include "debug.h"
 
 namespace chrissly
@@ -22,7 +23,8 @@ DXGIRenderWindow::DXGIRenderWindow(D3D11ConfigOptions* config, ID3D11Device* con
     renderTargetView(NULL),
     depthStencilBuffer(NULL),
     depthStencilView(NULL),
-    fullScreen(false)
+    fullScreen(false),
+    depthBuffer(true)
 {
     if (config->fullScreen)
     {
@@ -35,6 +37,8 @@ DXGIRenderWindow::DXGIRenderWindow(D3D11ConfigOptions* config, ID3D11Device* con
         this->height = config->windowHeight;
     }
     this->fullScreen = config->fullScreen;
+
+    this->depthBuffer = config->depthBuffer;
 }
 
 //------------------------------------------------------------------------------
@@ -151,29 +155,10 @@ DXGIRenderWindow::Create()
     backBuffer->Release();
 
     /* create depth stencil buffer and depth stencil view */
-    D3D11_TEXTURE2D_DESC depthBufferDesc;
-    ZeroMemory(&depthBufferDesc, sizeof(depthBufferDesc));
-    depthBufferDesc.Width = (UINT)this->width;
-    depthBufferDesc.Height = (UINT)this->height;
-    depthBufferDesc.MipLevels = 1U;
-    depthBufferDesc.ArraySize = 1U;
-    depthBufferDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-    depthBufferDesc.SampleDesc.Count = 1U;
-    depthBufferDesc.SampleDesc.Quality = 0U;
-    depthBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-    depthBufferDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-    depthBufferDesc.CPUAccessFlags = 0U;
-    depthBufferDesc.MiscFlags = 0U;
-    result = this->device->CreateTexture2D(&depthBufferDesc, NULL, &this->depthStencilBuffer);
-    CE_ASSERT(SUCCEEDED(result), "DXGIRenderWindow::Create(): failed to create depth stencil buffer\n");
-
-    D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
-    ZeroMemory(&depthStencilViewDesc, sizeof(depthStencilViewDesc));
-    depthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-    depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-    depthStencilViewDesc.Texture2D.MipSlice = 0U;
-    result = this->device->CreateDepthStencilView(this->depthStencilBuffer, &depthStencilViewDesc, &this->depthStencilView);
-    CE_ASSERT(SUCCEEDED(result), "DXGIRenderWindow::Create(): failed to create depth stencil view\n");
+    if (this->depthBuffer)
+    {
+        D3D11RenderSystem::Instance()->CreateDepthBuffer((UINT)this->width, (UINT)this->height, &this->depthStencilBuffer, &this->depthStencilView);
+    }
 
     this->buffer = NULL;
     this->format = graphics::PF_R8G8B8A8;
