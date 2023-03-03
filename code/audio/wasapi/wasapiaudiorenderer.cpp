@@ -44,7 +44,7 @@ WASAPIAudioRenderer::WASAPIAudioRenderer() :
     Singleton = this;
     memset(&this->deviceFormat, 0, sizeof(this->deviceFormat));
     memset(this->resampleBuffer, 0, sizeof(this->resampleBuffer));
-    memset(&this->channelMixBuffer, 0, sizeof(this->channelMixBuffer));
+    memset(this->channelMixBuffer, 0, sizeof(this->channelMixBuffer));
 }
 
 //------------------------------------------------------------------------------

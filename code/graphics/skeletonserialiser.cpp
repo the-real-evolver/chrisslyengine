@@ -86,7 +86,7 @@ ce_graphics_import_skeleton(char const* const file_path, Mesh* const mesh)
     FSWrapper::Close(fd);
 
     memset(&lexer, 0, sizeof(lexer));
-    memset(&text_buffer, 0, sizeof(text_buffer));
+    memset(text_buffer, 0, sizeof(text_buffer));
     stb_c_lexer_init(&lexer, (char*)file_buffer, (char*)((uintptr_t)file_buffer + file_size), text_buffer, sizeof(text_buffer));
     parser_state = PARSE_ROOT;
 

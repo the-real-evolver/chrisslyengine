@@ -112,5 +112,14 @@ GraphicsSystem::GetFrameNumber() const
     return this->frameNumber;
 }
 
+//------------------------------------------------------------------------------
+/**
+*/
+void
+GraphicsSystem::RaiseFrameNumber()
+{
+    ++this->frameNumber;
+}
+
 } // namespace graphics
 } // namespace chrissly

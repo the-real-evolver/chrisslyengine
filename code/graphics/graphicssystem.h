@@ -43,6 +43,8 @@ public:
     RenderSystem* const GetRenderSystem() const;
     /// gets the frame number
     unsigned int GetFrameNumber() const;
+    /// if you run your own render loop call this once per frame to update animations
+    void RaiseFrameNumber();
 
 private:
     /// copy constructor
