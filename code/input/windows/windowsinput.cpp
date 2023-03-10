@@ -287,22 +287,6 @@ ce_input_gamepad_get_state(ce_gamepad_state* const gps)
         if (keyboard_state[KEY_I]) gps->buttons |= GAMEPAD_Y;
 
         // Analog sticks
-        if (keyboard_state[KEY_A])
-        {
-            gps->left_stick_x = -1.0f;
-        }
-        else if (keyboard_state[KEY_D])
-        {
-            gps->left_stick_x = 1.0f;
-        }
-        if (keyboard_state[KEY_W])
-        {
-            gps->left_stick_y = 1.0f;
-        }
-        else if (keyboard_state[KEY_S])
-        {
-            gps->left_stick_y = -1.0f;
-        }
         if (keyboard_state[KEY_A] && keyboard_state[KEY_W])
         {
             gps->left_stick_x = -0.7f;
@@ -323,23 +307,23 @@ ce_input_gamepad_get_state(ce_gamepad_state* const gps)
             gps->left_stick_x = 0.7f;
             gps->left_stick_y = -0.7f;
         }
+        else if (keyboard_state[KEY_A])
+        {
+            gps->left_stick_x = -1.0f;
+        }
+        else if (keyboard_state[KEY_D])
+        {
+            gps->left_stick_x = 1.0f;
+        }
+        else if (keyboard_state[KEY_W])
+        {
+            gps->left_stick_y = 1.0f;
+        }
+        else if (keyboard_state[KEY_S])
+        {
+            gps->left_stick_y = -1.0f;
+        }
 
-        if (keyboard_state[KEY_LEFT])
-        {
-            gps->right_stick_x = -1.0f;
-        }
-        else if (keyboard_state[KEY_RIGHT])
-        {
-            gps->right_stick_x = 1.0f;
-        }
-        if (keyboard_state[KEY_UP])
-        {
-            gps->right_stick_y = 1.0f;
-        }
-        else if (keyboard_state[KEY_DOWN])
-        {
-            gps->right_stick_y = -1.0f;
-        }
         if (keyboard_state[KEY_LEFT] && keyboard_state[KEY_UP])
         {
             gps->right_stick_x = -0.7f;
@@ -359,6 +343,22 @@ ce_input_gamepad_get_state(ce_gamepad_state* const gps)
         {
             gps->right_stick_x = 0.7f;
             gps->right_stick_y = -0.7f;
+        }
+        else if (keyboard_state[KEY_LEFT])
+        {
+            gps->right_stick_x = -1.0f;
+        }
+        else if (keyboard_state[KEY_RIGHT])
+        {
+            gps->right_stick_x = 1.0f;
+        }
+        else if (keyboard_state[KEY_UP])
+        {
+            gps->right_stick_y = 1.0f;
+        }
+        else if (keyboard_state[KEY_DOWN])
+        {
+            gps->right_stick_y = -1.0f;
         }
 
         // Trigger
