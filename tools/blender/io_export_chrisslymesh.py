@@ -19,6 +19,7 @@ import os
 import re
 import bpy
 import bmesh
+import time
 import math
 import mathutils
 from mathutils import Vector, Matrix
@@ -556,6 +557,8 @@ class Export_ChrisslyEngineMesh(bpy.types.Operator, ExportHelper):
 
     # export the mesh
     def execute(self, context):
+        start_time = time.time()
+
         used_materials = []
 
         # selected only
@@ -586,7 +589,7 @@ class Export_ChrisslyEngineMesh(bpy.types.Operator, ExportHelper):
             # assemble filename for material file and remove duplicates from material list
             ce_write_material(os.path.splitext(self.filepath)[0] + ".material", list(dict.fromkeys(used_materials)))
 
-        self.report({'INFO'}, "Export \"%s\" finished"%(self.filepath))
+        self.report({'INFO'}, "Export \"%s\" finished, time taken %f sec"%(self.filepath, time.time() - start_time))
 
         return {'FINISHED'}
 
