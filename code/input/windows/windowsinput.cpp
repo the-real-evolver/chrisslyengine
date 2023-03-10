@@ -271,99 +271,99 @@ ce_input_gamepad_get_state(ce_gamepad_state* const gps)
     {
         // fallback to keyboard input
         // Buttons
-        if (1U == keyboard_state[KEY_F]) gps->buttons |= GAMEPAD_DPAD_UP;
-        if (1U == keyboard_state[KEY_V]) gps->buttons |= GAMEPAD_DPAD_DOWN;
-        if (1U == keyboard_state[KEY_C]) gps->buttons |= GAMEPAD_DPAD_LEFT;
-        if (1U == keyboard_state[KEY_B]) gps->buttons |= GAMEPAD_DPAD_RIGHT;
-        if (1U == keyboard_state[KEY_F2]) gps->buttons |= GAMEPAD_START;
-        if (1U == keyboard_state[KEY_F1]) gps->buttons |= GAMEPAD_BACK;
-        if (1U == keyboard_state[KEY_LSHIFT]) gps->buttons |= GAMEPAD_LEFT_THUMB;
-        if (1U == keyboard_state[KEY_RSHIFT]) gps->buttons |= GAMEPAD_RIGHT_THUMB;
-        if (1U == keyboard_state[KEY_LCONTROL]) gps->buttons |= GAMEPAD_LEFT_SHOULDER;
-        if (1U == keyboard_state[KEY_RCONTROL]) gps->buttons |= GAMEPAD_RIGHT_SHOULDER;
-        if (1U == keyboard_state[KEY_K]) gps->buttons |= GAMEPAD_A;
-        if (1U == keyboard_state[KEY_L]) gps->buttons |= GAMEPAD_B;
-        if (1U == keyboard_state[KEY_J]) gps->buttons |= GAMEPAD_X;
-        if (1U == keyboard_state[KEY_I]) gps->buttons |= GAMEPAD_Y;
+        if (keyboard_state[KEY_F]) gps->buttons |= GAMEPAD_DPAD_UP;
+        if (keyboard_state[KEY_V]) gps->buttons |= GAMEPAD_DPAD_DOWN;
+        if (keyboard_state[KEY_C]) gps->buttons |= GAMEPAD_DPAD_LEFT;
+        if (keyboard_state[KEY_B]) gps->buttons |= GAMEPAD_DPAD_RIGHT;
+        if (keyboard_state[KEY_F2]) gps->buttons |= GAMEPAD_START;
+        if (keyboard_state[KEY_F1]) gps->buttons |= GAMEPAD_BACK;
+        if (keyboard_state[KEY_LSHIFT]) gps->buttons |= GAMEPAD_LEFT_THUMB;
+        if (keyboard_state[KEY_RSHIFT]) gps->buttons |= GAMEPAD_RIGHT_THUMB;
+        if (keyboard_state[KEY_LCONTROL]) gps->buttons |= GAMEPAD_LEFT_SHOULDER;
+        if (keyboard_state[KEY_RCONTROL]) gps->buttons |= GAMEPAD_RIGHT_SHOULDER;
+        if (keyboard_state[KEY_K]) gps->buttons |= GAMEPAD_A;
+        if (keyboard_state[KEY_L]) gps->buttons |= GAMEPAD_B;
+        if (keyboard_state[KEY_J]) gps->buttons |= GAMEPAD_X;
+        if (keyboard_state[KEY_I]) gps->buttons |= GAMEPAD_Y;
 
         // Analog sticks
-        if (1U == keyboard_state[KEY_A])
+        if (keyboard_state[KEY_A])
         {
             gps->left_stick_x = -1.0f;
         }
-        else if (1U == keyboard_state[KEY_D])
+        else if (keyboard_state[KEY_D])
         {
             gps->left_stick_x = 1.0f;
         }
-        if (1U == keyboard_state[KEY_W])
+        if (keyboard_state[KEY_W])
         {
             gps->left_stick_y = 1.0f;
         }
-        else if (1U == keyboard_state[KEY_S])
+        else if (keyboard_state[KEY_S])
         {
             gps->left_stick_y = -1.0f;
         }
-        if (1U == keyboard_state[KEY_A] && 1U == keyboard_state[KEY_W])
+        if (keyboard_state[KEY_A] && keyboard_state[KEY_W])
         {
             gps->left_stick_x = -0.7f;
             gps->left_stick_y = 0.7f;
         }
-        else if (1U == keyboard_state[KEY_D] && 1U == keyboard_state[KEY_W])
+        else if (keyboard_state[KEY_D] && keyboard_state[KEY_W])
         {
             gps->left_stick_x = 0.7f;
             gps->left_stick_y = 0.7f;
         }
-        else if (1U == keyboard_state[KEY_A] && 1U == keyboard_state[KEY_S])
+        else if (keyboard_state[KEY_A] && keyboard_state[KEY_S])
         {
             gps->left_stick_x = -0.7f;
             gps->left_stick_y = -0.7f;
         }
-        else if (1U == keyboard_state[KEY_D] && 1U == keyboard_state[KEY_S])
+        else if (keyboard_state[KEY_D] && keyboard_state[KEY_S])
         {
             gps->left_stick_x = 0.7f;
             gps->left_stick_y = -0.7f;
         }
 
-        if (1U == keyboard_state[KEY_LEFT])
+        if (keyboard_state[KEY_LEFT])
         {
             gps->right_stick_x = -1.0f;
         }
-        else if (1U == keyboard_state[KEY_RIGHT])
+        else if (keyboard_state[KEY_RIGHT])
         {
             gps->right_stick_x = 1.0f;
         }
-        if (1U == keyboard_state[KEY_UP])
+        if (keyboard_state[KEY_UP])
         {
             gps->right_stick_y = 1.0f;
         }
-        else if (1U == keyboard_state[KEY_DOWN])
+        else if (keyboard_state[KEY_DOWN])
         {
             gps->right_stick_y = -1.0f;
         }
-        if (1U == keyboard_state[KEY_LEFT] && 1U == keyboard_state[KEY_UP])
+        if (keyboard_state[KEY_LEFT] && keyboard_state[KEY_UP])
         {
             gps->right_stick_x = -0.7f;
             gps->right_stick_y = 0.7f;
         }
-        else if (1U == keyboard_state[KEY_RIGHT] && 1U == keyboard_state[KEY_UP])
+        else if (keyboard_state[KEY_RIGHT] && keyboard_state[KEY_UP])
         {
             gps->right_stick_x = 0.7f;
             gps->right_stick_y = 0.7f;
         }
-        else if (1U == keyboard_state[KEY_LEFT] && 1U == keyboard_state[KEY_DOWN])
+        else if (keyboard_state[KEY_LEFT] && keyboard_state[KEY_DOWN])
         {
             gps->right_stick_x = -0.7f;
             gps->right_stick_y = -0.7f;
         }
-        else if (1U == keyboard_state[KEY_RIGHT] && 1U == keyboard_state[KEY_DOWN])
+        else if (keyboard_state[KEY_RIGHT] && keyboard_state[KEY_DOWN])
         {
             gps->right_stick_x = 0.7f;
             gps->right_stick_y = -0.7f;
         }
 
         // Trigger
-        if (1U == keyboard_state[KEY_M]) gps->left_trigger = 1.0f;
-        if (1U == keyboard_state[KEY_DIVIDE]) gps->right_trigger = 1.0f;
+        if (keyboard_state[KEY_M]) gps->left_trigger = 1.0f;
+        if (keyboard_state[KEY_DIVIDE]) gps->right_trigger = 1.0f;
     }
 }
 
