@@ -33,16 +33,16 @@ ce_input_update_keyboard_state(WPARAM w_param, unsigned char state)
         case VK_CLEAR:      keyboard_state[KEY_CLEAR] = state; break;
         case VK_RETURN:     keyboard_state[KEY_RETURN] = state; break;
         case VK_SHIFT:
-            keyboard_state[KEY_LSHIFT] = (GetAsyncKeyState(VK_LSHIFT) & 0x8000) != 0;
-            keyboard_state[KEY_RSHIFT] = (GetAsyncKeyState(VK_RSHIFT) & 0x8000) != 0;
+            keyboard_state[KEY_LSHIFT] = (GetKeyState(VK_LSHIFT) & 0x8000) != 0;
+            keyboard_state[KEY_RSHIFT] = (GetKeyState(VK_RSHIFT) & 0x8000) != 0;
             break;
         case VK_CONTROL:
-            keyboard_state[KEY_LCONTROL] = (GetAsyncKeyState(VK_LCONTROL) & 0x8000) != 0;
-            keyboard_state[KEY_RCONTROL] = (GetAsyncKeyState(VK_RCONTROL) & 0x8000) != 0;
+            keyboard_state[KEY_LCONTROL] = (GetKeyState(VK_LCONTROL) & 0x8000) != 0;
+            keyboard_state[KEY_RCONTROL] = (GetKeyState(VK_RCONTROL) & 0x8000) != 0;
             break;
         case VK_MENU:
-            keyboard_state[KEY_LALT] = (GetAsyncKeyState(VK_LMENU) & 0x8000) != 0;
-            keyboard_state[KEY_RALT] = (GetAsyncKeyState(VK_RMENU) & 0x8000) != 0;
+            keyboard_state[KEY_LALT] = (GetKeyState(VK_LMENU) & 0x8000) != 0;
+            keyboard_state[KEY_RALT] = (GetKeyState(VK_RMENU) & 0x8000) != 0;
             break;
         case VK_PAUSE:      keyboard_state[KEY_PAUSE] = state; break;
         case VK_CAPITAL:    keyboard_state[KEY_CAPS_LOCK] = state; break;
