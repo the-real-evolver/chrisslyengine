@@ -104,10 +104,9 @@ MeshManager::Load(const char* const filename)
                 break;
             case M_MESH_BOUNDS:
                 {
-                    // read bounding radius
-                    float boundingRadius = FLT_MAX;
-                    FSWrapper::Read(fd, &boundingRadius, 4U);
-                    mesh->boundingRadius = boundingRadius;
+                    // read bounding sphere
+                    FSWrapper::Read(fd, &mesh->boundingCenter.x, 12U);
+                    FSWrapper::Read(fd, &mesh->boundingRadius, 4U);
                 }
                 break;
             case M_ANIMATION:

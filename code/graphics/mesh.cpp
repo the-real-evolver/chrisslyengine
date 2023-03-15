@@ -80,6 +80,15 @@ Mesh::GetSubMesh(unsigned short index) const
 //------------------------------------------------------------------------------
 /**
 */
+const core::Vector3&
+Mesh::GetBoundingSphereCenter() const
+{
+    return this->boundingCenter;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
 void
 Mesh::SetBoundingSphereRadius(float radius)
 {

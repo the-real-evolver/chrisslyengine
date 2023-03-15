@@ -125,6 +125,7 @@ private:
     ID3D11Device* device;
     ID3D11DeviceContext* context;
     D3D11_VIEWPORT viewPort;
+    D3D11_RECT scissorRect[1U];
     ID3D11InputLayout* inputLayout;
     ID3D11InputLayout* inputLayoutMorphAnim;
     ID3D11InputLayout* inputLayoutSkeletalAnim;

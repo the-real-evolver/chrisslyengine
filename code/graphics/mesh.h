@@ -10,6 +10,7 @@
 #include "skeleton.h"
 #include "animation.h"
 #include "hashtable.h"
+#include "vector3.h"
 
 //------------------------------------------------------------------------------
 namespace chrissly
@@ -32,6 +33,8 @@ public:
     /// gets a pointer to the submesh indicated by the index
     SubMesh* const GetSubMesh(unsigned short index) const;
 
+    /// gets the center of the bounding sphere surrounding this mesh
+    const core::Vector3& GetBoundingSphereCenter() const;
     /// sets the radius of the bounding sphere surrounding this mesh (useful for manual created meshes)
     void SetBoundingSphereRadius(float radius);
     /// gets the radius of the bounding sphere surrounding this mesh
@@ -60,7 +63,9 @@ private:
     Skeleton* skeleton;
     /// storage of morph animations, lookup by name
     ce_hash_table animations;
-    /// local bounding sphere radius (centered on object)
+    /// local bounding sphere center
+    core::Vector3 boundingCenter;
+    /// local bounding sphere radius
     float boundingRadius;
 };
 

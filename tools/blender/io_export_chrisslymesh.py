@@ -15,6 +15,7 @@ bl_info = {
 }
 
 import operator
+import sys
 import os
 import re
 import bpy
@@ -42,20 +43,9 @@ BYTES_PER_VERTEX = 36
 BONE_WEIGHTS_PER_VERTEX = 4
 
 #------------------------------------------------------------------------------
-def ce_get_bounding_radius(objects):
-    bounding_radius = 0.0
-    for ob in objects:
-        if ob.type == 'MESH' and len(ob.data.polygons) != 0:
-            for corner in ob.bound_box: # relative to object origin
-                p = mathutils.Vector(corner)
-                if p.length > bounding_radius:
-                    bounding_radius = p.length
-    return bounding_radius
-
-#------------------------------------------------------------------------------
-def ce_get_longest_extend(objects):
-    min_edge = mathutils.Vector((0.0, 0.0, 0.0))
-    max_edge = mathutils.Vector((0.0, 0.0, 0.0))
+def ce_get_bb_min_max_edges(objects):
+    min_edge = mathutils.Vector((sys.float_info.max, sys.float_info.max, sys.float_info.max))
+    max_edge = mathutils.Vector((-sys.float_info.max, -sys.float_info.max, -sys.float_info.max))
     for ob in objects:
         if ob.type == 'MESH' and len(ob.data.polygons) != 0:
             for corner in ob.bound_box: # relative to object origin
@@ -72,6 +62,18 @@ def ce_get_longest_extend(objects):
                     min_edge.z = p.z
                 if p.z > max_edge.z:
                     max_edge.z = p.z
+    return min_edge, max_edge
+
+#------------------------------------------------------------------------------
+def ce_get_bounding_sphere(objects):
+    min_edge, max_edge = ce_get_bb_min_max_edges(objects)
+    radius = (max_edge - min_edge).length * 0.5
+    center = mathutils.Vector(((min_edge.x + max_edge.x) * 0.5, (min_edge.y + max_edge.y) * 0.5, (min_edge.z + max_edge.z) * 0.5))
+    return radius, center
+
+#------------------------------------------------------------------------------
+def ce_get_longest_extend(objects):
+    min_edge, max_edge = ce_get_bb_min_max_edges(objects)
     longest_extend = 0.0
     if max_edge.x - min_edge.x > longest_extend:
         longest_extend = max_edge.x - min_edge.x
@@ -172,13 +174,16 @@ def ce_write_material(file_path, materials):
 
 #------------------------------------------------------------------------------
 def ce_write_mesh(file_path, objects, scale_uniform, operator_instance, armature = None, write_all_weights = False):
-    # calculate scale and bounding radius
+    # calculate scale and bounding sphere
     scale = (1.0 / ce_get_longest_extend(objects)) if scale_uniform else 1.0
-    radius = ce_get_bounding_radius(objects) * scale
+    radius, center = ce_get_bounding_sphere(objects)
+    radius *= scale
 
     # 1. write bounds
     file = open(file_path, 'wb')
     file.write(M_MESH_BOUNDS)
+    byte_array = array('f', [center.x, center.z, -center.y] if armature == None else [center.x, center.y, center.z])
+    byte_array.tofile(file)
     byte_array = array('f', [radius])
     byte_array.tofile(file)
 
@@ -346,8 +351,10 @@ def ce_write_morph_animation(file_path):
     file = open(file_path, 'wb')
 
     # 1. write bounds
-    radius = ce_get_bounding_radius(bpy.context.scene.objects)
+    radius, center = ce_get_bounding_sphere(bpy.context.scene.objects)
     file.write(M_MESH_BOUNDS)
+    byte_array = array('f', [center.x, center.z, -center.y])
+    byte_array.tofile(file)
     byte_array = array('f', [radius])
     byte_array.tofile(file)
 

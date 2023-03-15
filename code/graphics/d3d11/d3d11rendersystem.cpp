@@ -54,6 +54,7 @@ D3D11RenderSystem::D3D11RenderSystem() :
 {
     Singleton = this;
     this->viewPort = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
+    this->scissorRect[0U] = {0, 0, 0, 0};
     ZeroMemory(&this->currentRasterState, sizeof(this->currentRasterState));
     ZeroMemory(&this->currentDepthStencilState, sizeof(this->currentDepthStencilState));
     ZeroMemory(&this->currentBlendState, sizeof(this->currentBlendState));
@@ -100,7 +101,7 @@ D3D11RenderSystem::Initialise(void* const customParams)
     this->currentRasterState.DepthBiasClamp = 0.0f;
     this->currentRasterState.SlopeScaledDepthBias = 0.0f;
     this->currentRasterState.DepthClipEnable = TRUE;
-    this->currentRasterState.ScissorEnable = FALSE;
+    this->currentRasterState.ScissorEnable = TRUE;
     this->currentRasterState.MultisampleEnable = FALSE;
     this->currentRasterState.AntialiasedLineEnable = FALSE;
 
@@ -346,13 +347,24 @@ D3D11RenderSystem::SetRenderTarget(graphics::RenderTarget* const target)
 void
 D3D11RenderSystem::SetViewport(graphics::Viewport* const vp)
 {
-    this->viewPort.TopLeftX = (FLOAT)vp->GetActualLeft();
-    this->viewPort.TopLeftY = (FLOAT)vp->GetActualTop();
-    this->viewPort.Width = (FLOAT)vp->GetActualWidth();
-    this->viewPort.Height = (FLOAT)vp->GetActualHeight();
+    int width = vp->GetActualWidth();
+    int height = vp->GetActualHeight();
+    int left = vp->GetActualLeft();
+    int top = vp->GetActualTop();
+
+    this->viewPort.TopLeftX = (FLOAT)left;
+    this->viewPort.TopLeftY = (FLOAT)top;
+    this->viewPort.Width = (FLOAT)width;
+    this->viewPort.Height = (FLOAT)height;
     this->viewPort.MinDepth = 0.0f;
     this->viewPort.MaxDepth = 1.0f;
     this->context->RSSetViewports(1U, &this->viewPort);
+
+    this->scissorRect[0].left = (LONG)left;
+    this->scissorRect[0].top = (LONG)top;
+    this->scissorRect[0].right = (LONG)(left + width);
+    this->scissorRect[0].bottom = (LONG)(top + height);
+    this->context->RSSetScissorRects(1U, this->scissorRect);
 
     if (vp->GetClearEveryFrame())
     {
