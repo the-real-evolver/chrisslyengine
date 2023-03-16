@@ -12,5 +12,10 @@
     algorithm: http://www.graphics.cornell.edu/pubs/1997/MT97.pdf
 */
 bool ce_intersection_ray_triangle(const float* vertices, unsigned int num_triangles, float ray_origin[3U], float ray_dir[3U], float* const t, float* const u, float* const v, float normalOut[3U]);
+/**
+    A naive implementation of Smits ray-aabb intersection algorithm:
+    https://www.realtimerendering.com/resources/RTNews/html/rtnv15n1.html#art4
+*/
+bool ce_intersection_ray_aabb(float ray_origin[3U], float ray_dir[3U], float aabb_min[3U], float aabb_max[3U]);
 
 #endif

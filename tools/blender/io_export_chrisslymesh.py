@@ -312,6 +312,11 @@ def ce_write_positions(file_path, objects, scale_uniform):
 
     file = open(file_path, 'wb')
 
+    # write bounding box
+    min_edge, max_edge = ce_get_bb_min_max_edges(objects)
+    byte_array = array('f', [min_edge.x, min_edge.z, -min_edge.y, max_edge.x, max_edge.z, -max_edge.y])
+    byte_array.tofile(file)
+
     for ob in objects:
         if ob.type == 'MESH' and len(ob.data.polygons) != 0:
             # triangulate mesh
@@ -539,7 +544,7 @@ class Export_ChrisslyEngineMesh(bpy.types.Operator, ExportHelper):
     scale_uniform: bpy.props.BoolProperty(name="Scale to uniform size", description="Scale the exported mesh so it's longest extend has size of 1 unit", default=False)
     separate_objects: bpy.props.BoolProperty(name="Objects as separate files", description="Each object will be saved as separate file, material file is shared", default=False)
     selected_only: bpy.props.BoolProperty(name="Selected only", description="Only selected objects will be exported", default=False)
-    position_only: bpy.props.BoolProperty(name="Position coordinates only", description="Only the vertex positions will be written to the file, can be used as collision geometry", default=False)
+    position_only: bpy.props.BoolProperty(name="Position coordinates only", description="Only the aabb min and max followed by the vertex positions will be written to the file, can be used as collision geometry", default=False)
     export_morph_animation: bpy.props.BoolProperty(name="Export morph animation", description="Export scene frames as morph animation keyframes", default=False)
     export_skeletal_animation: bpy.props.BoolProperty(name="Export skeletal animation", description="Export restpose, skeleton and animations", default=False)
     export_all_bone_weights: bpy.props.BoolProperty(name="Export all bone weights", description="By default only the 4 most influencial bone weights and the index to their matrix are stored per vertex, enalbe this if you want to store all weights per vertex (mandatory on the PSP since there is no support for blend indices)", default=False)

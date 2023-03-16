@@ -67,3 +67,41 @@ ce_intersection_ray_triangle(const float* vertices, unsigned int num_triangles, 
 
     return false;
 }
+
+#define SWAP_FLOAT(a, b) do {float temp = a; a = b; b = temp;} while(0)
+
+//------------------------------------------------------------------------------
+/**
+*/
+bool
+ce_intersection_ray_aabb(float ray_origin[3U], float ray_dir[3U], float aabb_min[3U], float aabb_max[3U])
+{
+    float tmin = (aabb_min[0U] - ray_origin[0U]) / ray_dir[0U];
+    float tmax = (aabb_max[0U] - ray_origin[0U]) / ray_dir[0U];
+
+    if (tmin > tmax) SWAP_FLOAT(tmin, tmax);
+
+    float tymin = (aabb_min[1U] - ray_origin[1U]) / ray_dir[1U];
+    float tymax = (aabb_max[1U] - ray_origin[1U]) / ray_dir[1U];
+
+    if (tymin > tymax) SWAP_FLOAT(tymin, tymax);
+
+    if ((tmin > tymax) || (tymin > tmax)) return false;
+
+    if (tymin > tmin) tmin = tymin;
+
+    if (tymax < tmax) tmax = tymax;
+
+    float tzmin = (aabb_min[2U] - ray_origin[2U]) / ray_dir[2U];
+    float tzmax = (aabb_max[2U] - ray_origin[2U]) / ray_dir[2U];
+
+    if (tzmin > tzmax) SWAP_FLOAT(tzmin, tzmax);
+
+    if ((tmin > tzmax) || (tzmin > tmax)) return false;
+
+    if (tzmin > tmin) tmin = tzmin;
+
+    if (tzmax < tmax)tmax = tzmax;
+
+    return true;
+}
