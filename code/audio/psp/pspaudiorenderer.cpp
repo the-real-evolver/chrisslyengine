@@ -201,7 +201,7 @@ PSPAudioRenderer::ChannelThread(SceSize args, void* argp)
             channel->GetPan(&pan);
             if (mode & audio::MODE_3D)
             {
-                ce_audio_calculate_stereo_channel_volumes(PAN_CONSTANTPOWER, volume *= channel->GetAttenuationFactor(), pan, &leftVolume, &rightVolume);
+                ce_audio_calculate_stereo_channel_volumes(PAN_CONSTANTPOWER, volume * channel->GetAttenuationFactor(), pan, &leftVolume, &rightVolume);
             }
             else if (1 == numChannels)
             {

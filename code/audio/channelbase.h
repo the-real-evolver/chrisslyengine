@@ -117,7 +117,6 @@ protected:
     float attenuationFactor;
     PropertyChange propertiesHaveChanged;
     core::Mutex syncLock;
-    int outputBuffer[1024U];
     DSP** dsps;
     void* userData;
 };

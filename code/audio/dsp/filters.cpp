@@ -41,7 +41,7 @@ lowpass_s16_stereo(const short* _ChrisslyRestrict src_buffer, short* _ChrisslyRe
 
 //------------------------------------------------------------------------------
 /**
-    See: http://www.martin-finke.de/blog/articles/audio-plugins-013-filter/
+    See: https://www.martin-finke.de/articles/audio-plugins-013-filter/
 */
 void
 ce_audio_filter_lowpass(int bits, int num_channels, const void* const src_buffer, void* const dst_buffer, unsigned int num_samples, float cutoff, float store[4U])

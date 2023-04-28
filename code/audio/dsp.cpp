@@ -4,6 +4,7 @@
 //------------------------------------------------------------------------------
 #include "dsp.h"
 #include <stdio.h>
+#include <string.h>
 
 namespace chrissly
 {
@@ -19,7 +20,7 @@ DSP::DSP() :
     Process(NULL),
     userData(NULL)
 {
-
+    memset(this->buffer, 0, sizeof(this->buffer));
 }
 
 //------------------------------------------------------------------------------

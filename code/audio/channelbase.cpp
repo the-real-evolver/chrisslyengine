@@ -35,7 +35,7 @@ ChannelBase::ChannelBase() :
     dsps(NULL),
     userData(NULL)
 {
-    memset(this->outputBuffer, 0, sizeof(this->outputBuffer));
+
 }
 
 //------------------------------------------------------------------------------
@@ -353,11 +353,17 @@ ChannelBase::GetIndex(int* const idx)
 Result
 ChannelBase::AddDSP(unsigned int idx, DSP* const dsp)
 {
-    // only support one dsp at index zero for now
-    if (0U == idx && 0U == ce_array_size(this->dsps))
+    if (NULL == dsp) return ERR_INVALID_PARAM;
+
+    if ((idx + 1U) > ce_array_size(this->dsps))
     {
-        ce_array_push_back(this->dsps, dsp);
+        this->dsps = ce_array_grow_wrapper(this->dsps, sizeof(*(this->dsps)), idx + 1U);
+        ce_array_header(this->dsps)->size = idx + 1U;
     }
+
+    if (this->dsps[idx] != NULL && this->dsps[idx] != dsp) this->dsps[idx]->Release();
+
+    this->dsps[idx] = dsp;
 
     return OK;
 }
@@ -439,22 +445,32 @@ ChannelBase::FillOutputBuffer(unsigned int numSamples, unsigned int position)
     void* buffer = this->mode & MODE_CREATESTREAM ? this->currentSound->GetCodec()->FillStreamBuffer(numSamples, position) : this->currentSound->GetSampleBufferPointer(position);
 
     // apply dsps
+    int numChannels, bits;
+    this->currentSound->GetFormat(NULL, NULL, &numChannels, &bits);
     unsigned int i;
     for (i = 0U; i < ce_array_size(this->dsps); ++i)
     {
         DSP* dsp = this->dsps[i];
+        if (NULL == dsp) continue;
         bool bypass;
         dsp->GetBypass(&bypass);
-        if (0U == i && !bypass)
+        if (bypass)
+        {
+            memcpy(dsp->buffer, buffer, numSamples * numChannels * (bits >> 3U));
+            continue;
+        }
+        void* dspUserData;
+        dsp->GetUserData(&dspUserData);
+        if (0U == i)
         {
             // dsp at index zero always takes the samplebuffer as input
-            int numChannels, bits;
-            this->currentSound->GetFormat(NULL, NULL, &numChannels, &bits);
-            void* dspUserData;
-            dsp->GetUserData(&dspUserData);
-            dsp->Process(numChannels, bits, numSamples, buffer, this->outputBuffer, dspUserData);
-            buffer = this->outputBuffer;
+            dsp->Process(numChannels, bits, numSamples, buffer, dsp->buffer, dspUserData);
         }
+        else if (this->dsps[i - 1] != NULL)
+        {
+            dsp->Process(numChannels, bits, numSamples, this->dsps[i - 1]->buffer, dsp->buffer, dspUserData);
+        }
+        buffer = dsp->buffer;
     }
 
     return buffer;
@@ -470,7 +486,7 @@ ChannelBase::ReleaseInternal()
     unsigned int i;
     for (i = 0U; i < ce_array_size(this->dsps); ++i)
     {
-        this->dsps[i]->Release();
+        if (this->dsps[i] != NULL) this->dsps[i]->Release();
     }
     ce_array_delete(this->dsps);
     this->isPlaying = false;

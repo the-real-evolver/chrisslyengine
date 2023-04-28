@@ -57,6 +57,7 @@ private:
     bool inUse;
     Result (*Process)(int numChannels, int bits, unsigned int numSamples, const void* const inbuffer, void* const outbuffer, void* const userData);
     void* userData;
+    int buffer[1024U];
 };
 
 } // namespace audio
