@@ -129,7 +129,8 @@ Camera::SetDirection(const Vector3& direction)
         Matrix3 kRot;
         this->orientation.ToRotationMatrix(kRot);
         Vector3 axes[3U];
-        for (unsigned int i = 0U; i < 3U; i++)
+        unsigned int i;
+        for (i = 0U; i < 3U; i++)
         {
             axes[i].x = kRot[0U][i];
             axes[i].y = kRot[1U][i];

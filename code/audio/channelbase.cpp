@@ -371,6 +371,27 @@ ChannelBase::AddDSP(unsigned int idx, DSP* const dsp)
 //------------------------------------------------------------------------------
 /**
 */
+Result
+ChannelBase::RemoveDSP(DSP* const dsp)
+{
+    if (NULL == dsp) return ERR_INVALID_PARAM;
+
+    unsigned int i;
+    for (i = 0U; i < ce_array_size(this->dsps); ++i)
+    {
+        if (this->dsps[i] == dsp)
+        {
+            this->dsps[i] = NULL;
+            dsp->Release();
+        }
+    }
+
+    return OK;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
 void
 ChannelBase::AttachSound(Sound* const sound)
 {
@@ -454,22 +475,10 @@ ChannelBase::FillOutputBuffer(unsigned int numSamples, unsigned int position)
         if (NULL == dsp) continue;
         bool bypass;
         dsp->GetBypass(&bypass);
-        if (bypass)
-        {
-            memcpy(dsp->buffer, buffer, numSamples * numChannels * (bits >> 3U));
-            continue;
-        }
+        if (bypass) continue;
         void* dspUserData;
         dsp->GetUserData(&dspUserData);
-        if (0U == i)
-        {
-            // dsp at index zero always takes the samplebuffer as input
-            dsp->Process(numChannels, bits, numSamples, buffer, dsp->buffer, dspUserData);
-        }
-        else if (this->dsps[i - 1] != NULL)
-        {
-            dsp->Process(numChannels, bits, numSamples, this->dsps[i - 1]->buffer, dsp->buffer, dspUserData);
-        }
+        dsp->Process(numChannels, bits, numSamples, buffer, dsp->buffer, dspUserData);
         buffer = dsp->buffer;
     }
 

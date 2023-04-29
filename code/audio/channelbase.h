@@ -78,6 +78,8 @@ public:
     Result GetIndex(int* const idx);
     /// adds a dsp to the channel
     Result AddDSP(unsigned int idx, DSP* const dsp);
+    /// remove a dsp from the dsp chain of the channel
+    Result RemoveDSP(DSP* const dsp);
 
 protected:
     /// copy constructor
