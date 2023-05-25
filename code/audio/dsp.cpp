@@ -3,6 +3,7 @@
 //  (C) 2018 Christian Bleicher
 //------------------------------------------------------------------------------
 #include "dsp.h"
+#include "debug.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -17,7 +18,10 @@ namespace audio
 DSP::DSP() :
     bypass(false),
     inUse(false),
-    Process(NULL),
+    release(NULL),
+    process(NULL),
+    numParameters(0),
+    setParamFloat(NULL),
     userData(NULL)
 {
     memset(this->buffer, 0, sizeof(this->buffer));
@@ -54,6 +58,27 @@ DSP::GetBypass(bool* const enabled)
 //------------------------------------------------------------------------------
 /**
 */
+
+Result
+DSP::GetNumParameters(int* const numParams)
+{
+    *numParams = this->numParameters;
+    return OK;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+Result
+DSP::SetParameterFloat(int idx, float value)
+{
+    if (this->setParamFloat != NULL) this->setParamFloat(this, idx, value);
+    return OK;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
 Result
 DSP::SetUserData(void* const data)
 {
@@ -79,7 +104,14 @@ DSP::Release()
 {
     this->bypass = false;
     this->inUse = false;
-    this->Process = NULL;
+    this->process = NULL;
+    this->numParameters = 0;
+    this->setParamFloat = NULL;
+    if (this->release != NULL)
+    {
+        this->release(this);
+        this->release = NULL;
+    }
     this->userData = NULL;
     return OK;
 }
@@ -90,10 +122,15 @@ DSP::Release()
 void
 DSP::Setup(const DspDescription* const desc)
 {
+    CE_ASSERT(desc->process != NULL, "DSP::Setup(): pointer to Process() callback must not be NULL");
     this->bypass = false;
     this->inUse = true;
-    this->Process = desc->Process;
+    this->release = desc->release;
+    this->process = desc->process;
+    this->numParameters = desc->numParameters;
+    this->setParamFloat = desc->setParamFloat;
     this->userData = desc->userData;
+    if (desc->setup != NULL) desc->setup(this);
 }
 
 //------------------------------------------------------------------------------

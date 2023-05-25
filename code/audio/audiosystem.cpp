@@ -217,7 +217,7 @@ AudioSystem::PlaySound(int channelid, Sound* const sound, bool paused, Channel**
 
             if (sound->mode & MODE_3D && i < 8U)
             {
-                DspDescription dspDesc = {DistanceFilterCallback, chn};
+                DspDescription dspDesc = {NULL, NULL, DistanceFilterCallback, 0, NULL, chn};
                 DSP* dsp;
                 CreateDSP(&dspDesc, &dsp);
                 chn->SetUserData((void*)i);
@@ -401,8 +401,10 @@ AudioSystem::GetAudioRenderer() const
 /**
 */
 Result
-AudioSystem::DistanceFilterCallback(int numChannels, int bits, unsigned int numSamples, const void* const inBuffer, void* const outBuffer, void* const dspUserData)
+AudioSystem::DistanceFilterCallback(DSP* const dsp, int numChannels, int bits, unsigned int numSamples, const void* const inBuffer, void* const outBuffer)
 {
+    void* dspUserData;
+    dsp->GetUserData(&dspUserData);
     Channel* channel = (Channel*)dspUserData;
     void* userData;
     channel->GetUserData(&userData);

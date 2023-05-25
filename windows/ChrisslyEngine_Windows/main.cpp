@@ -23,12 +23,12 @@ static unsigned int delaySamplePosition = 0U;
 /**
 */
 Result
-DspCallback(int numChannels, int bits, unsigned int numSamples, const void* const inBuffer, void* const outBuffer, void* const userData)
+DspCallback(DSP* const dsp, int numChannels, int bits, unsigned int numSamples, const void* const inBuffer, void* const outBuffer)
 {
     CE_ASSERT(2 == numChannels && 16 == bits, "DspCallback(): only 16 Bit stereo sounds are supported\n");
+    CE_UNREFERENCED_PARAMETER(dsp);
     CE_UNREFERENCED_PARAMETER(numChannels);
     CE_UNREFERENCED_PARAMETER(bits);
-    CE_UNREFERENCED_PARAMETER(userData);
 
     const short* input = (const short*)inBuffer;
     short* output = (short*)outBuffer;
@@ -96,7 +96,7 @@ WinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prevInstance, _In_ LPSTR cmd
     audioSystem->PlaySound(Channel::CHANNEL_FREE, sound, false, &channel);
 
     memset(delayBuffer, 0, sizeof(delayBuffer));
-    DspDescription dspDesc = {DspCallback};
+    DspDescription dspDesc = {NULL, NULL, DspCallback};
     DSP* dsp;
     audioSystem->CreateDSP(&dspDesc, &dsp);
     channel->AddDSP(0U, dsp);

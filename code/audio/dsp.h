@@ -13,12 +13,21 @@ namespace chrissly
 {
 namespace audio
 {
+class DSP;
 
 /// this struct is used when creating a dsp
 struct DspDescription
 {
+    /// callback called when the dsp is created
+    Result (*setup)(DSP* const dsp);
+    /// callback called when the dsp is released
+    Result (*release)(DSP* const dsp);
     /// callback where processing is done
-    Result (*Process)(int numChannels, int bits, unsigned int numSamples, const void* const inBuffer, void* const outBuffer, void* const userData);
+    Result (*process)(DSP* const dsp, int numChannels, int bits, unsigned int numSamples, const void* const inBuffer, void* const outBuffer);
+    /// number of parameters of this dsp
+    int numParameters;
+    /// callback called when a float parameter is altered
+    Result (*setParamFloat)(DSP* const dsp, int idx, float value);
     /// optional data supplied by the user, will be passed to the Process callback function during playback
     void* userData;
 };
@@ -36,6 +45,10 @@ public:
     Result SetBypass(bool enabled);
     /// retrieves the bypass state of the dsp
     Result GetBypass(bool* const enabled);
+    /// retrieves the number of parameters of the dsp
+    Result GetNumParameters(int* const numParams);
+    /// sets a floating-point parameter to the dsp
+    Result SetParameterFloat(int idx, float value);
     /// sets the user data
     Result SetUserData(void* const data);
     /// retrieves the user data
@@ -55,7 +68,10 @@ private:
 
     bool bypass;
     bool inUse;
-    Result (*Process)(int numChannels, int bits, unsigned int numSamples, const void* const inbuffer, void* const outbuffer, void* const userData);
+    Result (*release)(DSP* const dsp);
+    Result (*process)(DSP* const dsp, int numChannels, int bits, unsigned int numSamples, const void* const inbuffer, void* const outbuffer);
+    int numParameters;
+    Result (*setParamFloat)(DSP* const dsp, int idx, float value);
     void* userData;
     int buffer[1024U];
 };

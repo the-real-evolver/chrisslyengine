@@ -476,9 +476,7 @@ ChannelBase::FillOutputBuffer(unsigned int numSamples, unsigned int position)
         bool bypass;
         dsp->GetBypass(&bypass);
         if (bypass) continue;
-        void* dspUserData;
-        dsp->GetUserData(&dspUserData);
-        dsp->Process(numChannels, bits, numSamples, buffer, dsp->buffer, dspUserData);
+        dsp->process(dsp, numChannels, bits, numSamples, buffer, dsp->buffer);
         buffer = dsp->buffer;
     }
 
