@@ -72,7 +72,7 @@ DSP::GetNumParameters(int* const numParams)
 Result
 DSP::SetParameterFloat(int idx, float value)
 {
-    if (this->setParamFloat != NULL) this->setParamFloat(this, idx, value);
+    if (this->setParamFloat != NULL) return this->setParamFloat(this, idx, value);
     return OK;
 }
 
@@ -102,6 +102,7 @@ DSP::GetUserData(void** const data)
 Result
 DSP::Release()
 {
+    Result result = OK;
     this->bypass = false;
     this->inUse = false;
     this->process = NULL;
@@ -109,11 +110,11 @@ DSP::Release()
     this->setParamFloat = NULL;
     if (this->release != NULL)
     {
-        this->release(this);
+        result = this->release(this);
         this->release = NULL;
     }
     this->userData = NULL;
-    return OK;
+    return result;
 }
 
 //------------------------------------------------------------------------------
@@ -130,7 +131,7 @@ DSP::Setup(const DspDescription* const desc)
     this->numParameters = desc->numParameters;
     this->setParamFloat = desc->setParamFloat;
     this->userData = desc->userData;
-    if (desc->setup != NULL) desc->setup(this);
+    if (desc->setup != NULL) (void)desc->setup(this);
 }
 
 //------------------------------------------------------------------------------
