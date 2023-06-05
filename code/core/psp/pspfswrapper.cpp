@@ -108,10 +108,10 @@ PSPFSWrapper::Get(core::AccessMode mode)
 {
     switch (mode)
     {
-        case core::ReadAccess:      return PSP_O_RDONLY;
-        case core::WriteAccess:     return PSP_O_WRONLY | PSP_O_CREAT;
-        case core::ReadWriteAccess: return PSP_O_RDWR | PSP_O_CREAT;
-        case core::AppendAccess:    return PSP_O_APPEND | PSP_O_CREAT | PSP_O_WRONLY;
+        case core::READ_ACCESS:         return PSP_O_RDONLY;
+        case core::WRITE_ACCESS:        return PSP_O_WRONLY | PSP_O_CREAT;
+        case core::READ_WRITE_ACCESS:   return PSP_O_RDWR | PSP_O_CREAT;
+        case core::APPEND_ACCESS:       return PSP_O_APPEND | PSP_O_CREAT | PSP_O_WRONLY;
         default: CE_ASSERT(false, "FSWrapper::Get(): illegal AccessMode '%i'\n", mode);
     }
 
@@ -126,9 +126,9 @@ PSPFSWrapper::Get(core::SeekOrigin origin)
 {
     switch (origin)
     {
-        case core::Begin:   return PSP_SEEK_SET;
-        case core::Current: return PSP_SEEK_CUR;
-        case core::End:     return PSP_SEEK_END;
+        case core::BEGIN:   return PSP_SEEK_SET;
+        case core::CURRENT: return PSP_SEEK_CUR;
+        case core::END:     return PSP_SEEK_END;
         default: CE_ASSERT(false, "FSWrapper::Get(): illegal SeekOrigin '%i'\n", origin);
     }
 

@@ -24,7 +24,7 @@ static const unsigned int LexerTextBufferSize = 65536U;
 /**
 */
 MaterialParser::MaterialParser() :
-    parserState(StateParseRoot),
+    parserState(STATE_PARSE_ROOT),
     currentMaterial(NULL),
     currentPass(NULL),
     currentTextureUnitState(NULL)
@@ -48,7 +48,7 @@ MaterialParser::~MaterialParser()
 void
 MaterialParser::ParseScript(const char* const name)
 {
-    FileHandle fd = FSWrapper::Open(name, ReadAccess, Buffer, 0777);
+    FileHandle fd = FSWrapper::Open(name, READ_ACCESS, BUFFER, 0777);
     unsigned int fileSize = FSWrapper::GetFileSize(fd);
     void* fileBuffer = CE_MALLOC_ALIGN(CE_CACHE_LINE_SIZE, fileSize);
     CE_ASSERT(fileBuffer != NULL, "MaterialParser::ParseScript(): failed to allocate '%i' bytes\n", fileSize);
@@ -57,7 +57,7 @@ MaterialParser::ParseScript(const char* const name)
 
     stb_c_lexer_init(&this->lexer, (char*)fileBuffer, (char*)((uintptr_t)fileBuffer + fileSize), this->textBuffer, LexerTextBufferSize);
 
-    this->parserState = StateParseRoot;
+    this->parserState = STATE_PARSE_ROOT;
     this->currentMaterial = NULL;
     this->currentPass = NULL;
     this->currentTextureUnitState = NULL;
@@ -71,16 +71,16 @@ MaterialParser::ParseScript(const char* const name)
 
         switch (this->parserState)
         {
-            case StateParseRoot:
+            case STATE_PARSE_ROOT:
                 this->ParseRoot();
                 break;
-            case StateParseMaterial:
+            case STATE_PARSE_MATERIAL:
                 this->ParseMaterial();
                 break;
-            case StateParsePass:
+            case STATE_PARSE_PASS:
                 this->ParsePass();
                 break;
-            case StateParseTextureUnit:
+            case STATE_PARSE_TEXTUREUNIT:
                 this->ParseTextureUnitState();
                 break;
         }
@@ -102,7 +102,7 @@ MaterialParser::ParseRoot()
         if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
         if ('{' == this->lexer.token)
         {
-            this->parserState = StateParseMaterial;
+            this->parserState = STATE_PARSE_MATERIAL;
             this->currentMaterial = MaterialManager::Instance()->Create(matName);
         }
     }
@@ -116,14 +116,14 @@ MaterialParser::ParseMaterial()
 {
     if ('}' == this->lexer.token)
     {
-        this->parserState = StateParseRoot;
+        this->parserState = STATE_PARSE_ROOT;
     }
     else if (0 == strcmp(this->lexer.string, "pass"))
     {
         if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
         if ('{' == this->lexer.token)
         {
-            this->parserState = StateParsePass;
+            this->parserState = STATE_PARSE_PASS;
             this->currentPass = this->currentMaterial->CreatePass();
         }
     }
@@ -137,14 +137,14 @@ MaterialParser::ParsePass()
 {
     if ('}' == this->lexer.token)
     {
-        this->parserState = StateParseMaterial;
+        this->parserState = STATE_PARSE_MATERIAL;
     }
     else if (0 == strcmp(this->lexer.string, "texture_unit"))
     {
         if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
         if ('{' == this->lexer.token)
         {
-            this->parserState = StateParseTextureUnit;
+            this->parserState = STATE_PARSE_TEXTUREUNIT;
             this->currentTextureUnitState = this->currentPass->CreateTextureUnitState();
         }
     }
@@ -345,7 +345,7 @@ MaterialParser::ParseTextureUnitState()
     if ('}' == this->lexer.token)
     {
         CE_ASSERT(this->currentTextureUnitState->GetTextureName().Size() > 0U, "MaterialParser::ParseTextureUnitState(): parse error, missing 'texture' in 'texture_unit'\n");
-        this->parserState = StateParsePass;
+        this->parserState = STATE_PARSE_PASS;
     }
     else if (0 == strcmp(this->lexer.string, "texture"))
     {

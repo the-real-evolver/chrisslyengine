@@ -66,7 +66,7 @@ MeshManager::Load(const char* const filename)
     String skeletonPath;
     unsigned char skeletonPathLength = 0U;
 
-    FileHandle fd = FSWrapper::Open(filename, ReadAccess, Random, 0777);
+    FileHandle fd = FSWrapper::Open(filename, READ_ACCESS, RANDOM, 0777);
 
     while (FSWrapper::Read(fd, &currentChunk, 1U) > 0)
     {

@@ -18,13 +18,14 @@ LOCAL_C_INCLUDES += $(CE_INCLUDES) $(CE_INCLUDES)/core $(CE_INCLUDES)/graphics $
 
 LOCAL_SRC_FILES := $(CE_SRC_FILES)/core/android/androiddebug.cpp $(CE_SRC_FILES)/core/android/androidfswrapper.cpp \
                    $(CE_SRC_FILES)/core/vector3.cpp $(CE_SRC_FILES)/core/matrix3.cpp $(CE_SRC_FILES)/core/matrix4.cpp $(CE_SRC_FILES)/core/quaternion.cpp $(CE_SRC_FILES)/core/plane.cpp \
+                   $(CE_SRC_FILES)/core/intersection.cpp $(CE_SRC_FILES)/core/damping.cpp \
                    $(CE_SRC_FILES)/core/chrisslymemory.cpp $(CE_SRC_FILES)/core/chrisslystring.cpp $(CE_SRC_FILES)/core/timer.cpp \
                    $(CE_SRC_FILES)/graphics/texturebase.cpp $(CE_SRC_FILES)/graphics/textureunitstate.cpp $(CE_SRC_FILES)/graphics/texturemanager.cpp \
                    $(CE_SRC_FILES)/graphics/pass.cpp $(CE_SRC_FILES)/graphics/material.cpp $(CE_SRC_FILES)/graphics/materialmanager.cpp $(CE_SRC_FILES)/graphics/materialparser.cpp \
                    $(CE_SRC_FILES)/graphics/graphicssystem.cpp \
                    $(CE_SRC_FILES)/graphics/hardwarevertexbufferbase.cpp \
                    $(CE_SRC_FILES)/graphics/graphics/gpuprogrammanager.cpp \
-                   $(CE_SRC_FILES)/graphics/meshmanager.cpp $(CE_SRC_FILES)/graphics/mesh.cpp $(CE_SRC_FILES)/graphics/submesh.cpp \
+                   $(CE_SRC_FILES)/graphics/meshmanager.cpp $(CE_SRC_FILES)/graphics/mesh.cpp $(CE_SRC_FILES)/graphics/submesh.cpp $(CE_SRC_FILES)/graphics/skeleton.cpp $(CE_SRC_FILES)/graphics/skeletonserialiser.cpp \
                    $(CE_SRC_FILES)/graphics/subentity.cpp  $(CE_SRC_FILES)/graphics/entity.cpp \
                    $(CE_SRC_FILES)/graphics/renderqueue.cpp \
                    $(CE_SRC_FILES)/graphics/light.cpp \

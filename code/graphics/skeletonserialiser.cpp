@@ -78,7 +78,7 @@ parse_matrix4()
 void
 ce_graphics_import_skeleton(char const* const file_path, Mesh* const mesh)
 {
-    FileHandle fd = FSWrapper::Open(file_path, ReadAccess, Buffer, 0777);
+    FileHandle fd = FSWrapper::Open(file_path, READ_ACCESS, BUFFER, 0777);
     unsigned int file_size = FSWrapper::GetFileSize(fd);
     void* file_buffer = CE_MALLOC_ALIGN(CE_CACHE_LINE_SIZE, file_size);
     CE_ASSERT(file_buffer != NULL, "ce_graphics_import_skeleton(): failed to allocate '%i' bytes\n", file_size);

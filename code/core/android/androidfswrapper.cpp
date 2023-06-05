@@ -80,9 +80,9 @@ AndroidFSWrapper::Get(core::SeekOrigin origin)
 {
     switch (origin)
     {
-        case core::Begin:   return SEEK_SET;
-        case core::Current: return SEEK_CUR;
-        case core::End:     return SEEK_END;
+        case core::BEGIN:   return SEEK_SET;
+        case core::CURRENT: return SEEK_CUR;
+        case core::END:     return SEEK_END;
         default: CE_ASSERT(false, "FSWrapper::Get(): illegal SeekOrigin '%i'\n", origin);
     }
 
@@ -97,10 +97,10 @@ AndroidFSWrapper::Get(core::AccessPattern pattern)
 {
     switch (pattern)
     {
-        case core::Unknown:   return AASSET_MODE_UNKNOWN;
-        case core::Random:    return AASSET_MODE_RANDOM;
-        case core::Streaming: return AASSET_MODE_STREAMING;
-        case core::Buffer:    return AASSET_MODE_BUFFER;
+        case core::UNKNOWN:   return AASSET_MODE_UNKNOWN;
+        case core::RANDOM:    return AASSET_MODE_RANDOM;
+        case core::STREAMING: return AASSET_MODE_STREAMING;
+        case core::BUFFER:    return AASSET_MODE_BUFFER;
         default: CE_ASSERT(false, "FSWrapper::Get(): illegal AccessPattern '%i'\n", pattern);
     }
 

@@ -53,7 +53,7 @@ VorbisCodec::~VorbisCodec()
 void
 VorbisCodec::SetupSound(const char* const filename, Mode mode, void** sampleBuffer, unsigned int& length, AudioFormat& format, SoundType& type, int& channels, int& bits, unsigned int& sampleRate)
 {
-    FileHandle fd = FSWrapper::Open(filename, ReadAccess, Buffer, 0777);
+    FileHandle fd = FSWrapper::Open(filename, READ_ACCESS, BUFFER, 0777);
     unsigned int fileSize = FSWrapper::GetFileSize(fd);
     this->fileBuffer = CE_MALLOC_ALIGN(CE_CACHE_LINE_SIZE, fileSize);
     CE_ASSERT(this->fileBuffer != NULL, "VorbisCodec::SetupSound(): failed to allocate '%i' bytes for file buffer '%s'\n", fileSize, filename);

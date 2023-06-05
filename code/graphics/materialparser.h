@@ -29,10 +29,10 @@ private:
     /// defines the state of the parser
     enum ParserState
     {
-        StateParseRoot,
-        StateParseMaterial,
-        StateParsePass,
-        StateParseTextureUnit
+        STATE_PARSE_ROOT,
+        STATE_PARSE_MATERIAL,
+        STATE_PARSE_PASS,
+        STATE_PARSE_TEXTUREUNIT
     };
 
     /// parse root of the material description

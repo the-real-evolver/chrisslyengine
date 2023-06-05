@@ -78,7 +78,7 @@ TextureManager::Load(const char* const name, TextureType type)
     unsigned int i;
     for (i = 0U; i < numImages; ++i)
     {
-        FileHandle fd = FSWrapper::Open(fileNames[i], ReadAccess, Random, 0777);
+        FileHandle fd = FSWrapper::Open(fileNames[i], READ_ACCESS, RANDOM, 0777);
         unsigned int fileSize = FSWrapper::GetFileSize(fd);
         FSWrapper::Read(fd, &format, 1U);
         FSWrapper::Read(fd, &width, 2U);

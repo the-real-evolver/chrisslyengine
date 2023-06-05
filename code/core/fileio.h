@@ -14,31 +14,31 @@ namespace core
     /// access modes
     enum AccessMode
     {
-        ReadAccess,
-        WriteAccess,
-        AppendAccess,
-        ReadWriteAccess
+        READ_ACCESS,
+        WRITE_ACCESS,
+        APPEND_ACCESS,
+        READ_WRITE_ACCESS
     };
 
     /// access pattern
     enum AccessPattern
     {
         // no specific information about how data will be accessed
-        Unknown,
+        UNKNOWN,
         // read chunks and seek forward and backward
-        Random,
+        RANDOM,
         // read sequentially, with an occasional forward seek
-        Streaming,
+        STREAMING,
         // caller plans to ask for a read-only buffer with all data
-        Buffer
+        BUFFER
     };
 
     /// seek origins
     enum SeekOrigin
     {
-        Begin,
-        Current,
-        End
+        BEGIN,
+        CURRENT,
+        END
     };
 
 } // namespace core

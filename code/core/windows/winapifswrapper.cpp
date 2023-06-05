@@ -146,10 +146,10 @@ WinAPIFSWrapper::Get(core::AccessMode mode)
 {
     switch (mode)
     {
-        case core::ReadAccess:      return GENERIC_READ;
-        case core::WriteAccess:     return GENERIC_WRITE;
-        case core::ReadWriteAccess: return GENERIC_READ | GENERIC_WRITE;
-        case core::AppendAccess:    return FILE_APPEND_DATA;
+        case core::READ_ACCESS:         return GENERIC_READ;
+        case core::WRITE_ACCESS:        return GENERIC_WRITE;
+        case core::READ_WRITE_ACCESS:   return GENERIC_READ | GENERIC_WRITE;
+        case core::APPEND_ACCESS:       return FILE_APPEND_DATA;
         default: CE_ASSERT(false, "FSWrapper::Get(): illegal AccessMode '%i'\n", mode);
     }
 
@@ -164,9 +164,9 @@ WinAPIFSWrapper::Get(core::SeekOrigin origin)
 {
     switch (origin)
     {
-        case core::Begin:   return FILE_BEGIN;
-        case core::Current: return FILE_CURRENT;
-        case core::End:     return FILE_END;
+        case core::BEGIN:   return FILE_BEGIN;
+        case core::CURRENT: return FILE_CURRENT;
+        case core::END:     return FILE_END;
         default: CE_ASSERT(false, "FSWrapper::Get(): illegal SeekOrigin '%i'\n", origin);
     }
 
@@ -181,10 +181,10 @@ WinAPIFSWrapper::GetDispositionFlag(core::AccessMode mode)
 {
     switch (mode)
     {
-        case core::ReadAccess:      return OPEN_EXISTING;
-        case core::WriteAccess:     return CREATE_ALWAYS;
-        case core::ReadWriteAccess:
-        case core::AppendAccess:    return OPEN_ALWAYS;
+        case core::READ_ACCESS:         return OPEN_EXISTING;
+        case core::WRITE_ACCESS:        return CREATE_ALWAYS;
+        case core::READ_WRITE_ACCESS:
+        case core::APPEND_ACCESS:       return OPEN_ALWAYS;
         default: CE_ASSERT(false, "FSWrapper::GetDispositionFlag(): illegal AccessMode '%i'\n", mode);
     }
 
