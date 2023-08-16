@@ -35,7 +35,7 @@ GLES2Texture::GLES2Texture(void* faces[6U]) :
     TextureBase(faces),
     textureName(0)
 {
-    this->textureBuffer = faces[0U]; // temporary workaround to avoid crash and at least render something
+
 }
 
 //------------------------------------------------------------------------------
@@ -60,6 +60,8 @@ GLES2Texture::CreateInternalResources()
 {
     if (!this->isRenderTarget)
     {
+        if (graphics::TEX_TYPE_CUBE_MAP == this->type) this->textureBuffer = this->cubeFaces[0U]; // temporary workaround to avoid crash and at least render something
+
         glGenTextures(1, &this->textureName);
         glBindTexture(GL_TEXTURE_2D, this->textureName);
 

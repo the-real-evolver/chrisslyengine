@@ -34,7 +34,6 @@ PSPTexture::PSPTexture(void* faces[6U]) :
     TextureBase(faces),
     mipmapInfos(NULL)
 {
-    this->textureBuffer = faces[0U]; // workaround to avoid crash and at least render something (PSP does not support cubemaps)
 }
 
 //------------------------------------------------------------------------------
@@ -56,6 +55,8 @@ PSPTexture::CreateInternalResources()
 {
     if (!this->isRenderTarget)
     {
+        if (graphics::TEX_TYPE_CUBE_MAP == this->type) this->textureBuffer = this->cubeFaces[0U]; // workaround to avoid crash and at least render something (PSP does not support cubemaps)
+
         ce_array_init(this->mipmapInfos, this->numMipmaps);
 
         void* mipmapBuffer = this->textureBuffer;
