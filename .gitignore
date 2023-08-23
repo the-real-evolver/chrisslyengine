@@ -27,3 +27,10 @@ psp/*.PBP
 psp/*.SFO
 psp/export/*.material
 
+# ignore android studio temporary files etc.
+android/\.*/
+android/app/\.*/
+android/app/build
+android/app/src/main/assets/*.ogg
+android/app/src/main/assets/*.material
+android/local.properties

@@ -45,7 +45,7 @@ public:
 
 protected:
     /// default constructor
-    HardwareVertexBufferBase();
+    HardwareVertexBufferBase() {};
 
     unsigned int numVertices;
     unsigned int bytesPerVertex;

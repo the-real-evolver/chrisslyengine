@@ -4,6 +4,9 @@
 //------------------------------------------------------------------------------
 #include "eglrenderwindow.h"
 #include "core/debug.h"
+#if __CE_ANDROID__
+#include <android/native_window.h>
+#endif
 
 namespace chrissly
 {

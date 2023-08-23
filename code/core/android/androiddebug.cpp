@@ -23,6 +23,6 @@ ce_android_assert(bool cond, const char* const exp, const char* const file, int 
         snprintf(output, 256U, "Assertion: '%s' in file '%s' at line %i, %s\n", exp, file, line, message);
         // Log an assertion failure and SIGTRAP the process to have a chance
         // to inspect it, if a debugger is attached. This uses the FATAL priority.
-        __android_log_assert("assert", "chrisslyengine_android", output);
+        __android_log_assert("assert", "chrisslyengine_android", "%s", output);
     }
 }

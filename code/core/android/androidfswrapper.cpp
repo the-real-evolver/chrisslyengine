@@ -19,7 +19,7 @@ AndroidFSWrapper::Open(const char* const fileName, core::AccessMode mode, core::
 {
     core::FileHandle fileHandle;
     fileHandle.handle = AAssetManager_open(AndroidFSWrapper::AssetManager, fileName, AndroidFSWrapper::Get(pattern));
-    CE_ASSERT(fileHandle.handle >= 0, "FSWrapper::Open(): can't open file '%s'\n", fileName);
+    CE_ASSERT(fileHandle.handle != NULL, "FSWrapper::Open(): can't open file '%s'\n", fileName);
     return fileHandle;
 }
 

@@ -1,14 +1,10 @@
 Building Chrissly for Android
 ========================================================================
-- edit 'android\ChrisslyEngine_Android\build.cmd'
-- change 'NDK' variable to point to your NDK installation directory
-- run 'build.cmd'
+- install Android Studio Giraffe | 2022.3.1 or higher
+- open project 'chrisslyengine/android' in Android Studio
+- press press 'CTRL + F9' to build the application
 - run 'exportassets.cmd'
 
-Running the sample with Eclipse and the Android Development Tool (ADT)
+Running the sample with Android Studio
 ========================================================================
-- install eclipse and adt as described here: http://developer.android.com/ndk/guides/setup.html
-- open eclipse
-- 'File' -> 'Import' -> 'Existing Projects into Workspace'
-- select 'android\ChrisslyEngine_Android\' and click 'Finish'
-- right click the application in the project explorer 'Run As' -> '1 Android Application'
+- press 'SHIFT + F10' in Android Studio to start the sample application

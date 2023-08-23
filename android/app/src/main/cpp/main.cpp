@@ -90,7 +90,7 @@ Enter(struct android_app* state)
     window->AddViewport(camera, 0, 0, window->GetWidth(), window->GetHeight());
 
     MaterialManager::Instance()->Initialise();
-    Material* material = MaterialManager::Instance()->CreateOrRetrieve("cerberus_material");
+    Material* material = MaterialManager::Instance()->GetByName("cerberus_material");
     gpuProgram = new GpuProgram(MorphAnimVertexShader, FragmentShader);
     material->GetPass(0U)->SetGpuProgram(gpuProgram);
 
@@ -224,9 +224,6 @@ HandleCommands(struct android_app* app, int32_t cmd)
 void
 android_main(struct android_app* state)
 {
-    // make sure glue isn't stripped
-    app_dummy();
-
     // set callbacks
     state->onAppCmd = HandleCommands;
     state->onInputEvent = HandleInputEvents;

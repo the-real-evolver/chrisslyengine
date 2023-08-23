@@ -3,9 +3,9 @@
 :: Description: export assets for Android platform
 
 :: setup variables
-set ProjectFolder=%CD%\..\..
+set ProjectFolder=%CD%\..
 set SrcFolder=%ProjectFolder%\assets
-set DstFolder=%ProjectFolder%\android\ChrisslyEngine_Android\assets
+set DstFolder=%ProjectFolder%\android\app\src\main\assets
 set ToolChainFolder=%ProjectFolder%\tools\bin\win32
 
 cd %ToolChainFolder%
@@ -18,4 +18,4 @@ xcopy /i /y %SrcFolder%\materials\materials.material %DstFolder%\materials.mater
 
 xcopy /i /y %SrcFolder%\audio\intro.ogg %DstFolder%\intro.ogg*
 
-cd %ProjectFolder%\android\ChrisslyEngine_Android
+cd %ProjectFolder%\android
