@@ -60,25 +60,48 @@ GLES2Texture::CreateInternalResources()
 {
     if (!this->isRenderTarget)
     {
-        if (graphics::TEX_TYPE_CUBE_MAP == this->type) this->textureBuffer = this->cubeFaces[0U]; // temporary workaround to avoid crash and at least render something
+        GLenum texType = GLES2Mappings::Get(this->type);
 
         glGenTextures(1, &this->textureName);
-        glBindTexture(GL_TEXTURE_2D, this->textureName);
+        glBindTexture(texType, this->textureName);
 
         if (GLES2Mappings::IsCompressed(this->format))
         {
             GLsizei imageSize = GLES2Mappings::GetImageSize(this->format, this->width, this->height);
-            glCompressedTexImage2D(GL_TEXTURE_2D, 0, GLES2Mappings::Get(this->format), this->width, this->height, 0, imageSize, this->textureBuffer);
+            if (graphics::TEX_TYPE_CUBE_MAP == this->type)
+            {
+                glCompressedTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, GLES2Mappings::Get(this->format), this->width, this->height, 0, imageSize, this->cubeFaces[0U]);
+                glCompressedTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, GLES2Mappings::Get(this->format), this->width, this->height, 0, imageSize, this->cubeFaces[0U]);
+                glCompressedTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0, GLES2Mappings::Get(this->format), this->width, this->height, 0, imageSize, this->cubeFaces[0U]);
+                glCompressedTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, GLES2Mappings::Get(this->format), this->width, this->height, 0, imageSize, this->cubeFaces[0U]);
+                glCompressedTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 0, GLES2Mappings::Get(this->format), this->width, this->height, 0, imageSize, this->cubeFaces[0U]);
+                glCompressedTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, GLES2Mappings::Get(this->format), this->width, this->height, 0, imageSize, this->cubeFaces[0U]);
+            }
+            else
+            {
+                glCompressedTexImage2D(GL_TEXTURE_2D, 0, GLES2Mappings::Get(this->format), this->width, this->height, 0, imageSize, this->textureBuffer);
+            }
         }
         else
         {
             glPixelStorei(GL_UNPACK_ALIGNMENT, (graphics::PF_R8G8B8 == this->format) ? 1 : 4);
-            glTexImage2D(GL_TEXTURE_2D, 0, GLES2Mappings::GetInternalFormat(this->format), this->width, this->height, 0,
-                            GLES2Mappings::GetInternalFormat(this->format), GLES2Mappings::Get(this->format), this->textureBuffer);
+            if (graphics::TEX_TYPE_CUBE_MAP == this->type)
+            {
+                glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, GLES2Mappings::GetInternalFormat(this->format), this->width, this->height, 0, GLES2Mappings::GetInternalFormat(this->format),GLES2Mappings::Get(this->format), this->cubeFaces[0U]);
+                glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, GLES2Mappings::GetInternalFormat(this->format), this->width, this->height, 0, GLES2Mappings::GetInternalFormat(this->format),GLES2Mappings::Get(this->format), this->cubeFaces[1U]);
+                glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0, GLES2Mappings::GetInternalFormat(this->format), this->width, this->height, 0, GLES2Mappings::GetInternalFormat(this->format),GLES2Mappings::Get(this->format), this->cubeFaces[2U]);
+                glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, GLES2Mappings::GetInternalFormat(this->format), this->width, this->height, 0, GLES2Mappings::GetInternalFormat(this->format),GLES2Mappings::Get(this->format), this->cubeFaces[3U]);
+                glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 0, GLES2Mappings::GetInternalFormat(this->format), this->width, this->height, 0, GLES2Mappings::GetInternalFormat(this->format),GLES2Mappings::Get(this->format), this->cubeFaces[4U]);
+                glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, GLES2Mappings::GetInternalFormat(this->format), this->width, this->height, 0, GLES2Mappings::GetInternalFormat(this->format),GLES2Mappings::Get(this->format), this->cubeFaces[5U]);
+            }
+            else
+            {
+                glTexImage2D(GL_TEXTURE_2D, 0, GLES2Mappings::GetInternalFormat(this->format), this->width, this->height, 0, GLES2Mappings::GetInternalFormat(this->format), GLES2Mappings::Get(this->format), this->textureBuffer);
+            }
 
             if (0 == this->numMipmaps)
             {
-                glGenerateMipmap(GL_TEXTURE_2D);
+                glGenerateMipmap(texType);
                 unsigned int mipmapWidth = this->width;
                 unsigned int mipmapHeight = this->height;
                 while (mipmapWidth > 1U && mipmapHeight > 1U)

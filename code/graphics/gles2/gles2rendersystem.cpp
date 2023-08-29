@@ -80,6 +80,8 @@ GLES2RenderSystem::Initialise(void* const customParams)
 
     glEnable(GL_SCISSOR_TEST);
     CE_GL_ERROR_CHECK("glEnable");
+    glDepthFunc(GL_LEQUAL);
+    CE_GL_ERROR_CHECK("glDepthFunc");
 
     this->defaultGpuProgram = CE_NEW GLES2GpuProgram(DefaultVertexShader, DefaultFragmentShader);
     this->defaultGpuProgramFog = CE_NEW GLES2GpuProgram(DefaultVertexShaderFog, DefaultFragmentShaderFog);
@@ -257,16 +259,22 @@ GLES2RenderSystem::Render(graphics::SubEntity* const renderable)
         CE_GL_ERROR_CHECK("glBindBuffer");
 
         GLuint vertexTexCoordHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_TEXTURE_COORDINATES);
-        glVertexAttribPointer(vertexTexCoordHandle, 2, GL_FLOAT, GL_FALSE, stride, (void*)0U);
-        CE_GL_ERROR_CHECK("glVertexAttribPointer: texturecoords");
-        glEnableVertexAttribArray(vertexTexCoordHandle);
-        CE_GL_ERROR_CHECK("glEnableVertexAttribArray: texturecoords");
+        if (vertexTexCoordHandle < GL_MAX_VERTEX_ATTRIBS)
+        {
+            glVertexAttribPointer(vertexTexCoordHandle, 2, GL_FLOAT, GL_FALSE, stride, (void *) 0U);
+            CE_GL_ERROR_CHECK("glVertexAttribPointer: texturecoords");
+            glEnableVertexAttribArray(vertexTexCoordHandle);
+            CE_GL_ERROR_CHECK("glEnableVertexAttribArray: texturecoords");
+        }
 
         GLuint vertexNormalHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_NORMAL);
-        glVertexAttribPointer(vertexNormalHandle, 3, GL_FLOAT, GL_FALSE, stride, (void*)12U);
-        CE_GL_ERROR_CHECK("glVertexAttribPointer: normal");
-        glEnableVertexAttribArray(vertexNormalHandle);
-        CE_GL_ERROR_CHECK("glEnableVertexAttribArray: normal");
+        if (vertexNormalHandle < GL_MAX_VERTEX_ATTRIBS)
+        {
+            glVertexAttribPointer(vertexNormalHandle, 3, GL_FLOAT, GL_FALSE, stride, (void *) 12U);
+            CE_GL_ERROR_CHECK("glVertexAttribPointer: normal");
+            glEnableVertexAttribArray(vertexNormalHandle);
+            CE_GL_ERROR_CHECK("glEnableVertexAttribArray: normal");
+        }
 
         GLuint vertexPositionHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_POSITION);
         glVertexAttribPointer(vertexPositionHandle, 3, GL_FLOAT, GL_FALSE, stride, (void*)24U);
@@ -348,8 +356,9 @@ GLES2RenderSystem::SetPass(graphics::Pass* const pass)
     {
         graphics::TextureUnitState* tus = pass->GetTextureUnitState(textureUnitState);
         graphics::Texture* tex = tus->GetTexture();
+        GLenum texType = GLES2Mappings::Get(tex->GetType());
         glActiveTexture(GL_TEXTURE0 + textureUnitState);
-        glBindTexture(GL_TEXTURE_2D, tex->GetName());
+        glBindTexture(texType, tex->GetName());
 
         GLint min, mag;
         GLES2Mappings::Get(tus->GetTextureFiltering(graphics::FT_MIN), tus->GetTextureFiltering(graphics::FT_MAG), tus->GetTextureFiltering(graphics::FT_MIP), min, mag);
@@ -364,11 +373,11 @@ GLES2RenderSystem::SetPass(graphics::Pass* const pass)
                 min = GL_LINEAR;
             }
         }
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mag);
+        glTexParameteri(texType, GL_TEXTURE_MIN_FILTER, min);
+        glTexParameteri(texType, GL_TEXTURE_MAG_FILTER, mag);
 
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GLES2Mappings::Get(tus->GetTextureAddressingMode().u));
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GLES2Mappings::Get(tus->GetTextureAddressingMode().v));
+        glTexParameteri(texType, GL_TEXTURE_WRAP_S, GLES2Mappings::Get(tus->GetTextureAddressingMode().u));
+        glTexParameteri(texType, GL_TEXTURE_WRAP_T, GLES2Mappings::Get(tus->GetTextureAddressingMode().v));
     }
 
     // set gpu program to use
@@ -458,6 +467,9 @@ GLES2RenderSystem::SetPass(graphics::Pass* const pass)
                     glUniformMatrix4fv(def->location, def->arraySize, GL_FALSE, (float*)def->buffer);
                     break;
                 case graphics::GCT_SAMPLER2D:
+                    glUniform1iv(def->location, def->arraySize, (int*)def->buffer);
+                    break;
+                case graphics::GCT_SAMPLERCUBE:
                     glUniform1iv(def->location, def->arraySize, (int*)def->buffer);
                     break;
             }

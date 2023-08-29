@@ -93,6 +93,15 @@ TextureBase::~TextureBase()
 //------------------------------------------------------------------------------
 /**
 */
+ TextureType
+ TextureBase::GetType() const
+ {
+    return this->type;
+ }
+
+//------------------------------------------------------------------------------
+/**
+*/
 void
 TextureBase::SetFormat(PixelFormat pf)
 {

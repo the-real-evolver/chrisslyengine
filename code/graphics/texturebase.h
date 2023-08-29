@@ -35,6 +35,8 @@ public:
     /// destructor
     virtual ~TextureBase();
 
+    /// gets the type of the texture (2d, cubemap etc.)
+    TextureType GetType() const;
     /// sets the pixel format for the texture surface
     void SetFormat(PixelFormat pf);
     /// gets the pixel format for the texture surface

@@ -216,6 +216,14 @@ GLES2GpuProgram::ExtractConstantDefs()
                     memcpy(uniform->buffer, &samplerIndex, uniform->size);
                     ++samplerIndex;
                     break;
+                case GL_SAMPLER_CUBE:
+                    uniform->constType = graphics::GCT_SAMPLERCUBE;
+                    uniform->size = sizeof(int);
+                    uniform->arraySize = arraySize;
+                    uniform->buffer = CE_MALLOC(uniform->size * arraySize);
+                    memcpy(uniform->buffer, &samplerIndex, uniform->size);
+                    ++samplerIndex;
+                    break;
                 default:
                     CE_ASSERT(false, "GLES2GpuProgram::ExtractConstantDefs(): unsupported uniform type '%i'\n", type);
             }

@@ -41,6 +41,8 @@ public:
     static GLbitfield Get(graphics::FrameBufferType fbt);
     /// get rgba components of the given color (Format: AABBGGRR) as float value
     static void Get(unsigned int colour, float& red, float& green, float& blue, float& alpha);
+    /// return a OpenGL ES equivalent for a TextureType value
+    static GLenum Get(graphics::TextureType tt);
 };
 } // namespace chrissly
 //------------------------------------------------------------------------------

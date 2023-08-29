@@ -264,4 +264,20 @@ GLES2Mappings::Get(unsigned int colour, float& red, float& green, float& blue, f
     red   = (colour & 0x000000ff) / 255.0f;
 }
 
+//------------------------------------------------------------------------------
+/**
+*/
+GLenum
+GLES2Mappings::Get(graphics::TextureType tt)
+{
+    switch (tt)
+    {
+        case graphics::TEX_TYPE_2D:         return GL_TEXTURE_2D;
+        case graphics::TEX_TYPE_CUBE_MAP:   return GL_TEXTURE_CUBE_MAP;
+        default: CE_ASSERT(false, "GLES2Mappings::Get(): illegal or not supported TextureType '%i'\n", tt);
+    }
+
+    return 0U;
+}
+
 } // namespace chrissly
