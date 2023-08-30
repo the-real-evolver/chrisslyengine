@@ -63,7 +63,7 @@ GLES2HardwareVertexBuffer::Unmap()
         CE_GL_ERROR_CHECK("glBindBuffer");
         glBufferData(GL_ARRAY_BUFFER, this->numVertices * this->bytesPerVertex, this->vertexBuffer, GL_STATIC_DRAW);
         CE_GL_ERROR_CHECK("glBufferData");
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindBuffer(GL_ARRAY_BUFFER, 0U);
         CE_GL_ERROR_CHECK("glBindBuffer");
     }
 }

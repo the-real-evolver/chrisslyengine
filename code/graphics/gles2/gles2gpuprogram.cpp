@@ -24,11 +24,11 @@ GLES2GpuProgram::GLES2GpuProgram(const char* const vertexShaderSource, const cha
     defaultParams(NULL)
 {
     GLuint vertexShader = this->CreateShaderFromString(GL_VERTEX_SHADER, vertexShaderSource);
-    CE_ASSERT(0 != vertexShader, "GLES2GpuProgram::GLES2GpuProgram(): Could not create vertex shader.\n");
+    CE_ASSERT(0U != vertexShader, "GLES2GpuProgram::GLES2GpuProgram(): Could not create vertex shader.\n");
     GLuint fragmentShader = this->CreateShaderFromString(GL_FRAGMENT_SHADER, fragmentShaderSource);
-    CE_ASSERT(0 != fragmentShader, "GLES2GpuProgram::GLES2GpuProgram(): Could not create fragment shader.\n");
+    CE_ASSERT(0U != fragmentShader, "GLES2GpuProgram::GLES2GpuProgram(): Could not create fragment shader.\n");
     this->gpuProgram = this->CreateProgram(vertexShader, fragmentShader);
-    CE_ASSERT(0 != this->gpuProgram, "GLES2GpuProgram::GLES2GpuProgram(): Could not create program.\n");
+    CE_ASSERT(0U != this->gpuProgram, "GLES2GpuProgram::GLES2GpuProgram(): Could not create program.\n");
 
     this->uniformLocations[graphics::GpuProgramParameters::ACT_WORLD_MATRIX] = glGetUniformLocation(this->gpuProgram, "worldMatrix");
     CE_GL_ERROR_CHECK("glGetUniformLocation");

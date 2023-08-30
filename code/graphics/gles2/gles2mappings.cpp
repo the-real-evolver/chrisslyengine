@@ -15,10 +15,10 @@ namespace chrissly
 void
 GLES2Mappings::MakeGLMatrix(GLfloat gl_matrix[16U], const core::Matrix4& m)
 {
-    gl_matrix[0]  = m[0][0]; gl_matrix[1]  = m[1][0]; gl_matrix[2]  = m[2][0]; gl_matrix[3]  = m[3][0];
-    gl_matrix[4]  = m[0][1]; gl_matrix[5]  = m[1][1]; gl_matrix[6]  = m[2][1]; gl_matrix[7]  = m[3][1];
-    gl_matrix[8]  = m[0][2]; gl_matrix[9]  = m[1][2]; gl_matrix[10] = m[2][2]; gl_matrix[11] = m[3][2];
-    gl_matrix[12] = m[0][3]; gl_matrix[13] = m[1][3]; gl_matrix[14] = m[2][3]; gl_matrix[15] = m[3][3];
+    gl_matrix[0U]  = m[0U][0U]; gl_matrix[1U]  = m[1U][0U]; gl_matrix[2U]  = m[2U][0U]; gl_matrix[3U]  = m[3U][0U];
+    gl_matrix[4U]  = m[0U][1U]; gl_matrix[5U]  = m[1U][1U]; gl_matrix[6U]  = m[2U][1U]; gl_matrix[7U]  = m[3U][1U];
+    gl_matrix[8U]  = m[0U][2U]; gl_matrix[9U]  = m[1U][2U]; gl_matrix[10U] = m[2U][2U]; gl_matrix[11U] = m[3U][2U];
+    gl_matrix[12U] = m[0U][3U]; gl_matrix[13U] = m[1U][3U]; gl_matrix[14U] = m[2U][3U]; gl_matrix[15U] = m[3U][3U];
 }
 
 //------------------------------------------------------------------------------

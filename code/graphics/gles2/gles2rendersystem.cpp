@@ -261,7 +261,7 @@ GLES2RenderSystem::Render(graphics::SubEntity* const renderable)
         GLuint vertexTexCoordHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_TEXTURE_COORDINATES);
         if (vertexTexCoordHandle < GL_MAX_VERTEX_ATTRIBS)
         {
-            glVertexAttribPointer(vertexTexCoordHandle, 2, GL_FLOAT, GL_FALSE, stride, (void *) 0U);
+            glVertexAttribPointer(vertexTexCoordHandle, 2, GL_FLOAT, GL_FALSE, stride, (void*)0U);
             CE_GL_ERROR_CHECK("glVertexAttribPointer: texturecoords");
             glEnableVertexAttribArray(vertexTexCoordHandle);
             CE_GL_ERROR_CHECK("glEnableVertexAttribArray: texturecoords");
@@ -270,7 +270,7 @@ GLES2RenderSystem::Render(graphics::SubEntity* const renderable)
         GLuint vertexNormalHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_NORMAL);
         if (vertexNormalHandle < GL_MAX_VERTEX_ATTRIBS)
         {
-            glVertexAttribPointer(vertexNormalHandle, 3, GL_FLOAT, GL_FALSE, stride, (void *) 12U);
+            glVertexAttribPointer(vertexNormalHandle, 3, GL_FLOAT, GL_FALSE, stride, (void*)12U);
             CE_GL_ERROR_CHECK("glVertexAttribPointer: normal");
             glEnableVertexAttribArray(vertexNormalHandle);
             CE_GL_ERROR_CHECK("glEnableVertexAttribArray: normal");
@@ -285,7 +285,7 @@ GLES2RenderSystem::Render(graphics::SubEntity* const renderable)
         glDrawArrays(GL_TRIANGLES, 0, vertexBuffer->GetNumVertices());
         CE_GL_ERROR_CHECK("glDrawArrays");
 
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindBuffer(GL_ARRAY_BUFFER, 0U);
         CE_GL_ERROR_CHECK("glBindBuffer");
     }
 }
@@ -431,7 +431,7 @@ GLES2RenderSystem::SetPass(graphics::Pass* const pass)
         if (lit)
         {
             core::Matrix4 invViewMat = this->viewMatrix.Inverse();
-            core::Vector3 cameraPosition(invViewMat[0][3], invViewMat[1][3], invViewMat[2][3]);
+            core::Vector3 cameraPosition(invViewMat[0U][3U], invViewMat[1U][3U], invViewMat[2U][3U]);
             params->SetNamedConstant("cameraPosition", cameraPosition);
             params->SetNamedConstant("lightParams[0]", this->defaultLightShaderParams, MaxLights);
         }
@@ -495,20 +495,20 @@ GLES2RenderSystem::ProcessLights(ce_hash_table* const lights)
             graphics::Light* light = (graphics::Light*)((ce_key_value_pair*)it->data)->value;
 
             const core::Vector3& position = light->GetPosition();
-            this->defaultLightShaderParams[lightIndex][0][0] = position.x;
-            this->defaultLightShaderParams[lightIndex][0][1] = position.y;
-            this->defaultLightShaderParams[lightIndex][0][2] = position.z;
+            this->defaultLightShaderParams[lightIndex][0U][0U] = position.x;
+            this->defaultLightShaderParams[lightIndex][0U][1U] = position.y;
+            this->defaultLightShaderParams[lightIndex][0U][2U] = position.z;
 
             float red, green, blue, alpha;
             GLES2Mappings::Get(light->GetDiffuseColour(), red, green, blue, alpha);
-            this->defaultLightShaderParams[lightIndex][1][0] = red;
-            this->defaultLightShaderParams[lightIndex][1][1] = green;
-            this->defaultLightShaderParams[lightIndex][1][2] = blue;
+            this->defaultLightShaderParams[lightIndex][1U][0U] = red;
+            this->defaultLightShaderParams[lightIndex][1U][1U] = green;
+            this->defaultLightShaderParams[lightIndex][1U][2U] = blue;
 
             GLES2Mappings::Get(light->GetSpecularColour(), red, green, blue, alpha);
-            this->defaultLightShaderParams[lightIndex][2][0] = red;
-            this->defaultLightShaderParams[lightIndex][2][1] = green;
-            this->defaultLightShaderParams[lightIndex][2][2] = blue;
+            this->defaultLightShaderParams[lightIndex][2U][0U] = red;
+            this->defaultLightShaderParams[lightIndex][2U][1U] = green;
+            this->defaultLightShaderParams[lightIndex][2U][2U] = blue;
 
             ++lightIndex;
             it = it->next;

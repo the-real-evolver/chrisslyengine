@@ -13,7 +13,7 @@ namespace chrissly
 /**
 */
 GLES2Texture::GLES2Texture() :
-    textureName(0)
+    textureName(0U)
 {
 
 }
@@ -23,7 +23,7 @@ GLES2Texture::GLES2Texture() :
 */
 GLES2Texture::GLES2Texture(graphics::RenderTexture* const rt) :
     TextureBase(rt),
-    textureName(0)
+    textureName(0U)
 {
 
 }
@@ -33,7 +33,7 @@ GLES2Texture::GLES2Texture(graphics::RenderTexture* const rt) :
 */
 GLES2Texture::GLES2Texture(void* faces[6U]) :
     TextureBase(faces),
-    textureName(0)
+    textureName(0U)
 {
 
 }
@@ -45,7 +45,7 @@ GLES2Texture::~GLES2Texture()
 {
     if (!this->isRenderTarget)
     {
-        if (this->textureName != 0)
+        if (this->textureName != 0U)
         {
             glDeleteTextures(1, &this->textureName);
         }
@@ -71,11 +71,11 @@ GLES2Texture::CreateInternalResources()
             if (graphics::TEX_TYPE_CUBE_MAP == this->type)
             {
                 glCompressedTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, GLES2Mappings::Get(this->format), this->width, this->height, 0, imageSize, this->cubeFaces[0U]);
-                glCompressedTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, GLES2Mappings::Get(this->format), this->width, this->height, 0, imageSize, this->cubeFaces[0U]);
-                glCompressedTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0, GLES2Mappings::Get(this->format), this->width, this->height, 0, imageSize, this->cubeFaces[0U]);
-                glCompressedTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, GLES2Mappings::Get(this->format), this->width, this->height, 0, imageSize, this->cubeFaces[0U]);
-                glCompressedTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 0, GLES2Mappings::Get(this->format), this->width, this->height, 0, imageSize, this->cubeFaces[0U]);
-                glCompressedTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, GLES2Mappings::Get(this->format), this->width, this->height, 0, imageSize, this->cubeFaces[0U]);
+                glCompressedTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, GLES2Mappings::Get(this->format), this->width, this->height, 0, imageSize, this->cubeFaces[1U]);
+                glCompressedTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0, GLES2Mappings::Get(this->format), this->width, this->height, 0, imageSize, this->cubeFaces[2U]);
+                glCompressedTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, GLES2Mappings::Get(this->format), this->width, this->height, 0, imageSize, this->cubeFaces[3U]);
+                glCompressedTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 0, GLES2Mappings::Get(this->format), this->width, this->height, 0, imageSize, this->cubeFaces[4U]);
+                glCompressedTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, GLES2Mappings::Get(this->format), this->width, this->height, 0, imageSize, this->cubeFaces[5U]);
             }
             else
             {
