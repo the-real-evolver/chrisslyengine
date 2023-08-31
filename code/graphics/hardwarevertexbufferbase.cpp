@@ -32,6 +32,19 @@ HardwareVertexBufferBase::HardwareVertexBufferBase(unsigned int numVertices, uns
 //------------------------------------------------------------------------------
 /**
 */
+HardwareVertexBufferBase::HardwareVertexBufferBase() :
+    numVertices(0U),
+    bytesPerVertex(0U),
+    vertexBuffer(NULL),
+    usage(HBU_STATIC),
+    useShadowBuffer(false)
+{
+
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
 HardwareVertexBufferBase::~HardwareVertexBufferBase()
 {
     if (this->vertexBuffer != NULL)

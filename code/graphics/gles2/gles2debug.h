@@ -11,7 +11,7 @@
 #if CE_GL_ENABLE_ERROR_CHECK
 #define CE_GL_ERROR_CHECK(context) ce_check_gl_error(context)
 #else
-#define CE_GL_ERROR_CHECK
+#define CE_GL_ERROR_CHECK(context) void(context)
 #endif
 #define CE_PRINT_GL_STRING(name, s) ce_print_gl_string(name, s)
 

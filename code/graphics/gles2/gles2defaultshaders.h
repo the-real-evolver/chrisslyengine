@@ -72,7 +72,6 @@ const char* const DefaultFragmentShaderFog =
     "precision mediump float;\n"
     "varying float fogFactor;\n"
     "varying vec2 texCoordOut;\n"
-    "varying vec3 worldPosition;\n"
     "uniform sampler2D texture;\n"
     "uniform float uMod;\n"
     "uniform float vMod;\n"

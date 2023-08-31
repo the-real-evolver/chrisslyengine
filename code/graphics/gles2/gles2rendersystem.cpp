@@ -486,6 +486,8 @@ GLES2RenderSystem::SetPass(graphics::Pass* const pass)
                 case graphics::GCT_SAMPLERCUBE:
                     glUniform1iv(def->location, def->arraySize, (int*)def->buffer);
                     break;
+                default:
+                    break;
             }
 
             it = it->next;
