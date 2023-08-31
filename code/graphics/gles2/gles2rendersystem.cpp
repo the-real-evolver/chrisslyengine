@@ -30,6 +30,7 @@ GLES2RenderSystem::GLES2RenderSystem() :
     defaultGpuProgramFog(NULL),
     defaultGpuProgramLit(NULL),
     defaultGpuProgramLitFog(NULL),
+    defaultGpuProgramMorphAnim(NULL),
     currentGpuProgram(NULL),
     numTextureUnits(0)
 {
@@ -87,7 +88,7 @@ GLES2RenderSystem::Initialise(void* const customParams)
     this->defaultGpuProgramFog = CE_NEW GLES2GpuProgram(DefaultVertexShaderFog, DefaultFragmentShaderFog);
     this->defaultGpuProgramLit = CE_NEW GLES2GpuProgram(DefaultVertexShaderLit, DefaultFragmentShaderLit);
     this->defaultGpuProgramLitFog = CE_NEW GLES2GpuProgram(DefaultVertexShaderLitFog, DefaultFragmentShaderLitFog);
-
+    this->defaultGpuProgramMorphAnim = CE_NEW GLES2GpuProgram(DefaultVertexShaderMorphAnim, DefaultFragmentShaderMorphAnim);
     this->currentGpuProgram = this->defaultGpuProgram;
 
     return renderWindow;
@@ -107,6 +108,8 @@ GLES2RenderSystem::Shutdown()
     this->defaultGpuProgramLit = NULL;
     CE_DELETE this->defaultGpuProgramLitFog;
     this->defaultGpuProgramLitFog = NULL;
+    CE_DELETE this->defaultGpuProgramMorphAnim;
+    this->defaultGpuProgramMorphAnim = NULL;
     this->currentGpuProgram = NULL;
 
     CE_LOG("GLES2RenderSystem::Shutdown\n");
@@ -230,10 +233,13 @@ GLES2RenderSystem::Render(graphics::SubEntity* const renderable)
         CE_GL_ERROR_CHECK("glEnableVertexAttribArray");
 
         GLuint vertexNormalHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_NORMAL);
-        glVertexAttribPointer(vertexNormalHandle, 3, GL_FLOAT, GL_FALSE, stride, buffer + 12U);
-        CE_GL_ERROR_CHECK("glVertexAttribPointer");
-        glEnableVertexAttribArray(vertexNormalHandle);
-        CE_GL_ERROR_CHECK("glEnableVertexAttribArray");
+        if (vertexNormalHandle < GL_MAX_VERTEX_ATTRIBS)
+        {
+            glVertexAttribPointer(vertexNormalHandle, 3, GL_FLOAT, GL_FALSE, stride, buffer + 12U);
+            CE_GL_ERROR_CHECK("glVertexAttribPointer");
+            glEnableVertexAttribArray(vertexNormalHandle);
+            CE_GL_ERROR_CHECK("glEnableVertexAttribArray");
+        }
 
         GLuint vertexPositionHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_POSITION);
         glVertexAttribPointer(vertexPositionHandle, 3, GL_FLOAT, GL_FALSE, stride, buffer + 24U);
@@ -389,7 +395,15 @@ GLES2RenderSystem::SetPass(graphics::Pass* const pass)
     {
         bool lit = pass->GetLightingEnabled();
         bool fog = (graphics::FOG_LINEAR == pass->GetFogMode());
-        if (!fog && !lit)
+        if (pass->IsSkeletalAnimationIncluded())
+        {
+            // Todo: set skeletal animation shader
+        }
+        else if (pass->IsMorphAnimationIncluded())
+        {
+            this->currentGpuProgram = this->defaultGpuProgramMorphAnim;
+        }
+        else if (!fog && !lit)
         {
             this->currentGpuProgram = this->defaultGpuProgram;
         }

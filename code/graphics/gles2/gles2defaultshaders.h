@@ -13,14 +13,8 @@
 const char* const DefaultVertexShader =
     "#version 100\n"
     "attribute vec2 texCoordIn;\n"
-    "attribute vec3 normal;\n"
     "attribute vec4 position;\n"
-    "attribute vec4 positionMorphTarget;\n"
-    "uniform mat4 worldMatrix;\n"
-    "uniform mat4 viewMatrix;\n"
-    "uniform mat4 projectionMatrix;\n"
     "uniform mat4 worldViewProjMatrix;\n"
-    "uniform float morphWeight;\n"
     "varying vec2 texCoordOut;\n"
     "void main()\n"
     "{\n"
@@ -49,14 +43,10 @@ const char* const DefaultFragmentShader =
 const char* const DefaultVertexShaderFog =
     "#version 100\n"
     "attribute vec2 texCoordIn;\n"
-    "attribute vec3 normal;\n"
     "attribute vec4 position;\n"
-    "attribute vec4 positionMorphTarget;\n"
     "uniform mat4 worldMatrix;\n"
     "uniform mat4 viewMatrix;\n"
-    "uniform mat4 projectionMatrix;\n"
     "uniform mat4 worldViewProjMatrix;\n"
-    "uniform float morphWeight;\n"
     "uniform int fogMode;\n"
     "uniform float fogStart;\n"
     "uniform float fogEnd;\n"
@@ -103,12 +93,8 @@ const char* const DefaultVertexShaderLit =
     "attribute vec2 texCoordIn;\n"
     "attribute vec3 normal;\n"
     "attribute vec4 position;\n"
-    "attribute vec4 positionMorphTarget;\n"
     "uniform mat4 worldMatrix;\n"
-    "uniform mat4 viewMatrix;\n"
-    "uniform mat4 projectionMatrix;\n"
     "uniform mat4 worldViewProjMatrix;\n"
-    "uniform float morphWeight;\n"
     "varying vec2 texCoordOut;\n"
     "varying vec3 worldNormal;\n"
     "varying vec3 worldPosition;\n"
@@ -157,12 +143,9 @@ const char* const DefaultVertexShaderLitFog =
     "attribute vec2 texCoordIn;\n"
     "attribute vec3 normal;\n"
     "attribute vec4 position;\n"
-    "attribute vec4 positionMorphTarget;\n"
     "uniform mat4 worldMatrix;\n"
     "uniform mat4 viewMatrix;\n"
-    "uniform mat4 projectionMatrix;\n"
     "uniform mat4 worldViewProjMatrix;\n"
-    "uniform float morphWeight;\n"
     "uniform int fogMode;\n"
     "uniform float fogStart;\n"
     "uniform float fogEnd;\n"
@@ -216,5 +199,35 @@ const char* const DefaultFragmentShaderLitFog =
     "    colour.rgb = clamp(colour.rgb * diffuse, 0.0, 1.0);\n"
     "    gl_FragColor = mix(vec4(fogColour, 1.0), colour, fogFactor);\n"
     "}\n";
+
+//------------------------------------------------------------------------------
+/**
+    Morphanimation, Unlit
+*/
+const char* const DefaultVertexShaderMorphAnim =
+    "#version 100\n"
+    "attribute vec2 texCoordIn;\n"
+    "attribute vec4 position;\n"
+    "attribute vec4 positionMorphTarget;\n"
+    "uniform mat4 worldViewProjMatrix;\n"
+    "uniform float morphWeight;\n"
+    "varying vec2 texCoordOut;\n"
+    "void main()\n"
+    "{\n"
+    "    vec4 pos = (position + (positionMorphTarget - position) * morphWeight);\n"
+    "    gl_Position = worldViewProjMatrix * pos;\n"
+    "    texCoordOut = texCoordIn;\n"
+    "}\n";
+
+const char* const DefaultFragmentShaderMorphAnim =
+    "#version 100\n"
+    "precision mediump float;\n"
+    "varying vec2 texCoordOut;\n"
+    "uniform sampler2D texture;\n"
+    "void main()\n"
+    "{\n"
+    "    gl_FragColor = texture2D(texture, texCoordOut);\n"
+    "}\n";
+
 //------------------------------------------------------------------------------
 #endif

@@ -93,6 +93,7 @@ private:
     GLES2GpuProgram* defaultGpuProgramFog;
     GLES2GpuProgram* defaultGpuProgramLit;
     GLES2GpuProgram* defaultGpuProgramLitFog;
+    GLES2GpuProgram* defaultGpuProgramMorphAnim;
     GLES2GpuProgram* currentGpuProgram;
 
     GLfloat glWorldMatrix[16];
