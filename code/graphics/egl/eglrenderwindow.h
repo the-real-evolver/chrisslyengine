@@ -23,6 +23,8 @@ public:
     void Create();
     /// swaps the frame buffers to display the next frame
     void SwapBuffers();
+    /// get the type of the rendertarget
+    unsigned int GetType() const;
 
 private:
     /// private default constructor

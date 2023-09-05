@@ -40,7 +40,8 @@ GLES2GpuProgram::GLES2GpuProgram(const char* const vertexShaderSource, const cha
     CE_GL_ERROR_CHECK("glGetUniformLocation");
     this->uniformLocations[graphics::GpuProgramParameters::ACT_MORPH_WEIGHT] = glGetUniformLocation(this->gpuProgram, "morphWeight");
     CE_GL_ERROR_CHECK("glGetUniformLocation");
-    this->uniformLocations[graphics::GpuProgramParameters::ACT_TEXTURE_MATRIX] = -1;
+    this->uniformLocations[graphics::GpuProgramParameters::ACT_TEXTURE_MATRIX] = glGetUniformLocation(this->gpuProgram, "textureMatrix");
+    CE_GL_ERROR_CHECK("glGetUniformLocation");
 
     this->attributeLocations[graphics::VES_POSITION] = glGetAttribLocation(this->gpuProgram, "position");
     CE_GL_ERROR_CHECK("glGetAttribLocation");

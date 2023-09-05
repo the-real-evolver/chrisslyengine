@@ -70,6 +70,10 @@ public:
 
     /// gets the default light shader parameters (useful if a custom shader wants to use the default lighting)
     const core::Matrix4* const GetDefaultLightShaderParams() const;
+    /// get pointer to the default shadow caster gpu program
+    GLES2GpuProgram* const GetDefaultShadowCasterGpuProgram() const;
+    /// get pointer to the default shadow receiver gpu program
+    GLES2GpuProgram* const GetDefaultShadowReceiverGpuProgram() const;
 
 private:
     /// copy constructor
@@ -94,6 +98,8 @@ private:
     GLES2GpuProgram* defaultGpuProgramLit;
     GLES2GpuProgram* defaultGpuProgramLitFog;
     GLES2GpuProgram* defaultGpuProgramMorphAnim;
+    GLES2GpuProgram* defaultGpuProgramShadowCaster;
+    GLES2GpuProgram* defaultGpuProgramShadowReceiver;
     GLES2GpuProgram* currentGpuProgram;
 
     GLfloat glWorldMatrix[16];
@@ -103,6 +109,7 @@ private:
     GLfloat glWorldViewProjectionMatrix[16];
 
     GLint numTextureUnits;
+    GLint maxVertexAttribs;
 };
 
 } // namespace chrissly

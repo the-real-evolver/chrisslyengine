@@ -229,4 +229,62 @@ const char* const DefaultFragmentShaderMorphAnim =
     "}\n";
 
 //------------------------------------------------------------------------------
+/**
+    Shadowcaster
+*/
+const char* const DefaultVertexShaderShadowCaster =
+    "#version 100\n"
+    "attribute vec4 position;\n"
+    "uniform mat4 worldViewProjMatrix;\n"
+    "void main()\n"
+    "{\n"
+    "    gl_Position = worldViewProjMatrix * position;\n"
+    "}\n";
+
+const char* const DefaultFragmentShaderShadowCaster =
+    "#version 100\n"
+    "precision mediump float;\n"
+    "void main()\n"
+    "{\n"
+    "    gl_FragColor = vec4(0.5, 0.5, 0.5, 1.0);\n"
+    "}\n";
+
+//------------------------------------------------------------------------------
+/**
+    Shadowreceiver
+*/
+const char* const DefaultVertexShaderShadowReceiver =
+    "#version 100\n"
+    "attribute vec2 texCoordIn;\n"
+    "attribute vec4 position;\n"
+    "uniform mat4 worldViewProjMatrix;\n"
+    "uniform mat4 textureMatrix;\n"
+    "varying vec4 texCoordOut;\n"
+    "void main()\n"
+    "{\n"
+    "    gl_Position = worldViewProjMatrix * position;\n"
+    "    texCoordOut = textureMatrix * position;\n"
+    "}\n";
+
+const char* const DefaultFragmentShaderShadowReceiver =
+    "#version 100\n"
+    "precision mediump float;\n"
+    "varying vec4 texCoordOut;\n"
+    "uniform sampler2D texture;\n"
+    "void main()\n"
+    "{\n"
+    "    vec4 colour = vec4(1.0, 1.0, 1.0, 1.0);\n"
+    "    if (texCoordOut.w > 0.0)\n"
+    "    {\n"
+    "        vec2 uv = texCoordOut.xy / texCoordOut.w;\n"
+    "        // workaround for lack of support of GL_TEXTURE_BORDER_COLOR\n"
+    "        if (uv.x > 0.01 && uv.x < 0.99 && uv.y > 0.01 && uv.y < 0.99)\n"
+    "        {\n"
+    "            colour = texture2D(texture, uv);\n"
+    "        }\n"
+    "    }\n"
+    "    gl_FragColor = colour;\n"
+    "}\n";
+
+//------------------------------------------------------------------------------
 #endif

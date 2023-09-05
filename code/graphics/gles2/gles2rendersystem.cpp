@@ -31,8 +31,11 @@ GLES2RenderSystem::GLES2RenderSystem() :
     defaultGpuProgramLit(NULL),
     defaultGpuProgramLitFog(NULL),
     defaultGpuProgramMorphAnim(NULL),
+    defaultGpuProgramShadowCaster(NULL),
+    defaultGpuProgramShadowReceiver(NULL),
     currentGpuProgram(NULL),
-    numTextureUnits(0)
+    numTextureUnits(0),
+    maxVertexAttribs(0)
 {
     Singleton = this;
 
@@ -69,6 +72,10 @@ GLES2RenderSystem::Initialise(void* const customParams)
     CE_GL_ERROR_CHECK("glGetIntegerv");
     CE_LOG("GL_MAX_TEXTURE_IMAGE_UNITS: %i\n", this->numTextureUnits);
 
+    glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &this->maxVertexAttribs);
+    CE_GL_ERROR_CHECK("glGetIntegerv");
+    CE_LOG("GL_MAX_VERTEX_ATTRIBS: %i\n", this->maxVertexAttribs);
+
     GLint maxTextureSize;
     glGetIntegerv(GL_MAX_TEXTURE_SIZE, &maxTextureSize);
     CE_GL_ERROR_CHECK("glGetIntegerv");
@@ -89,6 +96,8 @@ GLES2RenderSystem::Initialise(void* const customParams)
     this->defaultGpuProgramLit = CE_NEW GLES2GpuProgram(DefaultVertexShaderLit, DefaultFragmentShaderLit);
     this->defaultGpuProgramLitFog = CE_NEW GLES2GpuProgram(DefaultVertexShaderLitFog, DefaultFragmentShaderLitFog);
     this->defaultGpuProgramMorphAnim = CE_NEW GLES2GpuProgram(DefaultVertexShaderMorphAnim, DefaultFragmentShaderMorphAnim);
+    this->defaultGpuProgramShadowCaster = CE_NEW GLES2GpuProgram(DefaultVertexShaderShadowCaster, DefaultFragmentShaderShadowCaster);
+    this->defaultGpuProgramShadowReceiver = CE_NEW GLES2GpuProgram(DefaultVertexShaderShadowReceiver, DefaultFragmentShaderShadowReceiver);
     this->currentGpuProgram = this->defaultGpuProgram;
 
     return renderWindow;
@@ -110,6 +119,10 @@ GLES2RenderSystem::Shutdown()
     this->defaultGpuProgramLitFog = NULL;
     CE_DELETE this->defaultGpuProgramMorphAnim;
     this->defaultGpuProgramMorphAnim = NULL;
+    CE_DELETE this->defaultGpuProgramShadowCaster;
+    this->defaultGpuProgramShadowCaster = NULL;
+    CE_DELETE this->defaultGpuProgramShadowReceiver;
+    this->defaultGpuProgramShadowReceiver = NULL;
     this->currentGpuProgram = NULL;
 
     CE_LOG("GLES2RenderSystem::Shutdown\n");
@@ -121,7 +134,16 @@ GLES2RenderSystem::Shutdown()
 void
 GLES2RenderSystem::SetRenderTarget(graphics::RenderTarget* const target)
 {
-
+    if ('EGLW' == target->GetType())
+    {
+        glBindFramebuffer(GL_FRAMEBUFFER, 0U);
+    }
+    else if ('GLRT' == target->GetType())
+    {
+        GLES2RenderTexture* renderTexture = (GLES2RenderTexture*)target;
+        glBindFramebuffer(GL_FRAMEBUFFER, renderTexture->GetFBO());
+    }
+    CE_GL_ERROR_CHECK("glBindFramebuffer");
 }
 
 //------------------------------------------------------------------------------
@@ -207,6 +229,8 @@ GLES2RenderSystem::SetMatrices()
     GLES2Mappings::MakeGLMatrix(this->glWorldViewProjectionMatrix, this->projectionMatrix * this->viewMatrix * this->worldMatrix);
     glUniformMatrix4fv(this->currentGpuProgram->GetUniformLocation(graphics::GpuProgramParameters::ACT_WORLDVIEWPROJ_MATRIX), 1, GL_FALSE, this->glWorldViewProjectionMatrix);
     CE_GL_ERROR_CHECK("glUniformMatrix4fv");
+    glUniformMatrix4fv(this->currentGpuProgram->GetUniformLocation(graphics::GpuProgramParameters::ACT_TEXTURE_MATRIX), 1, GL_FALSE, this->glTextureMatrix);
+    CE_GL_ERROR_CHECK("glUniformMatrix4fv");
 }
 
 //------------------------------------------------------------------------------
@@ -227,13 +251,16 @@ GLES2RenderSystem::Render(graphics::SubEntity* const renderable)
         unsigned char* buffer = (unsigned char*)vertexBuffer->Map();
 
         GLuint vertexTexCoordHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_TEXTURE_COORDINATES);
-        glVertexAttribPointer(vertexTexCoordHandle, 2, GL_FLOAT, GL_FALSE, stride, buffer);
-        CE_GL_ERROR_CHECK("glVertexAttribPointer");
-        glEnableVertexAttribArray(vertexTexCoordHandle);
-        CE_GL_ERROR_CHECK("glEnableVertexAttribArray");
+        if (vertexTexCoordHandle < this->maxVertexAttribs)
+        {
+            glVertexAttribPointer(vertexTexCoordHandle, 2, GL_FLOAT, GL_FALSE, stride, buffer);
+            CE_GL_ERROR_CHECK("glVertexAttribPointer");
+            glEnableVertexAttribArray(vertexTexCoordHandle);
+            CE_GL_ERROR_CHECK("glEnableVertexAttribArray");
+        }
 
         GLuint vertexNormalHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_NORMAL);
-        if (vertexNormalHandle < GL_MAX_VERTEX_ATTRIBS)
+        if (vertexNormalHandle < this->maxVertexAttribs)
         {
             glVertexAttribPointer(vertexNormalHandle, 3, GL_FLOAT, GL_FALSE, stride, buffer + 12U);
             CE_GL_ERROR_CHECK("glVertexAttribPointer");
@@ -265,7 +292,7 @@ GLES2RenderSystem::Render(graphics::SubEntity* const renderable)
         CE_GL_ERROR_CHECK("glBindBuffer");
 
         GLuint vertexTexCoordHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_TEXTURE_COORDINATES);
-        if (vertexTexCoordHandle < GL_MAX_VERTEX_ATTRIBS)
+        if (vertexTexCoordHandle < this->maxVertexAttribs)
         {
             glVertexAttribPointer(vertexTexCoordHandle, 2, GL_FLOAT, GL_FALSE, stride, (void*)0U);
             CE_GL_ERROR_CHECK("glVertexAttribPointer: texturecoords");
@@ -274,7 +301,7 @@ GLES2RenderSystem::Render(graphics::SubEntity* const renderable)
         }
 
         GLuint vertexNormalHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_NORMAL);
-        if (vertexNormalHandle < GL_MAX_VERTEX_ATTRIBS)
+        if (vertexNormalHandle < this->maxVertexAttribs)
         {
             glVertexAttribPointer(vertexNormalHandle, 3, GL_FLOAT, GL_FALSE, stride, (void*)12U);
             CE_GL_ERROR_CHECK("glVertexAttribPointer: normal");
@@ -293,6 +320,12 @@ GLES2RenderSystem::Render(graphics::SubEntity* const renderable)
 
         glBindBuffer(GL_ARRAY_BUFFER, 0U);
         CE_GL_ERROR_CHECK("glBindBuffer");
+    }
+
+    GLuint vai;
+    for (vai = 0U; vai < this->maxVertexAttribs; ++vai)
+    {
+        glDisableVertexAttribArray(vai);
     }
 }
 
@@ -553,6 +586,24 @@ const core::Matrix4* const
 GLES2RenderSystem::GetDefaultLightShaderParams() const
 {
     return this->defaultLightShaderParams;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+GLES2GpuProgram *const
+GLES2RenderSystem::GetDefaultShadowCasterGpuProgram() const
+{
+    return this->defaultGpuProgramShadowCaster;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+GLES2GpuProgram *const
+GLES2RenderSystem::GetDefaultShadowReceiverGpuProgram() const
+{
+    return this->defaultGpuProgramShadowReceiver;
 }
 
 } // namespace chrissly

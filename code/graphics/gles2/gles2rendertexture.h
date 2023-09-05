@@ -7,6 +7,7 @@
     (C) 2012 Christian Bleicher
 */
 #include "rendertarget.h"
+#include <GLES2/gl2.h>
 
 //------------------------------------------------------------------------------
 namespace chrissly
@@ -23,6 +24,17 @@ public:
     void Create(int width, int height, graphics::PixelFormat format);
     /// does nothing no need for doublebuffering when rendering offline
     void SwapBuffers();
+    /// get the type of the rendertarget
+    unsigned int GetType() const;
+
+    /// get fbo name
+    GLuint GetFBO() const;
+    /// get color attachment
+    GLuint GetColourAttachment() const;
+
+private:
+    GLuint frameBufferObject;
+    GLuint colourAttachment;
 };
 
 } // namespace chrissly

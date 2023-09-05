@@ -361,8 +361,14 @@ SceneManager::SetShadowTechnique(ShadowTechnique technique)
             this->shadowRttSkeletalAnimPass->SetGpuProgram(this->destRenderSystem->GetDefaultShadowCasterSkeletalAnimGpuProgram());
             this->shadowPass->SetGpuProgram(this->destRenderSystem->GetDefaultShadowReceiverGpuProgram());
             this->SetShadowColour(this->shadowColour);
+#elif __CE_GLES2__
+            this->shadowRenderTexture->Create(256, 256, PF_R8G8B8A8);
+            Viewport* vp = this->shadowRenderTexture->AddViewport(this->shadowCamera, 0, 0, 255, 255);
+            vp->SetClearEveryFrame(true, FBT_COLOUR);
+            vp->SetBackgroundColour(0xffffffff);
+            this->shadowRttPass->SetGpuProgram(this->destRenderSystem->GetDefaultShadowCasterGpuProgram());
+            this->shadowPass->SetGpuProgram(this->destRenderSystem->GetDefaultShadowReceiverGpuProgram());
 #endif
-
             this->shadowTexture = CE_NEW Texture(this->shadowRenderTexture);
             tus->SetTexture(this->shadowTexture);
 

@@ -120,4 +120,13 @@ EGLRenderWindow::SwapBuffers()
     eglSwapBuffers(this->display, this->surface);
 }
 
+//------------------------------------------------------------------------------
+/**
+*/
+unsigned int
+EGLRenderWindow::GetType() const
+{
+    return 'EGLW';
+}
+
 } // namespace chrissly

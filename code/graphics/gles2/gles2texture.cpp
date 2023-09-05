@@ -23,7 +23,7 @@ GLES2Texture::GLES2Texture() :
 */
 GLES2Texture::GLES2Texture(graphics::RenderTexture* const rt) :
     TextureBase(rt),
-    textureName(0U)
+    textureName(rt->GetColourAttachment())
 {
 
 }
@@ -87,12 +87,12 @@ GLES2Texture::CreateInternalResources()
             glPixelStorei(GL_UNPACK_ALIGNMENT, (graphics::PF_R8G8B8 == this->format) ? 1 : 4);
             if (graphics::TEX_TYPE_CUBE_MAP == this->type)
             {
-                glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, GLES2Mappings::GetInternalFormat(this->format), this->width, this->height, 0, GLES2Mappings::GetInternalFormat(this->format),GLES2Mappings::Get(this->format), this->cubeFaces[0U]);
-                glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, GLES2Mappings::GetInternalFormat(this->format), this->width, this->height, 0, GLES2Mappings::GetInternalFormat(this->format),GLES2Mappings::Get(this->format), this->cubeFaces[1U]);
-                glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0, GLES2Mappings::GetInternalFormat(this->format), this->width, this->height, 0, GLES2Mappings::GetInternalFormat(this->format),GLES2Mappings::Get(this->format), this->cubeFaces[2U]);
-                glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, GLES2Mappings::GetInternalFormat(this->format), this->width, this->height, 0, GLES2Mappings::GetInternalFormat(this->format),GLES2Mappings::Get(this->format), this->cubeFaces[3U]);
-                glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 0, GLES2Mappings::GetInternalFormat(this->format), this->width, this->height, 0, GLES2Mappings::GetInternalFormat(this->format),GLES2Mappings::Get(this->format), this->cubeFaces[4U]);
-                glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, GLES2Mappings::GetInternalFormat(this->format), this->width, this->height, 0, GLES2Mappings::GetInternalFormat(this->format),GLES2Mappings::Get(this->format), this->cubeFaces[5U]);
+                glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, GLES2Mappings::GetInternalFormat(this->format), this->width, this->height, 0, GLES2Mappings::GetInternalFormat(this->format), GLES2Mappings::Get(this->format), this->cubeFaces[0U]);
+                glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, GLES2Mappings::GetInternalFormat(this->format), this->width, this->height, 0, GLES2Mappings::GetInternalFormat(this->format), GLES2Mappings::Get(this->format), this->cubeFaces[1U]);
+                glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0, GLES2Mappings::GetInternalFormat(this->format), this->width, this->height, 0, GLES2Mappings::GetInternalFormat(this->format), GLES2Mappings::Get(this->format), this->cubeFaces[2U]);
+                glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, GLES2Mappings::GetInternalFormat(this->format), this->width, this->height, 0, GLES2Mappings::GetInternalFormat(this->format), GLES2Mappings::Get(this->format), this->cubeFaces[3U]);
+                glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 0, GLES2Mappings::GetInternalFormat(this->format), this->width, this->height, 0, GLES2Mappings::GetInternalFormat(this->format), GLES2Mappings::Get(this->format), this->cubeFaces[4U]);
+                glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, GLES2Mappings::GetInternalFormat(this->format), this->width, this->height, 0, GLES2Mappings::GetInternalFormat(this->format), GLES2Mappings::Get(this->format), this->cubeFaces[5U]);
             }
             else
             {
