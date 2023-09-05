@@ -21,7 +21,7 @@ public:
     /// destructor
     ~GLES2RenderTexture();
     /// creates a rendertexture from the given parameters
-    void Create(int width, int height, graphics::PixelFormat format);
+    void Create(int width, int height, graphics::PixelFormat format, bool depth = false);
     /// does nothing no need for doublebuffering when rendering offline
     void SwapBuffers();
     /// get the type of the rendertarget
@@ -35,6 +35,7 @@ public:
 private:
     GLuint frameBufferObject;
     GLuint colourAttachment;
+    GLuint depthAttachment;
 };
 
 } // namespace chrissly
