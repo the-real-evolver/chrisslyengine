@@ -289,16 +289,4 @@ D3D11Mappings::Get(const D3D11_SHADER_TYPE_DESC& typeDesc)
     return graphics::GCT_UNKNOWN;
 }
 
-//------------------------------------------------------------------------------
-/**
-*/
-void
-D3D11Mappings::Get(unsigned int colour, float& red, float& green, float& blue, float& alpha)
-{
-    alpha = ((colour & 0xff000000) >> 24U) / 255.0f;
-    blue  = ((colour & 0x00ff0000) >> 16U) / 255.0f;
-    green = ((colour & 0x0000ff00) >> 8U) / 255.0f;
-    red   = (colour & 0x000000ff) / 255.0f;
-}
-
 } // namespace chrissly

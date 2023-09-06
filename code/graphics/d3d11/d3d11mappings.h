@@ -40,8 +40,6 @@ public:
     static unsigned int GetMemorySize(unsigned int width, unsigned int height, graphics::PixelFormat pf);
     /// get GpuConstantType from the given d3d11 shader type description
     static graphics::GpuConstantType Get(const D3D11_SHADER_TYPE_DESC& typeDesc);
-    /// get rgba components of the given color (Format: AABBGGRR) as float value
-    static void Get(unsigned int colour, float& red, float& green, float& blue, float& alpha);
 };
 } // namespace chrissly
 //------------------------------------------------------------------------------

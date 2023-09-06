@@ -391,7 +391,7 @@ D3D11RenderSystem::SetViewport(graphics::Viewport* const vp)
         }
 
         FLOAT clearColour[4U] = {0.0f, 0.0f, 0.0f, 0.0f};
-        D3D11Mappings::Get(vp->GetBackgroundColour(), clearColour[0U], clearColour[1U], clearColour[2U], clearColour[3U]);
+        ce_colour_convert_u32_to_float(vp->GetBackgroundColour(), clearColour[0U], clearColour[1U], clearColour[2U], clearColour[3U]);
         unsigned int clearFlags = vp->GetClearBuffers();
         if (clearFlags & graphics::FBT_COLOUR)
         {
@@ -634,7 +634,7 @@ D3D11RenderSystem::SetPass(graphics::Pass* const pass)
         else
         {
             core::Quaternion ambient;
-            D3D11Mappings::Get(pass->GetDiffuse(), ambient.w, ambient.x, ambient.y, ambient.z);
+            ce_colour_convert_u32_to_float(pass->GetDiffuse(), ambient.w, ambient.x, ambient.y, ambient.z);
             params->SetNamedConstant("ambient", ambient);
         }
 
@@ -642,7 +642,7 @@ D3D11RenderSystem::SetPass(graphics::Pass* const pass)
         {
             core::Vector3 fogColour;
             float alpha;
-            D3D11Mappings::Get(pass->GetFogColour(), fogColour.x, fogColour.y, fogColour.z, alpha);
+            ce_colour_convert_u32_to_float(pass->GetFogColour(), fogColour.x, fogColour.y, fogColour.z, alpha);
             params->SetNamedConstant("fogColour", fogColour);
             params->SetNamedConstant("fogMode", (int)pass->GetFogMode());
             params->SetNamedConstant("fogStart", pass->GetFogStart());
@@ -693,12 +693,12 @@ D3D11RenderSystem::ProcessLights(ce_hash_table* const lights)
             this->defaultLightShaderParams[lightIndex][0U][2U] = position.z;
 
             float red, green, blue, alpha;
-            D3D11Mappings::Get(light->GetDiffuseColour(), red, green, blue, alpha);
+            ce_colour_convert_u32_to_float(light->GetDiffuseColour(), red, green, blue, alpha);
             this->defaultLightShaderParams[lightIndex][1U][0U] = red;
             this->defaultLightShaderParams[lightIndex][1U][1U] = green;
             this->defaultLightShaderParams[lightIndex][1U][2U] = blue;
 
-            D3D11Mappings::Get(light->GetSpecularColour(), red, green, blue, alpha);
+            ce_colour_convert_u32_to_float(light->GetSpecularColour(), red, green, blue, alpha);
             this->defaultLightShaderParams[lightIndex][2U][0U] = red;
             this->defaultLightShaderParams[lightIndex][2U][1U] = green;
             this->defaultLightShaderParams[lightIndex][2U][2U] = blue;

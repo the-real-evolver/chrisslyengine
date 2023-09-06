@@ -8,6 +8,7 @@
 #include "gles2debug.h"
 #include "light.h"
 #include "textureunitstate.h"
+#include "miscutils.h"
 #include "common.h"
 #include "debug.h"
 
@@ -167,7 +168,7 @@ GLES2RenderSystem::SetViewport(graphics::Viewport* const vp)
     if (vp->GetClearEveryFrame())
     {
         float red, green, blue, alpha;
-        GLES2Mappings::Get(vp->GetBackgroundColour(), red, green, blue, alpha);
+        ce_colour_convert_u32_to_float(vp->GetBackgroundColour(), red, green, blue, alpha);
         glClearColor(red, green, blue, alpha);
         CE_GL_ERROR_CHECK("glClearColor");
         glClear(GLES2Mappings::Get((graphics::FrameBufferType)vp->GetClearBuffers()));
@@ -468,7 +469,7 @@ GLES2RenderSystem::SetPass(graphics::Pass* const pass)
         {
             core::Vector3 fogColour;
             float alpha;
-            GLES2Mappings::Get(pass->GetFogColour(), fogColour.x, fogColour.y, fogColour.z, alpha);
+            ce_colour_convert_u32_to_float(pass->GetFogColour(), fogColour.x, fogColour.y, fogColour.z, alpha);
             params->SetNamedConstant("fogColour", fogColour);
             params->SetNamedConstant("fogMode", (int)pass->GetFogMode());
             params->SetNamedConstant("fogStart", pass->GetFogStart());
@@ -549,12 +550,12 @@ GLES2RenderSystem::ProcessLights(ce_hash_table* const lights)
             this->defaultLightShaderParams[lightIndex][0U][2U] = position.z;
 
             float red, green, blue, alpha;
-            GLES2Mappings::Get(light->GetDiffuseColour(), red, green, blue, alpha);
+            ce_colour_convert_u32_to_float(light->GetDiffuseColour(), red, green, blue, alpha);
             this->defaultLightShaderParams[lightIndex][1U][0U] = red;
             this->defaultLightShaderParams[lightIndex][1U][1U] = green;
             this->defaultLightShaderParams[lightIndex][1U][2U] = blue;
 
-            GLES2Mappings::Get(light->GetSpecularColour(), red, green, blue, alpha);
+            ce_colour_convert_u32_to_float(light->GetSpecularColour(), red, green, blue, alpha);
             this->defaultLightShaderParams[lightIndex][2U][0U] = red;
             this->defaultLightShaderParams[lightIndex][2U][1U] = green;
             this->defaultLightShaderParams[lightIndex][2U][2U] = blue;

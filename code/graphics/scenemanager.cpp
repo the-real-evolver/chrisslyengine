@@ -5,6 +5,7 @@
 #include "graphicssystem.h"
 #include "scenemanager.h"
 #include "meshmanager.h"
+#include "miscutils.h"
 #include "debug.h"
 #include <stdio.h>
 #if __CE_D3D11__
@@ -407,7 +408,7 @@ SceneManager::SetShadowColour(unsigned int colour)
 #if __CE_D3D11__
     Vector3 rgb;
     float alpha;
-    D3D11Mappings::Get(colour, rgb.x, rgb.y, rgb.z, alpha);
+    ce_colour_convert_u32_to_float(colour, rgb.x, rgb.y, rgb.z, alpha);
     this->destRenderSystem->GetDefaultShadowCasterGpuProgram()->GetDefaultParameters()->SetNamedConstant("shadowColour", rgb);
     this->destRenderSystem->GetDefaultTransparentShadowCasterGpuProgram()->GetDefaultParameters()->SetNamedConstant("shadowColour", rgb);
     this->destRenderSystem->GetDefaultShadowCasterMorphAnimGpuProgram()->GetDefaultParameters()->SetNamedConstant("shadowColour", rgb);
