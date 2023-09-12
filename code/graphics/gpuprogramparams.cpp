@@ -216,6 +216,7 @@ GpuProgramParameters::AutoConstantTypeFromString(const char* const name)
     if (0 == strcmp(name, "worldViewProjMatrix"))   {return ACT_WORLDVIEWPROJ_MATRIX;}
     if (0 == strcmp(name, "textureMatrix"))         {return ACT_TEXTURE_MATRIX;}
     if (0 == strcmp(name, "morphWeight"))           {return ACT_MORPH_WEIGHT;}
+    if (0 == strcmp(name, "boneMatrices[0]"))       {return ACT_BONE_MATRICES;}
 
     return ACT_COUNT;
 }

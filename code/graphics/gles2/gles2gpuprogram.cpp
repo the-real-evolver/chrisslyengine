@@ -42,8 +42,14 @@ GLES2GpuProgram::GLES2GpuProgram(const char* const vertexShaderSource, const cha
     CE_GL_ERROR_CHECK("glGetUniformLocation");
     this->uniformLocations[graphics::GpuProgramParameters::ACT_TEXTURE_MATRIX] = glGetUniformLocation(this->gpuProgram, "textureMatrix");
     CE_GL_ERROR_CHECK("glGetUniformLocation");
+    this->uniformLocations[graphics::GpuProgramParameters::ACT_BONE_MATRICES] = glGetUniformLocation(this->gpuProgram, "boneMatrices[0]");
+    CE_GL_ERROR_CHECK("glGetUniformLocation");
 
     this->attributeLocations[graphics::VES_POSITION] = glGetAttribLocation(this->gpuProgram, "position");
+    CE_GL_ERROR_CHECK("glGetAttribLocation");
+    this->attributeLocations[graphics::VES_BLEND_WEIGHTS] = glGetAttribLocation(this->gpuProgram, "weights");
+    CE_GL_ERROR_CHECK("glGetAttribLocation");
+    this->attributeLocations[graphics::VES_BLEND_INDICES] = glGetAttribLocation(this->gpuProgram, "indices");
     CE_GL_ERROR_CHECK("glGetAttribLocation");
     this->attributeLocations[graphics::VES_NORMAL] = glGetAttribLocation(this->gpuProgram, "normal");
     CE_GL_ERROR_CHECK("glGetAttribLocation");

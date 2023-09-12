@@ -230,6 +230,44 @@ const char* const DefaultFragmentShaderMorphAnim =
 
 //------------------------------------------------------------------------------
 /**
+    Skeletal animation, Unlit
+*/
+const char* const DefaultVertexShaderSkeletalAnim =
+    "#version 100\n"
+    "attribute vec4 weights;\n"
+    "attribute vec4 indices;\n"
+    "attribute vec2 texCoordIn;\n"
+    "attribute vec4 position;\n"
+    "uniform mat4 worldViewProjMatrix;\n"
+    "uniform mat4 boneMatrices[40];\n"
+    "varying vec2 texCoordOut;\n"
+    "void main()\n"
+    "{\n"
+    "    vec3 P = position.xyz;\n"
+    "    if (weights.x > 0.0 || weights.y > 0.0 || weights.z > 0.0 || weights.w > 0.0)\n"
+    "    {\n"
+    "        P = vec3(0.0);\n"
+    "        for (int i = 0; i < 4; ++i)\n"
+    "        {\n"
+    "            P += (boneMatrices[int(indices[i])] * position).xyz * weights[i];\n"
+    "        }\n"
+    "    }\n"
+    "    gl_Position = worldViewProjMatrix * vec4(P.x, P.z, -P.y, 1.0);\n"
+    "    texCoordOut = texCoordIn;\n"
+    "}\n";
+
+const char* const DefaultFragmentShaderSkeletalAnim =
+    "#version 100\n"
+    "precision mediump float;\n"
+    "varying vec2 texCoordOut;\n"
+    "uniform sampler2D texture;\n"
+    "void main()\n"
+    "{\n"
+    "    gl_FragColor = texture2D(texture, texCoordOut);\n"
+    "}\n";
+
+//------------------------------------------------------------------------------
+/**
     Shadowcaster
 */
 const char* const DefaultVertexShaderShadowCaster =
@@ -244,9 +282,10 @@ const char* const DefaultVertexShaderShadowCaster =
 const char* const DefaultFragmentShaderShadowCaster =
     "#version 100\n"
     "precision mediump float;\n"
+    "uniform vec3 shadowColour;"
     "void main()\n"
     "{\n"
-    "    gl_FragColor = vec4(0.5, 0.5, 0.5, 1.0);\n"
+    "    gl_FragColor = vec4(shadowColour, 1.0);\n"
     "}\n";
 
 //------------------------------------------------------------------------------
@@ -278,9 +317,9 @@ const char* const DefaultFragmentShaderShadowReceiver =
     "    {\n"
     "        vec2 uv = texCoordOut.xy / texCoordOut.w;\n"
     "        // workaround for lack of support of GL_TEXTURE_BORDER_COLOR\n"
-    "        if (uv.x > 0.01 && uv.x < 0.99 && uv.y > 0.01 && uv.y < 0.99)\n"
+    "        if (clamp(uv, vec2(0.01), vec2(0.99)) == uv)\n"
     "        {\n"
-    "            colour = texture2D(texture, uv);\n"
+    "            colour = texture2D(texture, vec2(uv.x, 1.0 - uv.y));\n"
     "        }\n"
     "    }\n"
     "    gl_FragColor = colour;\n"

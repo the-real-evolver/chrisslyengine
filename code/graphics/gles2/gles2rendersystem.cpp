@@ -6,7 +6,9 @@
 #include "gles2mappings.h"
 #include "gles2defaultshaders.h"
 #include "gles2debug.h"
+#include "chrisslyconfig.h"
 #include "light.h"
+#include "entity.h"
 #include "textureunitstate.h"
 #include "miscutils.h"
 #include "common.h"
@@ -32,6 +34,7 @@ GLES2RenderSystem::GLES2RenderSystem() :
     defaultGpuProgramLit(NULL),
     defaultGpuProgramLitFog(NULL),
     defaultGpuProgramMorphAnim(NULL),
+    defaultGpuProgramSkeletalAnim(NULL),
     defaultGpuProgramShadowCaster(NULL),
     defaultGpuProgramShadowReceiver(NULL),
     currentGpuProgram(NULL),
@@ -97,6 +100,7 @@ GLES2RenderSystem::Initialise(void* const customParams)
     this->defaultGpuProgramLit = CE_NEW GLES2GpuProgram(DefaultVertexShaderLit, DefaultFragmentShaderLit);
     this->defaultGpuProgramLitFog = CE_NEW GLES2GpuProgram(DefaultVertexShaderLitFog, DefaultFragmentShaderLitFog);
     this->defaultGpuProgramMorphAnim = CE_NEW GLES2GpuProgram(DefaultVertexShaderMorphAnim, DefaultFragmentShaderMorphAnim);
+    this->defaultGpuProgramSkeletalAnim = CE_NEW GLES2GpuProgram(DefaultVertexShaderSkeletalAnim, DefaultFragmentShaderSkeletalAnim);
     this->defaultGpuProgramShadowCaster = CE_NEW GLES2GpuProgram(DefaultVertexShaderShadowCaster, DefaultFragmentShaderShadowCaster);
     this->defaultGpuProgramShadowReceiver = CE_NEW GLES2GpuProgram(DefaultVertexShaderShadowReceiver, DefaultFragmentShaderShadowReceiver);
     this->currentGpuProgram = this->defaultGpuProgram;
@@ -120,6 +124,8 @@ GLES2RenderSystem::Shutdown()
     this->defaultGpuProgramLitFog = NULL;
     CE_DELETE this->defaultGpuProgramMorphAnim;
     this->defaultGpuProgramMorphAnim = NULL;
+    CE_DELETE this->defaultGpuProgramSkeletalAnim;
+    this->defaultGpuProgramSkeletalAnim = NULL;
     CE_DELETE this->defaultGpuProgramShadowCaster;
     this->defaultGpuProgramShadowCaster = NULL;
     CE_DELETE this->defaultGpuProgramShadowReceiver;
@@ -242,7 +248,73 @@ GLES2RenderSystem::Render(graphics::SubEntity* const renderable)
 {
     this->SetMatrices();
 
-    if (graphics::VAT_MORPH == renderable->GetSubMesh()->GetVertexAnimationType())
+    if (renderable->GetParent()->GetMesh()->GetSkeleton() != NULL)
+    {
+        unsigned int numBones = ce_array_size(renderable->GetParent()->GetBoneMatrices());
+        CE_ASSERT(numBones <= CE_MAX_BONES_PER_SKELETON, "GLES2RenderSystem::Render(): right now only up to %i bones are supported for skeletal animation, number of bones requested: %i", CE_MAX_BONES_PER_SKELETON, numBones);
+        static float boneMatrices[CE_MAX_BONES_PER_SKELETON][16U] = {{0}};
+        unsigned int i;
+        for (i = 0U; i < numBones; ++i)
+        {
+            GLES2Mappings::MakeGLMatrix(boneMatrices[i], renderable->GetParent()->GetBoneMatrices()[i]);
+        }
+        glUniformMatrix4fv(this->currentGpuProgram->GetUniformLocation(graphics::GpuProgramParameters::ACT_BONE_MATRICES), numBones, GL_FALSE, boneMatrices[0U]);
+
+        graphics::HardwareVertexBuffer* vertexBuffer = renderable->GetSubMesh()->vertexData->vertexBuffer;
+        GLsizei stride = (GLsizei)vertexBuffer->GetBytesPerVertex();
+
+        glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer->GetName());
+        CE_GL_ERROR_CHECK("glBindBuffer");
+
+        GLuint vertexWeightsHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_BLEND_WEIGHTS);
+        if (vertexWeightsHandle < this->maxVertexAttribs)
+        {
+            glVertexAttribPointer(vertexWeightsHandle, 4, GL_FLOAT, GL_FALSE, stride, (void*)0U);
+            CE_GL_ERROR_CHECK("glVertexAttribPointer: weights");
+            glEnableVertexAttribArray(vertexWeightsHandle);
+            CE_GL_ERROR_CHECK("glEnableVertexAttribArray: weights");
+        }
+
+        GLuint vertexIndexHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_BLEND_INDICES);
+        if (vertexIndexHandle < this->maxVertexAttribs)
+        {
+            glVertexAttribPointer(vertexIndexHandle, 4, GL_FLOAT, GL_FALSE, stride, (void*)16U);
+            CE_GL_ERROR_CHECK("glVertexAttribPointer: indices");
+            glEnableVertexAttribArray(vertexIndexHandle);
+            CE_GL_ERROR_CHECK("glEnableVertexAttribArray: indices");
+        }
+
+        GLuint vertexTexCoordHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_TEXTURE_COORDINATES);
+        if (vertexTexCoordHandle < this->maxVertexAttribs)
+        {
+            glVertexAttribPointer(vertexTexCoordHandle, 2, GL_FLOAT, GL_FALSE, stride, (void*)32U);
+            CE_GL_ERROR_CHECK("glVertexAttribPointer: texturecoords");
+            glEnableVertexAttribArray(vertexTexCoordHandle);
+            CE_GL_ERROR_CHECK("glEnableVertexAttribArray: texturecoords");
+        }
+
+        GLuint vertexNormalHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_NORMAL);
+        if (vertexNormalHandle < this->maxVertexAttribs)
+        {
+            glVertexAttribPointer(vertexNormalHandle, 3, GL_FLOAT, GL_FALSE, stride, (void*)44U);
+            CE_GL_ERROR_CHECK("glVertexAttribPointer: normal");
+            glEnableVertexAttribArray(vertexNormalHandle);
+            CE_GL_ERROR_CHECK("glEnableVertexAttribArray: normal");
+        }
+
+        GLuint vertexPositionHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_POSITION);
+        glVertexAttribPointer(vertexPositionHandle, 3, GL_FLOAT, GL_FALSE, stride, (void*)56U);
+        CE_GL_ERROR_CHECK("glVertexAttribPointer: position");
+        glEnableVertexAttribArray(vertexPositionHandle);
+        CE_GL_ERROR_CHECK("glEnableVertexAttribArray: position");
+
+        glDrawArrays(GL_TRIANGLES, 0, vertexBuffer->GetNumVertices());
+        CE_GL_ERROR_CHECK("glDrawArrays");
+
+        glBindBuffer(GL_ARRAY_BUFFER, 0U);
+        CE_GL_ERROR_CHECK("glBindBuffer");
+    }
+    else if (graphics::VAT_MORPH == renderable->GetSubMesh()->GetVertexAnimationType())
     {
         glUniform1f(this->currentGpuProgram->GetUniformLocation(graphics::GpuProgramParameters::ACT_MORPH_WEIGHT), renderable->GetMorphWeight());
         CE_GL_ERROR_CHECK("glUniform1f");
@@ -431,7 +503,7 @@ GLES2RenderSystem::SetPass(graphics::Pass* const pass)
         bool fog = (graphics::FOG_LINEAR == pass->GetFogMode());
         if (pass->IsSkeletalAnimationIncluded())
         {
-            // Todo: set skeletal animation shader
+            this->currentGpuProgram = this->defaultGpuProgramSkeletalAnim;
         }
         else if (pass->IsMorphAnimationIncluded())
         {

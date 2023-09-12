@@ -98,6 +98,7 @@ private:
     GLES2GpuProgram* defaultGpuProgramLit;
     GLES2GpuProgram* defaultGpuProgramLitFog;
     GLES2GpuProgram* defaultGpuProgramMorphAnim;
+    GLES2GpuProgram* defaultGpuProgramSkeletalAnim;
     GLES2GpuProgram* defaultGpuProgramShadowCaster;
     GLES2GpuProgram* defaultGpuProgramShadowReceiver;
     GLES2GpuProgram* currentGpuProgram;

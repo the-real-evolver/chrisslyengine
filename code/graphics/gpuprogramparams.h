@@ -92,6 +92,8 @@ public:
         ACT_TEXTURE_MATRIX,
         /// specifies the morph weight when blending between two vertices
         ACT_MORPH_WEIGHT,
+        /// array of world bone matrices
+        ACT_BONE_MATRICES,
         /// the  number of AutoConstantType elements
         ACT_COUNT
     };

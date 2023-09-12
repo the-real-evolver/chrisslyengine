@@ -5,6 +5,7 @@
 #include "androidfswrapper.h"
 #include "core/debug.h"
 #include <stdio.h>
+#include "chrisslystring.h"
 
 namespace chrissly
 {
@@ -17,9 +18,12 @@ AAssetManager* AndroidFSWrapper::AssetManager = NULL;
 core::FileHandle
 AndroidFSWrapper::Open(const char* const fileName, core::AccessMode mode, core::AccessPattern pattern, int permission)
 {
+    core::String name(fileName);
+    name.SubstituteString("\\\\", "/");
+    name.SubstituteString("\\", "/");
     core::FileHandle fileHandle;
-    fileHandle.handle = AAssetManager_open(AndroidFSWrapper::AssetManager, fileName, AndroidFSWrapper::Get(pattern));
-    CE_ASSERT(fileHandle.handle != NULL, "FSWrapper::Open(): can't open file '%s'\n", fileName);
+    fileHandle.handle = AAssetManager_open(AndroidFSWrapper::AssetManager, name.C_Str(), AndroidFSWrapper::Get(pattern));
+    CE_ASSERT(fileHandle.handle != NULL, "FSWrapper::Open(): can't open file '%s'\n", name.C_Str());
     return fileHandle;
 }
 

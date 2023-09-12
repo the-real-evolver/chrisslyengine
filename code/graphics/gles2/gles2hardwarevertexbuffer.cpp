@@ -59,6 +59,24 @@ GLES2HardwareVertexBuffer::Unmap()
 {
     if (graphics::HBU_STATIC == this->usage && !this->useShadowBuffer)
     {
+        // workaround to get skeletal animation to work: since glsl 1.00
+        // does not support uint attributes we have to convert them to float
+        if (this->bytesPerVertex == 68U)
+        {
+            unsigned char* buffer = (unsigned char*)(this->vertexBuffer) + 16U;
+            unsigned int vtx, idx;
+            for (vtx = 0U; vtx < this->numVertices; ++vtx)
+            {
+                unsigned int* uintPtr = (unsigned int*)buffer;
+                float* floatPtr = (float*)buffer;
+                for (idx = 0U; idx < 4U; ++idx)
+                {
+                    floatPtr[idx] = (float)uintPtr[idx];
+                }
+                buffer += this->bytesPerVertex;
+            }
+        }
+
         glBindBuffer(GL_ARRAY_BUFFER, this->bufferName);
         CE_GL_ERROR_CHECK("glBindBuffer");
         glBufferData(GL_ARRAY_BUFFER, this->numVertices * this->bytesPerVertex, this->vertexBuffer, GL_STATIC_DRAW);

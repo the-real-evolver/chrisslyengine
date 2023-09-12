@@ -134,5 +134,41 @@ String::Delete()
     }
 }
 
+//------------------------------------------------------------------------------
+/**
+*/
+void
+String::SubstituteString(const char* const pattern, const char* const replacement)
+{
+    if (NULL == pattern || NULL == replacement || this->size == 0U) return;
+
+    size_t patternLen = strlen(pattern);
+    if (0U == patternLen) return;
+    char* current; char* match;
+    size_t count = 0U;
+    for (current = this->data; (0 != (match = strstr(current, pattern))); current = match + patternLen) ++count;
+    if (0U == count) return;
+
+    size_t replacementLen = strlen(replacement);
+    size_t dstLen = (this->size - count * patternLen) + replacementLen * count;
+    char* buffer = (char*)CE_MALLOC(dstLen + 1U);
+    buffer[dstLen] = '\0';
+
+    char* dst = buffer; char* src = this->data;
+    while (0 != (match = strstr(src, pattern)))
+    {
+        size_t fragLen = match - src;
+        strncpy(dst, src, fragLen);
+        dst += fragLen;
+        strncpy(dst, replacement, replacementLen);
+        dst += replacementLen;
+        src += fragLen + patternLen;
+    }
+    strncpy(dst, src, this->size - (src - this->data));
+
+    this->Set(buffer);
+    CE_FREE(buffer);
+}
+
 } // namespace core
 } // namespace chrissly

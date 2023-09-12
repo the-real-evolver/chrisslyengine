@@ -36,6 +36,8 @@ public:
     void Set(const char* const ptr);
     /// set as char ptr, with explicit length
     void Set(const char* const ptr, unsigned int length);
+    /// substitute every occurrence of a string with another string
+    void SubstituteString(const char* const pattern, const char* const replacement);
 
 private:
     /// free allocated memory

@@ -348,7 +348,6 @@ SceneManager::SetShadowTechnique(ShadowTechnique technique)
             // blending: fragmentcolor * 0xff888888 + framebufferpixelcolor * 0xff000000 (fragmentcolor = modelvertexcolor = 0xffffffff)
             this->shadowRttPass->SetSceneBlendingEnabled(true);
             this->shadowRttPass->SetSceneBlending(SBF_FIX, SBF_FIX);
-            this->shadowRttPass->SetBlendingFixColors(0xff888888, 0xff000000);
             this->shadowRttPass->SetDepthCheckEnabled(false);
             tus->SetTextureMappingMode(TextureUnitState::TMM_TEXTURE_MATRIX);
             tus->SetTextureProjectionMappingMode(TextureUnitState::TPM_POSITION);
@@ -361,7 +360,6 @@ SceneManager::SetShadowTechnique(ShadowTechnique technique)
             this->shadowRttMorphAnimPass->SetGpuProgram(this->destRenderSystem->GetDefaultShadowCasterMorphAnimGpuProgram());
             this->shadowRttSkeletalAnimPass->SetGpuProgram(this->destRenderSystem->GetDefaultShadowCasterSkeletalAnimGpuProgram());
             this->shadowPass->SetGpuProgram(this->destRenderSystem->GetDefaultShadowReceiverGpuProgram());
-            this->SetShadowColour(this->shadowColour);
 #elif __CE_GLES2__
             this->shadowRenderTexture->Create(256, 256, PF_R8G8B8A8);
             Viewport* vp = this->shadowRenderTexture->AddViewport(this->shadowCamera, 0, 0, 255, 255);
@@ -370,6 +368,7 @@ SceneManager::SetShadowTechnique(ShadowTechnique technique)
             this->shadowRttPass->SetGpuProgram(this->destRenderSystem->GetDefaultShadowCasterGpuProgram());
             this->shadowPass->SetGpuProgram(this->destRenderSystem->GetDefaultShadowReceiverGpuProgram());
 #endif
+            this->SetShadowColour(this->shadowColour);
             this->shadowTexture = CE_NEW Texture(this->shadowRenderTexture);
             tus->SetTexture(this->shadowTexture);
 
@@ -405,7 +404,9 @@ void
 SceneManager::SetShadowColour(unsigned int colour)
 {
     this->shadowColour = colour;
-#if __CE_D3D11__
+#if __CE_PSP__
+    this->shadowRttPass->SetBlendingFixColors(this->shadowColour, 0xff000000);
+#elif __CE_D3D11__
     Vector3 rgb;
     float alpha;
     ce_colour_convert_u32_to_float(colour, rgb.x, rgb.y, rgb.z, alpha);
@@ -414,6 +415,11 @@ SceneManager::SetShadowColour(unsigned int colour)
     this->destRenderSystem->GetDefaultShadowCasterMorphAnimGpuProgram()->GetDefaultParameters()->SetNamedConstant("shadowColour", rgb);
     this->destRenderSystem->GetDefaultTransparentShadowCasterMorphAnimGpuProgram()->GetDefaultParameters()->SetNamedConstant("shadowColour", rgb);
     this->destRenderSystem->GetDefaultShadowCasterSkeletalAnimGpuProgram()->GetDefaultParameters()->SetNamedConstant("shadowColour", rgb);
+#elif __CE_GLES2__
+    Vector3 rgb;
+    float alpha;
+    ce_colour_convert_u32_to_float(colour, rgb.x, rgb.y, rgb.z, alpha);
+    this->destRenderSystem->GetDefaultShadowCasterGpuProgram()->GetDefaultParameters()->SetNamedConstant("shadowColour", rgb);
 #endif
 }
 

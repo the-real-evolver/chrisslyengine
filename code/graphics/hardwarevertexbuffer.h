@@ -17,6 +17,10 @@ namespace graphics
     {
         /// position, 3 reals per vertex
         VES_POSITION = 0,
+        /// blending weights
+        VES_BLEND_WEIGHTS,
+        /// blending indices
+        VES_BLEND_INDICES,
         /// normal, 3 reals per vertex
         VES_NORMAL,
         /// texture coordinates
