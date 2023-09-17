@@ -278,7 +278,7 @@ GLES2RenderSystem::Render(graphics::SubEntity* const renderable)
         GLuint vertexIndexHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_BLEND_INDICES);
         if (vertexIndexHandle < this->maxVertexAttribs)
         {
-            glVertexAttribPointer(vertexIndexHandle, 4, GL_FLOAT, GL_FALSE, stride, (void*)16U);
+            glVertexAttribPointer(vertexIndexHandle, 4, GL_UNSIGNED_INT, GL_FALSE, stride, (void*)16U);
             CE_GL_ERROR_CHECK("glVertexAttribPointer: indices");
             glEnableVertexAttribArray(vertexIndexHandle);
             CE_GL_ERROR_CHECK("glEnableVertexAttribArray: indices");

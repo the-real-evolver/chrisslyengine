@@ -43,8 +43,8 @@ GpuProgramManager::LoadFromSource(const char* const source, const char* const na
 
 #if __CE_D3D11__
     program = CE_NEW GpuProgram(source, name, vertexShaderFunctionName, fragmentShaderFunctionName, macros);
-#endif
     ce_hash_table_insert(&this->resources, name, strlen(name), program);
+#endif
 
     return program;
 }

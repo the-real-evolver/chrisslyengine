@@ -3,9 +3,9 @@
 //  (C) 2012 Christian Bleicher
 //------------------------------------------------------------------------------
 #include "androidfswrapper.h"
+#include "core/chrisslystring.h"
 #include "core/debug.h"
 #include <stdio.h>
-#include "chrisslystring.h"
 
 namespace chrissly
 {
