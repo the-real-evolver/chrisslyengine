@@ -326,4 +326,38 @@ const char* const DefaultFragmentShaderShadowReceiver =
     "}\n";
 
 //------------------------------------------------------------------------------
+/**
+    Shadowcaster, Skeleltal Animation
+*/
+const char* const DefaultVertexShaderShadowCasterSkeletalAnim =
+    "#version 100\n"
+    "attribute vec4 weights;\n"
+    "attribute vec4 indices;\n"
+    "attribute vec4 position;\n"
+    "uniform mat4 worldViewProjMatrix;\n"
+    "uniform mat4 boneMatrices[40];\n"
+    "void main()\n"
+    "{\n"
+    "    vec3 P = position.xyz;\n"
+    "    if (weights.x > 0.0 || weights.y > 0.0 || weights.z > 0.0 || weights.w > 0.0)\n"
+    "    {\n"
+    "        P = vec3(0.0);\n"
+    "        for (int i = 0; i < 4; ++i)\n"
+    "        {\n"
+    "            P += (boneMatrices[int(indices[i])] * position).xyz * weights[i];\n"
+    "        }\n"
+    "    }\n"
+    "    gl_Position = worldViewProjMatrix * vec4(P.x, P.z, -P.y, 1.0);\n"
+    "}\n";
+
+const char* const DefaultFragmentShaderShadowCasterSkeletalAnim =
+    "#version 100\n"
+    "precision mediump float;\n"
+    "uniform vec3 shadowColour;"
+    "void main()\n"
+    "{\n"
+    "    gl_FragColor = vec4(shadowColour, 1.0);\n"
+    "}\n";
+
+//------------------------------------------------------------------------------
 #endif

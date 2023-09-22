@@ -150,11 +150,6 @@ Animation::DestroyAllBoneTracks()
 void
 Animation::Apply(Entity* const entity, float timePos, float blendWeight, const float* blendMask)
 {
-    if (timePos > this->length && this->length > 0.0f)
-    {
-        timePos = Math::Fmod(timePos, this->length);
-    }
-
     // update morph animation
     unsigned int i;
     for (i = 0U; i < ce_array_size(this->vertexTracks); ++i)
@@ -214,11 +209,11 @@ Animation::Apply(Entity* const entity, float timePos, float blendWeight, const f
         // 1. restpose * animation keyframe local matrix
         for (i = 0U; i < numBones; ++i)
         {
-            Matrix4* animKeyMatrix = this->boneTracks[i]->GetTransformMatrices();
             float weight = blendMask != NULL ? blendMask[i] : blendWeight;
-            if (weight == 0.0f) continue;
+            if (0.0f == weight) continue;
 
             // interpolate keyframe and weight blend with keyframes from other active animations
+            Matrix4* animKeyMatrix = this->boneTracks[i]->GetTransformMatrices();
             Vector3 p(animKeyMatrix[currentKeyframe][0U][3U], animKeyMatrix[currentKeyframe][1U][3U], animKeyMatrix[currentKeyframe][2U][3U]);
             Vector3 pn(animKeyMatrix[currentKeyframe + 1U][0U][3U], animKeyMatrix[currentKeyframe + 1U][1U][3U], animKeyMatrix[currentKeyframe + 1U][2U][3U]);
             Vector3 pos = Vector3(blendMatrix[i][0U][3U], blendMatrix[i][1U][3U], blendMatrix[i][2U][3U]) + Vector3::Lerp(p, pn, t) * weight;

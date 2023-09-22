@@ -24,7 +24,7 @@ public:
     static void Close(core::FileHandle fileHandle);
     /// get size of a file in bytes
     static unsigned int GetFileSize(core::FileHandle fileHandle);
-    /// read from a file
+    /// read number of bytes from a file, returns the total number of elements successfully read
     static int Read(core::FileHandle fileHandle, void* const buf, unsigned int numBytes);
     /// seek in a file
     static void Seek(core::FileHandle fileHandle, int offset, core::SeekOrigin whence);

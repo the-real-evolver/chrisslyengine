@@ -166,8 +166,9 @@ String::SubstituteString(const char* const pattern, const char* const replacemen
     }
     strncpy(dst, src, this->size - (src - this->data));
 
-    this->Set(buffer);
-    CE_FREE(buffer);
+    this->Delete();
+    this->data = buffer;
+    this->size = dstLen;
 }
 
 } // namespace core

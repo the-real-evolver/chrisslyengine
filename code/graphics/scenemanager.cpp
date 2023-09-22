@@ -366,6 +366,7 @@ SceneManager::SetShadowTechnique(ShadowTechnique technique)
             vp->SetClearEveryFrame(true, FBT_COLOUR);
             vp->SetBackgroundColour(0xffffffff);
             this->shadowRttPass->SetGpuProgram(this->destRenderSystem->GetDefaultShadowCasterGpuProgram());
+            this->shadowRttSkeletalAnimPass->SetGpuProgram(this->destRenderSystem->GetDefaultShadowCasterSkeletalAnimGpuProgram());
             this->shadowPass->SetGpuProgram(this->destRenderSystem->GetDefaultShadowReceiverGpuProgram());
 #endif
             this->SetShadowColour(this->shadowColour);
@@ -420,6 +421,7 @@ SceneManager::SetShadowColour(unsigned int colour)
     float alpha;
     ce_colour_convert_u32_to_float(colour, rgb.x, rgb.y, rgb.z, alpha);
     this->destRenderSystem->GetDefaultShadowCasterGpuProgram()->GetDefaultParameters()->SetNamedConstant("shadowColour", rgb);
+    this->destRenderSystem->GetDefaultShadowCasterSkeletalAnimGpuProgram()->GetDefaultParameters()->SetNamedConstant("shadowColour", rgb);
 #endif
 }
 
@@ -527,7 +529,7 @@ SceneManager::_RenderScene(Camera* const camera, Viewport* const vp)
                 // add to shadow caster queue
                 if (this->IsShadowTechniqueInUse() && this->illuminationStage == IRS_RENDER_TO_TEXTURE)
                 {
-#if __CE_D3D11__
+#if __CE_D3D11__ || __CE_GLES2__
                     if (entity->GetMesh()->GetSkeleton() != NULL)
                     {
                         this->renderQueueOpaque.AddRenderable(subEntity, this->shadowRttSkeletalAnimPass);

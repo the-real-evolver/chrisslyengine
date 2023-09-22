@@ -547,7 +547,7 @@ class Export_ChrisslyEngineMesh(bpy.types.Operator, ExportHelper):
     position_only: bpy.props.BoolProperty(name="Position coordinates only", description="Only the aabb min and max followed by the vertex positions will be written to the file, can be used as collision geometry", default=False)
     export_morph_animation: bpy.props.BoolProperty(name="Export morph animation", description="Export scene frames as morph animation keyframes", default=False)
     export_skeletal_animation: bpy.props.BoolProperty(name="Export skeletal animation", description="Export restpose, skeleton and animations", default=False)
-    export_all_bone_weights: bpy.props.BoolProperty(name="Export all bone weights", description="By default only the 4 most influencial bone weights and the index to their matrix are stored per vertex, enalbe this if you want to store all weights per vertex (mandatory on the PSP since there is no support for blend indices)", default=False)
+    export_all_bone_weights: bpy.props.BoolProperty(name="Export all bone weights", description="By default only the 4 most influencial bone weights and the index to their matrix are stored per vertex, enalbe this if you want to store all weights per vertex (mandatory on the PSP since there is no support for indexed vertex blending)", default=False)
 
     filename_ext = ".mesh"
 

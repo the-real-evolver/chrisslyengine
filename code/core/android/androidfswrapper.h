@@ -4,13 +4,13 @@
 /**
     @class chrissly::AndroidFSWrapper
 
-    Wrapper for the android assetmanager filesystem.
+    Wrapper for the android assetmanager and internal storage filesystem.
 
     (C) 2012 Christian Bleicher
 */
 #include "core/fileio.h"
 #include "core/filehandle.h"
-#include <android/asset_manager.h>
+#include <android/native_activity.h>
 
 //------------------------------------------------------------------------------
 namespace chrissly
@@ -25,20 +25,26 @@ public:
     static void Close(core::FileHandle fileHandle);
     /// get size of a file in bytes
     static unsigned int GetFileSize(core::FileHandle fileHandle);
-    /// read from a file
+    /// read number of bytes from a file, returns the total number of elements successfully read
     static int Read(core::FileHandle fileHandle, void* const buf, unsigned int numBytes);
     /// seek in a file
     static void Seek(core::FileHandle fileHandle, int offset, core::SeekOrigin whence);
+    /// write to a file
+    static void Write(core::FileHandle fileHandle, const void* buf, unsigned int numBytes);
+    /// return true if a file exists
+    static bool FileExists(const char* const fileName);
+    /// return internal application private storage data path
+    static const char* GetAppDataDirectory();
     /// initialise the filesystem
-    static void _Initialise(AAssetManager* const assetManager);
+    static void _Initialise(ANativeActivity* const nativeActivity);
 
 private:
+    /// return a Posix equivalent for a AccessMode value
+    static const char* Get(core::AccessMode mode);
     /// return a Posix equivalent for a SeekOrigin value
     static int Get(core::SeekOrigin origin);
     /// return a android asset mode equivalent for a AccessPattern value
     static int Get(core::AccessPattern pattern);
-
-    static AAssetManager* AssetManager;
 };
 
 } // namespace chrissly

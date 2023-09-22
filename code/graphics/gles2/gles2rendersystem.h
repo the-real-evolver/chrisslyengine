@@ -74,6 +74,8 @@ public:
     GLES2GpuProgram* const GetDefaultShadowCasterGpuProgram() const;
     /// get pointer to the default shadow receiver gpu program
     GLES2GpuProgram* const GetDefaultShadowReceiverGpuProgram() const;
+    /// get pointer to the default shadow caster skeletal anim gpu program
+    GLES2GpuProgram* const GetDefaultShadowCasterSkeletalAnimGpuProgram() const;
 
 private:
     /// copy constructor
@@ -101,6 +103,7 @@ private:
     GLES2GpuProgram* defaultGpuProgramSkeletalAnim;
     GLES2GpuProgram* defaultGpuProgramShadowCaster;
     GLES2GpuProgram* defaultGpuProgramShadowReceiver;
+    GLES2GpuProgram* defaultGpuProgramShadowCasterSkeletalAnim;
     GLES2GpuProgram* currentGpuProgram;
 
     GLfloat glWorldMatrix[16];

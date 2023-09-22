@@ -229,7 +229,7 @@ android_main(struct android_app* state)
     state->onInputEvent = HandleInputEvents;
 
     // initialise filesystem
-    FSWrapper::_Initialise(state->activity->assetManager);
+    FSWrapper::_Initialise(state->activity);
 
     while (true)
     {

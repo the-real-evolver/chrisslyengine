@@ -28,6 +28,8 @@ struct FileHandle
 //------------------------------------------------------------------------------
 #elif __CE_ANDROID__
 #include <android/asset_manager.h>
+#include <stdio.h>
+
 namespace chrissly
 {
 namespace core
@@ -36,9 +38,10 @@ namespace core
 struct FileHandle
 {
     /// default constructor
-    FileHandle() : handle(NULL) {};
+    FileHandle() : assetHandle(NULL), fileHandle(NULL) {};
 
-    AAsset* handle;
+    AAsset* assetHandle;
+    FILE* fileHandle;
 };
 
 } // namespace core

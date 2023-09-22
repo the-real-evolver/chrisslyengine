@@ -6,11 +6,13 @@
 #include "core/chrisslystring.h"
 #include "core/debug.h"
 #include <stdio.h>
+#include <string.h>
 
 namespace chrissly
 {
 
-AAssetManager* AndroidFSWrapper::AssetManager = NULL;
+static AAssetManager* AssetManager = NULL;
+static char* InternalDataPath = NULL;
 
 //------------------------------------------------------------------------------
 /**
@@ -22,8 +24,16 @@ AndroidFSWrapper::Open(const char* const fileName, core::AccessMode mode, core::
     name.SubstituteString("\\\\", "/");
     name.SubstituteString("\\", "/");
     core::FileHandle fileHandle;
-    fileHandle.handle = AAssetManager_open(AndroidFSWrapper::AssetManager, name.C_Str(), AndroidFSWrapper::Get(pattern));
-    CE_ASSERT(fileHandle.handle != NULL, "FSWrapper::Open(): can't open file '%s'\n", name.C_Str());
+    if (strstr(fileName, InternalDataPath) != NULL)
+    {
+        fileHandle.fileHandle = fopen(name.C_Str(), AndroidFSWrapper::Get(mode));
+        CE_ASSERT(fileHandle.fileHandle != NULL, "FSWrapper::Open(): can't open file '%s'\n", name.C_Str());
+    }
+    else
+    {
+        fileHandle.assetHandle = AAssetManager_open(AssetManager, name.C_Str(), AndroidFSWrapper::Get(pattern));
+        CE_ASSERT(fileHandle.assetHandle != NULL, "FSWrapper::Open(): can't open file '%s'\n", name.C_Str());
+    }
     return fileHandle;
 }
 
@@ -33,7 +43,15 @@ AndroidFSWrapper::Open(const char* const fileName, core::AccessMode mode, core::
 void
 AndroidFSWrapper::Close(core::FileHandle fileHandle)
 {
-    AAsset_close(fileHandle.handle);
+    if (fileHandle.fileHandle != NULL)
+    {
+        int result = fclose(fileHandle.fileHandle);
+        CE_ASSERT(0 == result, "FSWrapper::Close(): failed to close file '%p'\n", fileHandle.fileHandle);
+    }
+    else if (fileHandle.assetHandle != NULL)
+    {
+        AAsset_close(fileHandle.assetHandle);
+    }
 }
 
 //------------------------------------------------------------------------------
@@ -42,7 +60,16 @@ AndroidFSWrapper::Close(core::FileHandle fileHandle)
 unsigned int
 AndroidFSWrapper::GetFileSize(core::FileHandle fileHandle)
 {
-    return (unsigned int)AAsset_getLength(fileHandle.handle);
+    unsigned int fileSize = 0U;
+    if (fileHandle.fileHandle != NULL)
+    {
+        if (fseek(fileHandle.fileHandle, 0, SEEK_END) >= 0) fileSize = (unsigned int)ftell(fileHandle.fileHandle);
+    }
+    else if (fileHandle.assetHandle != NULL)
+    {
+        fileSize = (unsigned int)AAsset_getLength(fileHandle.assetHandle);
+    }
+    return fileSize;
 }
 
 //------------------------------------------------------------------------------
@@ -51,9 +78,17 @@ AndroidFSWrapper::GetFileSize(core::FileHandle fileHandle)
 int
 AndroidFSWrapper::Read(core::FileHandle fileHandle, void* const buf, unsigned int numBytes)
 {
-    int result = AAsset_read(fileHandle.handle, buf, numBytes);
-    CE_ASSERT(result >= 0, "FSWrapper::Read(): can't read from file '%i'\n", fileHandle.handle);
-    return result;
+    int bytesRead = 0U;
+    if (fileHandle.fileHandle != NULL)
+    {
+        bytesRead = (int)fread(buf, 1U, (size_t)numBytes, fileHandle.fileHandle);
+    }
+    else if (fileHandle.assetHandle != NULL)
+    {
+        bytesRead = (int)AAsset_read(fileHandle.assetHandle, buf, (size_t)numBytes);
+    }
+    CE_ASSERT((bytesRead != 0 && (int)numBytes == bytesRead) || bytesRead == 0, "FSWrapper::Read(): could not read the requested number of bytes (requested: '%u' read: '%d')\n", numBytes, bytesRead);
+    return bytesRead;
 }
 
 //------------------------------------------------------------------------------
@@ -62,18 +97,96 @@ AndroidFSWrapper::Read(core::FileHandle fileHandle, void* const buf, unsigned in
 void
 AndroidFSWrapper::Seek(core::FileHandle fileHandle, int offset, core::SeekOrigin whence)
 {
-    off_t result = AAsset_seek(fileHandle.handle, (off_t)offset, AndroidFSWrapper::Get(whence));
-    CE_ASSERT(result != -1, "FSWrapper::Seek(): failed to seek file '%i'\n", fileHandle.handle);
+    if (fileHandle.fileHandle != NULL)
+    {
+        int result = fseek(fileHandle.fileHandle, (long)offset, AndroidFSWrapper::Get(whence));
+        CE_ASSERT(result == 0, "FSWrapper::Seek(): failed to seek file '%p'\n", fileHandle.fileHandle);
+    }
+    else if (fileHandle.assetHandle != NULL)
+    {
+        off_t result = AAsset_seek(fileHandle.assetHandle, (off_t)offset, AndroidFSWrapper::Get(whence));
+        CE_ASSERT(result != -1, "FSWrapper::Seek(): failed to seek file '%p'\n", fileHandle.assetHandle);
+    }
 }
 
 //------------------------------------------------------------------------------
 /**
 */
 void
-AndroidFSWrapper::_Initialise(AAssetManager* const assetManager)
+AndroidFSWrapper::Write(core::FileHandle fileHandle, const void *buf, unsigned int numBytes)
 {
-    AndroidFSWrapper::AssetManager = assetManager;
-    CE_LOG("AndroidFSWrapper::_Initialise\n");
+    if (fileHandle.fileHandle != NULL)
+    {
+        size_t bytesWritten = fwrite(buf, 1U, (size_t)numBytes, fileHandle.fileHandle);
+        CE_ASSERT((unsigned int)bytesWritten == numBytes, "FSWrapper::Write(): failed to write to file '%p', bytes supplied '%u', bytes written '%u'\n", fileHandle.fileHandle, numBytes, bytesWritten);
+    }
+    else if (fileHandle.assetHandle != NULL)
+    {
+        CE_ASSERT(false, "FSWrapper::Write(): AAssets can't be modified at runtime. They are read-only\n");
+    }
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+bool
+AndroidFSWrapper::FileExists(const char* const fileName)
+{
+    core::String name(fileName);
+    name.SubstituteString("\\\\", "/");
+    name.SubstituteString("\\", "/");
+    core::FileHandle fileHandle;
+    fileHandle.fileHandle = fopen(name.C_Str(), "r");
+    if (fileHandle.fileHandle != NULL)
+    {
+        fclose(fileHandle.fileHandle);
+        return true;
+    }
+    fileHandle.assetHandle = AAssetManager_open(AssetManager, name.C_Str(), AASSET_MODE_UNKNOWN);
+    if (NULL != fileHandle.assetHandle)
+    {
+        AAsset_close(fileHandle.assetHandle);
+        return true;
+    }
+    return false;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+const char*
+AndroidFSWrapper::GetAppDataDirectory()
+{
+    return InternalDataPath;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+AndroidFSWrapper::_Initialise(ANativeActivity* const nativeActivity)
+{
+    AssetManager = nativeActivity->assetManager;
+    InternalDataPath = (char*)nativeActivity->internalDataPath;
+    CE_LOG("AndroidFSWrapper::_Initialise()\n");
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+const char*
+AndroidFSWrapper::Get(core::AccessMode mode)
+{
+    switch (mode)
+    {
+        case core::READ_ACCESS:         return "rb";
+        case core::WRITE_ACCESS:        return "wb";
+        case core::READ_WRITE_ACCESS:   return "wb+";
+        case core::APPEND_ACCESS:       return "ab+";
+        default: CE_ASSERT(false, "FSWrapper::Get(): illegal AccessMode '%i'\n", mode);
+    }
+
+    return NULL;
 }
 
 //------------------------------------------------------------------------------

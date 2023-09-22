@@ -37,6 +37,7 @@ GLES2RenderSystem::GLES2RenderSystem() :
     defaultGpuProgramSkeletalAnim(NULL),
     defaultGpuProgramShadowCaster(NULL),
     defaultGpuProgramShadowReceiver(NULL),
+    defaultGpuProgramShadowCasterSkeletalAnim(NULL),
     currentGpuProgram(NULL),
     numTextureUnits(0),
     maxVertexAttribs(0)
@@ -103,6 +104,7 @@ GLES2RenderSystem::Initialise(void* const customParams)
     this->defaultGpuProgramSkeletalAnim = CE_NEW GLES2GpuProgram(DefaultVertexShaderSkeletalAnim, DefaultFragmentShaderSkeletalAnim);
     this->defaultGpuProgramShadowCaster = CE_NEW GLES2GpuProgram(DefaultVertexShaderShadowCaster, DefaultFragmentShaderShadowCaster);
     this->defaultGpuProgramShadowReceiver = CE_NEW GLES2GpuProgram(DefaultVertexShaderShadowReceiver, DefaultFragmentShaderShadowReceiver);
+    this->defaultGpuProgramShadowCasterSkeletalAnim = CE_NEW GLES2GpuProgram(DefaultVertexShaderShadowCasterSkeletalAnim, DefaultFragmentShaderShadowCasterSkeletalAnim);
     this->currentGpuProgram = this->defaultGpuProgram;
 
     return renderWindow;
@@ -129,6 +131,8 @@ GLES2RenderSystem::Shutdown()
     CE_DELETE this->defaultGpuProgramShadowCaster;
     this->defaultGpuProgramShadowCaster = NULL;
     CE_DELETE this->defaultGpuProgramShadowReceiver;
+    CE_DELETE this->defaultGpuProgramShadowCasterSkeletalAnim;
+    this->defaultGpuProgramShadowCasterSkeletalAnim = NULL;
     this->defaultGpuProgramShadowReceiver = NULL;
     this->currentGpuProgram = NULL;
 
@@ -667,6 +671,7 @@ GLES2RenderSystem::GetDefaultLightShaderParams() const
 GLES2GpuProgram *const
 GLES2RenderSystem::GetDefaultShadowCasterGpuProgram() const
 {
+    CE_ASSERT(this->defaultGpuProgramShadowCaster != NULL, "GLES2RenderSystem::GetDefaultShadowCasterGpuProgram(): gpu program not valid\n");
     return this->defaultGpuProgramShadowCaster;
 }
 
@@ -676,7 +681,18 @@ GLES2RenderSystem::GetDefaultShadowCasterGpuProgram() const
 GLES2GpuProgram *const
 GLES2RenderSystem::GetDefaultShadowReceiverGpuProgram() const
 {
+    CE_ASSERT(this->defaultGpuProgramShadowReceiver != NULL, "GLES2RenderSystem::GetDefaultShadowReceiverGpuProgram(): gpu program not valid\n");
     return this->defaultGpuProgramShadowReceiver;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+GLES2GpuProgram *const
+GLES2RenderSystem::GetDefaultShadowCasterSkeletalAnimGpuProgram() const
+{
+    CE_ASSERT(this->defaultGpuProgramShadowCasterSkeletalAnim != NULL, "GLES2RenderSystem::GetDefaultShadowCasterSkeletalAnimGpuProgram(): gpu program not valid\n");
+    return this->defaultGpuProgramShadowCasterSkeletalAnim;
 }
 
 } // namespace chrissly
