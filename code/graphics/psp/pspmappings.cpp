@@ -38,6 +38,7 @@ PSPMappings::Get(graphics::PrimitiveTopology top)
         case graphics::PT_LINESTRIP:        return GU_LINE_STRIP;
         case graphics::PT_TRIANGLELIST:     return GU_TRIANGLES;
         case graphics::PT_TRIANGLESTRIP:    return GU_TRIANGLE_STRIP;
+        case graphics::PT_TRIANGLEFAN:      return GU_TRIANGLE_FAN;
         default: CE_ASSERT(false, "PSPMappings::Get(): illegal PrimitiveTopology '%i'\n", top);
     }
 

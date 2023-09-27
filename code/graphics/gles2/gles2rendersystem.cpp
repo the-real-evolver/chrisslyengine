@@ -312,7 +312,7 @@ GLES2RenderSystem::Render(graphics::SubEntity* const renderable)
         glEnableVertexAttribArray(vertexPositionHandle);
         CE_GL_ERROR_CHECK("glEnableVertexAttribArray: position");
 
-        glDrawArrays(GL_TRIANGLES, 0, vertexBuffer->GetNumVertices());
+        glDrawArrays(GLES2Mappings::Get(renderable->GetSubMesh()->topology), 0, vertexBuffer->GetNumVertices());
         CE_GL_ERROR_CHECK("glDrawArrays");
 
         glBindBuffer(GL_ARRAY_BUFFER, 0U);
@@ -357,13 +357,14 @@ GLES2RenderSystem::Render(graphics::SubEntity* const renderable)
         glEnableVertexAttribArray(vertexPositionMorphTargetHandle);
         CE_GL_ERROR_CHECK("glEnableVertexAttribArray");
 
-        glDrawArrays(GL_TRIANGLES, 0, vertexBuffer->GetNumVertices());
+        glDrawArrays(GLES2Mappings::Get(renderable->GetSubMesh()->topology), 0, vertexBuffer->GetNumVertices());
         CE_GL_ERROR_CHECK("glDrawArrays");
     }
     else
     {
         graphics::HardwareVertexBuffer* vertexBuffer = renderable->GetSubMesh()->vertexData->vertexBuffer;
         GLsizei stride = (GLsizei)vertexBuffer->GetBytesPerVertex();
+        unsigned char* buffer = vertexBuffer->GetUsage() == graphics::HBU_DYNAMIC ? (unsigned char*)vertexBuffer->Map() : 0U;
 
         glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer->GetName());
         CE_GL_ERROR_CHECK("glBindBuffer");
@@ -371,7 +372,7 @@ GLES2RenderSystem::Render(graphics::SubEntity* const renderable)
         GLuint vertexTexCoordHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_TEXTURE_COORDINATES);
         if (vertexTexCoordHandle < this->maxVertexAttribs)
         {
-            glVertexAttribPointer(vertexTexCoordHandle, 2, GL_FLOAT, GL_FALSE, stride, (void*)0U);
+            glVertexAttribPointer(vertexTexCoordHandle, 2, GL_FLOAT, GL_FALSE, stride, (void*)buffer);
             CE_GL_ERROR_CHECK("glVertexAttribPointer: texturecoords");
             glEnableVertexAttribArray(vertexTexCoordHandle);
             CE_GL_ERROR_CHECK("glEnableVertexAttribArray: texturecoords");
@@ -380,19 +381,19 @@ GLES2RenderSystem::Render(graphics::SubEntity* const renderable)
         GLuint vertexNormalHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_NORMAL);
         if (vertexNormalHandle < this->maxVertexAttribs)
         {
-            glVertexAttribPointer(vertexNormalHandle, 3, GL_FLOAT, GL_FALSE, stride, (void*)12U);
+            glVertexAttribPointer(vertexNormalHandle, 3, GL_FLOAT, GL_FALSE, stride, (void*)(buffer + 12U));
             CE_GL_ERROR_CHECK("glVertexAttribPointer: normal");
             glEnableVertexAttribArray(vertexNormalHandle);
             CE_GL_ERROR_CHECK("glEnableVertexAttribArray: normal");
         }
 
         GLuint vertexPositionHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_POSITION);
-        glVertexAttribPointer(vertexPositionHandle, 3, GL_FLOAT, GL_FALSE, stride, (void*)24U);
+        glVertexAttribPointer(vertexPositionHandle, 3, GL_FLOAT, GL_FALSE, stride, (void*)(buffer + 24U));
         CE_GL_ERROR_CHECK("glVertexAttribPointer: position");
         glEnableVertexAttribArray(vertexPositionHandle);
         CE_GL_ERROR_CHECK("glEnableVertexAttribArray: position");
 
-        glDrawArrays(GL_TRIANGLES, 0, vertexBuffer->GetNumVertices());
+        glDrawArrays(GLES2Mappings::Get(renderable->GetSubMesh()->topology), 0, vertexBuffer->GetNumVertices());
         CE_GL_ERROR_CHECK("glDrawArrays");
 
         glBindBuffer(GL_ARRAY_BUFFER, 0U);

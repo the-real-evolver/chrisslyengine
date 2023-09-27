@@ -28,8 +28,10 @@ public:
     GpuProgramManager();
     /// destructor
     ~GpuProgramManager();
-    /// create, compile and link a gpu program from the given shader source code
-    GpuProgram* const LoadFromSource(const char* const source, const char* const name, const char* const vertexShaderFunctionName, const char* const fragmentShaderFunctionName, const char* const* const macros = NULL);
+    /// compile vertex and fragment shader from the given hlsl source code
+    GpuProgram* const LoadFromSource(const char* const name, const char* const source, const char* const vertexShaderFunctionName, const char* const fragmentShaderFunctionName, const char* const* const macros = NULL);
+    /// create, compile and link a gpu program from the given glsl shader source code
+    GpuProgram* const LoadFromSource(const char* const name, const char* const vertexShaderSource, const char* const fragmentShaderSource);
     /// retrieves a pointer to a gpuprogram by name, or null if the resource does not exist
     GpuProgram* const GetByName(const char* const name);
     /// removes all resources

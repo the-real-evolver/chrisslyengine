@@ -21,6 +21,8 @@ class GLES2Mappings
 public:
     /// convert matrix to OpenGl ES style
     static void MakeGLMatrix(GLfloat gl_matrix[16U], const core::Matrix4& m);
+    /// return a OpenGl ES equivalent for a PrimitiveTopology value
+    static GLenum Get(graphics::PrimitiveTopology top);
     /// return a OpenGL ES equivalent for a SceneBlendOperation value
     static GLenum Get(graphics::SceneBlendOperation op);
     /// return a OpenGL ES equivalent for a SceneBlendFactor value

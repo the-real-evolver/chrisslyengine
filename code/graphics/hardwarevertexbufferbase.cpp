@@ -80,5 +80,14 @@ HardwareVertexBufferBase::SetNumVertices(unsigned int num)
     this->numVertices = num;
 }
 
+//------------------------------------------------------------------------------
+/**
+*/
+Usage
+HardwareVertexBufferBase::GetUsage() const
+{
+    return this->usage;
+}
+
 } // namespace graphics
 } // namespace chrissly

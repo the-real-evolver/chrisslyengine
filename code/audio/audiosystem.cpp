@@ -145,6 +145,9 @@ AudioSystem::CreateSound(const char* const name, Mode mode, Sound** sound)
             else if (0 == strncmp(ext, "ogg", 3U))
             {
                 codec = CE_NEW VorbisCodec();
+#if __CE_SLES__
+                mode = MODE_CREATESAMPLE;
+#endif
             }
             else
             {

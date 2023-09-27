@@ -25,6 +25,26 @@ GLES2Mappings::MakeGLMatrix(GLfloat gl_matrix[16U], const core::Matrix4& m)
 /**
 */
 GLenum
+GLES2Mappings::Get(graphics::PrimitiveTopology top)
+{
+    switch (top)
+    {
+        case graphics::PT_POINTLIST:        return GL_POINTS;
+        case graphics::PT_LINELIST:         return GL_LINES;
+        case graphics::PT_LINESTRIP:        return GL_LINE_STRIP;
+        case graphics::PT_TRIANGLELIST:     return GL_TRIANGLES;
+        case graphics::PT_TRIANGLESTRIP:    return GL_TRIANGLE_STRIP;
+        case graphics::PT_TRIANGLEFAN:      return GL_TRIANGLE_FAN;
+        default: CE_ASSERT(false, "GLES2Mappings::Get(): illegal PrimitiveTopology '%i'\n", top);
+    }
+
+    return 0U;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+GLenum
 GLES2Mappings::Get(graphics::SceneBlendOperation op)
 {
     switch (op)

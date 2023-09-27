@@ -42,6 +42,8 @@ public:
     unsigned int GetNumVertices() const;
     /// set the number of vertices in this buffer
     void SetNumVertices(unsigned int num);
+    /// get the buffer usage
+    Usage GetUsage() const;
 
 protected:
     /// default constructor

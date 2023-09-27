@@ -19,7 +19,8 @@ namespace graphics
         PT_LINELIST,
         PT_LINESTRIP,
         PT_TRIANGLELIST,
-        PT_TRIANGLESTRIP
+        PT_TRIANGLESTRIP,
+        PT_TRIANGLEFAN
     };
 
     /**
