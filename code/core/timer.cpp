@@ -17,6 +17,21 @@ namespace core
 //------------------------------------------------------------------------------
 /**
 */
+static inline clock_t
+ce_clock()
+{
+#if __CE_ANDROID__
+    struct timespec ts;
+    clock_gettime(CLOCK_MONOTONIC, &ts);
+    return ts.tv_sec * 1000000L + ts.tv_nsec / 1000L;
+#else
+    return clock();
+#endif
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
 Timer::Timer() :
     running(false),
     diffTime(0),
@@ -32,7 +47,7 @@ void
 Timer::Start()
 {
     clock_t curRealTime;
-    curRealTime = clock();
+    curRealTime = ce_clock();
     this->diffTime += curRealTime - this->stopTime;
     this->stopTime = 0;
     this->running = true;
@@ -44,7 +59,7 @@ Timer::Start()
 void
 Timer::Stop()
 {
-    this->stopTime = clock();
+    this->stopTime = ce_clock();
     this->running = false;
 }
 
@@ -80,7 +95,7 @@ Timer::InternalTime() const
     clock_t inttime;
     if (this->running)
     {
-        inttime = clock();
+        inttime = ce_clock();
     }
     else
     {
