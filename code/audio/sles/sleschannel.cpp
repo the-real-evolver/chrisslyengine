@@ -81,7 +81,10 @@ SLESChannel::SetupAudioPlayer(SLEngineItf engineInterface, SLObjectItf outputMix
 void
 SLESChannel::ReleaseAudioPlayer()
 {
-    SLresult result = (*this->playerInterface)->SetPlayState(this->playerInterface, SL_PLAYSTATE_STOPPED);
+    SLuint32 state;
+    SLresult result = (*this->playerInterface)->GetPlayState(this->playerInterface, &state);
+    if (SL_RESULT_PARAMETER_INVALID == result || SL_PLAYSTATE_STOPPED == state) return;
+    result = (*this->playerInterface)->SetPlayState(this->playerInterface, SL_PLAYSTATE_STOPPED);
     CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESChannel::Release(): failed to stop player\n");
     (*this->player)->Destroy(this->player);
 }

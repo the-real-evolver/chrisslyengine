@@ -146,7 +146,8 @@ AudioSystem::CreateSound(const char* const name, Mode mode, Sound** sound)
             {
                 codec = CE_NEW VorbisCodec();
 #if __CE_SLES__
-                mode = MODE_CREATESAMPLE;
+                mode &= ~MODE_CREATESTREAM;
+                mode |= MODE_CREATESAMPLE;
 #endif
             }
             else
