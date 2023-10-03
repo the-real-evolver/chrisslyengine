@@ -93,7 +93,7 @@ private:
     bool receivesShadows;
     /// state of animation for animable meshes
     mutable ce_hash_table animationStates;
-    /// bone matrices that wll be send to the shader/gpu
+    /// bone matrices that will be send to the shader/gpu
     chrissly::core::Matrix4* boneMatrices;
     /// blended local bone matrices when multiple animations are enabled
     chrissly::core::Matrix4* blendMatrices;
