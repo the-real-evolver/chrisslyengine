@@ -21,7 +21,7 @@ TextureUnitState::TextureUnitState() :
     vMod(0.0f),
     minFilter(FO_LINEAR),
     magFilter(FO_LINEAR),
-    mipFilter(FO_NONE),
+    mipFilter(FO_POINT),
     lbo(LBO_REPLACE),
     lbt(LBT_COLOUR),
     mappingMode(TMM_TEXTURE_COORDS),

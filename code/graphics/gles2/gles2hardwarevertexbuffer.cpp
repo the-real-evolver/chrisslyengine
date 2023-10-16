@@ -35,7 +35,7 @@ GLES2HardwareVertexBuffer::GLES2HardwareVertexBuffer(unsigned int numVertices, u
 */
 GLES2HardwareVertexBuffer::~GLES2HardwareVertexBuffer()
 {
-    if (graphics::HBU_STATIC == this->usage && !this->useShadowBuffer)
+    if (this->bufferName != 0U)
     {
         glDeleteBuffers(1, &this->bufferName);
         CE_GL_ERROR_CHECK("glDeleteBuffers");

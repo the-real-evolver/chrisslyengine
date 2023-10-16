@@ -129,4 +129,13 @@ EGLRenderWindow::GetType() const
     return 'EGLW';
 }
 
+//------------------------------------------------------------------------------
+/**
+*/
+EGLNativeWindowType
+EGLRenderWindow::GetWindowHandle() const
+{
+    return this->window;
+}
+
 } // namespace chrissly

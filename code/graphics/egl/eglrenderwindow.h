@@ -25,6 +25,8 @@ public:
     void SwapBuffers();
     /// get the type of the rendertarget
     unsigned int GetType() const;
+    /// gets the window handle
+    EGLNativeWindowType GetWindowHandle() const;
 
 private:
     /// private default constructor
