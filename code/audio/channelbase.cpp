@@ -489,12 +489,8 @@ ChannelBase::FillOutputBuffer(unsigned int numSamples, unsigned int position)
 void
 ChannelBase::ReleaseInternal()
 {
-    // release and detach dsps
-    unsigned int i;
-    for (i = 0U; i < ce_array_size(this->dsps); ++i)
-    {
-        if (this->dsps[i] != NULL) this->dsps[i]->Release();
-    }
+    // release auto attached lowpass dsp on 3d sounds
+    if (this->mode & MODE_3D && this->dsps[0U] != NULL) this->dsps[0U]->Release();
     ce_array_delete(this->dsps);
     this->isPlaying = false;
     this->index = CHANNEL_FREE;
