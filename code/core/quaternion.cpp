@@ -93,6 +93,7 @@ Quaternion::FromRotationMatrix(const Matrix3& rot)
         *quatAxis[j] = (rot[j][i] + rot[i][j]) * root;
         *quatAxis[k] = (rot[k][i]+ rot[i][k]) * root;
     }
+    this->Normalise();
 }
 
 //------------------------------------------------------------------------------

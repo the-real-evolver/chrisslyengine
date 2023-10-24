@@ -210,7 +210,6 @@ Animation::Apply(Entity* const entity, float timePos, float blendWeight, const f
         for (i = 0U; i < numBones; ++i)
         {
             float weight = blendMask != NULL ? blendMask[i] : blendWeight;
-            if (0.0f == weight) continue;
 
             // interpolate keyframe and weight blend with keyframes from other active animations
             Matrix4* animKeyMatrix = this->boneTracks[i]->GetTransformMatrices();
