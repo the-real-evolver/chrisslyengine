@@ -40,12 +40,17 @@ private:
     SLVolumeItf GetVolumeInterface() const;
     /// gets the effect send interface
     SLEffectSendItf GetEffectSendInterface() const;
+    /// signal the audio renderer to release the channel
+    void RequestRelease();
+    /// returns if a channel release was requested
+    bool GetReleaseRequest();
 
     SLAndroidSimpleBufferQueueItf bufferQueueInterface;
     SLPlayItf playerInterface;
     SLVolumeItf volumeInterface;
     SLObjectItf player;
     SLEffectSendItf effectSendInterface;
+    bool requestRelease;
 };
 
 } // namespace chrissly

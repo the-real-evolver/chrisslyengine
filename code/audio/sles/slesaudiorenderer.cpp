@@ -163,17 +163,23 @@ SLESAudioRenderer::StartChannel(audio::Channel* const channel)
 void
 SLESAudioRenderer::UpdateChannel(audio::Channel* const channel)
 {
+    const core::Mutex& syncLock = channel->GetSyncLock();
+    syncLock.Lock();
+    if (channel->GetReleaseRequest())
+    {
+        this->ReleaseChannel(channel);
+        syncLock.Unlock();
+        return;
+    }
     audio::Mode mode;
     channel->GetMode(&mode);
     if (mode & audio::MODE_CREATESTREAM)
     {
-        const core::Mutex& syncLock = channel->GetSyncLock();
-        syncLock.Lock();
         audio::Sound* sound;
         channel->GetCurrentSound(&sound);
         sound->GetCodec()->FillStreamBackBuffer();
-        syncLock.Unlock();
     }
+    syncLock.Unlock();
 
     audio::PropertyChange propertyChange = channel->PropertiesHaveChanged();
     if (propertyChange != audio::UNCHANGED)
@@ -245,6 +251,7 @@ void
 SLESAudioRenderer::BufferQueueCallback(SLAndroidSimpleBufferQueueItf bufferQueueInterface, void* context)
 {
     audio::Channel* channel = (audio::Channel*)context;
+    const core::Mutex& syncLock = channel->GetSyncLock();
     SLresult result;
     audio::Sound* sound;
     channel->GetCurrentSound(&sound);
@@ -252,7 +259,6 @@ SLESAudioRenderer::BufferQueueCallback(SLAndroidSimpleBufferQueueItf bufferQueue
     channel->GetMode(&mode);
     if (mode & audio::MODE_CREATESTREAM)
     {
-        const core::Mutex& syncLock = channel->GetSyncLock();
         syncLock.Lock();
         audio::Codec* codec = sound->GetCodec();
         if (codec->EndOfStream())
@@ -265,8 +271,7 @@ SLESAudioRenderer::BufferQueueCallback(SLAndroidSimpleBufferQueueItf bufferQueue
             }
             else
             {
-                channel->ReleaseAudioPlayer();
-                channel->ReleaseInternal();
+                channel->RequestRelease();
             }
         }
         else
@@ -291,8 +296,9 @@ SLESAudioRenderer::BufferQueueCallback(SLAndroidSimpleBufferQueueItf bufferQueue
         }
         else
         {
-            channel->ReleaseAudioPlayer();
-            channel->ReleaseInternal();
+            syncLock.Lock();
+            channel->RequestRelease();
+            syncLock.Unlock();
         }
     }
 }

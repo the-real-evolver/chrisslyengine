@@ -18,7 +18,8 @@ SLESChannel::SLESChannel() :
     playerInterface(NULL),
     volumeInterface(NULL),
     player(NULL),
-    effectSendInterface(NULL)
+    effectSendInterface(NULL),
+    requestRelease(false)
 {
 
 }
@@ -49,7 +50,7 @@ SLESChannel::SetupAudioPlayer(SLEngineItf engineInterface, SLObjectItf outputMix
     const SLboolean required[3U] = {SL_BOOLEAN_TRUE, SL_BOOLEAN_TRUE, SL_BOOLEAN_TRUE};
     SLresult result = (*engineInterface)->CreateAudioPlayer(engineInterface, &this->player, &audioSource, &audioSink, 3U, ids, required);
     CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESChannel::SetupAudioPlayer(): failed to create audio player\n");
-    result = (*player)->Realize(player, SL_BOOLEAN_FALSE);
+    result = (*this->player)->Realize(this->player, SL_BOOLEAN_FALSE);
     CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESChannel::SetupAudioPlayer(): failed to realize audio player\n");
 
     result = (*this->player)->GetInterface(this->player, SL_IID_PLAY, &this->playerInterface);
@@ -125,6 +126,26 @@ SLEffectSendItf
 SLESChannel::GetEffectSendInterface() const
 {
     return this->effectSendInterface;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+SLESChannel::RequestRelease()
+{
+    this->requestRelease = true;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+bool
+SLESChannel::GetReleaseRequest()
+{
+    bool requestRelease = this->requestRelease;
+    this->requestRelease = false;
+    return requestRelease;
 }
 
 } // namespace chrissly
