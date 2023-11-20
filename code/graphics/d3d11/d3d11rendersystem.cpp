@@ -24,6 +24,7 @@ static const unsigned int MaxLights = 4U;
 /**
 */
 D3D11RenderSystem::D3D11RenderSystem() :
+    activeViewport(NULL),
     ambientLight(0x00000000),
     worldMatrix(core::Matrix4::ZERO),
     viewMatrix(core::Matrix4::ZERO),
@@ -349,6 +350,8 @@ D3D11RenderSystem::SetRenderTarget(graphics::RenderTarget* const target)
 void
 D3D11RenderSystem::SetViewport(graphics::Viewport* const vp)
 {
+    this->activeViewport = vp;
+
     int width = vp->GetActualWidth();
     int height = vp->GetActualHeight();
     int left = vp->GetActualLeft();
@@ -402,6 +405,15 @@ D3D11RenderSystem::SetViewport(graphics::Viewport* const vp)
             this->context->ClearDepthStencilView(depthStencilView, D3D11Mappings::Get(clearFlags), 1.0f, 0U);
         }
     }
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+graphics::Viewport* const
+D3D11RenderSystem::GetViewport() const
+{
+    return this->activeViewport;
 }
 
 //------------------------------------------------------------------------------

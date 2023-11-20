@@ -39,6 +39,8 @@ public:
         camera and render target.
     */
     void SetViewport(graphics::Viewport* const vp);
+    /// get the current active viewport
+    graphics::Viewport* const GetViewport() const;
     /// sets the world transform matrix
     void SetWorldMatrix(const core::Matrix4& m);
     /// sets the view transform matrix
@@ -93,6 +95,8 @@ private:
     D3D11RenderSystem& operator = (const D3D11RenderSystem&);
 
     static D3D11RenderSystem* Singleton;
+
+    graphics::Viewport* activeViewport;
 
     unsigned int ambientLight;
     core::Matrix4 defaultLightShaderParams[4U];

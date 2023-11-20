@@ -25,6 +25,7 @@ static const unsigned int MaxLights = 4U;
 /**
 */
 GLES2RenderSystem::GLES2RenderSystem() :
+    activeViewport(NULL),
     ambientLight(0x00000000),
     worldMatrix(core::Matrix4::ZERO),
     viewMatrix(core::Matrix4::ZERO),
@@ -163,6 +164,8 @@ GLES2RenderSystem::SetRenderTarget(graphics::RenderTarget* const target)
 void
 GLES2RenderSystem::SetViewport(graphics::Viewport* const vp)
 {
+    this->activeViewport = vp;
+
     int width = vp->GetActualWidth();
     int height = vp->GetActualHeight();
     int left = vp->GetActualLeft();
@@ -184,6 +187,15 @@ GLES2RenderSystem::SetViewport(graphics::Viewport* const vp)
         glClear(GLES2Mappings::Get((graphics::FrameBufferType)vp->GetClearBuffers()));
         CE_GL_ERROR_CHECK("glClear");
     }
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+graphics::Viewport* const
+GLES2RenderSystem::GetViewport() const
+{
+    return this->activeViewport;
 }
 
 //------------------------------------------------------------------------------

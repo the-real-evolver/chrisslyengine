@@ -34,6 +34,7 @@ static const ScePspFVector3 SphereMapTransformMatrix[2U] =
 /**
 */
 PSPRenderSystem::PSPRenderSystem() :
+    activeViewport(NULL),
     lights(NULL),
     restoreLights(false),
     ambientLight(0x00000000)
@@ -104,6 +105,8 @@ PSPRenderSystem::SetRenderTarget(graphics::RenderTarget* const target)
 void
 PSPRenderSystem::SetViewport(graphics::Viewport* const vp)
 {
+    this->activeViewport = vp;
+
     int width = vp->GetActualWidth();
     int height = vp->GetActualHeight();
     int left = vp->GetActualLeft();
@@ -120,6 +123,15 @@ PSPRenderSystem::SetViewport(graphics::Viewport* const vp)
         sceGuClearColor(vp->GetBackgroundColour());
         sceGuClear(PSPMappings::Get((graphics::FrameBufferType)vp->GetClearBuffers()));
     }
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+graphics::Viewport* const
+PSPRenderSystem::GetViewport() const
+{
+    return this->activeViewport;
 }
 
 //------------------------------------------------------------------------------

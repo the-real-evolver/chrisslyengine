@@ -40,6 +40,8 @@ public:
         camera and render target.
     */
     void SetViewport(graphics::Viewport* const vp);
+    /// get the current active viewport
+    graphics::Viewport* const GetViewport() const;
     /// sets the world transform matrix
     void SetWorldMatrix(const core::Matrix4& m);
     /// sets the view transform matrix
@@ -78,6 +80,8 @@ private:
     PSPRenderSystem& operator = (const PSPRenderSystem&);
 
     static PSPRenderSystem* Singleton;
+
+    graphics::Viewport* activeViewport;
 
     ce_hash_table* lights;
     bool restoreLights;
