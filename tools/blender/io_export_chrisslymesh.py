@@ -168,6 +168,11 @@ def ce_write_material(file_path, materials):
                                 file.write("            scale %f %f\n" % (scale[0], scale[1]))
                     file.write("        }\n")
                     ce_write_texture(tex.image, os.path.dirname(file_path))
+        if 'cubic_texture' in mat:
+            file.write("        texture_unit\n")
+            file.write("        {\n")
+            file.write("            cubic_texture \"%s\"\n" % (mat.get('cubic_texture', "default")))
+            file.write("        }\n")
         file.write("    }\n")
         file.write("}\n\n")
     file.close()
