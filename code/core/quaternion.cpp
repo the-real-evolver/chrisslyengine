@@ -329,6 +329,7 @@ Quaternion::Slerp(const Quaternion& rkP, const Quaternion& rkQ, float t, bool sh
         rkT = rkQ;
     }
 
+    Quaternion qt;
     if (Math::Fabs(fCos) < 1.0f - 1e-03f)
     {
         // standard case (slerp)
@@ -337,7 +338,7 @@ Quaternion::Slerp(const Quaternion& rkP, const Quaternion& rkQ, float t, bool sh
         float fInvSin = 1.0f / fSin;
         float fCoeff0 = Math::Sin((1.0f - t) * fAngle) * fInvSin;
         float fCoeff1 = Math::Sin(t * fAngle) * fInvSin;
-        return fCoeff0 * rkP + fCoeff1 * rkT;
+        qt = fCoeff0 * rkP + fCoeff1 * rkT;
     }
     else
     {
@@ -347,11 +348,10 @@ Quaternion::Slerp(const Quaternion& rkP, const Quaternion& rkQ, float t, bool sh
         // 2. "rkP" and "rkQ" are almost inverse of each other (fCos ~= -1), there
         //    are an infinite number of possibilities interpolation. but we haven't
         //    have method to fix this case, so just use linear interpolation here
-        Quaternion qt = (1.0f - t) * rkP + t * rkT;
-        // taking the complement requires renormalisation
-        qt.Normalise();
-        return qt;
+        qt = (1.0f - t) * rkP + t * rkT;
     }
+    qt.Normalise();
+    return qt;
 }
 
 } // namespace core
