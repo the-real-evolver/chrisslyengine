@@ -142,7 +142,7 @@ def ce_write_material(file_path, materials):
         file.write("    pass\n")
         file.write("    {\n")
         file.write("        lighting on\n")
-        if mat.blend_method == 'BLEND' or mat.blend_method == 'CLIP':
+        if mat.blend_method == 'BLEND':
             file.write("        scene_blend src_alpha one_minus_src_alpha\n")
             file.write("        depth_write off\n")
         file.write("        diffuse %f %f %f %f\n" % (mat.diffuse_color[0], mat.diffuse_color[1], mat.diffuse_color[2], mat.diffuse_color[3]))
