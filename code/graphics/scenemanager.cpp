@@ -413,6 +413,7 @@ SceneManager::SetShadowColour(unsigned int colour)
     ce_colour_convert_u32_to_float(colour, rgb.x, rgb.y, rgb.z, alpha);
     this->destRenderSystem->GetDefaultShadowCasterGpuProgram()->GetDefaultParameters()->SetNamedConstant("shadowColour", rgb);
     this->destRenderSystem->GetDefaultTransparentShadowCasterGpuProgram()->GetDefaultParameters()->SetNamedConstant("shadowColour", rgb);
+    this->destRenderSystem->GetDefaultTransparentShadowCasterAlphaTestGpuProgram()->GetDefaultParameters()->SetNamedConstant("shadowColour", rgb);
     this->destRenderSystem->GetDefaultShadowCasterMorphAnimGpuProgram()->GetDefaultParameters()->SetNamedConstant("shadowColour", rgb);
     this->destRenderSystem->GetDefaultTransparentShadowCasterMorphAnimGpuProgram()->GetDefaultParameters()->SetNamedConstant("shadowColour", rgb);
     this->destRenderSystem->GetDefaultShadowCasterSkeletalAnimGpuProgram()->GetDefaultParameters()->SetNamedConstant("shadowColour", rgb);
@@ -534,7 +535,8 @@ SceneManager::_RenderScene(Camera* const camera, Viewport* const vp)
                     {
                         this->renderQueueOpaque.AddRenderable(subEntity, this->shadowRttSkeletalAnimPass);
                     }
-                    else if (material->GetNumPasses() > 0U && material->GetPass(0U)->GetSceneBlendingEnabled() && material->GetPass(0U)->GetNumTextureUnitStates() > 0U)
+                    else if (material->GetNumPasses() > 0U && material->GetPass(0U)->GetNumTextureUnitStates() > 0U &&
+                             (material->GetPass(0U)->GetSceneBlendingEnabled() || material->GetPass(0U)->GetAlphaFunction() != CF_ALWAYS))
                     {
                         this->renderQueueTransparentShadowCaster.AddRenderable(subEntity, material->GetPass(0U));
                     }
@@ -773,6 +775,10 @@ SceneManager::RenderTransparentTextureShadowCasterQueueGroupObjects(RenderQueue*
         if (graphics::VAT_MORPH == renderablePass->renderable->GetSubMesh()->GetVertexAnimationType())
         {
             pass->SetGpuProgram(this->destRenderSystem->GetDefaultTransparentShadowCasterMorphAnimGpuProgram());
+        }
+        else if (pass->GetAlphaFunction() != CF_ALWAYS)
+        {
+            pass->SetGpuProgram(this->destRenderSystem->GetDefaultTransparentShadowCasterAlphaTestGpuProgram());
         }
         else
         {

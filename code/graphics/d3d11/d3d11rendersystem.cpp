@@ -44,6 +44,7 @@ D3D11RenderSystem::D3D11RenderSystem() :
     defaultGpuProgramSkeletalAnimNoTexture(NULL),
     defaultGpuProgramShadowCaster(NULL),
     defaultGpuProgramTransparentShadowCaster(NULL),
+    defaultGpuProgramTransparentShadowCasterAlphaTest(NULL),
     defaultGpuProgramShadowReceiver(NULL),
     defaultGpuProgramShadowCasterMorphAnim(NULL),
     defaultGpuProgramTransparentShadowCasterMorphAnim(NULL),
@@ -172,6 +173,8 @@ D3D11RenderSystem::Initialise(void* const customParams)
     this->defaultGpuProgramSkeletalAnimNoTexture = CE_NEW D3D11GpuProgram(DefaultGpuProgramSkeletalAnim, "defaultshaderskeletalanimnotexture.fx", "DefaultVertexShader", "DefaultFragmentShader", shaderMacrosSkeletalAnimationNoTexture);
     this->defaultGpuProgramShadowCaster = CE_NEW D3D11GpuProgram(DefaultGpuProgramShadowCaster, "defaultshadershadowcaster.fx", "DefaultVertexShader", "DefaultFragmentShader");
     this->defaultGpuProgramTransparentShadowCaster = CE_NEW D3D11GpuProgram(DefaultGpuProgramTransparentShadowCaster, "defaultshadertransparentshadowcaster.fx", "DefaultVertexShader", "DefaultFragmentShader");
+    const char* shaderMacrosAlphaTest[] = {"ALPHA_TEST", "1", NULL, NULL};
+    this->defaultGpuProgramTransparentShadowCasterAlphaTest = CE_NEW D3D11GpuProgram(DefaultGpuProgramTransparentShadowCaster, "defaultshadertransparentshadowcasteralphatest.fx", "DefaultVertexShader", "DefaultFragmentShader", shaderMacrosAlphaTest);
     this->defaultGpuProgramShadowReceiver = CE_NEW D3D11GpuProgram(DefaultGpuProgramShadowReceiver, "defaultshadershadowreceiver.fx", "DefaultVertexShader", "DefaultFragmentShader");
     this->defaultGpuProgramShadowCasterMorphAnim = CE_NEW D3D11GpuProgram(DefaultGpuProgramShadowCasterMorphAnim, "defaultshadershadowcastermorphanim.fx", "DefaultVertexShader", "DefaultFragmentShader");
     this->defaultGpuProgramTransparentShadowCasterMorphAnim = CE_NEW D3D11GpuProgram(DefaultGpuProgramTransparentShadowCasterMorphAnim, "defaultshadertransparentshadowcastermorphanim.fx", "DefaultVertexShader", "DefaultFragmentShader");
@@ -276,6 +279,8 @@ D3D11RenderSystem::Shutdown()
     this->defaultGpuProgramShadowCaster = NULL;
     CE_DELETE this->defaultGpuProgramTransparentShadowCaster;
     this->defaultGpuProgramTransparentShadowCaster = NULL;
+    CE_DELETE this->defaultGpuProgramTransparentShadowCasterAlphaTest;
+    this->defaultGpuProgramTransparentShadowCasterAlphaTest = NULL;
     CE_DELETE this->defaultGpuProgramShadowReceiver;
     this->defaultGpuProgramShadowReceiver = NULL;
     CE_DELETE this->defaultGpuProgramShadowCasterMorphAnim;
@@ -365,10 +370,10 @@ D3D11RenderSystem::SetViewport(graphics::Viewport* const vp)
     this->viewPort.MaxDepth = 1.0f;
     this->context->RSSetViewports(1U, &this->viewPort);
 
-    this->scissorRect[0].left = (LONG)left;
-    this->scissorRect[0].top = (LONG)top;
-    this->scissorRect[0].right = (LONG)(left + width);
-    this->scissorRect[0].bottom = (LONG)(top + height);
+    this->scissorRect[0U].left = (LONG)left;
+    this->scissorRect[0U].top = (LONG)top;
+    this->scissorRect[0U].right = (LONG)(left + width);
+    this->scissorRect[0U].bottom = (LONG)(top + height);
     this->context->RSSetScissorRects(1U, this->scissorRect);
 
     if (vp->GetClearEveryFrame())
@@ -760,6 +765,16 @@ D3D11RenderSystem::GetDefaultTransparentShadowCasterGpuProgram() const
 {
     CE_ASSERT(this->defaultGpuProgramTransparentShadowCaster != NULL, "D3D11RenderSystem::GetDefaultTransparentShadowCasterGpuProgram(): gpu program not valid\n");
     return this->defaultGpuProgramTransparentShadowCaster;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+D3D11GpuProgram* const
+D3D11RenderSystem::GetDefaultTransparentShadowCasterAlphaTestGpuProgram() const
+{
+    CE_ASSERT(this->defaultGpuProgramTransparentShadowCasterAlphaTest != NULL, "D3D11RenderSystem::GetDefaultTransparentShadowCasterAlphaTestGpuProgram(): gpu program not valid\n");
+    return this->defaultGpuProgramTransparentShadowCasterAlphaTest;
 }
 
 //------------------------------------------------------------------------------

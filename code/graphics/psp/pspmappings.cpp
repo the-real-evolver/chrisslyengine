@@ -94,6 +94,27 @@ PSPMappings::Get(graphics::SceneBlendFactor sbf)
 /**
 */
 int
+PSPMappings::Get(graphics::ComparisonFunction cf)
+{
+    switch (cf)
+    {
+        case graphics::CF_NEVER:        return GU_NEVER;
+        case graphics::CF_LESS:         return GU_LESS;
+        case graphics::CF_EQUAL:        return GU_EQUAL;
+        case graphics::CF_LESS_EQUAL:   return GU_LEQUAL;
+        case graphics::CF_GREATER:      return GU_GREATER;
+        case graphics::CF_NOT_EQUAL:    return GU_NOTEQUAL;
+        case graphics::CF_ALWAYS:       return GU_ALWAYS;
+        default: CE_ASSERT(false, "PSPMappings::Get(): illegal ComparisonFunction '%i'\n", cf);
+    }
+
+    return 0;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+int
 PSPMappings::Get(graphics::LayerBlendType lbt)
 {
     switch (lbt)
@@ -270,7 +291,7 @@ PSPMappings::Get(graphics::FrameBufferType fbt)
     if (fbt & graphics::FBT_DEPTH)      {clearBits |= GU_DEPTH_BUFFER_BIT;}
     if (fbt & graphics::FBT_STENCIL)    {clearBits |= GU_STENCIL_BUFFER_BIT;}
     if (fbt & graphics::FBT_FAST_CLEAR) {clearBits |= GU_FAST_CLEAR_BIT;}
- 
+
     return clearBits;
 }
 

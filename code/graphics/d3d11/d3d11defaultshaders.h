@@ -523,7 +523,11 @@ const char* const DefaultGpuProgramTransparentShadowCaster =
     "}\n"
     "void DefaultFragmentShader(VertexOut input, out float4 output : SV_Target)\n"
     "{\n"
-    "    output = float4(shadowColour, texture0.Sample(samplerLinear, input.uv).a);\n"
+    "    float4 albedo = texture0.Sample(samplerLinear, input.uv);\n"
+    "#ifdef ALPHA_TEST\n"
+    "    if (albedo.a < 0.001f) discard;\n"
+    "#endif\n"
+    "    output = float4(shadowColour, albedo.a);\n"
     "};\n";
 
 //------------------------------------------------------------------------------

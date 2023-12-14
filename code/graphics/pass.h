@@ -68,6 +68,12 @@ public:
     unsigned int GetSourceBlendingFixColor() const;
     /// retrieves the destination fix colors
     unsigned int GetDestinationBlendingFixColor() const;
+    /// specify how the alpha test discards fragments
+    void SetAlphaFunction(ComparisonFunction func, float ref);
+    /// get the alpha test function
+    ComparisonFunction GetAlphaFunction() const;
+    /// get the alpha test ref
+    float GetAlphaRef() const;
 
     /// sets whether or not this pass renders with depth-buffer checking on or not
     void SetDepthCheckEnabled(bool enabled);
@@ -229,6 +235,8 @@ private:
     bool sceneBlend;
     unsigned int sourceFixColor;
     unsigned int destFixColor;
+    ComparisonFunction alphaTestFunction;
+    float alphaTestRef;
     bool depthCheck;
     bool depthWrite;
     CullingMode cullMode;

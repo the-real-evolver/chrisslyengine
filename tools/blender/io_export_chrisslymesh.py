@@ -145,6 +145,8 @@ def ce_write_material(file_path, materials):
         if mat.blend_method == 'BLEND':
             file.write("        scene_blend src_alpha one_minus_src_alpha\n")
             file.write("        depth_write off\n")
+        elif mat.blend_method == 'CLIP':
+            file.write("        alpha_test less 0.001\n")
         file.write("        diffuse %f %f %f %f\n" % (mat.diffuse_color[0], mat.diffuse_color[1], mat.diffuse_color[2], mat.diffuse_color[3]))
         file.write("        specular %f %f %f 1.0 %f\n" % (mat.specular_color[0], mat.specular_color[1], mat.specular_color[2], mat.specular_intensity * 64.0))
         file.write("        cull_hardware %s\n" % ('clockwise' if mat.use_backface_culling else 'none'))

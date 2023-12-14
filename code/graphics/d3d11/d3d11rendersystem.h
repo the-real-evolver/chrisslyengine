@@ -72,6 +72,8 @@ public:
     D3D11GpuProgram* const GetDefaultShadowCasterGpuProgram() const;
     /// get pointer to the default transparent shadow caster gpu program
     D3D11GpuProgram* const GetDefaultTransparentShadowCasterGpuProgram() const;
+    /// get pointer to the default transparent shadow caster alpha test gpu program
+    D3D11GpuProgram* const GetDefaultTransparentShadowCasterAlphaTestGpuProgram() const;
     /// get pointer to the default shadow caster morph anim gpu program
     D3D11GpuProgram* const GetDefaultShadowCasterMorphAnimGpuProgram() const;
     /// get pointer to the default transparent shadow caster morph anim gpu program
@@ -120,6 +122,7 @@ private:
     D3D11GpuProgram* defaultGpuProgramSkeletalAnimNoTexture;
     D3D11GpuProgram* defaultGpuProgramShadowCaster;
     D3D11GpuProgram* defaultGpuProgramTransparentShadowCaster;
+    D3D11GpuProgram* defaultGpuProgramTransparentShadowCasterAlphaTest;
     D3D11GpuProgram* defaultGpuProgramShadowReceiver;
     D3D11GpuProgram* defaultGpuProgramShadowCasterMorphAnim;
     D3D11GpuProgram* defaultGpuProgramTransparentShadowCasterMorphAnim;

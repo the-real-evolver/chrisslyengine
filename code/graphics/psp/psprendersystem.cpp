@@ -268,6 +268,16 @@ PSPRenderSystem::SetPass(graphics::Pass* const pass)
         sceGuDisable(GU_BLEND);
     }
 
+    if (pass->GetAlphaFunction() != graphics::CF_ALWAYS)
+    {
+        sceGuEnable(GU_ALPHA_TEST);
+        sceGuAlphaFunc(PSPMappings::Get(pass->GetAlphaFunction()), (int)(pass->GetAlphaRef() * 255.0f), 0xff);
+    }
+    else
+    {
+        sceGuDisable(GU_ALPHA_TEST);
+    }
+
     // depth check
     pass->GetDepthCheckEnabled() ? sceGuEnable(GU_DEPTH_TEST) : sceGuDisable(GU_DEPTH_TEST);
 

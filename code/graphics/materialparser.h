@@ -49,6 +49,8 @@ private:
     SceneBlendFactor GetSceneBlendFactorFromString(const char* const blendFactor) const;
     /// gets the filter option enum value from the parsed string
     FilterOptions GetFilterOptionsFromString(const char* const filterOption) const;
+    /// gets the comparison function enum value from the parsed string
+    ComparisonFunction GetComparisonFunctionFromString(const char* const compFunc) const;
 
     ParserState parserState;
     stb_lexer lexer;

@@ -20,6 +20,8 @@ Pass::Pass(unsigned short index) :
     sceneBlend(false),
     sourceFixColor(0xff666666),
     destFixColor(0xff000000),
+    alphaTestFunction(CF_ALWAYS),
+    alphaTestRef(0.0f),
     depthCheck(true),
     depthWrite(true),
     cullMode(CULL_CLOCKWISE),
@@ -141,6 +143,34 @@ unsigned int
 Pass::GetDestinationBlendingFixColor() const
 {
     return this->destFixColor;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+Pass::SetAlphaFunction(ComparisonFunction func, float ref)
+{
+    this->alphaTestFunction = func;
+    this->alphaTestRef = ref;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+ComparisonFunction
+Pass::GetAlphaFunction() const
+{
+    return this->alphaTestFunction;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+float
+Pass::GetAlphaRef() const
+{
+    return this->alphaTestRef;
 }
 
 //------------------------------------------------------------------------------

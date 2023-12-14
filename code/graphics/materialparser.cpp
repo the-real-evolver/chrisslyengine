@@ -289,6 +289,14 @@ MaterialParser::ParsePass()
             this->currentPass->SetBlendingFixColors(this->currentPass->GetSourceBlendingFixColor(), this->GetRGBAValue(red, green, blue, 1.0f));
         }
     }
+    else if (0 == strcmp(this->lexer.string, "alpha_test"))
+    {
+        if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
+        ComparisonFunction func = this->GetComparisonFunctionFromString(this->lexer.string);
+        if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
+        float ref = (float)this->lexer.real_number;
+        this->currentPass->SetAlphaFunction(func, ref);
+    }
     else if (0 == strcmp(this->lexer.string, "cull_hardware"))
     {
         if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
@@ -467,6 +475,24 @@ MaterialParser::GetFilterOptionsFromString(const char* const filterOption) const
     if (0 == strcmp(filterOption, "linear"))    {return FO_LINEAR;}
 
     return FO_NONE;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+ComparisonFunction
+MaterialParser::GetComparisonFunctionFromString(const char* const compFunc) const
+{
+    if (0 == strcmp(compFunc, "never"))         {return CF_NEVER;}
+    if (0 == strcmp(compFunc, "less"))          {return CF_LESS;}
+    if (0 == strcmp(compFunc, "equal"))         {return CF_EQUAL;}
+    if (0 == strcmp(compFunc, "less_equal"))    {return CF_LESS_EQUAL;}
+    if (0 == strcmp(compFunc, "greater"))       {return CF_GREATER;}
+    if (0 == strcmp(compFunc, "not_equal"))     {return CF_NOT_EQUAL;}
+    if (0 == strcmp(compFunc, "greater_equal")) {return CF_GREATER_EQUAL;}
+    if (0 == strcmp(compFunc, "always"))        {return CF_ALWAYS;}
+
+    return CF_ALWAYS;
 }
 
 } // namespace graphics

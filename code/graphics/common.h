@@ -24,6 +24,21 @@ namespace graphics
     };
 
     /**
+        comparison function for depth-stencil or alpha test operations
+    */
+    enum ComparisonFunction
+    {
+        CF_NEVER,
+        CF_LESS,
+        CF_EQUAL,
+        CF_LESS_EQUAL,
+        CF_GREATER,
+        CF_NOT_EQUAL,
+        CF_GREATER_EQUAL,
+        CF_ALWAYS
+    };
+
+    /**
         hardware culling modes based on vertex winding. This setting applies to
         how the hardware API culls triangles it is sent
     */

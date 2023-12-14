@@ -28,6 +28,8 @@ public:
     static int Get(graphics::SceneBlendOperation op);
     /// return a PSP equivalent for a SceneBlendFactor value
     static int Get(graphics::SceneBlendFactor sbf);
+    /// return a PSP equivalent for a ComparisonFunction value
+    static int Get(graphics::ComparisonFunction cf);
     /// return a PSP equivalent for a LayerBlendType value
     static int Get(graphics::LayerBlendType lbt);
     /// return a PSP equivalent for a LayerBlendOperation value
