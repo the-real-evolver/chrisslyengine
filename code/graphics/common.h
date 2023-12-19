@@ -23,9 +23,7 @@ namespace graphics
         PT_TRIANGLEFAN
     };
 
-    /**
-        comparison function for depth-stencil or alpha test operations
-    */
+    /// comparison function for depth-stencil or alpha test operations
     enum ComparisonFunction
     {
         CF_NEVER,

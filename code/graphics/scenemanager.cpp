@@ -53,8 +53,8 @@ SceneManager::SceneManager() :
     ce_array_init(this->entities, 256U);
     ce_array_init(this->sceneNodes, 256U);
 
-    this->renderQueueOpaque.Initialise(512U);
-    this->renderQueueTransparent.Initialise(256U);
+    this->renderQueueOpaque.Initialise(1024U);
+    this->renderQueueTransparent.Initialise(1024U);
     this->renderQueueTransparentShadowCaster.Initialise(256U);
     this->renderQueueShadowReceiver.Initialise(256U);
 
