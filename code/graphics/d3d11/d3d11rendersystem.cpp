@@ -79,6 +79,9 @@ D3D11RenderSystem::~D3D11RenderSystem()
 graphics::RenderWindow* const
 D3D11RenderSystem::Initialise(void* const customParams)
 {
+    CE_ASSERT(customParams != NULL, "D3D11RenderSystem::Initialise(): customParams must not be NULL, pass a D3D11ConfigOptions pointer with a valid HINSTANCE to GraphicsSystem::Initialise()\n");
+    D3D11ConfigOptions* config = (D3D11ConfigOptions*)customParams;
+
     /* create device */
     D3D_FEATURE_LEVEL featureLevels[] = {D3D_FEATURE_LEVEL_10_1};
 
@@ -96,6 +99,10 @@ D3D11RenderSystem::Initialise(void* const customParams)
     );
     CE_ASSERT(SUCCEEDED(result), "D3D11RenderSystem::Initialise(): failed to create d3d11 device\n");
 
+    UINT msaaNumQualityLevels = 0U;
+    result = this->device->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, 4U, &msaaNumQualityLevels);
+    if (FAILED(result) || msaaNumQualityLevels == 0U) config->msaaEnable = false;
+
     /* initialise rasterizer state object that tells the rasterizer stage how to behave */
     ZeroMemory(&this->currentRasterState, sizeof(this->currentRasterState));
     this->currentRasterState.FillMode = D3D11_FILL_SOLID;
@@ -106,8 +113,8 @@ D3D11RenderSystem::Initialise(void* const customParams)
     this->currentRasterState.SlopeScaledDepthBias = 0.0f;
     this->currentRasterState.DepthClipEnable = TRUE;
     this->currentRasterState.ScissorEnable = TRUE;
-    this->currentRasterState.MultisampleEnable = FALSE;
-    this->currentRasterState.AntialiasedLineEnable = FALSE;
+    this->currentRasterState.MultisampleEnable = config->msaaEnable;
+    this->currentRasterState.AntialiasedLineEnable = config->msaaEnable;
 
     /* initialise depth stencil state */
     ZeroMemory(&this->currentDepthStencilState, sizeof(this->currentDepthStencilState));
@@ -239,7 +246,7 @@ D3D11RenderSystem::Initialise(void* const customParams)
     this->context->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
     /* create default render window */
-    graphics::RenderWindow* renderWindow = CE_NEW graphics::RenderWindow((D3D11ConfigOptions*)customParams, this->device);
+    graphics::RenderWindow* renderWindow = CE_NEW graphics::RenderWindow(config, this->device);
     renderWindow->Create();
 
     return renderWindow;
@@ -841,7 +848,7 @@ D3D11RenderSystem::GetContext() const
 /**
 */
 void
-D3D11RenderSystem::CreateDepthBuffer(UINT width, UINT height, ID3D11Texture2D** bufferOut, ID3D11DepthStencilView** viewOut)
+D3D11RenderSystem::CreateDepthBuffer(UINT width, UINT height, bool msaa, ID3D11Texture2D** bufferOut, ID3D11DepthStencilView** viewOut)
 {
     D3D11_TEXTURE2D_DESC depthBufferDesc;
     ZeroMemory(&depthBufferDesc, sizeof(depthBufferDesc));
@@ -850,7 +857,7 @@ D3D11RenderSystem::CreateDepthBuffer(UINT width, UINT height, ID3D11Texture2D** 
     depthBufferDesc.MipLevels = 1U;
     depthBufferDesc.ArraySize = 1U;
     depthBufferDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-    depthBufferDesc.SampleDesc.Count = 1U;
+    depthBufferDesc.SampleDesc.Count = msaa ? 4U : 1U;
     depthBufferDesc.SampleDesc.Quality = 0U;
     depthBufferDesc.Usage = D3D11_USAGE_DEFAULT;
     depthBufferDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
@@ -862,7 +869,7 @@ D3D11RenderSystem::CreateDepthBuffer(UINT width, UINT height, ID3D11Texture2D** 
     D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
     ZeroMemory(&depthStencilViewDesc, sizeof(depthStencilViewDesc));
     depthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-    depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+    depthStencilViewDesc.ViewDimension = msaa ? D3D11_DSV_DIMENSION_TEXTURE2DMS : D3D11_DSV_DIMENSION_TEXTURE2D;
     depthStencilViewDesc.Texture2D.MipSlice = 0U;
     result = this->device->CreateDepthStencilView(*bufferOut, &depthStencilViewDesc, viewOut);
     CE_ASSERT(SUCCEEDED(result), "D3D11RenderSystem::CreateDepthBuffer(): failed to create depth stencil view\n");

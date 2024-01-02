@@ -535,8 +535,8 @@ SceneManager::_RenderScene(Camera* const camera, Viewport* const vp)
                     {
                         this->renderQueueOpaque.AddRenderable(subEntity, this->shadowRttSkeletalAnimPass);
                     }
-                    else if (material->GetNumPasses() > 0U && material->GetPass(0U)->GetNumTextureUnitStates() > 0U &&
-                             (material->GetPass(0U)->GetSceneBlendingEnabled() || material->GetPass(0U)->GetAlphaFunction() != CF_ALWAYS))
+                    else if (material->GetNumPasses() > 0U && material->GetPass(0U)->GetNumTextureUnitStates() > 0U
+                             && (material->GetPass(0U)->GetSceneBlendingEnabled() || material->GetPass(0U)->GetAlphaFunction() != CF_ALWAYS))
                     {
                         this->renderQueueTransparentShadowCaster.AddRenderable(subEntity, material->GetPass(0U));
                     }

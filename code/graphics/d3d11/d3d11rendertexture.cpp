@@ -90,7 +90,7 @@ D3D11RenderTexture::Create(int w, int h, graphics::PixelFormat fmt, bool depth)
 
     if (depth)
     {
-        D3D11RenderSystem::Instance()->CreateDepthBuffer((UINT)w, (UINT)h, &this->depthStencilBuffer, &this->depthStencilView);
+        D3D11RenderSystem::Instance()->CreateDepthBuffer((UINT)w, (UINT)h, false, &this->depthStencilBuffer, &this->depthStencilView);
     }
 
     this->width = w;

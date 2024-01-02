@@ -88,7 +88,7 @@ public:
     /// get pointer to the d3d11 device context
     ID3D11DeviceContext* const GetContext() const;
     /// create depth buffer with the given dimensions (format: DXGI_FORMAT_D24_UNORM_S8_UINT)
-    void CreateDepthBuffer(UINT width, UINT height, ID3D11Texture2D** bufferOut, ID3D11DepthStencilView** viewOut);
+    void CreateDepthBuffer(UINT width, UINT height, bool msaa, ID3D11Texture2D** bufferOut, ID3D11DepthStencilView** viewOut);
 
 private:
     /// copy constructor

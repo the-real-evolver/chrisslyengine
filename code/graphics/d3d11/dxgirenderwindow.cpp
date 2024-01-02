@@ -24,7 +24,8 @@ DXGIRenderWindow::DXGIRenderWindow(D3D11ConfigOptions* config, ID3D11Device* con
     depthStencilBuffer(NULL),
     depthStencilView(NULL),
     fullScreen(false),
-    depthBuffer(true)
+    depthBuffer(true),
+    msaaEnable(false)
 {
     if (config->fullScreen)
     {
@@ -39,6 +40,8 @@ DXGIRenderWindow::DXGIRenderWindow(D3D11ConfigOptions* config, ID3D11Device* con
     this->fullScreen = config->fullScreen;
 
     this->depthBuffer = config->depthBuffer;
+
+    this->msaaEnable = config->msaaEnable;
 }
 
 //------------------------------------------------------------------------------
@@ -128,12 +131,13 @@ DXGIRenderWindow::Create()
     sd.BufferDesc.RefreshRate.Numerator = 60U;
     sd.BufferDesc.RefreshRate.Denominator = 1U;
     sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-    sd.SampleDesc.Count = 1U;
+    sd.SampleDesc.Count = this->msaaEnable ? 4U : 1U;
     sd.SampleDesc.Quality = 0U;
     sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-    sd.BufferCount = 1U;
+    sd.BufferCount = this->msaaEnable ? 1U : 2U;
     sd.OutputWindow = this->hwnd;
     sd.Windowed = TRUE;
+    sd.SwapEffect = this->msaaEnable ? DXGI_SWAP_EFFECT_DISCARD : DXGI_SWAP_EFFECT_FLIP_DISCARD;
 
     result = dxgiFactory->CreateSwapChain(
         this->device,       /* [in]     IUnknown *pDevice               */
@@ -157,7 +161,7 @@ DXGIRenderWindow::Create()
     /* create depth stencil buffer and depth stencil view */
     if (this->depthBuffer)
     {
-        D3D11RenderSystem::Instance()->CreateDepthBuffer((UINT)this->width, (UINT)this->height, &this->depthStencilBuffer, &this->depthStencilView);
+        D3D11RenderSystem::Instance()->CreateDepthBuffer((UINT)this->width, (UINT)this->height, this->msaaEnable, &this->depthStencilBuffer, &this->depthStencilView);
     }
 
     this->buffer = NULL;
