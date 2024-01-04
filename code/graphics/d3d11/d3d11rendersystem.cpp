@@ -54,7 +54,8 @@ D3D11RenderSystem::D3D11RenderSystem() :
     context(NULL),
     inputLayout(NULL),
     inputLayoutMorphAnim(NULL),
-    inputLayoutSkeletalAnim(NULL)
+    inputLayoutSkeletalAnim(NULL),
+    msaaEnable(false)
 {
     Singleton = this;
     this->viewPort = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
@@ -102,6 +103,7 @@ D3D11RenderSystem::Initialise(void* const customParams)
     UINT msaaNumQualityLevels = 0U;
     result = this->device->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, 4U, &msaaNumQualityLevels);
     if (FAILED(result) || msaaNumQualityLevels == 0U) config->msaaEnable = false;
+    this->msaaEnable = config->msaaEnable;
 
     /* initialise rasterizer state object that tells the rasterizer stage how to behave */
     ZeroMemory(&this->currentRasterState, sizeof(this->currentRasterState));
@@ -559,11 +561,14 @@ D3D11RenderSystem::SetPass(graphics::Pass* const pass)
     {
         this->currentBlendState.RenderTarget[0U].BlendEnable = FALSE;
     }
+    this->currentBlendState.AlphaToCoverageEnable = this->msaaEnable && pass->GetAlphaToCoverageEnabled();
     ID3D11BlendState* blendState = NULL;
     HRESULT result = this->device->CreateBlendState(&this->currentBlendState, &blendState);
     CE_ASSERT(SUCCEEDED(result), "D3D11RenderSystem::SetPass(): failed to create blend state\n");
     float blendFactor[4U] = {0.0f, 0.0f, 0.0f, 0.0f};
     this->context->OMSetBlendState(blendState, blendFactor, 0xffffffff);
+
+
 
     /* depth check and depth write */
     this->currentDepthStencilState.DepthEnable = pass->GetDepthCheckEnabled();

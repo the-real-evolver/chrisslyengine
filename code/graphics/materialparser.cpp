@@ -297,6 +297,18 @@ MaterialParser::ParsePass()
         float ref = (float)this->lexer.real_number;
         this->currentPass->SetAlphaFunction(func, ref);
     }
+    else if (0 == strcmp(this->lexer.string, "alpha_to_coverage"))
+    {
+        if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}
+        if (0 == strcmp(this->lexer.string, "on"))
+        {
+            this->currentPass->SetAlphaToCoverageEnabled(true);
+        }
+        else if (0 == strcmp(this->lexer.string, "off"))
+        {
+            this->currentPass->SetAlphaToCoverageEnabled(false);
+        }
+    }
     else if (0 == strcmp(this->lexer.string, "cull_hardware"))
     {
         if (0 == stb_c_lexer_get_token(&this->lexer)) {return;}

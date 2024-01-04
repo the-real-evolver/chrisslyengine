@@ -22,6 +22,7 @@ Pass::Pass(unsigned short index) :
     destFixColor(0xff000000),
     alphaTestFunction(CF_ALWAYS),
     alphaTestRef(0.0f),
+    alphaToCoverage(false),
     depthCheck(true),
     depthWrite(true),
     cullMode(CULL_CLOCKWISE),
@@ -171,6 +172,24 @@ float
 Pass::GetAlphaRef() const
 {
     return this->alphaTestRef;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+Pass::SetAlphaToCoverageEnabled(bool enabled)
+{
+    this->alphaToCoverage = enabled;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+bool
+Pass::GetAlphaToCoverageEnabled() const
+{
+    return this->alphaToCoverage;
 }
 
 //------------------------------------------------------------------------------

@@ -141,6 +141,7 @@ private:
     D3D11_DEPTH_STENCIL_DESC currentDepthStencilState;
     D3D11_BLEND_DESC currentBlendState;
     D3D11_SAMPLER_DESC currentSamplerState;
+    bool msaaEnable;
 };
 
 } // namespace chrissly

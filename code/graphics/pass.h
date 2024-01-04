@@ -74,6 +74,10 @@ public:
     ComparisonFunction GetAlphaFunction() const;
     /// get the alpha test ref
     float GetAlphaRef() const;
+    /// enables/disables alpha to coverage
+    void SetAlphaToCoverageEnabled(bool enabled);
+    /// returns if alpha to coverage is enabled
+    bool GetAlphaToCoverageEnabled() const;
 
     /// sets whether or not this pass renders with depth-buffer checking on or not
     void SetDepthCheckEnabled(bool enabled);
@@ -237,6 +241,7 @@ private:
     unsigned int destFixColor;
     ComparisonFunction alphaTestFunction;
     float alphaTestRef;
+    bool alphaToCoverage;
     bool depthCheck;
     bool depthWrite;
     CullingMode cullMode;
