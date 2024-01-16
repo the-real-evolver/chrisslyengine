@@ -568,8 +568,6 @@ D3D11RenderSystem::SetPass(graphics::Pass* const pass)
     float blendFactor[4U] = {0.0f, 0.0f, 0.0f, 0.0f};
     this->context->OMSetBlendState(blendState, blendFactor, 0xffffffff);
 
-
-
     /* depth check and depth write */
     this->currentDepthStencilState.DepthEnable = pass->GetDepthCheckEnabled();
     this->currentDepthStencilState.DepthWriteMask = pass->GetDepthWriteEnabled() ? D3D11_DEPTH_WRITE_MASK_ALL : D3D11_DEPTH_WRITE_MASK_ZERO;

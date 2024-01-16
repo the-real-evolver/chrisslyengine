@@ -6,6 +6,7 @@
 #include "miscutils.h"
 #include "debug.h"
 #include <stdio.h>
+#include <shlobj_core.h>
 
 namespace chrissly
 {
@@ -136,6 +137,64 @@ WinAPIFSWrapper::FileExists(const char* const fileName)
     DWORD fileAttr = GetFileAttributes(fileName);
     if (0xffffffff == fileAttr || 0U != (FILE_ATTRIBUTE_DIRECTORY & fileAttr)) return false;
     return true;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+const char*
+WinAPIFSWrapper::GetAppDataDirectory()
+{
+    static TCHAR AppDataDirectory[MAX_PATH] = {'\0'};
+#if __CE_DEBUG__
+    HRESULT result =
+#endif
+    SHGetFolderPath(
+        NULL,                               /* [in]  HWND   hwnd    */
+        CSIDL_APPDATA | CSIDL_FLAG_CREATE,  /* [in]  int    csidl   */
+        NULL,                               /* [in]  HANDLE hToken  */
+        0U,                                 /* [in]  DWORD  dwFlags */
+        AppDataDirectory                    /* [out] LPSTR  pszPath */
+    );
+    CE_ASSERT(SUCCEEDED(result), "FSWrapper::GetAppDataDirectory(): failed to get app data directory\n");
+
+    return AppDataDirectory;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+const char*
+WinAPIFSWrapper::GetBinDirectory()
+{
+    static TCHAR BinDirectory[MAX_PATH] = {'\0'};
+#if __CE_DEBUG__
+    DWORD result =
+#endif
+    GetModuleFileName(
+        NULL,           /* [in, optional] HMODULE hModule       */
+        BinDirectory,   /* [out]          LPSTR   lpFilename    */
+        MAX_PATH        /* [in]           DWORD   nSize         */
+    );
+    CE_ASSERT(result != MAX_PATH, "FSWrapper::GetBinDirectory(): failed to get bin directory\n");
+
+    char* lastSlash = strrchr(BinDirectory, '\\');
+    if (lastSlash != NULL) *lastSlash = '\0';
+
+    return BinDirectory;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+WinAPIFSWrapper::ChangeWorkingDirectory(const char* const path)
+{
+#if __CE_DEBUG__
+    BOOL result =
+#endif
+    SetCurrentDirectory(path);
+    CE_ASSERT(result != FALSE, "FSWrapper::ChangeWorkingDirectory(): failed to change working directory\n");
 }
 
 //------------------------------------------------------------------------------
