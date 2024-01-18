@@ -146,17 +146,21 @@ const char*
 WinAPIFSWrapper::GetAppDataDirectory()
 {
     static TCHAR AppDataDirectory[MAX_PATH] = {'\0'};
+    PWSTR path = NULL;
 #if __CE_DEBUG__
     HRESULT result =
 #endif
-    SHGetFolderPath(
-        NULL,                               /* [in]  HWND   hwnd    */
-        CSIDL_APPDATA | CSIDL_FLAG_CREATE,  /* [in]  int    csidl   */
-        NULL,                               /* [in]  HANDLE hToken  */
-        0U,                                 /* [in]  DWORD  dwFlags */
-        AppDataDirectory                    /* [out] LPSTR  pszPath */
+    SHGetKnownFolderPath(
+        FOLDERID_RoamingAppData,    /* [in]           REFKNOWNFOLDERID rfid      */
+        0U,                         /* [in]           DWORD            dwFlags   */
+        NULL,                       /* [in, optional] HANDLE           hToken    */
+        &path                       /* [out]          PWSTR * ppszPath           */
     );
     CE_ASSERT(SUCCEEDED(result), "FSWrapper::GetAppDataDirectory(): failed to get app data directory\n");
+
+    wcstombs(AppDataDirectory, path, MAX_PATH);
+
+    CoTaskMemFree(path);
 
     return AppDataDirectory;
 }
