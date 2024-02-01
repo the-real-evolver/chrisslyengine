@@ -53,15 +53,16 @@ TextureManager::Load(const char* const name, TextureType type)
     unsigned char format = PF_UNKNOWN, numMipmaps = 0U, swizzled = 0U;
     unsigned int numImages = (TEX_TYPE_CUBE_MAP == type) ? 6U : 1U;
     void* imageBuffers[6U] = {NULL};
-    char fileNames[6U][256U] = {{'\0'}};
+    char fileNames[6U][260U] = {{'\0'}};
 
     if (TEX_TYPE_2D == type)
     {
-        strcpy(fileNames[0U], name);
+        strncpy(fileNames[0U], name, sizeof(fileNames[0U]));
     }
     else if (TEX_TYPE_CUBE_MAP == type)
     {
         char* ext = (char*)strrchr(name, '.');
+        if (NULL == ext) return NULL;
         strncpy(fileNames[0U], name, ext - name); strcat(strcat(fileNames[0U], "_px"), ext);
         strncpy(fileNames[1U], name, ext - name); strcat(strcat(fileNames[1U], "_nx"), ext);
         strncpy(fileNames[2U], name, ext - name); strcat(strcat(fileNames[2U], "_py"), ext);
