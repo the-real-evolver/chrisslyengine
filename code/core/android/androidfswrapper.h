@@ -34,7 +34,7 @@ public:
     /// return true if a file exists
     static bool FileExists(const char* const fileName);
     /// return internal application private storage data path
-    static const char* GetAppDataDirectory();
+    static const char* const GetAppDataDirectory();
     /// initialise the filesystem
     static void _Initialise(ANativeActivity* const nativeActivity);
 

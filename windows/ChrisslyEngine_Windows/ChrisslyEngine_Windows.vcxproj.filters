@@ -529,5 +529,8 @@
     <ClInclude Include="..\..\code\core\miscutils.h">
       <Filter>core</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\code\core\parserutils.h">
+      <Filter>core</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

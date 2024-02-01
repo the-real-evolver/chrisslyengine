@@ -7,6 +7,7 @@
 #include "fswrapper.h"
 #include "debug.h"
 #include "stb_c_lexer.h"
+#include "parserutils.h"
 
 using namespace chrissly::core;
 using namespace chrissly::graphics;
@@ -25,52 +26,6 @@ enum skeleton_parser_state
 static skeleton_parser_state parser_state = PARSE_ROOT;
 static char text_buffer[65536U] = {'\0'};
 static stb_lexer lexer = {};
-
-#define CLEX_PARSE_ERROR 257
-
-//------------------------------------------------------------------------------
-/**
-*/
-static int
-parse_signed_int()
-{
-    if (0 == stb_c_lexer_get_token(&lexer)) {return 0;}
-    if ('-' == lexer.token)
-    {
-        if (0 == stb_c_lexer_get_token(&lexer)) {return 0;}
-        return -(int)lexer.int_number;
-    }
-    return (int)lexer.int_number;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-static float
-parse_float()
-{
-    if (0 == stb_c_lexer_get_token(&lexer)) {return 0.0f;}
-    if ('-' == lexer.token)
-    {
-        if (0 == stb_c_lexer_get_token(&lexer)) {return 0.0f;}
-        return -(float)lexer.real_number;
-    }
-    return (float)lexer.real_number;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-static Matrix4
-parse_matrix4()
-{
-    Matrix4 m;
-    m[0U][0U] = parse_float(); m[0U][1U] = parse_float(); m[0U][2U] = parse_float(); m[0U][3U] = parse_float();
-    m[1U][0U] = parse_float(); m[1U][1U] = parse_float(); m[1U][2U] = parse_float(); m[1U][3U] = parse_float();
-    m[2U][0U] = parse_float(); m[2U][1U] = parse_float(); m[2U][2U] = parse_float(); m[2U][3U] = parse_float();
-    m[3U][0U] = parse_float(); m[3U][1U] = parse_float(); m[3U][2U] = parse_float(); m[3U][3U] = parse_float();
-    return m;
-}
 
 //------------------------------------------------------------------------------
 /**
@@ -136,7 +91,7 @@ ce_graphics_import_skeleton(char const* const file_path, Mesh* const mesh)
                 }
                 else if (0 == strcmp(lexer.string, "num_bones"))
                 {
-                    skeleton = CE_NEW Skeleton(parse_signed_int());
+                    skeleton = CE_NEW Skeleton(ce_parse_signed_int(&lexer));
                     mesh->SetSkeleton(skeleton);
                 }
                 else if (0 == strcmp(lexer.string, "bone"))
@@ -157,19 +112,19 @@ ce_graphics_import_skeleton(char const* const file_path, Mesh* const mesh)
                 }
                 else if (0 == strcmp(lexer.string, "index"))
                 {
-                    bone_index = parse_signed_int();
+                    bone_index = ce_parse_signed_int(&lexer);
                 }
                 else if (0 == strcmp(lexer.string, "parent"))
                 {
-                    parent_bone_index = parse_signed_int();
+                    parent_bone_index = ce_parse_signed_int(&lexer);
                 }
                 else if (0 == strcmp(lexer.string, "local_matrix"))
                 {
-                    matrix = parse_matrix4();
+                    matrix = ce_parse_matrix4(&lexer);
                 }
                 else if (0 == strcmp(lexer.string, "inv_model_matrix"))
                 {
-                    inverse_model_matrix = parse_matrix4();
+                    inverse_model_matrix = ce_parse_matrix4(&lexer);
                 }
                 break;
             case PARSE_ANIMATION:
@@ -179,11 +134,11 @@ ce_graphics_import_skeleton(char const* const file_path, Mesh* const mesh)
                 }
                 else if (0 == strcmp(lexer.string, "length"))
                 {
-                    animation = mesh->CreateAnimation(animation_name.C_Str(), parse_float());
+                    animation = mesh->CreateAnimation(animation_name.C_Str(), ce_parse_float(&lexer));
                 }
                 else if (0 == strcmp(lexer.string, "num_keyframes"))
                 {
-                    num_keyframes = parse_signed_int();
+                    num_keyframes = ce_parse_signed_int(&lexer);
                 }
                 else if (0 == strcmp(lexer.string, "track"))
                 {
@@ -218,11 +173,11 @@ ce_graphics_import_skeleton(char const* const file_path, Mesh* const mesh)
                 }
                 else if (0 == strcmp(lexer.string, "time"))
                 {
-                    time = parse_float();
+                    time = ce_parse_float(&lexer);
                 }
                 else if (0 == strcmp(lexer.string, "local_matrix"))
                 {
-                    matrix = parse_matrix4();
+                    matrix = ce_parse_matrix4(&lexer);
                 }
                 break;
         }

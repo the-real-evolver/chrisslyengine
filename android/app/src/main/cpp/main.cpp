@@ -161,7 +161,7 @@ HandleInputEvents(struct android_app* app, AInputEvent* event)
 {
     if (AINPUT_EVENT_TYPE_MOTION == AInputEvent_getType(event))
     {
-        int32_t x = AMotionEvent_getX(event, 0);
+        int32_t x = (int32_t)AMotionEvent_getX(event, 0);
         distance = x - lastX;
         lastX = x;
         return 1;
@@ -209,8 +209,8 @@ HandleCommands(struct android_app* app, int32_t cmd)
             Enter(app);
             break;
         case APP_CMD_GAINED_FOCUS:
-            break;
         case APP_CMD_LOST_FOCUS:
+        default:
             break;
     }
 }
