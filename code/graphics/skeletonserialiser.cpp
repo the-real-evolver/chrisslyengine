@@ -57,7 +57,7 @@ ce_graphics_import_skeleton(char const* const file_path, Mesh* const mesh)
 
     while (stb_c_lexer_get_token(&lexer) != 0)
     {
-        if (CLEX_PARSE_ERROR == lexer.token)
+        if (CLEX_parse_error == lexer.token)
         {
             break;
         }

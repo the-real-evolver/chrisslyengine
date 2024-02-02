@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 /**
-    @file core/parser_utils.h
+    @file core/parserutils.h
 
     Convenience functions for parsing signed numbers with stb_c_lexer.
 
@@ -8,9 +8,6 @@
 */
 #include "stb_c_lexer.h"
 #include "matrix4.h"
-
-/* avoid undeclared identifier compile error when including stb_c_lexer.h more than once */
-#define CLEX_PARSE_ERROR 257
 
 /* parse integer number considering its sign */
 inline int
