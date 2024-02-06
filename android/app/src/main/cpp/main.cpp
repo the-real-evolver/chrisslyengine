@@ -178,27 +178,10 @@ HandleCommands(struct android_app* app, int32_t cmd)
 {
     switch (cmd)
     {
-        case APP_CMD_DESTROY:
-            if (initialised)
-            {
-                Exit();
-            }
-            break;
-        case APP_CMD_SAVE_STATE:
-            // the system has asked us to save our current state
-            break;
         case APP_CMD_INIT_WINDOW:
-            // the window is being shown, get it ready
             if (app->window != NULL)
             {
                 Enter(app);
-            }
-            break;
-        case APP_CMD_TERM_WINDOW:
-            // the window is being hidden or closed, clean it up
-            if (initialised)
-            {
-                Exit();
             }
             break;
         case APP_CMD_CONFIG_CHANGED:
@@ -208,8 +191,14 @@ HandleCommands(struct android_app* app, int32_t cmd)
             }
             Enter(app);
             break;
-        case APP_CMD_GAINED_FOCUS:
-        case APP_CMD_LOST_FOCUS:
+        case APP_CMD_TERM_WINDOW:
+        case APP_CMD_DESTROY:
+        case APP_CMD_SAVE_STATE:
+            if (initialised)
+            {
+                Exit();
+            }
+            break;
         default:
             break;
     }

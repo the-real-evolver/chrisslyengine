@@ -71,6 +71,7 @@ WinAPIFSWrapper::GetFileSize(core::FileHandle fileHandle)
 int
 WinAPIFSWrapper::Read(core::FileHandle fileHandle, void* const buf, unsigned int numBytes)
 {
+    CE_ASSERT(numBytes > 0U, "FSWrapper::Read(): requested number of bytes to read is '%u', has to be greater than zero", numBytes);
     DWORD bytesRead;
 
 #if __CE_DEBUG__
@@ -84,7 +85,7 @@ WinAPIFSWrapper::Read(core::FileHandle fileHandle, void* const buf, unsigned int
         NULL                /* _Inout_opt_  LPOVERLAPPED lpOverlapped   */
     );
     CE_ASSERT(result != FALSE, "FSWrapper::Read(): failed to read from file '%p'\n", fileHandle.handle);
-    CE_ASSERT((bytesRead != 0U && numBytes == bytesRead) || bytesRead == 0U, "FSWrapper::Read(): could not read the requested number of bytes (requested: '%d' read: '%d')\n", numBytes, bytesRead);
+    CE_ASSERT((bytesRead != 0U && numBytes == bytesRead) || bytesRead == 0U, "FSWrapper::Read(): could not read the requested number of bytes (requested: '%u' read: '%u')\n", numBytes, bytesRead);
 
     return (int)bytesRead;
 }
@@ -125,6 +126,7 @@ WinAPIFSWrapper::Write(core::FileHandle fileHandle, const void* buf, unsigned in
         NULL                /* _Inout_opt_                                  LPOVERLAPPED lpOverlapped       */
     );
     CE_ASSERT(result != FALSE, "FSWrapper::Write(): failed to write to file '%p'\n", fileHandle.handle);
+    CE_ASSERT(bytesWritten == numBytes, "FSWrapper::Write(): failed to write to file '%p', bytes supplied '%u', bytes written '%u'\n", fileHandle.handle, numBytes, bytesWritten);
 }
 
 //------------------------------------------------------------------------------

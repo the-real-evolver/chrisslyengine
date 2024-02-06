@@ -64,6 +64,7 @@ AndroidFSWrapper::GetFileSize(core::FileHandle fileHandle)
     if (fileHandle.fileHandle != NULL)
     {
         if (fseek(fileHandle.fileHandle, 0, SEEK_END) >= 0) fileSize = (unsigned int)ftell(fileHandle.fileHandle);
+        fseek(fileHandle.fileHandle, 0, SEEK_SET);
     }
     else if (fileHandle.assetHandle != NULL)
     {
@@ -78,7 +79,8 @@ AndroidFSWrapper::GetFileSize(core::FileHandle fileHandle)
 int
 AndroidFSWrapper::Read(core::FileHandle fileHandle, void* const buf, unsigned int numBytes)
 {
-    int bytesRead = 0U;
+    CE_ASSERT(numBytes > 0U, "FSWrapper::Read(): requested number of bytes to read is '%u', has to be greater than zero", numBytes);
+    int bytesRead = 0;
     if (fileHandle.fileHandle != NULL)
     {
         bytesRead = (int)fread(buf, 1U, (size_t)numBytes, fileHandle.fileHandle);
