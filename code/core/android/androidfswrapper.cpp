@@ -117,6 +117,7 @@ AndroidFSWrapper::Seek(core::FileHandle fileHandle, int offset, core::SeekOrigin
 void
 AndroidFSWrapper::Write(core::FileHandle fileHandle, const void *buf, unsigned int numBytes)
 {
+    CE_ASSERT(numBytes > 0U, "FSWrapper::Write(): requested number of bytes to write is '%u', has to be greater than zero", numBytes);
     if (fileHandle.fileHandle != NULL)
     {
         size_t bytesWritten = fwrite(buf, 1U, (size_t)numBytes, fileHandle.fileHandle);

@@ -73,7 +73,6 @@ WinAPIFSWrapper::Read(core::FileHandle fileHandle, void* const buf, unsigned int
 {
     CE_ASSERT(numBytes > 0U, "FSWrapper::Read(): requested number of bytes to read is '%u', has to be greater than zero", numBytes);
     DWORD bytesRead;
-
 #if __CE_DEBUG__
     BOOL result =
 #endif
@@ -114,6 +113,7 @@ WinAPIFSWrapper::Seek(core::FileHandle fileHandle, int offset, core::SeekOrigin 
 void
 WinAPIFSWrapper::Write(core::FileHandle fileHandle, const void* buf, unsigned int numBytes)
 {
+    CE_ASSERT(numBytes > 0U, "FSWrapper::Write(): requested number of bytes to write is '%u', has to be greater than zero", numBytes);
     DWORD bytesWritten;
 #if __CE_DEBUG__
     BOOL result =

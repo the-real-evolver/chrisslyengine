@@ -17,7 +17,7 @@ using namespace chrissly::audio;
 bool initialised = false;
 GraphicsSystem* graphicsSystem;
 SceneNode* sceneNode;
-int32_t lastX, distance;
+float lastX, distance;
 AnimationState* animState;
 GpuProgram* gpuProgram;
 GpuProgramParameters* params;
@@ -140,13 +140,13 @@ Trigger()
     if (initialised)
     {
         animState->AddTime(0.016f);
-        sceneNode->Yaw((float)distance * 0.02f);
-        float val = (float)lastX * 0.003f;
+        sceneNode->Yaw(distance * 0.02f);
+        float val = lastX * 0.003f;
         mat[0U][0U] = val; mat[0U][1U] = val; mat[0U][2U] = val;
         params->SetNamedConstant("specularColor", mat);
         graphicsSystem->RenderOneFrame();
 
-        float pan = (((float)lastX / 240.0f) - 0.5f) * 2.0f;
+        float pan = ((lastX / 240.0f) - 0.5f) * 2.0f;
         channel->SetPan(pan);
         audioSystem->Update();
     }
@@ -161,7 +161,7 @@ HandleInputEvents(struct android_app* app, AInputEvent* event)
 {
     if (AINPUT_EVENT_TYPE_MOTION == AInputEvent_getType(event))
     {
-        int32_t x = (int32_t)AMotionEvent_getX(event, 0);
+        float x = AMotionEvent_getX(event, 0);
         distance = x - lastX;
         lastX = x;
         return 1;
@@ -206,9 +206,9 @@ HandleCommands(struct android_app* app, int32_t cmd)
 
 //------------------------------------------------------------------------------
 /**
-    this is the main entry point of a native application that is using
+    This is the main entry point of a native application that is using
     android_native_app_glue. It runs in its own thread, with its own
-    event loop for receiving input events and doing other things
+    event loop for receiving input events and doing other things.
 */
 void
 android_main(struct android_app* state)
@@ -222,13 +222,11 @@ android_main(struct android_app* state)
 
     while (true)
     {
-        // read all pending events
-        int ident;
         int events;
         struct android_poll_source* source;
 
-        // loop until all events are read, then continue
-        while ((ident = ALooper_pollAll(0, NULL, &events, (void**)&source)) >= 0)
+        // loop until all pending events are read, then continue
+        while (ALooper_pollAll(0, NULL, &events, (void**)&source) >= 0)
         {
             // process this event
             if (source != NULL)
