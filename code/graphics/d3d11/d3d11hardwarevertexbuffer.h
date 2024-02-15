@@ -21,12 +21,12 @@ public:
     /// destructor
     ~D3D11HardwareVertexBuffer();
     /// enable the cpu to access the data in the buffer and return a pointer to it
-    void* const Map();
+    void* Map();
     /// updates the modified data on the the gpu
     void Unmap();
 
     /// gets a pointer to the d3d11 buffer
-    ID3D11Buffer* const GetD3D11Buffer() const;
+    ID3D11Buffer* GetD3D11Buffer() const;
 
 private:
     /// private default constructor

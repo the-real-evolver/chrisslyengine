@@ -467,7 +467,7 @@ Pass::IsSkeletalAnimationIncluded() const
 //------------------------------------------------------------------------------
 /**
 */
-TextureUnitState* const
+TextureUnitState*
 Pass::CreateTextureUnitState()
 {
     TextureUnitState* textureUnitState = CE_NEW TextureUnitState();
@@ -479,7 +479,7 @@ Pass::CreateTextureUnitState()
 //------------------------------------------------------------------------------
 /**
 */
-TextureUnitState* const
+TextureUnitState*
 Pass::GetTextureUnitState(unsigned short i) const
 {
     return this->textureUnitStates[i];
@@ -529,7 +529,7 @@ Pass::SetGpuProgram(GpuProgram* const program)
 //------------------------------------------------------------------------------
 /**
 */
-GpuProgram* const
+GpuProgram*
 Pass::GetGpuProgram() const
 {
     return this->gpuProgram;

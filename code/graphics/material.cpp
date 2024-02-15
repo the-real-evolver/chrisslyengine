@@ -32,7 +32,7 @@ Material::~Material()
 //------------------------------------------------------------------------------
 /**
 */
-Pass* const
+Pass*
 Material::CreatePass()
 {
     Pass* pass = CE_NEW Pass((unsigned short)ce_array_size(this->passes));
@@ -44,7 +44,7 @@ Material::CreatePass()
 //------------------------------------------------------------------------------
 /**
 */
-Pass* const
+Pass*
 Material::GetPass(unsigned short index) const
 {
     return this->passes[index];

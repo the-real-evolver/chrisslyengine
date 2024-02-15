@@ -37,29 +37,29 @@ public:
     /// stops the channel from playing, makes it available for re-use
     Result Stop();
     /// returns the playing state for the current channel
-    Result IsPlaying(bool* const isplaying);
+    Result IsPlaying(bool* const isplaying) const;
     /// sets the paused state of the channel
     Result SetPaused(bool pause);
     /// retrieves the paused state of the channel
-    Result GetPaused(bool* const pause);
+    Result GetPaused(bool* const pause) const;
     /// sets the volume for the channel linearly (reaches from 0.0 to 1.0 inclusive. 0.0 = silent, 1.0 = full volume. Default = 1.0)
     Result SetVolume(float vol);
     /// retrieves the volume level for the channel
-    Result GetVolume(float* const vol);
+    Result GetVolume(float* const vol) const;
     /// set sound pressure level relative to a reference value of 20 micropascal which is often considered as the "absolute threshold of hearing" (reaches from -32.0 to 0.0 inclusive. -32.0 = silent, 0.0 = full)
     Result SetPressureLevel(float decibel);
     /// sets a channels pan position linearly (a left/right pan level, from -1.0 to 1.0 inclusive. -1.0 = Full left, 0.0 = center, 1.0 = full right. Default = 0.0)
     Result SetPan(float pan);
     /// returns the pan position of the channel
-    Result GetPan(float* const pan);
+    Result GetPan(float* const pan) const;
     /// changes some attributes for a channel based on the mode passed in
     Result SetMode(Mode modeflags);
     /// retrieves the current mode bit flags for the current channel
-    Result GetMode(Mode* const modeflags);
+    Result GetMode(Mode* const modeflags) const;
     /// sets the current playback position for the currently playing sound to the specified PCM offset
     Result SetPosition(unsigned int position);
     /// returns the current PCM offset or playback position for the specified channel
-    Result GetPosition(unsigned int* const position);
+    Result GetPosition(unsigned int* const position) const;
     /// sets the position of a 3d channel
     Result Set3DAttributes(const core::Vector3* const position);
     /// retrieves the position of a 3d channel
@@ -67,7 +67,7 @@ public:
     /// sets the minimum and maximum audible distance for a channel
     Result Set3DMinMaxDistance(float mindistance, float maxdistance);
     /// retrieves the current minimum and maximum audible distance for a channel
-    Result Get3DMinMaxDistance(float* const mindistance, float* const maxdistance);
+    Result Get3DMinMaxDistance(float* const mindistance, float* const maxdistance) const;
     /// sets the user data
     Result SetUserData(void* const data);
     /// retrieves the user data
@@ -75,7 +75,7 @@ public:
     /// returns the currently playing sound for this channel
     Result GetCurrentSound(Sound** sound);
     /// retrieves the internal channel index for a channel
-    Result GetIndex(int* const idx);
+    Result GetIndex(int* const idx) const;
     /// adds a dsp to the channel
     Result AddDSP(unsigned int idx, DSP* const dsp);
     /// remove a dsp from the dsp chain of the channel
@@ -101,7 +101,7 @@ protected:
     /// gets the sync lock mutex
     const core::Mutex& GetSyncLock() const;
     /// processes all attached dsps and returns the mixed result, otherwise the 'dry' sample or stream buffer is returned
-    void* const FillOutputBuffer(unsigned int numSamples, unsigned int position);
+    void* FillOutputBuffer(unsigned int numSamples, unsigned int position);
     /// called when the hardware channel has finished playing or was stopped explicitly
     void ReleaseInternal();
 

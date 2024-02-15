@@ -28,7 +28,7 @@ public:
     void CreateInternalResources();
 
     /// gets a pointer to the shader resource view
-    ID3D11ShaderResourceView* const GetShaderResourceView() const;
+    ID3D11ShaderResourceView* GetShaderResourceView() const;
 
 private:
     ID3D11ShaderResourceView* shaderResourceView;

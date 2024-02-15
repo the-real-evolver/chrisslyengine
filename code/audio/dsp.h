@@ -44,9 +44,9 @@ public:
     /// enables or disables the process callback of the dsp
     Result SetBypass(bool enabled);
     /// retrieves the bypass state of the dsp
-    Result GetBypass(bool* const enabled);
+    Result GetBypass(bool* const enabled) const;
     /// retrieves the number of parameters of the dsp
-    Result GetNumParameters(int* const numParams);
+    Result GetNumParameters(int* const numParams) const;
     /// sets a floating-point parameter to the dsp
     Result SetParameterFloat(int idx, float value);
     /// sets the user data

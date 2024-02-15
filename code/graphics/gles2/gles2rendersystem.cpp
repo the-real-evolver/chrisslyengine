@@ -63,7 +63,7 @@ GLES2RenderSystem::~GLES2RenderSystem()
 //------------------------------------------------------------------------------
 /**
 */
-graphics::RenderWindow* const
+graphics::RenderWindow*
 GLES2RenderSystem::Initialise(void* const customParams)
 {
     graphics::RenderWindow* renderWindow = CE_NEW graphics::RenderWindow(customParams);
@@ -192,7 +192,7 @@ GLES2RenderSystem::SetViewport(graphics::Viewport* const vp)
 //------------------------------------------------------------------------------
 /**
 */
-graphics::Viewport* const
+graphics::Viewport*
 GLES2RenderSystem::GetViewport() const
 {
     return this->activeViewport;
@@ -274,7 +274,7 @@ GLES2RenderSystem::Render(graphics::SubEntity* const renderable)
         {
             GLES2Mappings::MakeGLMatrix(boneMatrices[i], renderable->GetParent()->GetBoneMatrices()[i]);
         }
-        glUniformMatrix4fv(this->currentGpuProgram->GetUniformLocation(graphics::GpuProgramParameters::ACT_BONE_MATRICES), numBones, GL_FALSE, boneMatrices[0U]);
+        glUniformMatrix4fv(this->currentGpuProgram->GetUniformLocation(graphics::GpuProgramParameters::ACT_BONE_MATRICES), (GLsizei)numBones, GL_FALSE, boneMatrices[0U]);
 
         graphics::HardwareVertexBuffer* vertexBuffer = renderable->GetSubMesh()->vertexData->vertexBuffer;
         GLsizei stride = (GLsizei)vertexBuffer->GetBytesPerVertex();
@@ -324,7 +324,7 @@ GLES2RenderSystem::Render(graphics::SubEntity* const renderable)
         glEnableVertexAttribArray(vertexPositionHandle);
         CE_GL_ERROR_CHECK("glEnableVertexAttribArray: position");
 
-        glDrawArrays(GLES2Mappings::Get(renderable->GetSubMesh()->topology), 0, vertexBuffer->GetNumVertices());
+        glDrawArrays(GLES2Mappings::Get(renderable->GetSubMesh()->topology), 0, (GLsizei)vertexBuffer->GetNumVertices());
         CE_GL_ERROR_CHECK("glDrawArrays");
 
         glBindBuffer(GL_ARRAY_BUFFER, 0U);
@@ -369,7 +369,7 @@ GLES2RenderSystem::Render(graphics::SubEntity* const renderable)
         glEnableVertexAttribArray(vertexPositionMorphTargetHandle);
         CE_GL_ERROR_CHECK("glEnableVertexAttribArray");
 
-        glDrawArrays(GLES2Mappings::Get(renderable->GetSubMesh()->topology), 0, vertexBuffer->GetNumVertices());
+        glDrawArrays(GLES2Mappings::Get(renderable->GetSubMesh()->topology), 0, (GLsizei)vertexBuffer->GetNumVertices());
         CE_GL_ERROR_CHECK("glDrawArrays");
     }
     else
@@ -405,7 +405,7 @@ GLES2RenderSystem::Render(graphics::SubEntity* const renderable)
         glEnableVertexAttribArray(vertexPositionHandle);
         CE_GL_ERROR_CHECK("glEnableVertexAttribArray: position");
 
-        glDrawArrays(GLES2Mappings::Get(renderable->GetSubMesh()->topology), 0, vertexBuffer->GetNumVertices());
+        glDrawArrays(GLES2Mappings::Get(renderable->GetSubMesh()->topology), 0, (GLsizei)vertexBuffer->GetNumVertices());
         CE_GL_ERROR_CHECK("glDrawArrays");
 
         glBindBuffer(GL_ARRAY_BUFFER, 0U);
@@ -526,21 +526,21 @@ GLES2RenderSystem::SetPass(graphics::Pass* const pass)
         {
             this->currentGpuProgram = this->defaultGpuProgramMorphAnim;
         }
-        else if (!fog && !lit)
-        {
-            this->currentGpuProgram = this->defaultGpuProgram;
-        }
-        else if (fog && !lit)
-        {
-            this->currentGpuProgram = this->defaultGpuProgramFog;
-        }
-        else if (!fog && lit)
-        {
-            this->currentGpuProgram = this->defaultGpuProgramLit;
-        }
         else if (fog && lit)
         {
             this->currentGpuProgram = this->defaultGpuProgramLitFog;
+        }
+        else if (fog)
+        {
+            this->currentGpuProgram = this->defaultGpuProgramFog;
+        }
+        else if (lit)
+        {
+            this->currentGpuProgram = this->defaultGpuProgramLit;
+        }
+        else
+        {
+            this->currentGpuProgram = this->defaultGpuProgram;
         }
 
         graphics::GpuProgramParameters* params = this->currentGpuProgram->GetDefaultParameters();
@@ -589,25 +589,25 @@ GLES2RenderSystem::SetPass(graphics::Pass* const pass)
             switch (def->constType)
             {
                 case graphics::GCT_INT1:
-                    glUniform1iv(def->location, def->arraySize, (int*)def->buffer);
+                    glUniform1iv(def->location, (GLsizei)def->arraySize, (int*)def->buffer);
                     break;
                 case graphics::GCT_FLOAT1:
-                    glUniform1fv(def->location, def->arraySize, (float*)def->buffer);
+                    glUniform1fv(def->location, (GLsizei)def->arraySize, (float*)def->buffer);
                     break;
                 case graphics::GCT_FLOAT3:
-                    glUniform3fv(def->location, def->arraySize, (float*)def->buffer);
+                    glUniform3fv(def->location, (GLsizei)def->arraySize, (float*)def->buffer);
                     break;
                 case graphics::GCT_FLOAT4:
-                    glUniform4fv(def->location, def->arraySize, (float*)def->buffer);
+                    glUniform4fv(def->location, (GLsizei)def->arraySize, (float*)def->buffer);
                     break;
                 case graphics::GCT_MATRIX_4X4:
-                    glUniformMatrix4fv(def->location, def->arraySize, GL_FALSE, (float*)def->buffer);
+                    glUniformMatrix4fv(def->location, (GLsizei)def->arraySize, GL_FALSE, (float*)def->buffer);
                     break;
                 case graphics::GCT_SAMPLER2D:
-                    glUniform1iv(def->location, def->arraySize, (int*)def->buffer);
+                    glUniform1iv(def->location, (GLsizei)def->arraySize, (int*)def->buffer);
                     break;
                 case graphics::GCT_SAMPLERCUBE:
-                    glUniform1iv(def->location, def->arraySize, (int*)def->buffer);
+                    glUniform1iv(def->location, (GLsizei)def->arraySize, (int*)def->buffer);
                     break;
                 default:
                     break;
@@ -672,7 +672,7 @@ GLES2RenderSystem::SetAmbientLight(unsigned int colour)
 //------------------------------------------------------------------------------
 /**
 */
-const core::Matrix4* const
+const core::Matrix4*
 GLES2RenderSystem::GetDefaultLightShaderParams() const
 {
     return this->defaultLightShaderParams;
@@ -681,7 +681,7 @@ GLES2RenderSystem::GetDefaultLightShaderParams() const
 //------------------------------------------------------------------------------
 /**
 */
-GLES2GpuProgram *const
+GLES2GpuProgram*
 GLES2RenderSystem::GetDefaultShadowCasterGpuProgram() const
 {
     CE_ASSERT(this->defaultGpuProgramShadowCaster != NULL, "GLES2RenderSystem::GetDefaultShadowCasterGpuProgram(): gpu program not valid\n");
@@ -691,7 +691,7 @@ GLES2RenderSystem::GetDefaultShadowCasterGpuProgram() const
 //------------------------------------------------------------------------------
 /**
 */
-GLES2GpuProgram *const
+GLES2GpuProgram*
 GLES2RenderSystem::GetDefaultShadowReceiverGpuProgram() const
 {
     CE_ASSERT(this->defaultGpuProgramShadowReceiver != NULL, "GLES2RenderSystem::GetDefaultShadowReceiverGpuProgram(): gpu program not valid\n");
@@ -701,7 +701,7 @@ GLES2RenderSystem::GetDefaultShadowReceiverGpuProgram() const
 //------------------------------------------------------------------------------
 /**
 */
-GLES2GpuProgram *const
+GLES2GpuProgram*
 GLES2RenderSystem::GetDefaultShadowCasterSkeletalAnimGpuProgram() const
 {
     CE_ASSERT(this->defaultGpuProgramShadowCasterSkeletalAnim != NULL, "GLES2RenderSystem::GetDefaultShadowCasterSkeletalAnimGpuProgram(): gpu program not valid\n");

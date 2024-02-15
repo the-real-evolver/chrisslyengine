@@ -28,11 +28,11 @@ public:
     unsigned int GetType() const;
 
     /// gets a pointer to the shader resource view
-    ID3D11ShaderResourceView* const GetShaderResourceView() const;
+    ID3D11ShaderResourceView* GetShaderResourceView() const;
     /// gets a pointer to the rendertarget view
-    ID3D11RenderTargetView* const GetRenderTargetView() const;
+    ID3D11RenderTargetView* GetRenderTargetView() const;
     /// gets a pointer to the depth stencil view
-    ID3D11DepthStencilView* const GetDepthStencilView() const;
+    ID3D11DepthStencilView* GetDepthStencilView() const;
 
 private:
     ID3D11RenderTargetView* renderTargetView;

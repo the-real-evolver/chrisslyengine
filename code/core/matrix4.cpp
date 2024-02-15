@@ -187,7 +187,7 @@ Matrix4::operator * (const Vector3 &v) const
 //------------------------------------------------------------------------------
 /**
 */
-float* const
+float*
 Matrix4::operator[] (unsigned int iRow) const
 {
     return (float*)this->m[iRow];

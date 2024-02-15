@@ -157,7 +157,7 @@ AndroidFSWrapper::FileExists(const char* const fileName)
 //------------------------------------------------------------------------------
 /**
 */
-const char* const
+const char*
 AndroidFSWrapper::GetAppDataDirectory()
 {
     return InternalDataPath;

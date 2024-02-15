@@ -116,15 +116,9 @@ TextureUnitState::GetTextureFiltering(FilterType ftype) const
 {
     switch (ftype)
     {
-        case FT_MIN:
-            return this->minFilter;
-            break;
-        case FT_MAG:
-            return this->magFilter;
-            break;
-        case FT_MIP:
-            return this->mipFilter;
-            break;
+        case FT_MIN: return this->minFilter;
+        case FT_MAG: return this->magFilter;
+        case FT_MIP: return this->mipFilter;
     }
     
     return FO_NONE;
@@ -236,7 +230,7 @@ TextureUnitState::SetTexture(Texture* tex)
 //------------------------------------------------------------------------------
 /**
 */
-Texture* const
+Texture*
 TextureUnitState::GetTexture() const
 {
     return this->texture;

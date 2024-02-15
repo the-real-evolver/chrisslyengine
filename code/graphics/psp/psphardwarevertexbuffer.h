@@ -20,7 +20,7 @@ public:
     /// destructor
     ~PSPHardwareVertexBuffer();
     /// enable the cpu to access the data in the buffer and return a pointer to it
-    void* const Map();
+    void* Map();
     /// updates the modified data on the the gpu
     void Unmap();
 

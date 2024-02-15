@@ -29,17 +29,17 @@ public:
     /// sets a Material to be used
     void SetMaterial(Material* const mat);
     /// retrieves a pointer to the material this renderable object uses
-    Material* const GetMaterial() const;
+    Material* GetMaterial() const;
     /// tells this SubEntity whether to be visible or not
     void SetVisible(bool vis);
     /// returns whether or not this SubEntity is supposed to be visible
     bool IsVisible() const;
     /// accessor method to read mesh data 
-    SubMesh* const GetSubMesh() const;
+    SubMesh* GetSubMesh() const;
     /// get the parent entity of this subentity
-    Entity* const GetParent() const;
+    Entity* GetParent() const;
     /// advanced method to get the hardware morph vertex information
-    VertexData* const GetMorphVertexData() const;
+    VertexData* GetMorphVertexData() const;
     /// set vertex morph weight value
     void SetMorphWeight(float weight);
     /// get vertex morph weight value

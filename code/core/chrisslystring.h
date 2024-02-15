@@ -31,7 +31,7 @@ public:
     /// return size of the string
     unsigned int Size() const;
     /// returns a pointer to an array that contains a null-terminated sequence of characters
-    const char* const C_Str() const;
+    const char* C_Str() const;
     /// set as char ptr
     void Set(const char* const ptr);
     /// set as char ptr, with explicit length

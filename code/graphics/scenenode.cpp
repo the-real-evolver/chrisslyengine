@@ -40,7 +40,7 @@ SceneNode::~SceneNode()
 //------------------------------------------------------------------------------
 /**
 */
-SceneNode* const
+SceneNode*
 SceneNode::CreateChildSceneNode()
 {
     SceneNode* sceneNode = SceneManager::Instance()->CreateSceneNode();
@@ -54,7 +54,7 @@ SceneNode::CreateChildSceneNode()
 //------------------------------------------------------------------------------
 /**
 */
-SceneNode* const
+SceneNode*
 SceneNode::GetParentSceneNode() const
 {
     return this->parent;
@@ -63,7 +63,7 @@ SceneNode::GetParentSceneNode() const
 //------------------------------------------------------------------------------
 /**
 */
-ce_linked_list* const
+ce_linked_list*
 SceneNode::GetAllChildren() const
 {
     return this->children;
@@ -316,7 +316,7 @@ SceneNode::NumAttachedObjects() const
 //------------------------------------------------------------------------------
 /**
 */
-Entity* const
+Entity*
 SceneNode::GetAttachedObject(unsigned short index) const
 {
     return this->objects[index];

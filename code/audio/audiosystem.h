@@ -56,7 +56,7 @@ private:
     /// prevent copy by assignment
     AudioSystem& operator = (const AudioSystem&);
     /// internal method to retrieve a pointer to the currently selected audiorenderer
-    AudioRenderer* const GetAudioRenderer() const;
+    AudioRenderer* GetAudioRenderer() const;
     /// applies a lowpass filter on 3d sounds based on spatial distance
     static Result DistanceFilterCallback(DSP* const dsp, int numChannels, int bits, unsigned int numSamples, const void* const inBuffer, void* const outBuffer);
 

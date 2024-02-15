@@ -206,7 +206,7 @@ SLESAudioRenderer::UpdateChannel(audio::Channel* const channel)
             }
             else
             {
-                slVolume = (float)M_LN2 / logf(1.0f / (1.0f - volume)) * -1000.0f;
+                slVolume = (SLmillibel)((float)M_LN2 / logf(1.0f / (1.0f - volume)) * -1000.0f);
             }
             result = (*volumeInterface)->SetVolumeLevel(volumeInterface, slVolume);
             CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::UpdateChannel(): failed to set volume level to: '%f' (SLmillibel '%i')\n", volume, slVolume);

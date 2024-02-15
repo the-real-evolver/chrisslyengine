@@ -144,7 +144,7 @@ public:
     /// set texture to use
     void SetTexture(Texture* const tex);
     /// get the used texture
-    Texture* const GetTexture() const;
+    Texture* GetTexture() const;
 
     /// internal method for loading this object as part of Material::load
     void _Load();

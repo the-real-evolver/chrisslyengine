@@ -132,7 +132,7 @@ D3D11Texture::CreateInternalResources()
 //------------------------------------------------------------------------------
 /**
 */
-ID3D11ShaderResourceView* const
+ID3D11ShaderResourceView*
 D3D11Texture::GetShaderResourceView() const
 {
     return this->shaderResourceView;

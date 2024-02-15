@@ -44,7 +44,7 @@ SoundBase::~SoundBase()
 /**
 */
 Result
-SoundBase::GetLength(unsigned int* const length)
+SoundBase::GetLength(unsigned int* const length) const
 {
     *length = this->lengthInSamples;
     return OK;
@@ -79,7 +79,7 @@ SoundBase::GetFormat(SoundType* const type, AudioFormat* const format, int* cons
 /**
 */
 Result
-SoundBase::GetMode(Mode* const modeflags)
+SoundBase::GetMode(Mode* const modeflags) const
 {
     *modeflags = this->mode;
     return OK;
@@ -205,7 +205,7 @@ SoundBase::GetSampleBufferPointer(unsigned int position) const
 //------------------------------------------------------------------------------
 /**
 */
-Codec* const
+Codec*
 SoundBase::GetCodec() const
 {
     return this->audioCodec;

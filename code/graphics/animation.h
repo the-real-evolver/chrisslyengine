@@ -25,24 +25,24 @@ public:
     ~Animation();
 
     /// gets the name of this animation
-    const char* const GetName() const;
+    const char* GetName() const;
     /// gets the total length of the animation
     float GetLength() const;
     /// creates a VertexAnimationTrack for animating vertex position data
-    VertexAnimationTrack* const CreateVertexTrack(unsigned char handle);
+    VertexAnimationTrack* CreateVertexTrack(unsigned char handle);
     /// gets the number of VertexAnimationTrack objects contained in this animation
     unsigned short GetNumVertexTracks() const;
     /// gets a Vertex track by it's index
-    VertexAnimationTrack* const GetVertexTrack(unsigned short index) const;
+    VertexAnimationTrack* GetVertexTrack(unsigned short index) const;
     /// removes and destroys all vertex tracks making up this animation
     void DestroyAllVertexTracks();
 
     /// creates a BoneAnimationTrack for animating the skeleton
-    BoneAnimationTrack* const CreateBoneTrack(unsigned int numKeyFrames);
+    BoneAnimationTrack* CreateBoneTrack(unsigned int numKeyFrames);
     /// gets the number of BoneAnimationTrack objects contained in this animation
     unsigned short GetNumBoneTracks() const;
     /// gets a Bone track by it's index
-    BoneAnimationTrack* const GetBoneTrack(unsigned short index) const;
+    BoneAnimationTrack* GetBoneTrack(unsigned short index) const;
     /// removes and destroys all bone tracks making up this animation
     void DestroyAllBoneTracks();
 

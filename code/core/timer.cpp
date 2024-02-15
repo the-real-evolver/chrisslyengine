@@ -21,7 +21,7 @@ static inline clock_t
 ce_clock()
 {
 #if __CE_ANDROID__
-    struct timespec ts;
+    struct timespec ts = {};
     clock_gettime(CLOCK_MONOTONIC, &ts);
     return ts.tv_sec * 1000000L + ts.tv_nsec / 1000L;
 #else

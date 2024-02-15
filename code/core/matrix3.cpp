@@ -29,7 +29,7 @@ Matrix3::~Matrix3()
 //------------------------------------------------------------------------------
 /**
 */
-float* const
+float*
 Matrix3::operator[] (unsigned int iRow) const
 {
     return (float*)m[iRow];

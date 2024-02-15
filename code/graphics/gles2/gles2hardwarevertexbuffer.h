@@ -23,7 +23,7 @@ public:
     /// destructor
     ~GLES2HardwareVertexBuffer();
     /// enable the cpu to access the data in the buffer and return a pointer to it
-    void* const Map();
+    void* Map();
     /// updates the modified data on the the gpu
     void Unmap();
     /// return gl buffer name

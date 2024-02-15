@@ -59,7 +59,7 @@ PSPRenderSystem::~PSPRenderSystem()
 //------------------------------------------------------------------------------
 /**
 */
-graphics::RenderWindow* const
+graphics::RenderWindow*
 PSPRenderSystem::Initialise(void* const customParams)
 {
     sceGuInit();
@@ -128,7 +128,7 @@ PSPRenderSystem::SetViewport(graphics::Viewport* const vp)
 //------------------------------------------------------------------------------
 /**
 */
-graphics::Viewport* const
+graphics::Viewport*
 PSPRenderSystem::GetViewport() const
 {
     return this->activeViewport;
@@ -459,7 +459,7 @@ PSPRenderSystem::SetAmbientLight(unsigned int colour)
 //------------------------------------------------------------------------------
 /**
 */
-void* const
+void*
 PSPRenderSystem::GetDisplayList() const
 {
     return (void*)DisplayList;

@@ -83,7 +83,7 @@ String::Size() const
 //------------------------------------------------------------------------------
 /**
 */
-const char* const
+const char*
 String::C_Str() const
 {
     return this->size > 0U ? this->data : EmptyString;

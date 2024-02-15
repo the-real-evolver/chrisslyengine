@@ -47,11 +47,11 @@ public:
     /**
         @param timePos the time from which this KeyFrame will apply
     */
-    VertexMorphKeyFrame* const CreateVertexMorphKeyFrame(float timePos);
+    VertexMorphKeyFrame* CreateVertexMorphKeyFrame(float timePos);
     /// returns the number of keyframes in this animation
     unsigned short GetNumKeyFrames() const;
     /// returns the morph KeyFrame at the specified index
-    VertexMorphKeyFrame* const GetVertexMorphKeyFrame(unsigned short index) const;
+    VertexMorphKeyFrame* GetVertexMorphKeyFrame(unsigned short index) const;
     /// removes all the KeyFrames from this track
     void RemoveAllKeyFrames();
     /// applies an animation track to the designated target
@@ -75,9 +75,9 @@ public:
     /// creates a new keyframe and adds it to this animation at the given time
     void CreateKeyFrame(float timePos, chrissly::core::Matrix4 const& transform);
     /// gets the list of transform matrices of all keyframes
-    chrissly::core::Matrix4* const GetTransformMatrices() const;
+    chrissly::core::Matrix4* GetTransformMatrices() const;
     /// gets the list of time positions of all keyframes
-    float* const GetTimeIndicies() const;
+    float* GetTimeIndicies() const;
 
 private:
     /// index of the parent bone

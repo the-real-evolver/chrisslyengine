@@ -43,7 +43,7 @@ public:
     /// gets the number of renderable pass currently populating the queue
     unsigned short GetNumRenderablePasses() const;
     /// get RenderablePass at given index
-    RenderablePass* const GetRenderablePass(unsigned short index) const;
+    RenderablePass* GetRenderablePass(unsigned short index) const;
     /// sort queue in order of distance to camera, from furthest to nearest
     void Sort();
 

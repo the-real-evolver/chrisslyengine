@@ -27,7 +27,7 @@ public:
     /// instructs the viewport to updates its contents
     void Update();
     /// retrieves a pointer to the render target for this viewport
-    RenderTarget* const GetTarget() const;
+    RenderTarget* GetTarget() const;
     /// gets one of the actual dimensions of the viewport, a value in pixels
     int GetActualLeft() const;
     /// gets one of the actual dimensions of the viewport, a value in pixels

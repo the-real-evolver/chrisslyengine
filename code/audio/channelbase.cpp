@@ -64,7 +64,7 @@ ChannelBase::Stop()
 /**
 */
 Result
-ChannelBase::IsPlaying(bool* const isplaying)
+ChannelBase::IsPlaying(bool* const isplaying) const
 {
     *isplaying = this->isPlaying;
     return OK;
@@ -87,7 +87,7 @@ ChannelBase::SetPaused(bool pause)
 /**
 */
 Result
-ChannelBase::GetPaused(bool* const pause)
+ChannelBase::GetPaused(bool* const pause) const
 {
     *pause = this->paused;
     return OK;
@@ -121,7 +121,7 @@ ChannelBase::SetVolume(float vol)
 /**
 */
 Result
-ChannelBase::GetVolume(float* const vol)
+ChannelBase::GetVolume(float* const vol) const
 {
     *vol = this->volume;
     return OK;
@@ -179,7 +179,7 @@ ChannelBase::SetPan(float pan)
 /**
 */
 Result
-ChannelBase::GetPan(float* const pan)
+ChannelBase::GetPan(float* const pan) const
 {
     *pan = this->panning;
     return OK;
@@ -225,7 +225,7 @@ ChannelBase::SetMode(Mode modeflags)
 /**
 */
 Result
-ChannelBase::GetMode(Mode* const modeflags)
+ChannelBase::GetMode(Mode* const modeflags) const
 {
     *modeflags = this->mode;
     return OK;
@@ -245,7 +245,7 @@ ChannelBase::SetPosition(unsigned int position)
 /**
 */
 Result
-ChannelBase::GetPosition(unsigned int* const position)
+ChannelBase::GetPosition(unsigned int* const position) const
 {
     *position = this->samplePosition;
     return OK;
@@ -294,7 +294,7 @@ ChannelBase::Set3DMinMaxDistance(float mindistance, float maxdistance)
 /**
 */
 Result
-ChannelBase::Get3DMinMaxDistance(float* const mindistance, float* const maxdistance)
+ChannelBase::Get3DMinMaxDistance(float* const mindistance, float* const maxdistance) const
 {
     if (mindistance != NULL)
     {
@@ -341,7 +341,7 @@ ChannelBase::GetCurrentSound(Sound** sound)
 /**
 */
 Result
-ChannelBase::GetIndex(int* const idx)
+ChannelBase::GetIndex(int* const idx) const
 {
     *idx = this->index;
     return OK;
@@ -460,7 +460,7 @@ ChannelBase::GetSyncLock() const
 //------------------------------------------------------------------------------
 /**
 */
-void* const
+void*
 ChannelBase::FillOutputBuffer(unsigned int numSamples, unsigned int position)
 {
     void* buffer = this->mode & MODE_CREATESTREAM ? this->currentSound->GetCodec()->FillStreamBuffer(numSamples, position) : this->currentSound->GetSampleBufferPointer(position);

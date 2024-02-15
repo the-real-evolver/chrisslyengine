@@ -30,7 +30,7 @@ public:
     ~GLES2RenderSystem();
 
     /// start up the renderer
-    graphics::RenderWindow* const Initialise(void* const customParams);
+    graphics::RenderWindow* Initialise(void* const customParams);
     /// shutdown the renderer and cleanup resources
     void Shutdown();
     /// set current render target to target, enabling its device context if needed
@@ -42,7 +42,7 @@ public:
     */
     void SetViewport(graphics::Viewport* const vp);
     /// get the current active viewport
-    graphics::Viewport* const GetViewport() const;
+    graphics::Viewport* GetViewport() const;
     /// sets the world transform matrix
     void SetWorldMatrix(const core::Matrix4& m);
     /// sets the view transform matrix
@@ -71,13 +71,13 @@ public:
     void SetAmbientLight(unsigned int colour);
 
     /// gets the default light shader parameters (useful if a custom shader wants to use the default lighting)
-    const core::Matrix4* const GetDefaultLightShaderParams() const;
+    const core::Matrix4* GetDefaultLightShaderParams() const;
     /// get pointer to the default shadow caster gpu program
-    GLES2GpuProgram* const GetDefaultShadowCasterGpuProgram() const;
+    GLES2GpuProgram* GetDefaultShadowCasterGpuProgram() const;
     /// get pointer to the default shadow receiver gpu program
-    GLES2GpuProgram* const GetDefaultShadowReceiverGpuProgram() const;
+    GLES2GpuProgram* GetDefaultShadowReceiverGpuProgram() const;
     /// get pointer to the default shadow caster skeletal anim gpu program
-    GLES2GpuProgram* const GetDefaultShadowCasterSkeletalAnimGpuProgram() const;
+    GLES2GpuProgram* GetDefaultShadowCasterSkeletalAnimGpuProgram() const;
 
 private:
     /// copy constructor

@@ -30,7 +30,7 @@ public:
     /// vector multiplication (component product)
     Vector3 operator * (const Vector3& rhs) const;
     /// vector scalar multiplication
-    Vector3 operator * (const float fScalar);
+    Vector3 operator * (const float fScalar) const;
     /// vector scalar multiplication
     Vector3& operator *= (const float fScalar);
     /// vector addition

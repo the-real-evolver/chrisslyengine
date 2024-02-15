@@ -11,7 +11,7 @@
 void
 ce_check_gl_error(const char* const op)
 {
-    GLint error;
+    GLenum error;
     for (error = glGetError(); error; error = glGetError())
     {
         CE_LOG("after %s() glError (0x%x)\n", op, error);

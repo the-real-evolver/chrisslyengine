@@ -143,9 +143,9 @@ SLESChannel::RequestRelease()
 bool
 SLESChannel::GetReleaseRequest()
 {
-    bool requestRelease = this->requestRelease;
+    bool release = this->requestRelease;
     this->requestRelease = false;
-    return requestRelease;
+    return release;
 }
 
 } // namespace chrissly

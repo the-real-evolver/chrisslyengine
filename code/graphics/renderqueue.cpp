@@ -85,7 +85,7 @@ RenderQueue::GetNumRenderablePasses() const
 //------------------------------------------------------------------------------
 /**
 */
-RenderablePass* const
+RenderablePass*
 RenderQueue::GetRenderablePass(unsigned short index) const
 {
     return this->renderablePasses + (uintptr_t)index;

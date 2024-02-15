@@ -52,7 +52,7 @@ Skeleton::SetBone(int index, int parent, Matrix4 const& local, Matrix4 const& in
 //------------------------------------------------------------------------------
 /**
 */
-Matrix4* const
+Matrix4*
 Skeleton::GetLocalTransformMatrices() const
 {
     return this->localMatrix;
@@ -61,7 +61,7 @@ Skeleton::GetLocalTransformMatrices() const
 //------------------------------------------------------------------------------
 /**
 */
-Matrix4* const
+Matrix4*
 Skeleton::GetInverseModelTransformMatrices() const
 {
     return this->inverseModelMatrix;
@@ -70,7 +70,7 @@ Skeleton::GetInverseModelTransformMatrices() const
 //------------------------------------------------------------------------------
 /**
 */
-int* const
+int*
 Skeleton::GetParentIndicies() const
 {
     return this->parentIndex;

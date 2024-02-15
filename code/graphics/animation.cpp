@@ -41,7 +41,7 @@ Animation::~Animation()
 //------------------------------------------------------------------------------
 /**
 */
-const char* const
+const char*
 Animation::GetName() const
 {
     return this->name.C_Str();
@@ -59,7 +59,7 @@ Animation::GetLength() const
 //------------------------------------------------------------------------------
 /**
 */
-VertexAnimationTrack* const
+VertexAnimationTrack*
 Animation::CreateVertexTrack(unsigned char handle)
 {
     VertexAnimationTrack* vertexAnimationTrack = CE_NEW VertexAnimationTrack(handle);
@@ -80,7 +80,7 @@ Animation::GetNumVertexTracks() const
 //------------------------------------------------------------------------------
 /**
 */
-VertexAnimationTrack* const
+VertexAnimationTrack*
 Animation::GetVertexTrack(unsigned short index) const
 {
     return this->vertexTracks[index];
@@ -103,7 +103,7 @@ Animation::DestroyAllVertexTracks()
 //------------------------------------------------------------------------------
 /**
 */
-BoneAnimationTrack* const
+BoneAnimationTrack*
 Animation::CreateBoneTrack(unsigned int numKeyFrames)
 {
     BoneAnimationTrack* boneAnimationTrack = CE_NEW BoneAnimationTrack(numKeyFrames);
@@ -124,7 +124,7 @@ Animation::GetNumBoneTracks() const
 //------------------------------------------------------------------------------
 /**
 */
-BoneAnimationTrack* const
+BoneAnimationTrack*
 Animation::GetBoneTrack(unsigned short index) const
 {
     return this->boneTracks[index];

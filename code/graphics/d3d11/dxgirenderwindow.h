@@ -44,9 +44,9 @@ public:
     unsigned int GetType() const;
 
     /// gets a pointer to the rendertarget view of the swapchain's buffer
-    ID3D11RenderTargetView* const GetRenderTargetView() const;
+    ID3D11RenderTargetView* GetRenderTargetView() const;
     /// gets a pointer to the depth stencil view
-    ID3D11DepthStencilView* const GetDepthStencilView() const;
+    ID3D11DepthStencilView* GetDepthStencilView() const;
 
     /// gets the window handle
     HWND GetWindowHandle() const;

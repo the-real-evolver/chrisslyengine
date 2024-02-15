@@ -40,7 +40,7 @@ public:
     /// transforms the given 3-D vector by the matrix
     Vector3 operator * (const Vector3 &v) const;
     /// member access, allows use of construct mat[r][c]
-    float* const operator[] (unsigned int iRow) const;
+    float* operator[] (unsigned int iRow) const;
     /// mirrors the matrix at their main diagonal
     Matrix4 Transpose() const;
     /// get the upper 3x3 elements of this matrix (usually representing rotation and scaling) as 3x3 matrix

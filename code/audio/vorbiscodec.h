@@ -31,13 +31,13 @@ public:
     /// swaps the streambuffers, called when a buffer finishes playing
     void SwapStreamBuffers();
     /// get pointer to the current streambuffer
-    void* const GetStreamBufferPointer() const;
+    void* GetStreamBufferPointer() const;
     /// retrieves the length of the current streambuffer
     unsigned int GetStreamBufferLength() const;
     /// gets a value that indicates whether the current stream position is at the end of the stream
     bool EndOfStream() const;
     /// loads the given number of samples at the given position of the stream into the current streambuffer and returns a pointer to it
-    void* const FillStreamBuffer(unsigned int numSamples, unsigned int position);
+    void* FillStreamBuffer(unsigned int numSamples, unsigned int position);
 
 private:
     /// copy constructor

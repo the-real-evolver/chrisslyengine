@@ -110,7 +110,7 @@ StateManager::IsRunning() const
 //------------------------------------------------------------------------------
 /**
 */
-State const* const
+State const*
 StateManager::GetPreviousState() const
 {
     return this->previousState;
@@ -119,7 +119,7 @@ StateManager::GetPreviousState() const
 //------------------------------------------------------------------------------
 /**
 */
-State const* const
+State const*
 StateManager::GetNextState() const
 {
     return this->nextState;

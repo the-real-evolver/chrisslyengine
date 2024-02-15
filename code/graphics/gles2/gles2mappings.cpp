@@ -250,7 +250,7 @@ GLES2Mappings::GetImageSize(graphics::PixelFormat pf, GLsizei width, GLsizei hei
     switch (pf)
     {
         // ETC1 provides 6x compression of 24-bit RGB
-        case graphics::PF_ETC1_RGB8: return (unsigned int)(width * height) >> 1U;
+        case graphics::PF_ETC1_RGB8: return (GLsizei)(width * height) >> 1U;
         default: CE_ASSERT(false, "GLES2Mappings::GetImageSize(): illegal or not supported PixelFormat '%i'\n", pf);
     }
 

@@ -48,18 +48,18 @@ public:
     /// destructor
     ~SceneManager();
     /// creates a camera to be managed by this scene manager
-    Camera* const CreateCamera(const char* const name);
+    Camera* CreateCamera(const char* const name);
      /// retrieves a pointer to the camera
-    Camera* const GetCamera(const char* const name) const;
+    Camera* GetCamera(const char* const name) const;
      /// removes (and destroys) all cameras from the scene
     void DestroyAllCameras();
 
     /// creates a named light for use in the scene
-    Light* const CreateLight(const char* const name);
+    Light* CreateLight(const char* const name);
     /// returns a pointer to the named Light which has previously been added to the scene
-    Light* const GetLight(const char* const name) const;
+    Light* GetLight(const char* const name) const;
     /// returns a pointer to the hashtable that contains all lights
-    ce_hash_table* const GetAllLights() const;
+    ce_hash_table* GetAllLights() const;
     /// removes the light from the scene and destroys it
     void DestroyLight(Light* const light);
     /// removes and destroys all lights in the scene
@@ -71,7 +71,7 @@ public:
         meshName The name of the Mesh it is to be based on (e.g. 'knot.mesh'). The
         mesh will be loaded if it is not already.
     */
-    Entity* const CreateEntity(const char* const meshName);
+    Entity* CreateEntity(const char* const meshName);
     /// destroys the given Entity instance
     void DestroyEntity(Entity* const entity);
 
@@ -92,7 +92,7 @@ public:
             If you wish to create a node with a specific name, call the alternative method
             which takes a name parameter.
     */
-    SceneNode* const CreateSceneNode();
+    SceneNode* CreateSceneNode();
     /// destroys the given SceneNode instance
     void DestroySceneNode(SceneNode* const node);
     /// gets the SceneNode at the root of the scene hierarchy
@@ -105,7 +105,7 @@ public:
             However, in all cases there is only ever one root node of
             the hierarchy, and this method returns a pointer to it.
     */
-    SceneNode* const GetRootSceneNode();
+    SceneNode* GetRootSceneNode();
 
     /// empties the entire scene, inluding all SceneNodes, Entities, Lights etc.
     /** 
@@ -128,7 +128,7 @@ public:
     */
     void SetAmbientLight(unsigned int colour);
     /// returns the ambient light level to be used for the scene.
-    const unsigned int GetAmbientLight() const;
+    unsigned int GetAmbientLight() const;
     /// sets the general shadow technique to be used in this scene
     void SetShadowTechnique(ShadowTechnique technique);
     /// gets the current shadow technique
@@ -140,7 +140,7 @@ public:
     /// gets the colour used when rendering to the shadow texture
     unsigned int GetShadowColour() const;
     /// returns a pointer to the shadow texture currently in use at the given index
-    Texture* const GetShadowTexture(size_t index) const;
+    Texture* GetShadowTexture(size_t index) const;
     /// prompts the class to send its contents to the renderer
     void _RenderScene(Camera* const camera, Viewport* const vp);
     /// internal method for setting up the renderstate for a rendering pass

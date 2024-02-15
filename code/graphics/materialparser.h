@@ -44,13 +44,13 @@ private:
     /// parse texture unit state from the material description
     void ParseTextureUnitState();
     /// gets the uint rgb colour value
-    unsigned int GetRGBAValue(float red, float green, float blue, float alpha) const;
+    static unsigned int GetRGBAValue(float red, float green, float blue, float alpha) ;
     /// gets the blend factor enum value from the parsed string
-    SceneBlendFactor GetSceneBlendFactorFromString(const char* const blendFactor) const;
+    static SceneBlendFactor GetSceneBlendFactorFromString(const char* const blendFactor) ;
     /// gets the filter option enum value from the parsed string
-    FilterOptions GetFilterOptionsFromString(const char* const filterOption) const;
+    static FilterOptions GetFilterOptionsFromString(const char* const filterOption) ;
     /// gets the comparison function enum value from the parsed string
-    ComparisonFunction GetComparisonFunctionFromString(const char* const compFunc) const;
+    static ComparisonFunction GetComparisonFunctionFromString(const char* const compFunc) ;
 
     ParserState parserState;
     stb_lexer lexer;

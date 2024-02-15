@@ -23,9 +23,9 @@ public:
     ~Material();
 
     /// creates a new Pass for this Material
-    Pass* const CreatePass();
+    Pass* CreatePass();
     /// retrieves the Pass with the given index
-    Pass* const GetPass(unsigned short index) const;
+    Pass* GetPass(unsigned short index) const;
     /// retrieves the number of passes
     unsigned short GetNumPasses() const;
     /// removes all Passes from this Material 

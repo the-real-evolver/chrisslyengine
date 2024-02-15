@@ -23,11 +23,11 @@ GLES2GpuProgram::GLES2GpuProgram()
 GLES2GpuProgram::GLES2GpuProgram(const char* const vertexShaderSource, const char* const fragmentShaderSource) :
     defaultParams(NULL)
 {
-    GLuint vertexShader = this->CreateShaderFromString(GL_VERTEX_SHADER, vertexShaderSource);
+    GLuint vertexShader = CreateShaderFromString(GL_VERTEX_SHADER, vertexShaderSource);
     CE_ASSERT(0U != vertexShader, "GLES2GpuProgram::GLES2GpuProgram(): Could not create vertex shader.\n");
-    GLuint fragmentShader = this->CreateShaderFromString(GL_FRAGMENT_SHADER, fragmentShaderSource);
+    GLuint fragmentShader = CreateShaderFromString(GL_FRAGMENT_SHADER, fragmentShaderSource);
     CE_ASSERT(0U != fragmentShader, "GLES2GpuProgram::GLES2GpuProgram(): Could not create fragment shader.\n");
-    this->gpuProgram = this->CreateProgram(vertexShader, fragmentShader);
+    this->gpuProgram = CreateProgram(vertexShader, fragmentShader);
     CE_ASSERT(0U != this->gpuProgram, "GLES2GpuProgram::GLES2GpuProgram(): Could not create program.\n");
 
     this->uniformLocations[graphics::GpuProgramParameters::ACT_WORLD_MATRIX] = glGetUniformLocation(this->gpuProgram, "worldMatrix");
@@ -95,7 +95,7 @@ GLES2GpuProgram::~GLES2GpuProgram()
 //------------------------------------------------------------------------------
 /**
 */
-graphics::GpuProgramParameters* const
+graphics::GpuProgramParameters*
 GLES2GpuProgram::GetDefaultParameters()
 {
     if (NULL == this->defaultParams)
@@ -109,7 +109,7 @@ GLES2GpuProgram::GetDefaultParameters()
 //------------------------------------------------------------------------------
 /**
 */
-graphics::GpuNamedConstants* const
+graphics::GpuNamedConstants*
 GLES2GpuProgram::GetConstantDefinitions() const
 {
     return this->constantDefs;
@@ -127,7 +127,7 @@ GLES2GpuProgram::GetUniformLocation(graphics::GpuProgramParameters::AutoConstant
 //------------------------------------------------------------------------------
 /**
 */
-GLint
+GLuint
 GLES2GpuProgram::GetProgramHandle() const
 {
     return this->gpuProgram;
@@ -145,7 +145,7 @@ GLES2GpuProgram::GetAttributeLocation(graphics::VertexElementSemantic semantic) 
 //------------------------------------------------------------------------------
 /**
 */
-graphics::GpuProgramParameters* const
+graphics::GpuProgramParameters*
 GLES2GpuProgram::CreateParameters()
 {
     graphics::GpuProgramParameters* ret = CE_NEW graphics::GpuProgramParameters;

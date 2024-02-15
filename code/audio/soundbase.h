@@ -26,11 +26,11 @@ public:
     /// destructor
     virtual ~SoundBase();
     /// retrieves the length of the sound
-    Result GetLength(unsigned int* const length);
+    Result GetLength(unsigned int* const length) const;
     /// returns format information about the sound
     Result GetFormat(SoundType* const type, AudioFormat* const format, int* const channels, int* const bits);
     /// retrieves the mode bits set by the codec and the user when opening the sound
-    Result GetMode(Mode* const modeflags);
+    Result GetMode(Mode* const modeflags) const;
     /// requests release
     Result Release();
 
@@ -52,7 +52,7 @@ protected:
     /// get pointer to the sample at the given position
     void* GetSampleBufferPointer(unsigned int position) const;
     /// get pointer to the attached codec
-    Codec* const GetCodec() const;
+    Codec* GetCodec() const;
     /// internal method that frees the sound object and makes it available for further use
     void ReleaseInternal();
 

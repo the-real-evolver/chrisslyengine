@@ -49,7 +49,7 @@ DSP::SetBypass(bool enabled)
 /**
 */
 Result
-DSP::GetBypass(bool* const enabled)
+DSP::GetBypass(bool* const enabled) const
 {
     *enabled = this->bypass;
     return OK;
@@ -60,7 +60,7 @@ DSP::GetBypass(bool* const enabled)
 */
 
 Result
-DSP::GetNumParameters(int* const numParams)
+DSP::GetNumParameters(int* const numParams) const
 {
     *numParams = this->numParameters;
     return OK;

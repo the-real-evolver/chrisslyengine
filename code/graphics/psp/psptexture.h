@@ -33,7 +33,7 @@ public:
     /// create mipmap infos
     void CreateInternalResources();
     /// get mipmap info of the given level
-    MipmapInfo* const GetMipmapInfo(int level) const;
+    MipmapInfo* GetMipmapInfo(int level) const;
 
 private:
     MipmapInfo* mipmapInfos;

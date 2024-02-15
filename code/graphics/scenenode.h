@@ -23,11 +23,11 @@ public:
     ~SceneNode();
 
     /// creates a new SceneNode as a child of this node
-    SceneNode* const CreateChildSceneNode();
+    SceneNode* CreateChildSceneNode();
     /// gets the parent of this scenenode
-    SceneNode* const GetParentSceneNode() const;
+    SceneNode* GetParentSceneNode() const;
     /// gets list of all child nodes
-    ce_linked_list* const GetAllChildren() const;
+    ce_linked_list* GetAllChildren() const;
     /// removes/detaches the specified child from this node
     void RemoveChild(SceneNode* const node);
     /// removes all child nodes attached to this node
@@ -89,7 +89,7 @@ public:
             Retrieves by index. The index of an object may change as other
             objects are added / removed.
     */
-    Entity* const GetAttachedObject(unsigned short index) const;
+    Entity* GetAttachedObject(unsigned short index) const;
     /// detaches the specified object from this node
     void DetachObject(Entity* const obj);
     /// detaches all objects attached to this node

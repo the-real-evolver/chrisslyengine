@@ -395,7 +395,7 @@ AudioSystem::_Mix(unsigned int numSamples, unsigned char* const buffer)
 //------------------------------------------------------------------------------
 /**
 */
-AudioRenderer* const
+AudioRenderer*
 AudioSystem::GetAudioRenderer() const
 {
     return this->activeRenderer;

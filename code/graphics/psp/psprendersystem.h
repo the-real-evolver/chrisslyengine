@@ -29,7 +29,7 @@ public:
     ~PSPRenderSystem();
 
     /// start up the renderer
-    graphics::RenderWindow* const Initialise(void* const customParams);
+    graphics::RenderWindow* Initialise(void* const customParams);
     /// shutdown the renderer and cleanup resources
     void Shutdown();
     /// set current render target to target, enabling its device context if needed
@@ -41,7 +41,7 @@ public:
     */
     void SetViewport(graphics::Viewport* const vp);
     /// get the current active viewport
-    graphics::Viewport* const GetViewport() const;
+    graphics::Viewport* GetViewport() const;
     /// sets the world transform matrix
     void SetWorldMatrix(const core::Matrix4& m);
     /// sets the view transform matrix
@@ -71,7 +71,7 @@ public:
     void SetAmbientLight(unsigned int colour);
 
     /// returns a pointer to the displaylist
-    void* const GetDisplayList() const;
+    void* GetDisplayList() const;
 
 private:
     /// copy constructor

@@ -125,7 +125,7 @@ Entity::~Entity()
 //------------------------------------------------------------------------------
 /**
 */
-SceneNode* const
+SceneNode*
 Entity::GetParentSceneNode() const
 {
     return this->parentNode;
@@ -134,7 +134,7 @@ Entity::GetParentSceneNode() const
 //------------------------------------------------------------------------------
 /**
 */
-Mesh* const
+Mesh*
 Entity::GetMesh() const
 {
     return this->mesh;
@@ -143,7 +143,7 @@ Entity::GetMesh() const
 //------------------------------------------------------------------------------
 /**
 */
-SubEntity* const
+SubEntity*
 Entity::GetSubEntity(unsigned int index) const
 {
     return this->subEntities[index];
@@ -223,7 +223,7 @@ Entity::HasAnimation() const
 //------------------------------------------------------------------------------
 /**
 */
-AnimationState* const
+AnimationState*
 Entity::GetAnimationState(const char* const name) const
 {
     return (AnimationState*)ce_hash_table_find(&this->animationStates, name, strlen(name));
@@ -232,7 +232,7 @@ Entity::GetAnimationState(const char* const name) const
 //------------------------------------------------------------------------------
 /**
 */
-ce_hash_table* const
+ce_hash_table*
 Entity::GetAllAnimationStates() const
 {
     return &this->animationStates;
@@ -293,7 +293,7 @@ Entity::UpdateAnimation()
 //------------------------------------------------------------------------------
 /**
 */
-chrissly::core::Matrix4* const
+chrissly::core::Matrix4*
 Entity::GetBoneMatrices() const
 {
     return this->boneMatrices;
@@ -302,7 +302,7 @@ Entity::GetBoneMatrices() const
 //------------------------------------------------------------------------------
 /**
 */
-chrissly::core::Matrix4* const
+chrissly::core::Matrix4*
 Entity::GetBlendMatrices() const
 {
     return this->blendMatrices;

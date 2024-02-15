@@ -144,7 +144,7 @@ WinAPIFSWrapper::FileExists(const char* const fileName)
 //------------------------------------------------------------------------------
 /**
 */
-const char* const
+const char*
 WinAPIFSWrapper::GetAppDataDirectory()
 {
     static TCHAR AppDataDirectory[MAX_PATH] = {'\0'};
@@ -170,7 +170,7 @@ WinAPIFSWrapper::GetAppDataDirectory()
 //------------------------------------------------------------------------------
 /**
 */
-const char* const
+const char*
 WinAPIFSWrapper::GetBinDirectory()
 {
     static TCHAR BinDirectory[MAX_PATH] = {'\0'};

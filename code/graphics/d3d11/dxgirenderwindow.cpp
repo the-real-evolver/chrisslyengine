@@ -193,7 +193,7 @@ DXGIRenderWindow::GetType() const
 //------------------------------------------------------------------------------
 /**
 */
-ID3D11RenderTargetView* const
+ID3D11RenderTargetView*
 DXGIRenderWindow::GetRenderTargetView() const
 {
     return this->renderTargetView;
@@ -202,7 +202,7 @@ DXGIRenderWindow::GetRenderTargetView() const
 //------------------------------------------------------------------------------
 /**
 */
-ID3D11DepthStencilView* const
+ID3D11DepthStencilView*
 DXGIRenderWindow::GetDepthStencilView() const
 {
     return this->depthStencilView;

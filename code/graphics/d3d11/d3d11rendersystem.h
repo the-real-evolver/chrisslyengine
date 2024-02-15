@@ -28,7 +28,7 @@ public:
     ~D3D11RenderSystem();
 
     /// start up the renderer
-    graphics::RenderWindow* const Initialise(void* const customParams);
+    graphics::RenderWindow* Initialise(void* const customParams);
     /// shutdown the renderer and cleanup resources
     void Shutdown();
     /// set current render target to target, enabling its device context if needed
@@ -40,7 +40,7 @@ public:
     */
     void SetViewport(graphics::Viewport* const vp);
     /// get the current active viewport
-    graphics::Viewport* const GetViewport() const;
+    graphics::Viewport* GetViewport() const;
     /// sets the world transform matrix
     void SetWorldMatrix(const core::Matrix4& m);
     /// sets the view transform matrix
@@ -69,24 +69,24 @@ public:
     void SetAmbientLight(unsigned int colour);
 
     /// get pointer to the default shadow caster gpu program
-    D3D11GpuProgram* const GetDefaultShadowCasterGpuProgram() const;
+    D3D11GpuProgram* GetDefaultShadowCasterGpuProgram() const;
     /// get pointer to the default transparent shadow caster gpu program
-    D3D11GpuProgram* const GetDefaultTransparentShadowCasterGpuProgram() const;
+    D3D11GpuProgram* GetDefaultTransparentShadowCasterGpuProgram() const;
     /// get pointer to the default transparent shadow caster alpha test gpu program
-    D3D11GpuProgram* const GetDefaultTransparentShadowCasterAlphaTestGpuProgram() const;
+    D3D11GpuProgram* GetDefaultTransparentShadowCasterAlphaTestGpuProgram() const;
     /// get pointer to the default shadow caster morph anim gpu program
-    D3D11GpuProgram* const GetDefaultShadowCasterMorphAnimGpuProgram() const;
+    D3D11GpuProgram* GetDefaultShadowCasterMorphAnimGpuProgram() const;
     /// get pointer to the default transparent shadow caster morph anim gpu program
-    D3D11GpuProgram* const GetDefaultTransparentShadowCasterMorphAnimGpuProgram() const;
+    D3D11GpuProgram* GetDefaultTransparentShadowCasterMorphAnimGpuProgram() const;
     /// get pointer to the default shadow caster skeletal anim gpu program
-    D3D11GpuProgram* const GetDefaultShadowCasterSkeletalAnimGpuProgram() const;
+    D3D11GpuProgram* GetDefaultShadowCasterSkeletalAnimGpuProgram() const;
     /// get pointer to the default shadow receiver gpu program
-    D3D11GpuProgram* const GetDefaultShadowReceiverGpuProgram() const;
+    D3D11GpuProgram* GetDefaultShadowReceiverGpuProgram() const;
 
     /// get pointer to the d3d11 device
-    ID3D11Device* const GetDevice() const;
+    ID3D11Device* GetDevice() const;
     /// get pointer to the d3d11 device context
-    ID3D11DeviceContext* const GetContext() const;
+    ID3D11DeviceContext* GetContext() const;
     /// create depth buffer with the given dimensions (format: DXGI_FORMAT_D24_UNORM_S8_UINT)
     void CreateDepthBuffer(UINT width, UINT height, bool msaa, ID3D11Texture2D** bufferOut, ID3D11DepthStencilView** viewOut);
 

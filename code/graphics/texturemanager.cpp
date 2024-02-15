@@ -39,7 +39,7 @@ TextureManager::~TextureManager()
 //------------------------------------------------------------------------------
 /**
 */
-Texture* const
+Texture*
 TextureManager::Load(const char* const name, TextureType type)
 {
     Texture* texture = (Texture*)ce_hash_table_find(&this->resources, name, strlen(name));

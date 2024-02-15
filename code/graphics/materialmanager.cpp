@@ -63,7 +63,7 @@ MaterialManager::ParseScript(const char* const name)
 //------------------------------------------------------------------------------
 /**
 */
-Material* const
+Material*
 MaterialManager::Create(const char* const name)
 {
     Material* material = (Material*)ce_hash_table_find(&this->resources, name, strlen(name));
@@ -83,7 +83,7 @@ MaterialManager::Create(const char* const name)
 //------------------------------------------------------------------------------
 /**
 */
-Material* const
+Material*
 MaterialManager::GetByName(const char* const name)
 {
     return (Material*)ce_hash_table_find(&this->resources, name, strlen(name));
@@ -113,7 +113,7 @@ MaterialManager::RemoveAll()
 //------------------------------------------------------------------------------
 /**
 */
-ce_hash_table* const
+ce_hash_table*
 MaterialManager::GetAllScripts() const
 {
     return &this->scripts;

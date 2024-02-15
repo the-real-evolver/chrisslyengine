@@ -45,7 +45,7 @@ GLES2HardwareVertexBuffer::~GLES2HardwareVertexBuffer()
 //------------------------------------------------------------------------------
 /**
 */
-void* const
+void*
 GLES2HardwareVertexBuffer::Map()
 {
     return this->vertexBuffer;
@@ -61,7 +61,7 @@ GLES2HardwareVertexBuffer::Unmap()
     {
         glBindBuffer(GL_ARRAY_BUFFER, this->bufferName);
         CE_GL_ERROR_CHECK("glBindBuffer");
-        glBufferData(GL_ARRAY_BUFFER, this->numVertices * this->bytesPerVertex, this->vertexBuffer, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, (GLsizeiptr)this->numVertices * (GLsizeiptr)this->bytesPerVertex, this->vertexBuffer, GL_STATIC_DRAW);
         CE_GL_ERROR_CHECK("glBufferData");
         glBindBuffer(GL_ARRAY_BUFFER, 0U);
         CE_GL_ERROR_CHECK("glBindBuffer");

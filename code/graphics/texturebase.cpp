@@ -183,7 +183,7 @@ TextureBase::SetBuffer(void* const buffer)
 //------------------------------------------------------------------------------
 /**
 */
-const void* const
+const void*
 TextureBase::GetBuffer() const
 {
     return this->textureBuffer;

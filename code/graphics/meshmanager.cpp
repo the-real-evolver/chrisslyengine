@@ -42,7 +42,7 @@ MeshManager::~MeshManager()
 //------------------------------------------------------------------------------
 /**
 */
-Mesh* const
+Mesh*
 MeshManager::Load(const char* const filename)
 {
     Mesh* mesh = (Mesh*)ce_hash_table_find(&this->resources, filename, strlen(filename));
@@ -165,6 +165,8 @@ MeshManager::Load(const char* const filename)
                 skeletonPath.Set(stringBuffer, skeletonPathLength);
                 ce_graphics_import_skeleton(skeletonPath.C_Str(), mesh);
                 break;
+            default:
+                break;
         }
     }
 
@@ -176,7 +178,7 @@ MeshManager::Load(const char* const filename)
 //------------------------------------------------------------------------------
 /**
 */
-Mesh* const
+Mesh*
 MeshManager::CreateManual(const char* const name)
 {
     Mesh* mesh = (Mesh*)ce_hash_table_find(&this->resources, name, strlen(name));
@@ -214,7 +216,7 @@ MeshManager::RemoveAll()
 //------------------------------------------------------------------------------
 /**
 */
-ce_hash_table* const
+ce_hash_table*
 MeshManager::GetAllMeshes() const
 {
     return &this->resources;

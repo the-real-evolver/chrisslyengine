@@ -27,11 +27,11 @@ public:
     /// destructor
     ~Entity();
     /// returns the scene node to which this object is attached
-    SceneNode* const GetParentSceneNode() const;
+    SceneNode* GetParentSceneNode() const;
     /// gets the Mesh that this Entity is based on
-    Mesh* const GetMesh() const;
+    Mesh* GetMesh() const;
     /// gets a pointer to a SubEntity, ie a part of an Entity
-    SubEntity* const GetSubEntity(unsigned int index) const;
+    SubEntity* GetSubEntity(unsigned int index) const;
     /// retrieves the number of SubEntity objects making up this entity
     unsigned int GetNumSubEntities() const;
     /// tells this Entity whether to be visible or not
@@ -61,15 +61,15 @@ public:
         current state of each animation available to the entity. The AnimationState objects are
         initialised from the Mesh object.
     */
-    AnimationState* const GetAnimationState(const char* const name) const;
+    AnimationState* GetAnimationState(const char* const name) const;
     /// returns a pointer to the hashtable that contains all animation states
-    ce_hash_table* const GetAllAnimationStates() const;
+    ce_hash_table* GetAllAnimationStates() const;
     /// perform all the updates required for an animated entity
     void UpdateAnimation();
     /// gets the bone matrices
-    chrissly::core::Matrix4* const GetBoneMatrices() const;
+    chrissly::core::Matrix4* GetBoneMatrices() const;
     /// gets the blend matrices
-    chrissly::core::Matrix4* const GetBlendMatrices() const;
+    chrissly::core::Matrix4* GetBlendMatrices() const;
     /// internal method called to notify the object that it has been attached to a node
     void _NotifyAttached(SceneNode* const parent);
 

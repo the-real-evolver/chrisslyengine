@@ -57,7 +57,7 @@ GraphicsSystem::~GraphicsSystem()
 //------------------------------------------------------------------------------
 /**
 */
-RenderWindow* const
+RenderWindow*
 GraphicsSystem::Initialise(void* const customParams)
 {
     this->autoWindow = this->activeRenderer->Initialise(customParams);
@@ -70,7 +70,7 @@ GraphicsSystem::Initialise(void* const customParams)
 //------------------------------------------------------------------------------
 /**
 */
-RenderWindow* const
+RenderWindow*
 GraphicsSystem::GetAutoCreatedWindow() const
 {
     return this->autoWindow;
@@ -97,7 +97,7 @@ GraphicsSystem::RenderOneFrame()
 //------------------------------------------------------------------------------
 /**
 */
-RenderSystem* const
+RenderSystem*
 GraphicsSystem::GetRenderSystem() const
 {
     return this->activeRenderer;

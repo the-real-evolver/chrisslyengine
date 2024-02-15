@@ -80,7 +80,7 @@ SceneManager::~SceneManager()
 //------------------------------------------------------------------------------
 /**
 */
-Camera* const
+Camera*
 SceneManager::CreateCamera(const char* const name)
 {
     Camera* camera = CE_NEW Camera();
@@ -93,7 +93,7 @@ SceneManager::CreateCamera(const char* const name)
 //------------------------------------------------------------------------------
 /**
 */
-Camera* const
+Camera*
 SceneManager::GetCamera(const char* const name) const
 {
     return (Camera*)ce_hash_table_find(&this->cameras, name, strlen(name));
@@ -121,7 +121,7 @@ SceneManager::DestroyAllCameras()
 //------------------------------------------------------------------------------
 /**
 */
-Light* const
+Light*
 SceneManager::CreateLight(const char* const name)
 {
     Light* light = CE_NEW Light();
@@ -134,7 +134,7 @@ SceneManager::CreateLight(const char* const name)
 //------------------------------------------------------------------------------
 /**
 */
-Light* const
+Light*
 SceneManager::GetLight(const char* const name) const
 {
     return (Light*)ce_hash_table_find(&this->lights, name, strlen(name));
@@ -143,7 +143,7 @@ SceneManager::GetLight(const char* const name) const
 //------------------------------------------------------------------------------
 /**
 */
-ce_hash_table* const
+ce_hash_table*
 SceneManager::GetAllLights() const
 {
     return &this->lights;
@@ -181,7 +181,7 @@ SceneManager::DestroyAllLights()
 //------------------------------------------------------------------------------
 /**
 */
-Entity* const
+Entity*
 SceneManager::CreateEntity(const char* const meshName)
 {
     Entity* entity = CE_NEW Entity(MeshManager::Instance()->Load(meshName));
@@ -216,7 +216,7 @@ SceneManager::DestroyEntity(Entity* const entity)
 //------------------------------------------------------------------------------
 /**
 */
-SceneNode* const
+SceneNode*
 SceneManager::CreateSceneNode()
 {
     SceneNode* sceneNode = CE_NEW SceneNode();
@@ -241,7 +241,7 @@ SceneManager::DestroySceneNode(SceneNode* const node)
 //------------------------------------------------------------------------------
 /**
 */
-SceneNode* const
+SceneNode*
 SceneManager::GetRootSceneNode()
 {
     if (NULL == this->sceneRoot)
@@ -291,7 +291,7 @@ SceneManager::SetAmbientLight(unsigned int colour)
 //------------------------------------------------------------------------------
 /**
 */
-const unsigned int
+unsigned int
 SceneManager::GetAmbientLight() const
 {
     return this->ambientLight;
@@ -438,7 +438,7 @@ SceneManager::GetShadowColour() const
 //------------------------------------------------------------------------------
 /**
 */
-Texture* const
+Texture*
 SceneManager::GetShadowTexture(size_t index) const
 {
     CE_ASSERT(0U == index, "SceneManager::GetShadowTexture(): invalid index");

@@ -43,11 +43,11 @@ public:
     /// set bone parameters
     void SetBone(int index, int parent, chrissly::core::Matrix4 const& local, chrissly::core::Matrix4 const& invModel);
     /// gets the list of local transform matrices
-    chrissly::core::Matrix4* const GetLocalTransformMatrices() const;
+    chrissly::core::Matrix4* GetLocalTransformMatrices() const;
     /// gets the list of inverse model transform matrices
-    chrissly::core::Matrix4* const GetInverseModelTransformMatrices() const;
+    chrissly::core::Matrix4* GetInverseModelTransformMatrices() const;
     /// gets the list of transform matrices
-    int* const GetParentIndicies() const;
+    int* GetParentIndicies() const;
     /// gets the animation blending mode which this skeleton will use
     SkeletonAnimationBlendMode GetBlendMode() const;
     /// sets the animation blending mode this skeleton will use

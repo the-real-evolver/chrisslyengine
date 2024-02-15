@@ -30,11 +30,11 @@ public:
     /// swaps the frame buffers to display the next frame
     virtual void SwapBuffers() = 0;
     /// adds a viewport to the rendering target
-    Viewport* const AddViewport(Camera* const cam, int left, int top, int w, int h);
+    Viewport* AddViewport(Camera* const cam, int left, int top, int w, int h);
     /// returns the number of viewports attached to this target
     unsigned short GetNumViewports() const;
     /// retrieves a pointer to the viewport with the given index
-    Viewport* const GetViewport(unsigned short index) const;
+    Viewport* GetViewport(unsigned short index) const;
     /// removes all viewports on this target
     void RemoveAllViewports();
     /// get the width of the rendertarget
@@ -44,7 +44,7 @@ public:
     /// get the pixelformat of the buffer
     PixelFormat GetFormat() const;
     /// get pointer to buffer
-    void* const GetBuffer() const;
+    void* GetBuffer() const;
     /// get the current frame time
     double GetFrameTime() const;
     /// reset the current frame time

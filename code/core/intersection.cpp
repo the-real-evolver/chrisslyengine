@@ -99,9 +99,5 @@ ce_intersection_ray_aabb(float ray_origin[3U], float ray_dir[3U], float aabb_min
 
     if ((tmin > tzmax) || (tzmin > tmax)) return false;
 
-    if (tzmin > tmin) tmin = tzmin;
-
-    if (tzmax < tmax)tmax = tzmax;
-
     return true;
 }

@@ -113,7 +113,7 @@ AnimationState::GetLoop() const
 //------------------------------------------------------------------------------
 /**
 */
-const char* const
+const char*
 AnimationState::GetAnimationName() const
 {
     return this->animationName.C_Str();
@@ -195,7 +195,7 @@ AnimationState::DestroyBlendMask()
 //------------------------------------------------------------------------------
 /**
 */
-float* const
+float*
 AnimationState::GetBlendMask() const
 {
     return this->blendMask;

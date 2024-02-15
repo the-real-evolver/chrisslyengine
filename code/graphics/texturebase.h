@@ -57,7 +57,7 @@ public:
     /// set the hardware pixel buffer to use
     void SetBuffer(void* const buffer);
     /// return hardware pixel buffer for a surface
-    const void* const GetBuffer() const;
+    const void* GetBuffer() const;
 
     /// enable to swizzle texture read
     void SetSwizzleEnabled(bool enabled);

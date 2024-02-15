@@ -33,9 +33,9 @@ public:
     /// return true if a file exists
     static bool FileExists(const char* const fileName);
     /// return common application data path (usually: C:\Documents and Settings\username\Application Data)
-    static const char* const GetAppDataDirectory();
+    static const char* GetAppDataDirectory();
     /// return path of the executable file of the current process
-    static const char* const GetBinDirectory();
+    static const char* GetBinDirectory();
     /// change the current directory for the current process
     static void ChangeWorkingDirectory(const char* const path);
 

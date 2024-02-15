@@ -32,13 +32,13 @@ public:
     /// swaps the streambuffers, called when a buffer finishes playing
     virtual void SwapStreamBuffers() = 0;
     /// get pointer to the current streambuffer
-    virtual void* const GetStreamBufferPointer() const = 0;
+    virtual void* GetStreamBufferPointer() const = 0;
     /// retrieves the length of the current streambuffer
     virtual unsigned int GetStreamBufferLength() const = 0;
     /// gets a value that indicates whether the current stream position is at the end of the stream
     virtual bool EndOfStream() const = 0;
     /// loads the given number of samples at the given position of the stream into the current streambuffer and returns a pointer to it
-    virtual void* const FillStreamBuffer(unsigned int numSamples, unsigned int position) = 0;
+    virtual void* FillStreamBuffer(unsigned int numSamples, unsigned int position) = 0;
 };
 
 } // namespace audio

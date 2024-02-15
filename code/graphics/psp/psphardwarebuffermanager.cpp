@@ -46,7 +46,7 @@ PSPHardwareBufferManager::GetMemorySize(unsigned int width, unsigned int height,
 //------------------------------------------------------------------------------
 /**
 */
-void* const
+void*
 PSPHardwareBufferManager::GetStaticVramBuffer(unsigned int width, unsigned int height, unsigned int psm)
 {
     void* result = (void*)StaticOffset;
@@ -58,7 +58,7 @@ PSPHardwareBufferManager::GetStaticVramBuffer(unsigned int width, unsigned int h
 //------------------------------------------------------------------------------
 /**
 */
-void* const
+void*
 PSPHardwareBufferManager::GetStaticVramTexture(unsigned int width, unsigned int height, unsigned int psm)
 {
     void* result = GetStaticVramBuffer(width, height, psm);

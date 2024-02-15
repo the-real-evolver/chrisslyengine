@@ -29,13 +29,13 @@ public:
     /// destructor
     ~MeshManager();
     /// loads a mesh from a file, making it immediately available for use
-    Mesh* const Load(const char* const filename);
+    Mesh* Load(const char* const filename);
     /// creates an empty mesh and registers it with the given name, intended for programmatically mesh creation (like particlesystems etc.)
-    Mesh* const CreateManual(const char* const name);
+    Mesh* CreateManual(const char* const name);
     /// removes all resources
     void RemoveAll();
     /// returns a pointer to the hashtable that contains all meshes
-    ce_hash_table* const GetAllMeshes() const;
+    ce_hash_table* GetAllMeshes() const;
 
 private:
     /// copy constructor

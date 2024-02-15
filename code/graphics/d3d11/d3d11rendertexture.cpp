@@ -119,7 +119,7 @@ D3D11RenderTexture::GetType() const
 //------------------------------------------------------------------------------
 /**
 */
-ID3D11RenderTargetView* const
+ID3D11RenderTargetView*
 D3D11RenderTexture::GetRenderTargetView() const
 {
     return this->renderTargetView;
@@ -128,7 +128,7 @@ D3D11RenderTexture::GetRenderTargetView() const
 //------------------------------------------------------------------------------
 /**
 */
-ID3D11DepthStencilView* const
+ID3D11DepthStencilView*
 D3D11RenderTexture::GetDepthStencilView() const
 {
     return this->depthStencilView;
@@ -137,7 +137,7 @@ D3D11RenderTexture::GetDepthStencilView() const
 //------------------------------------------------------------------------------
 /**
 */
-ID3D11ShaderResourceView* const
+ID3D11ShaderResourceView*
 D3D11RenderTexture::GetShaderResourceView() const
 {
     return this->shaderResourceView;

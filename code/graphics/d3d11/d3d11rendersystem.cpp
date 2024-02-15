@@ -77,7 +77,7 @@ D3D11RenderSystem::~D3D11RenderSystem()
 //------------------------------------------------------------------------------
 /**
 */
-graphics::RenderWindow* const
+graphics::RenderWindow*
 D3D11RenderSystem::Initialise(void* const customParams)
 {
     CE_ASSERT(customParams != NULL, "D3D11RenderSystem::Initialise(): customParams must not be NULL, pass a D3D11ConfigOptions pointer with a valid HINSTANCE to GraphicsSystem::Initialise()\n");
@@ -424,7 +424,7 @@ D3D11RenderSystem::SetViewport(graphics::Viewport* const vp)
 //------------------------------------------------------------------------------
 /**
 */
-graphics::Viewport* const
+graphics::Viewport*
 D3D11RenderSystem::GetViewport() const
 {
     return this->activeViewport;
@@ -631,21 +631,21 @@ D3D11RenderSystem::SetPass(graphics::Pass* const pass)
         {
             this->currentGpuProgram = textured ? this->defaultGpuProgramMorphAnim : this->defaultGpuProgramMorphAnimNoTexture;
         }
-        else if (!fog && !lit)
-        {
-            this->currentGpuProgram = textured ? this->defaultGpuProgram : this->defaultGpuProgramNoTexture;
-        }
-        else if (fog && !lit)
-        {
-            this->currentGpuProgram = textured ? this->defaultGpuProgramFog : this->defaultGpuProgramFogNoTexture;
-        }
-        else if (!fog && lit)
-        {
-            this->currentGpuProgram = textured ? this->defaultGpuProgramLit : this->defaultGpuProgramLitNoTexture;
-        }
         else if (fog && lit)
         {
             this->currentGpuProgram = textured ? this->defaultGpuProgramLitFog : this->defaultGpuProgramLitFogNoTexture;
+        }
+        else if (fog)
+        {
+            this->currentGpuProgram = textured ? this->defaultGpuProgramFog : this->defaultGpuProgramFogNoTexture;
+        }
+        else if (lit)
+        {
+            this->currentGpuProgram = textured ? this->defaultGpuProgramLit : this->defaultGpuProgramLitNoTexture;
+        }
+        else
+        {
+            this->currentGpuProgram = textured ? this->defaultGpuProgram : this->defaultGpuProgramNoTexture;
         }
 
         params = this->currentGpuProgram->GetDefaultParameters();
@@ -760,7 +760,7 @@ D3D11RenderSystem::SetAmbientLight(unsigned int colour)
 //------------------------------------------------------------------------------
 /**
 */
-D3D11GpuProgram* const
+D3D11GpuProgram*
 D3D11RenderSystem::GetDefaultShadowCasterGpuProgram() const
 {
     CE_ASSERT(this->defaultGpuProgramShadowCaster != NULL, "D3D11RenderSystem::GetDefaultShadowCasterGpuProgram(): gpu program not valid\n");
@@ -770,7 +770,7 @@ D3D11RenderSystem::GetDefaultShadowCasterGpuProgram() const
 //------------------------------------------------------------------------------
 /**
 */
-D3D11GpuProgram* const
+D3D11GpuProgram*
 D3D11RenderSystem::GetDefaultTransparentShadowCasterGpuProgram() const
 {
     CE_ASSERT(this->defaultGpuProgramTransparentShadowCaster != NULL, "D3D11RenderSystem::GetDefaultTransparentShadowCasterGpuProgram(): gpu program not valid\n");
@@ -780,7 +780,7 @@ D3D11RenderSystem::GetDefaultTransparentShadowCasterGpuProgram() const
 //------------------------------------------------------------------------------
 /**
 */
-D3D11GpuProgram* const
+D3D11GpuProgram*
 D3D11RenderSystem::GetDefaultTransparentShadowCasterAlphaTestGpuProgram() const
 {
     CE_ASSERT(this->defaultGpuProgramTransparentShadowCasterAlphaTest != NULL, "D3D11RenderSystem::GetDefaultTransparentShadowCasterAlphaTestGpuProgram(): gpu program not valid\n");
@@ -790,7 +790,7 @@ D3D11RenderSystem::GetDefaultTransparentShadowCasterAlphaTestGpuProgram() const
 //------------------------------------------------------------------------------
 /**
 */
-D3D11GpuProgram* const
+D3D11GpuProgram*
 D3D11RenderSystem::GetDefaultShadowCasterMorphAnimGpuProgram() const
 {
     CE_ASSERT(this->defaultGpuProgramShadowCasterMorphAnim != NULL, "D3D11RenderSystem::GetDefaultShadowCasterMorphAnimGpuProgram(): gpu program not valid\n");
@@ -800,7 +800,7 @@ D3D11RenderSystem::GetDefaultShadowCasterMorphAnimGpuProgram() const
 //------------------------------------------------------------------------------
 /**
 */
-D3D11GpuProgram* const
+D3D11GpuProgram*
 D3D11RenderSystem::GetDefaultTransparentShadowCasterMorphAnimGpuProgram() const
 {
     CE_ASSERT(this->defaultGpuProgramTransparentShadowCasterMorphAnim != NULL, "D3D11RenderSystem::GetDefaultTransparentShadowCasterMorphAnimGpuProgram(): gpu program not valid\n");
@@ -810,7 +810,7 @@ D3D11RenderSystem::GetDefaultTransparentShadowCasterMorphAnimGpuProgram() const
 //------------------------------------------------------------------------------
 /**
 */
-D3D11GpuProgram* const
+D3D11GpuProgram*
 D3D11RenderSystem::GetDefaultShadowCasterSkeletalAnimGpuProgram() const
 {
     CE_ASSERT(this->defaultGpuProgramShadowCasterSkeletalAnim != NULL, "D3D11RenderSystem::GetDefaultShadowCasterSkeletalAnimGpuProgram(): gpu program not valid\n");
@@ -820,7 +820,7 @@ D3D11RenderSystem::GetDefaultShadowCasterSkeletalAnimGpuProgram() const
 //------------------------------------------------------------------------------
 /**
 */
-D3D11GpuProgram* const
+D3D11GpuProgram*
 D3D11RenderSystem::GetDefaultShadowReceiverGpuProgram() const
 {
     CE_ASSERT(this->defaultGpuProgramShadowReceiver != NULL, "D3D11RenderSystem::GetDefaultShadowReceiverGpuProgram(): gpu program not valid\n");
@@ -830,7 +830,7 @@ D3D11RenderSystem::GetDefaultShadowReceiverGpuProgram() const
 //------------------------------------------------------------------------------
 /**
 */
-ID3D11Device* const
+ID3D11Device*
 D3D11RenderSystem::GetDevice() const
 {
     CE_ASSERT(this->device != NULL, "D3D11RenderSystem::GetDevice(): d3d11 device not valid\n");
@@ -840,7 +840,7 @@ D3D11RenderSystem::GetDevice() const
 //------------------------------------------------------------------------------
 /**
 */
-ID3D11DeviceContext* const
+ID3D11DeviceContext*
 D3D11RenderSystem::GetContext() const
 {
     CE_ASSERT(this->context != NULL, "D3D11RenderSystem::GetContext(): d3d11 device context not valid\n");

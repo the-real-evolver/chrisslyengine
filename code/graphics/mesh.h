@@ -27,11 +27,11 @@ public:
     /// destructor
     ~Mesh();
     /// creates a new SubMesh
-    SubMesh* const CreateSubMesh();
+    SubMesh* CreateSubMesh();
     /// gets the number of sub meshes which comprise this mesh
     unsigned short GetNumSubMeshes() const;
     /// gets a pointer to the submesh indicated by the index
-    SubMesh* const GetSubMesh(unsigned short index) const;
+    SubMesh* GetSubMesh(unsigned short index) const;
 
     /// gets the center of the bounding sphere surrounding this mesh
     const core::Vector3& GetBoundingSphereCenter() const;
@@ -43,18 +43,18 @@ public:
     /// set the skeleton this mesh uses for animation
     void SetSkeleton(Skeleton* const skel);
     /// gets a pointer to the linked skeleton
-    Skeleton* const GetSkeleton() const;
+    Skeleton* GetSkeleton() const;
 
     /// creates a new Animation object for vertex animating this mesh
-    Animation* const CreateAnimation(const char* const name, float length);
+    Animation* CreateAnimation(const char* const name, float length);
     /// returns the named vertex Animation object
-    Animation* const GetAnimation(const char* const name);
+    Animation* GetAnimation(const char* const name);
     /// removes all morph Animations from this mesh
     void RemoveAllAnimations();
     /// returns whether or not this mesh has some kind of animation
     bool HasAnimation() const;
     /// initialise an animation set suitable for use with this mesh
-    void _InitAnimationState(ce_hash_table* const animSet);
+    void _InitAnimationState(ce_hash_table* const animSet) const;
 
 private:
     /// a list of submeshes which make up this mesh

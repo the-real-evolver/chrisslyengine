@@ -44,7 +44,7 @@ public:
     /// gets whether or not this animation loops
     bool GetLoop() const;
     /// gets the name of the animation to which this state applies
-    const char* const GetAnimationName() const;
+    const char* GetAnimationName() const;
     /// gets the time position for this animation
     float GetTimePosition() const;
     /// sets the total length of this animation (may be shorter than whole animation)
@@ -69,7 +69,7 @@ public:
     /// destroy the currently set blend mask
     void DestroyBlendMask();
     /// gets the current blend mask
-    float* const GetBlendMask() const;
+    float* GetBlendMask() const;
     /// sets the absolute (not modulated with the averaged weight) weight for the bone at the given index
     void SetBlendMaskEntry(unsigned int index, float entryWeight);
 

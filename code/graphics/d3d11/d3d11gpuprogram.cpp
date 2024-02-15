@@ -154,7 +154,7 @@ D3D11GpuProgram::~D3D11GpuProgram()
 //------------------------------------------------------------------------------
 /**
 */
-graphics::GpuProgramParameters* const
+graphics::GpuProgramParameters*
 D3D11GpuProgram::GetDefaultParameters() const
 {
     return this->defaultParams;
@@ -163,7 +163,7 @@ D3D11GpuProgram::GetDefaultParameters() const
 //------------------------------------------------------------------------------
 /**
 */
-graphics::GpuNamedConstants* const
+graphics::GpuNamedConstants*
 D3D11GpuProgram::GetConstantDefinitions() const
 {
     return this->constantDefs;
@@ -326,7 +326,7 @@ D3D11GpuProgram::ExtractConstantDefs(ID3D10Blob* const shaderCode)
 //------------------------------------------------------------------------------
 /**
 */
-ID3D10Blob* const
+ID3D10Blob*
 D3D11GpuProgram::GetVertexShaderCode() const
 {
     return this->vertexShaderCode;

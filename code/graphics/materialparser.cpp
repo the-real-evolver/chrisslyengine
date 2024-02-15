@@ -445,7 +445,7 @@ MaterialParser::ParseTextureUnitState()
 /**
 */
 unsigned int
-MaterialParser::GetRGBAValue(float red, float green, float blue, float alpha) const
+MaterialParser::GetRGBAValue(float red, float green, float blue, float alpha)
 {
     unsigned int colour = 0U;
     colour |= (unsigned int)(alpha * 255.0f) << 24U;
@@ -459,7 +459,7 @@ MaterialParser::GetRGBAValue(float red, float green, float blue, float alpha) co
 /**
 */
 SceneBlendFactor
-MaterialParser::GetSceneBlendFactorFromString(const char* const blendFactor) const
+MaterialParser::GetSceneBlendFactorFromString(const char* const blendFactor)
 {
     if (0 == strcmp(blendFactor, "one"))                    {return SBF_ONE;}
     if (0 == strcmp(blendFactor, "zero"))                   {return SBF_ZERO;}
@@ -480,7 +480,7 @@ MaterialParser::GetSceneBlendFactorFromString(const char* const blendFactor) con
 /**
 */
 FilterOptions
-MaterialParser::GetFilterOptionsFromString(const char* const filterOption) const
+MaterialParser::GetFilterOptionsFromString(const char* const filterOption)
 {
     if (0 == strcmp(filterOption, "none"))      {return FO_NONE;}
     if (0 == strcmp(filterOption, "point"))     {return FO_POINT;}
@@ -493,7 +493,7 @@ MaterialParser::GetFilterOptionsFromString(const char* const filterOption) const
 /**
 */
 ComparisonFunction
-MaterialParser::GetComparisonFunctionFromString(const char* const compFunc) const
+MaterialParser::GetComparisonFunctionFromString(const char* const compFunc)
 {
     if (0 == strcmp(compFunc, "never"))         {return CF_NEVER;}
     if (0 == strcmp(compFunc, "less"))          {return CF_LESS;}

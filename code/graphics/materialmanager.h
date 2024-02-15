@@ -34,13 +34,13 @@ public:
     /// parse material script and create materials
     void ParseScript(const char* const name);
     /// create a new material (name has to be unique)
-    Material* const Create(const char* const name);
+    Material* Create(const char* const name);
     /// retrieves a pointer to a material by name, or null if the resource does not exist
-    Material* const GetByName(const char* const name);
+    Material* GetByName(const char* const name);
     /// removes all resources
     void RemoveAll();
     /// returns a pointer to the hashtable that contains all registered scripts
-    ce_hash_table* const GetAllScripts() const;
+    ce_hash_table* GetAllScripts() const;
 
 private:
     /// copy constructor

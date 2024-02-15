@@ -44,7 +44,7 @@ VertexAnimationTrack::GetHandle() const
 //------------------------------------------------------------------------------
 /**
 */
-VertexMorphKeyFrame* const
+VertexMorphKeyFrame*
 VertexAnimationTrack::CreateVertexMorphKeyFrame(float timePos)
 {
     VertexMorphKeyFrame* vertexMorphKeyFrame = CE_NEW VertexMorphKeyFrame(timePos);
@@ -65,7 +65,7 @@ VertexAnimationTrack::GetNumKeyFrames() const
 //------------------------------------------------------------------------------
 /**
 */
-VertexMorphKeyFrame* const
+VertexMorphKeyFrame*
 VertexAnimationTrack::GetVertexMorphKeyFrame(unsigned short index) const
 {
     return this->keyFrames[index];
@@ -136,7 +136,7 @@ BoneAnimationTrack::CreateKeyFrame(float timePos, chrissly::core::Matrix4 const&
 //------------------------------------------------------------------------------
 /**
 */
-chrissly::core::Matrix4* const
+chrissly::core::Matrix4*
 BoneAnimationTrack::GetTransformMatrices() const
 {
     return this->localMatrix;
@@ -145,7 +145,7 @@ BoneAnimationTrack::GetTransformMatrices() const
 //------------------------------------------------------------------------------
 /**
 */
-float* const
+float*
 BoneAnimationTrack::GetTimeIndicies() const
 {
     return this->timeIndex;

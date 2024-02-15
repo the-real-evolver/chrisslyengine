@@ -34,13 +34,13 @@ public:
     /// destructor
     ~GraphicsSystem();
     /// initialise graphicssystem
-    RenderWindow* const Initialise(void* const customParams = NULL);
+    RenderWindow* Initialise(void* const customParams = NULL);
     /// retrieves a pointer to the window that was created automatically
-    RenderWindow* const GetAutoCreatedWindow() const;
+    RenderWindow* GetAutoCreatedWindow() const;
     /// render one frame
     void RenderOneFrame();
     /// retrieve a pointer to the currently selected render system
-    RenderSystem* const GetRenderSystem() const;
+    RenderSystem* GetRenderSystem() const;
     /// gets the frame number
     unsigned int GetFrameNumber() const;
     /// if you run your own render loop call this once per frame to update animations

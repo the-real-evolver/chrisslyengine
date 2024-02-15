@@ -85,7 +85,7 @@ SubEntity::SetMaterial(Material* const mat)
 //------------------------------------------------------------------------------
 /**
 */
-Material* const
+Material*
 SubEntity::GetMaterial() const
 {
     return this->material;
@@ -112,7 +112,7 @@ SubEntity::IsVisible() const
 //------------------------------------------------------------------------------
 /**
 */
-SubMesh* const
+SubMesh*
 SubEntity::GetSubMesh() const
 {
     return this->subMesh;
@@ -121,7 +121,7 @@ SubEntity::GetSubMesh() const
 //------------------------------------------------------------------------------
 /**
 */
-Entity* const
+Entity*
 SubEntity::GetParent() const
 {
     return this->parentEntity;
@@ -130,7 +130,7 @@ SubEntity::GetParent() const
 //------------------------------------------------------------------------------
 /**
 */
-VertexData* const
+VertexData*
 SubEntity::GetMorphVertexData() const
 {
     return this->morphVertexData;

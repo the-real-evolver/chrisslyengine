@@ -32,7 +32,7 @@ GpuProgramManager::~GpuProgramManager()
 //------------------------------------------------------------------------------
 /**
 */
-GpuProgram* const
+GpuProgram*
 GpuProgramManager::LoadFromSource(const char* const name, const char* const source, const char* const vertexShaderFunctionName, const char* const fragmentShaderFunctionName, const char* const* const macros)
 {
     GpuProgram* program = (GpuProgram*)ce_hash_table_find(&this->resources, name, strlen(name));
@@ -52,7 +52,7 @@ GpuProgramManager::LoadFromSource(const char* const name, const char* const sour
 //------------------------------------------------------------------------------
 /**
 */
-GpuProgram *const
+GpuProgram*
 GpuProgramManager::LoadFromSource(const char *const name, const char *const vertexShaderSource, const char *const fragmentShaderSource)
 {
     GpuProgram* program = (GpuProgram*)ce_hash_table_find(&this->resources, name, strlen(name));
@@ -72,7 +72,7 @@ GpuProgramManager::LoadFromSource(const char *const name, const char *const vert
 //------------------------------------------------------------------------------
 /**
 */
-GpuProgram* const
+GpuProgram*
 GpuProgramManager::GetByName(const char* const name)
 {
     return (GpuProgram*)ce_hash_table_find(&this->resources, name, strlen(name));
