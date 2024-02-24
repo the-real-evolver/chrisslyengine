@@ -3,6 +3,7 @@
 //  (C) 2022 Christian Bleicher
 //------------------------------------------------------------------------------
 #include "intersection.h"
+#include "chrisslymath.h"
 
 #define EPSILON 0.000001f
 #define CROSS(dest,v1,v2) dest[0]=v1[1]*v2[2]-v1[2]*v2[1]; dest[1]=v1[2]*v2[0]-v1[0]*v2[2]; dest[2]=v1[0]*v2[1]-v1[1]*v2[0];
@@ -99,5 +100,21 @@ ce_intersection_ray_aabb(float ray_origin[3U], float ray_dir[3U], float aabb_min
 
     if ((tmin > tzmax) || (tzmin > tmax)) return false;
 
+    return true;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+bool
+ce_intersection_ray_sphere(float ray_origin[3U], float ray_dir[3U], float sphere_center[3U], float sphere_radius)
+{
+    float dv[3U];
+    SUB(dv, sphere_center, ray_origin);
+    float dot = DOT(dv, ray_dir);
+    if (dot < 0.0f) return false;
+    float ds = chrissly::core::Math::Sqrt(dv[0U] * dv[0U] + dv[1U] * dv[1U] + dv[2U] * dv[2U]);
+    float d = chrissly::core::Math::Sqrt(chrissly::core::Math::Fabs(dot * dot - ds * ds));
+    if (d > sphere_radius) return false;
     return true;
 }
