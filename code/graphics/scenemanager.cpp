@@ -665,6 +665,15 @@ SceneManager::_SetEntityDestroyedCallback(EntityCallback callback)
 //------------------------------------------------------------------------------
 /**
 */
+SceneNode**
+SceneManager::_GetAllSceneNodes() const
+{
+    return this->sceneNodes;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
 void
 SceneManager::DestroyShadowTextures()
 {

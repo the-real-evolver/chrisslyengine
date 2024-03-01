@@ -160,6 +160,8 @@ public:
     void _SetEntityCreatedCallback(EntityCallback callback);
     /// sets a callback which will be notified when an entity was destroyed
     void _SetEntityDestroyedCallback(EntityCallback callback);
+    /// gets all scenenodes as an array
+    SceneNode** _GetAllSceneNodes() const;
 
 private:
     /// copy constructor
