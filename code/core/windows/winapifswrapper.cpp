@@ -71,7 +71,7 @@ WinAPIFSWrapper::GetFileSize(core::FileHandle fileHandle)
 int
 WinAPIFSWrapper::Read(core::FileHandle fileHandle, void* const buf, unsigned int numBytes)
 {
-    CE_ASSERT(numBytes > 0U, "FSWrapper::Read(): requested number of bytes to read is '%u', has to be greater than zero", numBytes);
+    CE_ASSERT(numBytes > 0U, "FSWrapper::Read(): requested number of bytes to read is '%u', has to be greater than zero\n", numBytes);
     DWORD bytesRead;
 #if __CE_DEBUG__
     BOOL result =
@@ -113,7 +113,7 @@ WinAPIFSWrapper::Seek(core::FileHandle fileHandle, int offset, core::SeekOrigin 
 void
 WinAPIFSWrapper::Write(core::FileHandle fileHandle, const void* buf, unsigned int numBytes)
 {
-    CE_ASSERT(numBytes > 0U, "FSWrapper::Write(): requested number of bytes to write is '%u', has to be greater than zero", numBytes);
+    CE_ASSERT(numBytes > 0U, "FSWrapper::Write(): requested number of bytes to write is '%u', has to be greater than zero\n", numBytes);
     DWORD bytesWritten;
 #if __CE_DEBUG__
     BOOL result =
@@ -139,6 +139,45 @@ WinAPIFSWrapper::FileExists(const char* const fileName)
     DWORD fileAttr = GetFileAttributes(fileName);
     if (0xffffffff == fileAttr || 0U != (FILE_ATTRIBUTE_DIRECTORY & fileAttr)) return false;
     return true;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+bool
+WinAPIFSWrapper::RemoveFile(const char* const fileName)
+{
+    return DeleteFile(fileName);
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+int
+WinAPIFSWrapper::ListFiles(const char* const path, const char* const pattern, unsigned int maxNumFiles, char filesOut[][260U])
+{
+    CE_ASSERT(path != NULL && pattern != NULL, "FSWrapper::ListFiles(): invalid pointer passed\n");
+
+    TCHAR searchPath[MAX_PATH] = {'\0'};
+    size_t patternLength = strlen(pattern);
+    strncpy(searchPath, path, MAX_PATH - patternLength - 1U);
+    strcat(searchPath, "\\");
+    strcat(searchPath, pattern);
+
+    WIN32_FIND_DATA findData = {};
+    HANDLE findHandle = FindFirstFile(searchPath, &findData);
+    if (INVALID_HANDLE_VALUE == findHandle) return 0;
+    unsigned int fileIndex = 0U;
+    do
+    {
+        if (!(findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY))
+        {
+            strncpy(filesOut[fileIndex], findData.cFileName, MAX_PATH);
+            ++fileIndex;
+        }
+    } while (FindNextFile(findHandle, &findData) && fileIndex < maxNumFiles);
+
+    return (int)fileIndex;
 }
 
 //------------------------------------------------------------------------------

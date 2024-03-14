@@ -204,7 +204,7 @@ Animation::Apply(Entity* const entity, float timePos, float blendWeight, const f
         Matrix4* boneMatrix = entity->GetBoneMatrices();
         Matrix4* blendMatrix = entity->GetBlendMatrices();
 
-        CE_ASSERT(blendMask == NULL || (blendMask != NULL && ce_array_size(blendMask) >= numBones), "Animation::Apply(): blend mask size %u does not match number of bones %u", ce_array_size(blendMask), numBones);
+        CE_ASSERT(blendMask == NULL || (blendMask != NULL && ce_array_size(blendMask) >= numBones), "Animation::Apply(): blend mask size %u does not match number of bones %u\n", ce_array_size(blendMask), numBones);
 
         // 1. restpose * animation keyframe local matrix
         for (i = 0U; i < numBones; ++i)

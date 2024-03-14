@@ -33,6 +33,10 @@ public:
     static void Write(core::FileHandle fileHandle, const void* buf, unsigned int numBytes);
     /// return true if a file exists
     static bool FileExists(const char* const fileName);
+    /// delete a file
+    static bool RemoveFile(const char* const fileName);
+    /// list all files in a directory, returns the number of files in the list
+    static int ListFiles(const char* const path, const char* const pattern, unsigned int maxNumFiles, char filesOut[][260U]);
     /// return internal application private storage data path
     static const char* GetAppDataDirectory();
     /// initialise the filesystem

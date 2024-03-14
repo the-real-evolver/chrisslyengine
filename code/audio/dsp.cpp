@@ -123,7 +123,7 @@ DSP::Release()
 void
 DSP::Setup(const DspDescription* const desc)
 {
-    CE_ASSERT(desc->process != NULL, "DSP::Setup(): pointer to Process() callback must not be NULL");
+    CE_ASSERT(desc->process != NULL, "DSP::Setup(): pointer to Process() callback must not be NULL\n");
     this->bypass = false;
     this->inUse = true;
     this->release = desc->release;

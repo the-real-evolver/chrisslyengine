@@ -7,6 +7,8 @@
 #include "core/debug.h"
 #include <stdio.h>
 #include <string.h>
+#include <dirent.h>
+#include <regex>
 
 namespace chrissly
 {
@@ -152,6 +154,81 @@ AndroidFSWrapper::FileExists(const char* const fileName)
         return true;
     }
     return false;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+bool
+AndroidFSWrapper::RemoveFile(const char* const fileName)
+{
+    core::String name(fileName);
+    name.SubstituteString("\\\\", "/");
+    name.SubstituteString("\\", "/");
+    if (strstr(fileName, InternalDataPath) != NULL)
+    {
+        return (0 == remove(name.C_Str()));
+    }
+    else
+    {
+        CE_ASSERT(false, "FSWrapper::RemoveFile(): AAssets can't be removed. They are read-only\n");
+    }
+    return false;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+int
+AndroidFSWrapper::ListFiles(const char* const path, const char* const pattern, unsigned int maxNumFiles, char filesOut[][260U])
+{
+    CE_ASSERT(path != NULL && pattern != NULL, "FSWrapper::ListFiles(): invalid pointer passed\n");
+
+    core::String name(path);
+    name.SubstituteString("\\\\", "/");
+    name.SubstituteString("\\", "/");
+
+    // mimic the behaviour of the WinAPI FindFirstFile() function
+    core::String patternRegex(pattern);
+    patternRegex.SubstituteString("*", ".*");
+    patternRegex.SubstituteString("?", ".");
+    std::regex wildcard(patternRegex.C_Str(), std::regex_constants::basic);
+
+    unsigned int fileIndex = 0U;
+    if (strstr(path, InternalDataPath) != NULL)
+    {
+        DIR* dir;
+        struct dirent* entry;
+        dir = opendir(name.C_Str());
+        if (dir != NULL)
+        {
+            while ((entry = readdir(dir)) != NULL)
+            {
+                if (std::regex_search(entry->d_name, wildcard))
+                {
+                    strncpy(filesOut[fileIndex], entry->d_name, 260U);
+                    ++fileIndex;
+                }
+            }
+            closedir(dir);
+        }
+    }
+    else
+    {
+        AAssetDir* dir = AAssetManager_openDir(AssetManager, name.C_Str());
+        const char* assetName = NULL;
+        while ((assetName = AAssetDir_getNextFileName(dir)) != NULL)
+        {
+            if (std::regex_search(assetName, wildcard))
+            {
+                strncpy(filesOut[fileIndex], assetName, 260U);
+                ++fileIndex;
+            }
+        }
+        AAssetDir_close(dir);
+    }
+
+    return (int)fileIndex;
 }
 
 //------------------------------------------------------------------------------

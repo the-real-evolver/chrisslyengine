@@ -84,7 +84,10 @@ TextureBase::~TextureBase()
             unsigned int i;
             for (i = 0U; i < 6U; ++i)
             {
-                CE_FREE(this->cubeFaces[i]);
+                if (this->cubeFaces[i] != NULL)
+                {
+                    CE_FREE(this->cubeFaces[i]);
+                }
             }
         }
     }

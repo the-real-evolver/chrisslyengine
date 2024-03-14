@@ -202,7 +202,7 @@ SceneManager::CreateEntity(const char* const meshName)
 void
 SceneManager::DestroyEntity(Entity* const entity)
 {
-    CE_ASSERT(entity != NULL, "SceneManager::DestroyEntity(): invalid pointer passed");
+    CE_ASSERT(entity != NULL, "SceneManager::DestroyEntity(): invalid pointer passed\n");
 
     if (this->entityDestroyedCallback != NULL)
     {
@@ -233,7 +233,7 @@ SceneManager::CreateSceneNode()
 void
 SceneManager::DestroySceneNode(SceneNode* const node)
 {
-    CE_ASSERT(node != NULL, "SceneManager::DestroySceneNode(): invalid pointer passed");
+    CE_ASSERT(node != NULL, "SceneManager::DestroySceneNode(): invalid pointer passed\n");
     ce_array_erase(this->sceneNodes, node);
     CE_DELETE node;
 }
@@ -441,7 +441,7 @@ SceneManager::GetShadowColour() const
 Texture*
 SceneManager::GetShadowTexture(size_t index) const
 {
-    CE_ASSERT(0U == index, "SceneManager::GetShadowTexture(): invalid index");
+    CE_ASSERT(0U == index, "SceneManager::GetShadowTexture(): invalid index\n");
     return this->shadowTexture;
 }
 
