@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <dirent.h>
-#include <regex>
+#include <regex.h>
 
 namespace chrissly
 {
@@ -192,7 +192,8 @@ AndroidFSWrapper::ListFiles(const char* const path, const char* const pattern, u
     core::String patternRegex(pattern);
     patternRegex.SubstituteString("*", ".*");
     patternRegex.SubstituteString("?", ".");
-    std::regex wildcard(patternRegex.C_Str(), std::regex_constants::basic);
+    regex_t wildcard;
+    if (regcomp(&wildcard, patternRegex.C_Str(), REG_BASIC) != 0) return 0;
 
     unsigned int fileIndex = 0U;
     if (strstr(path, InternalDataPath) != NULL)
@@ -200,26 +201,24 @@ AndroidFSWrapper::ListFiles(const char* const path, const char* const pattern, u
         DIR* dir;
         struct dirent* entry;
         dir = opendir(name.C_Str());
-        if (dir != NULL)
+        if (NULL == dir) return 0;
+        while ((entry = readdir(dir)) != NULL && fileIndex < maxNumFiles)
         {
-            while ((entry = readdir(dir)) != NULL)
+            if (0 == regexec(&wildcard, entry->d_name, 0U, NULL, 0))
             {
-                if (std::regex_search(entry->d_name, wildcard))
-                {
-                    strncpy(filesOut[fileIndex], entry->d_name, 260U);
-                    ++fileIndex;
-                }
+                strncpy(filesOut[fileIndex], entry->d_name, 260U);
+                ++fileIndex;
             }
-            closedir(dir);
         }
+        closedir(dir);
     }
     else
     {
         AAssetDir* dir = AAssetManager_openDir(AssetManager, name.C_Str());
         const char* assetName = NULL;
-        while ((assetName = AAssetDir_getNextFileName(dir)) != NULL)
+        while ((assetName = AAssetDir_getNextFileName(dir)) != NULL && fileIndex < maxNumFiles)
         {
-            if (std::regex_search(assetName, wildcard))
+            if (0 == regexec(&wildcard, assetName, 0U, NULL, 0))
             {
                 strncpy(filesOut[fileIndex], assetName, 260U);
                 ++fileIndex;
@@ -227,6 +226,8 @@ AndroidFSWrapper::ListFiles(const char* const path, const char* const pattern, u
         }
         AAssetDir_close(dir);
     }
+
+    regfree(&wildcard);
 
     return (int)fileIndex;
 }
