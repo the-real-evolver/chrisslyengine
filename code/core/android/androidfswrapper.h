@@ -10,6 +10,7 @@
 */
 #include "core/fileio.h"
 #include "core/filehandle.h"
+#include "chrisslyconfig.h"
 #include <android/native_activity.h>
 
 //------------------------------------------------------------------------------
@@ -36,7 +37,7 @@ public:
     /// delete a file
     static bool RemoveFile(const char* const fileName);
     /// list all files in a directory, returns the number of files in the list
-    static int ListFiles(const char* const path, const char* const pattern, unsigned int maxNumFiles, char filesOut[][260U]);
+    static int ListFiles(const char* const path, const char* const pattern, unsigned int maxNumFiles, char filesOut[][CE_MAX_PATH]);
     /// return internal application private storage data path
     static const char* GetAppDataDirectory();
     /// initialise the filesystem

@@ -180,7 +180,7 @@ AndroidFSWrapper::RemoveFile(const char* const fileName)
 /**
 */
 int
-AndroidFSWrapper::ListFiles(const char* const path, const char* const pattern, unsigned int maxNumFiles, char filesOut[][260U])
+AndroidFSWrapper::ListFiles(const char* const path, const char* const pattern, unsigned int maxNumFiles, char filesOut[][CE_MAX_PATH])
 {
     CE_ASSERT(path != NULL && pattern != NULL, "FSWrapper::ListFiles(): invalid pointer passed\n");
 
@@ -206,7 +206,7 @@ AndroidFSWrapper::ListFiles(const char* const path, const char* const pattern, u
         {
             if (0 == regexec(&wildcard, entry->d_name, 0U, NULL, 0))
             {
-                strncpy(filesOut[fileIndex], entry->d_name, 260U);
+                strncpy(filesOut[fileIndex], entry->d_name, CE_MAX_PATH);
                 ++fileIndex;
             }
         }
@@ -220,7 +220,7 @@ AndroidFSWrapper::ListFiles(const char* const path, const char* const pattern, u
         {
             if (0 == regexec(&wildcard, assetName, 0U, NULL, 0))
             {
-                strncpy(filesOut[fileIndex], assetName, 260U);
+                strncpy(filesOut[fileIndex], assetName, CE_MAX_PATH);
                 ++fileIndex;
             }
         }

@@ -3,6 +3,7 @@
 //  (C) 2022 Christian Bleicher
 //------------------------------------------------------------------------------
 #include "gpuprogrammanager.h"
+#include "miscutils.h"
 
 namespace chrissly
 {
@@ -55,6 +56,9 @@ GpuProgramManager::LoadFromSource(const char* const name, const char* const sour
 GpuProgram*
 GpuProgramManager::LoadFromSource(const char *const name, const char *const vertexShaderSource, const char *const fragmentShaderSource)
 {
+    CE_UNREFERENCED_PARAMETER(vertexShaderSource);
+    CE_UNREFERENCED_PARAMETER(fragmentShaderSource);
+
     GpuProgram* program = (GpuProgram*)ce_hash_table_find(&this->resources, name, strlen(name));
     if (program != NULL)
     {

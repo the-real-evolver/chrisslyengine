@@ -5,6 +5,7 @@
 #include "texturemanager.h"
 #include "fswrapper.h"
 #include "memoryallocatorconfig.h"
+#include "chrisslyconfig.h"
 #include "debug.h"
 #include <string.h>
 #include <stdio.h>
@@ -53,7 +54,7 @@ TextureManager::Load(const char* const name, TextureType type)
     unsigned char format = PF_UNKNOWN, numMipmaps = 0U, swizzled = 0U;
     unsigned int numImages = (TEX_TYPE_CUBE_MAP == type) ? 6U : 1U;
     void* imageBuffers[6U] = {NULL};
-    char fileNames[6U][260U] = {{'\0'}};
+    char fileNames[6U][CE_MAX_PATH] = {{'\0'}};
 
     if (TEX_TYPE_2D == type)
     {

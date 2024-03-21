@@ -154,13 +154,13 @@ WinAPIFSWrapper::RemoveFile(const char* const fileName)
 /**
 */
 int
-WinAPIFSWrapper::ListFiles(const char* const path, const char* const pattern, unsigned int maxNumFiles, char filesOut[][260U])
+WinAPIFSWrapper::ListFiles(const char* const path, const char* const pattern, unsigned int maxNumFiles, char filesOut[][CE_MAX_PATH])
 {
     CE_ASSERT(path != NULL && pattern != NULL, "FSWrapper::ListFiles(): invalid pointer passed\n");
 
-    TCHAR searchPath[MAX_PATH] = {'\0'};
+    TCHAR searchPath[CE_MAX_PATH] = {'\0'};
     size_t patternLength = strlen(pattern);
-    strncpy(searchPath, path, MAX_PATH - patternLength - 1U);
+    strncpy(searchPath, path, CE_MAX_PATH - patternLength - 1U);
     strcat(searchPath, "\\");
     strcat(searchPath, pattern);
 
@@ -186,7 +186,7 @@ WinAPIFSWrapper::ListFiles(const char* const path, const char* const pattern, un
 const char*
 WinAPIFSWrapper::GetAppDataDirectory()
 {
-    static TCHAR AppDataDirectory[MAX_PATH] = {'\0'};
+    static TCHAR AppDataDirectory[CE_MAX_PATH] = {'\0'};
     PWSTR path = NULL;
 #if __CE_DEBUG__
     HRESULT result =
@@ -199,7 +199,7 @@ WinAPIFSWrapper::GetAppDataDirectory()
     );
     CE_ASSERT(SUCCEEDED(result), "FSWrapper::GetAppDataDirectory(): failed to get app data directory\n");
 
-    wcstombs(AppDataDirectory, path, MAX_PATH);
+    wcstombs(AppDataDirectory, path, CE_MAX_PATH);
 
     CoTaskMemFree(path);
 
@@ -212,16 +212,16 @@ WinAPIFSWrapper::GetAppDataDirectory()
 const char*
 WinAPIFSWrapper::GetBinDirectory()
 {
-    static TCHAR BinDirectory[MAX_PATH] = {'\0'};
+    static TCHAR BinDirectory[CE_MAX_PATH] = {'\0'};
 #if __CE_DEBUG__
     DWORD result =
 #endif
     GetModuleFileName(
         NULL,           /* [in, optional] HMODULE hModule       */
         BinDirectory,   /* [out]          LPSTR   lpFilename    */
-        MAX_PATH        /* [in]           DWORD   nSize         */
+        CE_MAX_PATH     /* [in]           DWORD   nSize         */
     );
-    CE_ASSERT(result != MAX_PATH, "FSWrapper::GetBinDirectory(): failed to get bin directory\n");
+    CE_ASSERT(result != CE_MAX_PATH, "FSWrapper::GetBinDirectory(): failed to get bin directory\n");
 
     char* lastSlash = strrchr(BinDirectory, '\\');
     if (lastSlash != NULL) *lastSlash = '\0';

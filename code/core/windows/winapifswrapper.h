@@ -10,6 +10,7 @@
 */
 #include "core/fileio.h"
 #include "core/filehandle.h"
+#include "chrisslyconfig.h"
 
 //------------------------------------------------------------------------------
 namespace chrissly
@@ -35,7 +36,7 @@ public:
     /// delete a file
     static bool RemoveFile(const char* const fileName);
     /// list all files in a directory, returns the number of files in the list
-    static int ListFiles(const char* const path, const char* const pattern, unsigned int maxNumFiles, char filesOut[][260U]);
+    static int ListFiles(const char* const path, const char* const pattern, unsigned int maxNumFiles, char filesOut[][CE_MAX_PATH]);
     /// return common application data path (usually: C:\Documents and Settings\username\Application Data)
     static const char* GetAppDataDirectory();
     /// return path of the executable file of the current process
