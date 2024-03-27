@@ -423,6 +423,7 @@ SceneManager::SetShadowColour(unsigned int colour)
     ce_colour_convert_u32_to_float(colour, rgb.x, rgb.y, rgb.z, alpha);
     this->destRenderSystem->GetDefaultShadowCasterGpuProgram()->GetDefaultParameters()->SetNamedConstant("shadowColour", rgb);
     this->destRenderSystem->GetDefaultShadowCasterSkeletalAnimGpuProgram()->GetDefaultParameters()->SetNamedConstant("shadowColour", rgb);
+    this->destRenderSystem->GetDefaultTransparentShadowCasterAlphaTestGpuProgram()->GetDefaultParameters()->SetNamedConstant("shadowColour", rgb);
 #endif
 }
 
@@ -792,6 +793,11 @@ SceneManager::RenderTransparentTextureShadowCasterQueueGroupObjects(RenderQueue*
         else
         {
             pass->SetGpuProgram(this->destRenderSystem->GetDefaultTransparentShadowCasterGpuProgram());
+        }
+#elif __CE_GLES2__
+        if (pass->GetAlphaFunction() != CF_ALWAYS)
+        {
+            pass->SetGpuProgram(this->destRenderSystem->GetDefaultTransparentShadowCasterAlphaTestGpuProgram());
         }
 #endif
         this->destRenderSystem->SetPass(pass);

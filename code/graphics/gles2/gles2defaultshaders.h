@@ -290,6 +290,35 @@ const char* const DefaultFragmentShaderShadowCaster =
 
 //------------------------------------------------------------------------------
 /**
+    Shadowcaster, Transparent
+*/
+const char* const DefaultVertexShaderTransparentShadowCaster =
+    "#version 100\n"
+    "attribute vec2 texCoordIn;\n"
+    "attribute vec4 position;\n"
+    "uniform mat4 worldViewProjMatrix;\n"
+    "varying vec2 texCoordOut;\n"
+    "void main()\n"
+    "{\n"
+    "    gl_Position = worldViewProjMatrix * position;\n"
+    "    texCoordOut = texCoordIn;\n"
+    "}\n";
+
+const char* const DefaultFragmentShaderTransparentShadowCaster =
+    "#version 100\n"
+    "precision mediump float;\n"
+    "varying vec2 texCoordOut;\n"
+    "uniform vec3 shadowColour;"
+    "uniform sampler2D texture;\n"
+    "void main()\n"
+    "{\n"
+    "    vec4 albedo = texture2D(texture, texCoordOut);\n"
+    "    if (albedo.a < 0.001) discard;\n"
+    "    gl_FragColor = vec4(shadowColour, albedo.a);\n"
+    "}\n";
+
+//------------------------------------------------------------------------------
+/**
     Shadowreceiver
 */
 const char* const DefaultVertexShaderShadowReceiver =

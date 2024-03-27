@@ -37,8 +37,8 @@ public:
     static GLint GetInternalFormat(graphics::PixelFormat pf);
     /// return true if the PixelFormat is a compressed format
     static bool IsCompressed(graphics::PixelFormat pf);
-    /// return the byte size of an compressed image with the given format and dimensions
-    static GLsizei GetImageSize(graphics::PixelFormat pf, GLsizei width, GLsizei height);
+    /// return the byte size of an image with the given format and dimensions
+    static GLsizei GetImageSize(graphics::PixelFormat pf, unsigned int width, unsigned int height);
     /// return a OpenGL ES equivalent for a FrameBufferType value
     static GLbitfield Get(graphics::FrameBufferType fbt);
     /// return a OpenGL ES equivalent for a TextureType value

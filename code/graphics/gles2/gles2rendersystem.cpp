@@ -104,6 +104,7 @@ GLES2RenderSystem::Initialise(void* const customParams)
     this->defaultGpuProgramMorphAnim = CE_NEW GLES2GpuProgram(DefaultVertexShaderMorphAnim, DefaultFragmentShaderMorphAnim);
     this->defaultGpuProgramSkeletalAnim = CE_NEW GLES2GpuProgram(DefaultVertexShaderSkeletalAnim, DefaultFragmentShaderSkeletalAnim);
     this->defaultGpuProgramShadowCaster = CE_NEW GLES2GpuProgram(DefaultVertexShaderShadowCaster, DefaultFragmentShaderShadowCaster);
+    this->defaultGpuProgramTransparentShadowCasterAlphaTest = CE_NEW GLES2GpuProgram(DefaultVertexShaderTransparentShadowCaster, DefaultFragmentShaderTransparentShadowCaster);
     this->defaultGpuProgramShadowReceiver = CE_NEW GLES2GpuProgram(DefaultVertexShaderShadowReceiver, DefaultFragmentShaderShadowReceiver);
     this->defaultGpuProgramShadowCasterSkeletalAnim = CE_NEW GLES2GpuProgram(DefaultVertexShaderShadowCasterSkeletalAnim, DefaultFragmentShaderShadowCasterSkeletalAnim);
     this->currentGpuProgram = this->defaultGpuProgram;
@@ -131,6 +132,8 @@ GLES2RenderSystem::Shutdown()
     this->defaultGpuProgramSkeletalAnim = NULL;
     CE_DELETE this->defaultGpuProgramShadowCaster;
     this->defaultGpuProgramShadowCaster = NULL;
+    CE_DELETE this->defaultGpuProgramTransparentShadowCasterAlphaTest;
+    this->defaultGpuProgramTransparentShadowCasterAlphaTest = NULL;
     CE_DELETE this->defaultGpuProgramShadowReceiver;
     CE_DELETE this->defaultGpuProgramShadowCasterSkeletalAnim;
     this->defaultGpuProgramShadowCasterSkeletalAnim = NULL;
@@ -686,6 +689,16 @@ GLES2RenderSystem::GetDefaultShadowCasterGpuProgram() const
 {
     CE_ASSERT(this->defaultGpuProgramShadowCaster != NULL, "GLES2RenderSystem::GetDefaultShadowCasterGpuProgram(): gpu program not valid\n");
     return this->defaultGpuProgramShadowCaster;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+GLES2GpuProgram*
+GLES2RenderSystem::GetDefaultTransparentShadowCasterAlphaTestGpuProgram() const
+{
+    CE_ASSERT(this->defaultGpuProgramTransparentShadowCasterAlphaTest != NULL, "GLES2RenderSystem::GetDefaultTransparentShadowCasterAlphaTestGpuProgram(): gpu program not valid\n");
+    return this->defaultGpuProgramTransparentShadowCasterAlphaTest;
 }
 
 //------------------------------------------------------------------------------

@@ -74,6 +74,8 @@ public:
     const core::Matrix4* GetDefaultLightShaderParams() const;
     /// get pointer to the default shadow caster gpu program
     GLES2GpuProgram* GetDefaultShadowCasterGpuProgram() const;
+    /// get pointer to the default transparent shadow caster alpha test gpu program
+    GLES2GpuProgram* GetDefaultTransparentShadowCasterAlphaTestGpuProgram() const;
     /// get pointer to the default shadow receiver gpu program
     GLES2GpuProgram* GetDefaultShadowReceiverGpuProgram() const;
     /// get pointer to the default shadow caster skeletal anim gpu program
@@ -106,6 +108,7 @@ private:
     GLES2GpuProgram* defaultGpuProgramMorphAnim;
     GLES2GpuProgram* defaultGpuProgramSkeletalAnim;
     GLES2GpuProgram* defaultGpuProgramShadowCaster;
+    GLES2GpuProgram* defaultGpuProgramTransparentShadowCasterAlphaTest;
     GLES2GpuProgram* defaultGpuProgramShadowReceiver;
     GLES2GpuProgram* defaultGpuProgramShadowCasterSkeletalAnim;
     GLES2GpuProgram* currentGpuProgram;

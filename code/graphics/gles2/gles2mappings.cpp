@@ -245,12 +245,12 @@ GLES2Mappings::IsCompressed(graphics::PixelFormat pf)
 /**
 */
 GLsizei
-GLES2Mappings::GetImageSize(graphics::PixelFormat pf, GLsizei width, GLsizei height)
+GLES2Mappings::GetImageSize(graphics::PixelFormat pf, unsigned int width, unsigned int height)
 {
     switch (pf)
     {
-        // ETC1 provides 6x compression of 24-bit RGB
-        case graphics::PF_ETC1_RGB8: return (GLsizei)(width * height) >> 1U;
+        case graphics::PF_R8G8B8A8:     return (GLsizei)((width * height) << 2U);
+        case graphics::PF_ETC1_RGB8:    return (GLsizei)((width * height) >> 1U); // ETC1 provides 6x compression of 24-bit RGB
         default: CE_ASSERT(false, "GLES2Mappings::GetImageSize(): illegal or not supported PixelFormat '%i'\n", pf);
     }
 
