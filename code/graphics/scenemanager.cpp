@@ -7,10 +7,6 @@
 #include "meshmanager.h"
 #include "miscutils.h"
 #include "debug.h"
-#include <stdio.h>
-#if __CE_D3D11__
-#include "d3d11/d3d11mappings.h"
-#endif
 
 namespace chrissly
 {

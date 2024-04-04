@@ -37,6 +37,8 @@ public:
     void Exit();
     /// returns if the statemanger is running
     bool IsRunning() const;
+    /// stops the statemanager without releasing the current state
+    void Stop();
     /// returns pointer to the previous state
     State const* GetPreviousState() const;
     /// returns pointer to the next state we transfering to

@@ -110,6 +110,15 @@ StateManager::IsRunning() const
 //------------------------------------------------------------------------------
 /**
 */
+void
+StateManager::Stop()
+{
+    this->isRunning = false;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
 State const*
 StateManager::GetPreviousState() const
 {
