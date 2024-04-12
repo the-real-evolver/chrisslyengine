@@ -20,12 +20,12 @@ GLES2GpuProgram::GLES2GpuProgram()
 //------------------------------------------------------------------------------
 /**
 */
-GLES2GpuProgram::GLES2GpuProgram(const char* const vertexShaderSource, const char* const fragmentShaderSource) :
+GLES2GpuProgram::GLES2GpuProgram(const char* const vertexShaderSource, const char* const fragmentShaderSource, const char* const* const macros) :
     defaultParams(NULL)
 {
-    GLuint vertexShader = CreateShaderFromString(GL_VERTEX_SHADER, vertexShaderSource);
+    GLuint vertexShader = CreateShaderFromString(GL_VERTEX_SHADER, vertexShaderSource, macros);
     CE_ASSERT(0U != vertexShader, "GLES2GpuProgram::GLES2GpuProgram(): Could not create vertex shader.\n");
-    GLuint fragmentShader = CreateShaderFromString(GL_FRAGMENT_SHADER, fragmentShaderSource);
+    GLuint fragmentShader = CreateShaderFromString(GL_FRAGMENT_SHADER, fragmentShaderSource, macros);
     CE_ASSERT(0U != fragmentShader, "GLES2GpuProgram::GLES2GpuProgram(): Could not create fragment shader.\n");
     this->gpuProgram = CreateProgram(vertexShader, fragmentShader);
     CE_ASSERT(0U != this->gpuProgram, "GLES2GpuProgram::GLES2GpuProgram(): Could not create program.\n");
@@ -248,12 +248,48 @@ GLES2GpuProgram::ExtractConstantDefs()
 /**
 */
 GLuint
-GLES2GpuProgram::CreateShaderFromString(GLenum shaderType, const char* source)
+GLES2GpuProgram::CreateShaderFromString(GLenum shaderType, const char* source, const char* const* const macros)
 {
+    char* srcMod = (char*)source;
+    if (macros != NULL)
+    {
+        unsigned int versionLen = 0U;
+        const char* versionBegin = strstr(source, "#version");
+        const char* versionEnd = NULL;
+        if (versionBegin != NULL)
+        {
+            versionEnd = strchr(versionBegin, '\n');
+            versionLen = (versionEnd - versionBegin) + 1U;
+        }
+
+        unsigned int definesLen = 0U, index = 0U;
+        while (macros[index] != NULL)
+        {
+            definesLen += strlen("#define  \n") + strlen(macros[index]) + strlen(macros[index + 1U]);
+            index += 2U;
+        }
+
+        unsigned int sourceLen = strlen(source);
+        srcMod = (char*)CE_MALLOC(sourceLen + definesLen);
+        memset(srcMod, 0, sourceLen + definesLen);
+        if (versionLen > 0U) strncpy(srcMod, versionBegin, versionLen);
+        index = 0U;
+        while (macros[index] != NULL)
+        {
+            strcat(srcMod, "#define ");
+            strcat(srcMod, macros[index]);
+            strcat(srcMod, " ");
+            strcat(srcMod, macros[index + 1U]);
+            strcat(srcMod, "\n");
+            index += 2U;
+        }
+        strcat(srcMod, versionLen > 0U ? versionEnd + 1U : source);
+    }
+
     GLuint shader = glCreateShader(shaderType);
     if (shader != 0U)
     {
-        glShaderSource(shader, 1, &source, NULL);
+        glShaderSource(shader, 1, &srcMod, NULL);
         glCompileShader(shader);
         GLint compiled = 0;
         glGetShaderiv(shader, GL_COMPILE_STATUS, &compiled);
@@ -275,6 +311,8 @@ GLES2GpuProgram::CreateShaderFromString(GLenum shaderType, const char* source)
             }
         }
     }
+
+    if (macros != NULL) CE_FREE(srcMod);
 
     return shader;
 }

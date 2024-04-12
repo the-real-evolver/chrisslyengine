@@ -54,11 +54,8 @@ GpuProgramManager::LoadFromSource(const char* const name, const char* const sour
 /**
 */
 GpuProgram*
-GpuProgramManager::LoadFromSource(const char *const name, const char *const vertexShaderSource, const char *const fragmentShaderSource)
+GpuProgramManager::LoadFromSource(const char *const name, const char *const vertexShaderSource, const char *const fragmentShaderSource, const char* const* const macros)
 {
-    CE_UNREFERENCED_PARAMETER(vertexShaderSource);
-    CE_UNREFERENCED_PARAMETER(fragmentShaderSource);
-
     GpuProgram* program = (GpuProgram*)ce_hash_table_find(&this->resources, name, strlen(name));
     if (program != NULL)
     {
@@ -66,8 +63,11 @@ GpuProgramManager::LoadFromSource(const char *const name, const char *const vert
     }
 
 #if __CE_GLES2__
-    program = CE_NEW GpuProgram(vertexShaderSource, fragmentShaderSource);
+    program = CE_NEW GpuProgram(vertexShaderSource, fragmentShaderSource, macros);
     ce_hash_table_insert(&this->resources, name, strlen(name), program);
+#else
+    CE_UNREFERENCED_PARAMETER(vertexShaderSource);
+    CE_UNREFERENCED_PARAMETER(fragmentShaderSource);
 #endif
 
     return program;
