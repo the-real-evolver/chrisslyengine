@@ -210,7 +210,7 @@ def ce_write_mesh(file_path, objects, scale_uniform, operator_instance, armature
 
             # scaling and axis conversion
             if armature == None:
-                mesh.transform((Matrix.Scale(scale, 4) @ axis_conversion(to_forward='-Z', to_up='Y').to_4x4()) @ ob.matrix_world)
+                mesh.transform((Matrix.Scale(scale, 4) @ axis_conversion(from_forward='-Y', to_forward='Z', to_up='Y').to_4x4()) @ ob.matrix_world)
 
             for index, mat_slot in enumerate(ob.material_slots):
                 # 2. write submesh chunk id
@@ -337,7 +337,7 @@ def ce_write_positions(file_path, objects, scale_uniform):
             bm.free()
 
             # scaling and axis conversion
-            mesh.transform((Matrix.Scale(scale, 4) @ axis_conversion(to_forward='-Z', to_up='Y').to_4x4()) @ ob.matrix_world)
+            mesh.transform((Matrix.Scale(scale, 4) @ axis_conversion(from_forward='-Y', to_forward='Z', to_up='Y').to_4x4()) @ ob.matrix_world)
 
             # write positions
             for face in mesh.polygons:
