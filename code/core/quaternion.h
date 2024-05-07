@@ -34,11 +34,11 @@ public:
     void FromAngleAxis(float rfAngle, const Vector3& rkAxis);
     /// assign operator
     Quaternion& operator = (const Quaternion& rkQ);
-    /// quaternion addition
+    /// quaternion addition (average rotations)
     Quaternion operator + (const Quaternion& rkQ) const;
     /// quaternion subtraction
     Quaternion operator - (const Quaternion& rkQ) const;
-    /// quaternion multiplication
+    /// quaternion multiplication (compose rotations)
     Quaternion operator * (const Quaternion& rkQ) const;
     /// rotation of a vector by a quaternion
     Vector3 operator * (const Vector3& rkVector) const;
