@@ -135,12 +135,12 @@ GLES2RenderSystem::Shutdown()
     CE_DELETE this->defaultGpuProgramTransparentShadowCasterAlphaTest;
     this->defaultGpuProgramTransparentShadowCasterAlphaTest = NULL;
     CE_DELETE this->defaultGpuProgramShadowReceiver;
+    this->defaultGpuProgramShadowReceiver = NULL;
     CE_DELETE this->defaultGpuProgramShadowCasterSkeletalAnim;
     this->defaultGpuProgramShadowCasterSkeletalAnim = NULL;
-    this->defaultGpuProgramShadowReceiver = NULL;
     this->currentGpuProgram = NULL;
 
-    CE_LOG("GLES2RenderSystem::Shutdown\n");
+    CE_LOG("GLES2RenderSystem::Shutdown()\n");
 }
 
 //------------------------------------------------------------------------------

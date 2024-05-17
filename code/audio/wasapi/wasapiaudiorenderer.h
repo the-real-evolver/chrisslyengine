@@ -67,7 +67,6 @@ private:
     UINT32 bufferFrameCount;
 
     WAVEFORMATEX deviceFormat;
-    int resampleBuffer[1024U];
     int channelMixBuffer[65536U];
 };
 

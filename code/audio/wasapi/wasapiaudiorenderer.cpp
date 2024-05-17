@@ -43,7 +43,6 @@ WASAPIAudioRenderer::WASAPIAudioRenderer() :
 {
     Singleton = this;
     memset(&this->deviceFormat, 0, sizeof(this->deviceFormat));
-    memset(this->resampleBuffer, 0, sizeof(this->resampleBuffer));
     memset(this->channelMixBuffer, 0, sizeof(this->channelMixBuffer));
 }
 
@@ -89,6 +88,7 @@ WASAPIAudioRenderer::Initialise(void* const customParams)
     WAVEFORMATEX* format = NULL;
     result = this->audioClient->GetMixFormat(&format);
     CE_ASSERT(SUCCEEDED(result), "WASAPIAudioRenderer::Initialise(): failed to get mix format\n");
+    format->nSamplesPerSec = 44100U;
     memcpy(&this->deviceFormat, format, sizeof(this->deviceFormat));
     format->wFormatTag = WAVE_FORMAT_PCM;
     format->nChannels = 2U;
@@ -98,12 +98,12 @@ WASAPIAudioRenderer::Initialise(void* const customParams)
     format->cbSize = 0U;
 
     REFERENCE_TIME hnsRequestedDuration = (REFERENCE_TIME)(RequestedFrameDurationInSeconds * (double)ReftimesPerSec);
-    result = this->audioClient->Initialize(AUDCLNT_SHAREMODE_SHARED, 0U, hnsRequestedDuration, 0, format, NULL);
+    result = this->audioClient->Initialize(AUDCLNT_SHAREMODE_SHARED, AUDCLNT_STREAMFLAGS_AUTOCONVERTPCM | AUDCLNT_STREAMFLAGS_SRC_DEFAULT_QUALITY, hnsRequestedDuration, 0, format, NULL);
     if (FAILED(result))
     {
         format->nChannels = this->deviceFormat.nChannels;
         format->wBitsPerSample = this->deviceFormat.wBitsPerSample;
-        result = this->audioClient->Initialize(AUDCLNT_SHAREMODE_SHARED, 0U, hnsRequestedDuration, 0, format, NULL);
+        result = this->audioClient->Initialize(AUDCLNT_SHAREMODE_SHARED, AUDCLNT_STREAMFLAGS_AUTOCONVERTPCM | AUDCLNT_STREAMFLAGS_SRC_DEFAULT_QUALITY, hnsRequestedDuration, 0, format, NULL);
         CE_ASSERT(SUCCEEDED(result), "WASAPIAudioRenderer::Initialise(): failed to initialise audio client\n");
     }
     else
@@ -267,17 +267,8 @@ WASAPIAudioRenderer::RunAudioThread()
 
             if (data != NULL)
             {
-                // resample
-                if (this->deviceFormat.nSamplesPerSec != 44100U)
-                {
-                    unsigned int numSamplesToMix = (unsigned int)((double)numFramesAvailable * (44100.0 / (double)this->deviceFormat.nSamplesPerSec));
-                    audio::AudioSystem::Instance()->_Mix(numSamplesToMix, (unsigned char*)this->resampleBuffer);
-                    ce_audio_resample_s16_stereo(this->resampleBuffer, numSamplesToMix, this->channelMixBuffer, numFramesAvailable);
-                }
-                else
-                {
-                    audio::AudioSystem::Instance()->_Mix(numFramesAvailable, (unsigned char*)this->channelMixBuffer);
-                }
+                // mix
+                audio::AudioSystem::Instance()->_Mix(numFramesAvailable, (unsigned char*)this->channelMixBuffer);
 
                 // down-mix or up-mix
                 switch (this->deviceFormat.nChannels)
