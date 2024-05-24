@@ -27,6 +27,8 @@ public:
     unsigned int GetType() const;
     /// gets the window handle
     EGLNativeWindowType GetWindowHandle() const;
+    /// returns whether msaa is supported and enabled
+    bool IsMSAAEnabled() const;
 
 private:
     /// private default constructor
@@ -36,6 +38,7 @@ private:
     EGLDisplay display;
     EGLSurface surface;
     EGLContext context;
+    bool msaaEnable;
 };
 
 } // namespace chrissly

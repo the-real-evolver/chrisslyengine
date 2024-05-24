@@ -121,6 +121,8 @@ private:
 
     GLint numTextureUnits;
     GLint maxVertexAttribs;
+
+    bool msaaEnable;
 };
 
 } // namespace chrissly

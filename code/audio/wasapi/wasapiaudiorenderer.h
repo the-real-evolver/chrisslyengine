@@ -65,9 +65,6 @@ private:
     IAudioClient* audioClient;
     IAudioRenderClient* renderClient;
     UINT32 bufferFrameCount;
-
-    WAVEFORMATEX deviceFormat;
-    int channelMixBuffer[65536U];
 };
 
 } // namespace chrissly

@@ -41,7 +41,8 @@ GLES2RenderSystem::GLES2RenderSystem() :
     defaultGpuProgramShadowCasterSkeletalAnim(NULL),
     currentGpuProgram(NULL),
     numTextureUnits(0),
-    maxVertexAttribs(0)
+    maxVertexAttribs(0),
+    msaaEnable(false)
 {
     Singleton = this;
 
@@ -152,11 +153,12 @@ GLES2RenderSystem::SetRenderTarget(graphics::RenderTarget* const target)
     if ('EGLW' == target->GetType())
     {
         glBindFramebuffer(GL_FRAMEBUFFER, 0U);
+        this->msaaEnable = ((EGLRenderWindow*)target)->IsMSAAEnabled();
     }
     else if ('GLRT' == target->GetType())
     {
-        GLES2RenderTexture* renderTexture = (GLES2RenderTexture*)target;
-        glBindFramebuffer(GL_FRAMEBUFFER, renderTexture->GetFBO());
+        glBindFramebuffer(GL_FRAMEBUFFER, ((GLES2RenderTexture*)target)->GetFBO());
+        this->msaaEnable = false;
     }
     CE_GL_ERROR_CHECK("glBindFramebuffer");
 }
@@ -457,6 +459,7 @@ GLES2RenderSystem::SetPass(graphics::Pass* const pass)
     {
         glDisable(GL_BLEND);
     }
+    (pass->GetAlphaToCoverageEnabled() && this->msaaEnable) ? glEnable(GL_SAMPLE_ALPHA_TO_COVERAGE) : glDisable(GL_SAMPLE_ALPHA_TO_COVERAGE);
 
     // depth check
     pass->GetDepthCheckEnabled() ? glEnable(GL_DEPTH_TEST) : glDisable(GL_DEPTH_TEST);

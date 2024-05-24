@@ -25,7 +25,8 @@ EGLRenderWindow::EGLRenderWindow(void* windowHandle) :
     window((EGLNativeWindowType)windowHandle),
     display(EGL_NO_DISPLAY),
     surface(EGL_NO_SURFACE),
-    context(EGL_NO_CONTEXT)
+    context(EGL_NO_CONTEXT),
+    msaaEnable(false)
 {
 
 }
@@ -64,7 +65,18 @@ EGLRenderWindow::Create()
     // Here specify the attributes of the desired configuration.
     // Below, we select an EGLConfig with at least 8 bits per color
     // component compatible with on-screen windows
-    const EGLint attribs[] =
+    const EGLint attribsMSAA4x[] =
+    {
+        EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
+        EGL_BLUE_SIZE, 8,
+        EGL_GREEN_SIZE, 8,
+        EGL_RED_SIZE, 8,
+        EGL_DEPTH_SIZE, 24,
+        EGL_SAMPLE_BUFFERS, 1,
+        EGL_SAMPLES, 4,
+        EGL_NONE
+    };
+    const EGLint attribsDefault[] =
     {
         EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
         EGL_BLUE_SIZE, 8,
@@ -77,7 +89,16 @@ EGLRenderWindow::Create()
     EGLConfig config;
 
     // pick the first EGLConfig that matches
-    eglChooseConfig(this->display, attribs, &config, 1, &numConfigs);
+    if (!eglChooseConfig(this->display, attribsMSAA4x, &config, 1, &numConfigs))
+    {
+        EGLBoolean result = eglChooseConfig(this->display, attribsDefault, &config, 1, &numConfigs);
+        CE_ASSERT(result, "EGLRenderWindow::Create(): failed to find a matching config");
+        this->msaaEnable = false;
+    }
+    else
+    {
+        this->msaaEnable = true;
+    }
 
 #if __CE_ANDROID__
     // EGL_NATIVE_VISUAL_ID is an attribute of the EGLConfig that is
@@ -136,6 +157,15 @@ EGLNativeWindowType
 EGLRenderWindow::GetWindowHandle() const
 {
     return this->window;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+bool
+EGLRenderWindow::IsMSAAEnabled() const
+{
+    return this->msaaEnable;
 }
 
 } // namespace chrissly

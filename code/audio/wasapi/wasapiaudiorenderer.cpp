@@ -4,8 +4,6 @@
 //------------------------------------------------------------------------------
 #include "wasapiaudiorenderer.h"
 #include "audiosystem.h"
-#include "dsp/samplerateconverter.h"
-#include "dsp/mixer.h"
 #include "miscutils.h"
 #include <functiondiscoverykeys_devpkey.h>
 
@@ -42,8 +40,6 @@ WASAPIAudioRenderer::WASAPIAudioRenderer() :
     bufferFrameCount(0U)
 {
     Singleton = this;
-    memset(&this->deviceFormat, 0, sizeof(this->deviceFormat));
-    memset(this->channelMixBuffer, 0, sizeof(this->channelMixBuffer));
 }
 
 //------------------------------------------------------------------------------
@@ -89,7 +85,6 @@ WASAPIAudioRenderer::Initialise(void* const customParams)
     result = this->audioClient->GetMixFormat(&format);
     CE_ASSERT(SUCCEEDED(result), "WASAPIAudioRenderer::Initialise(): failed to get mix format\n");
     format->nSamplesPerSec = 44100U;
-    memcpy(&this->deviceFormat, format, sizeof(this->deviceFormat));
     format->wFormatTag = WAVE_FORMAT_PCM;
     format->nChannels = 2U;
     format->wBitsPerSample = 16U;
@@ -99,18 +94,7 @@ WASAPIAudioRenderer::Initialise(void* const customParams)
 
     REFERENCE_TIME hnsRequestedDuration = (REFERENCE_TIME)(RequestedFrameDurationInSeconds * (double)ReftimesPerSec);
     result = this->audioClient->Initialize(AUDCLNT_SHAREMODE_SHARED, AUDCLNT_STREAMFLAGS_AUTOCONVERTPCM | AUDCLNT_STREAMFLAGS_SRC_DEFAULT_QUALITY, hnsRequestedDuration, 0, format, NULL);
-    if (FAILED(result))
-    {
-        format->nChannels = this->deviceFormat.nChannels;
-        format->wBitsPerSample = this->deviceFormat.wBitsPerSample;
-        result = this->audioClient->Initialize(AUDCLNT_SHAREMODE_SHARED, AUDCLNT_STREAMFLAGS_AUTOCONVERTPCM | AUDCLNT_STREAMFLAGS_SRC_DEFAULT_QUALITY, hnsRequestedDuration, 0, format, NULL);
-        CE_ASSERT(SUCCEEDED(result), "WASAPIAudioRenderer::Initialise(): failed to initialise audio client\n");
-    }
-    else
-    {
-        this->deviceFormat.nChannels = 2U;
-        this->deviceFormat.wBitsPerSample = 16U;
-    }
+    CE_ASSERT(SUCCEEDED(result), "WASAPIAudioRenderer::Initialise(): failed to initialise audio client\n");
 
     result = this->audioClient->GetBufferSize(&this->bufferFrameCount);
     CE_ASSERT(SUCCEEDED(result), "WASAPIAudioRenderer::Initialise(): failed to get buffer size\n");
@@ -267,36 +251,7 @@ WASAPIAudioRenderer::RunAudioThread()
 
             if (data != NULL)
             {
-                // mix
-                audio::AudioSystem::Instance()->_Mix(numFramesAvailable, (unsigned char*)this->channelMixBuffer);
-
-                // down-mix or up-mix
-                switch (this->deviceFormat.nChannels)
-                {
-                    case 1U:
-                        switch (this->deviceFormat.wBitsPerSample)
-                        {
-                            case 32U:
-                                ce_audio_downmix_s16_stereo_s32_mono((short*)this->channelMixBuffer, (int*)data, numFramesAvailable);
-                                break;
-                            default:
-                                break;
-                        }
-
-                        break;
-                    case 2U:
-                        switch (this->deviceFormat.wBitsPerSample)
-                        {
-                            case 16U:
-                                memcpy(data, this->channelMixBuffer, numFramesAvailable * 4U);
-                                break;
-                            default:
-                                break;
-                        }
-                        break;
-                    default:
-                        break;
-                }
+                audio::AudioSystem::Instance()->_Mix(numFramesAvailable, data);
             }
 
             result = this->renderClient->ReleaseBuffer(numFramesAvailable, flags);
