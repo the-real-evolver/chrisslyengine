@@ -20,6 +20,22 @@ namespace chrissly
 namespace graphics
 {
 
+// this struct has to be passed to GraphicsSystem::Initialise() in order to initialise the RenderWindow and RenderSystem
+struct ConfigOptions
+{
+    /// default constructor
+    ConfigOptions() : instance(NULL), windowWidth(0), windowHeight(0), fullScreen(false), depthBuffer(true), msaaEnable(false) {};
+    /// constructor with all parameters
+    ConfigOptions(void* inst, int width, int height, bool fs, bool depth = true, bool msaa = false) : instance(inst), windowWidth(width), windowHeight(height), fullScreen(fs), depthBuffer(depth), msaaEnable(msaa) {};
+
+    void* instance;
+    int windowWidth;
+    int windowHeight;
+    bool fullScreen;
+    bool depthBuffer;
+    bool msaaEnable;
+};
+
 class GraphicsSystem
 {
 public:

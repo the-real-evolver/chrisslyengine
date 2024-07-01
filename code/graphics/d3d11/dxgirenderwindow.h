@@ -13,27 +13,16 @@
 //------------------------------------------------------------------------------
 namespace chrissly
 {
-// this struct has to be passed to GraphicsSystem::Initialise() in order to initialise the D3D11RenderWindow
-struct D3D11ConfigOptions
+namespace graphics
 {
-    /// default constructor
-    D3D11ConfigOptions() : instance(NULL), windowWidth(0), windowHeight(0), fullScreen(false), depthBuffer(true), msaaEnable(false) {};
-    /// constructor with all parameters
-    D3D11ConfigOptions(HINSTANCE inst, int width, int height, bool fs, bool depth = true, bool msaa = false) : instance(inst), windowWidth(width), windowHeight(height), fullScreen(fs), depthBuffer(depth), msaaEnable(msaa) {};
-
-    HINSTANCE instance;
-    int windowWidth;
-    int windowHeight;
-    bool fullScreen;
-    bool depthBuffer;
-    bool msaaEnable;
-};
+    struct ConfigOptions;
+}
 
 class DXGIRenderWindow : public graphics::RenderTarget
 {
 public:
     /// constructor with instance handle and device
-    DXGIRenderWindow(D3D11ConfigOptions* config, ID3D11Device* const dev);
+    DXGIRenderWindow(graphics::ConfigOptions* config, ID3D11Device* const dev);
     /// destructor
     ~DXGIRenderWindow();
     /// creates & displays the new window

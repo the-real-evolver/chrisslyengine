@@ -5,6 +5,7 @@
 #include "d3d11rendersystem.h"
 #include "d3d11mappings.h"
 #include "d3d11defaultshaders.h"
+#include "graphicssystem.h"
 #include "chrisslyconfig.h"
 #include "miscutils.h"
 #include "light.h"
@@ -80,8 +81,8 @@ D3D11RenderSystem::~D3D11RenderSystem()
 graphics::RenderWindow*
 D3D11RenderSystem::Initialise(void* const customParams)
 {
-    CE_ASSERT(customParams != NULL, "D3D11RenderSystem::Initialise(): customParams must not be NULL, pass a D3D11ConfigOptions pointer with a valid HINSTANCE to GraphicsSystem::Initialise()\n");
-    D3D11ConfigOptions* config = (D3D11ConfigOptions*)customParams;
+    CE_ASSERT(customParams != NULL, "D3D11RenderSystem::Initialise(): customParams must not be NULL, pass a ConfigOptions pointer with a valid HINSTANCE to GraphicsSystem::Initialise()\n");
+    graphics::ConfigOptions* config = (graphics::ConfigOptions*)customParams;
 
     /* create device */
     D3D_FEATURE_LEVEL featureLevels[] = {D3D_FEATURE_LEVEL_10_1};

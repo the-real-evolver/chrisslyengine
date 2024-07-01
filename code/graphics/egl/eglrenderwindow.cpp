@@ -3,6 +3,7 @@
 //  (C) 2012 Christian Bleicher
 //------------------------------------------------------------------------------
 #include "eglrenderwindow.h"
+#include "graphicssystem.h"
 #include "core/debug.h"
 #if __CE_ANDROID__
 #include <android/native_window.h>
@@ -21,12 +22,12 @@ EGLRenderWindow::EGLRenderWindow()
 //------------------------------------------------------------------------------
 /**
 */
-EGLRenderWindow::EGLRenderWindow(void* windowHandle) :
-    window((EGLNativeWindowType)windowHandle),
+EGLRenderWindow::EGLRenderWindow(graphics::ConfigOptions* config) :
+    window((EGLNativeWindowType)config->instance),
     display(EGL_NO_DISPLAY),
     surface(EGL_NO_SURFACE),
     context(EGL_NO_CONTEXT),
-    msaaEnable(false)
+    msaaEnable(config->msaaEnable)
 {
 
 }
@@ -89,15 +90,14 @@ EGLRenderWindow::Create()
     EGLConfig config;
 
     // pick the first EGLConfig that matches
-    if (!eglChooseConfig(this->display, attribsMSAA4x, &config, 1, &numConfigs))
+    if (this->msaaEnable && !eglChooseConfig(this->display, attribsMSAA4x, &config, 1, &numConfigs))
+    {
+        this->msaaEnable = false;
+    }
+    if (!this->msaaEnable)
     {
         EGLBoolean result = eglChooseConfig(this->display, attribsDefault, &config, 1, &numConfigs);
         CE_ASSERT(result, "EGLRenderWindow::Create(): failed to find a matching config");
-        this->msaaEnable = false;
-    }
-    else
-    {
-        this->msaaEnable = true;
     }
 
 #if __CE_ANDROID__

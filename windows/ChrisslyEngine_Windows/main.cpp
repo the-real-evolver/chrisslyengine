@@ -59,7 +59,7 @@ WinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prevInstance, _In_ LPSTR cmd
     CE_UNREFERENCED_PARAMETER(showCmd);
     CE_UNREFERENCED_PARAMETER(prevInstance);
 
-    D3D11ConfigOptions config(instance, 1280, 720, false, true, true);
+    ConfigOptions config(instance, 1280, 720, false, true, true);
     GraphicsSystem* graphicsSystem = new GraphicsSystem();
     RenderWindow* window = graphicsSystem->Initialise((void*)&config);
     Camera* camera = SceneManager::Instance()->CreateCamera("MainCamera");

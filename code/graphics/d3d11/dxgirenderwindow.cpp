@@ -4,6 +4,7 @@
 //------------------------------------------------------------------------------
 #include "dxgirenderwindow.h"
 #include "d3d11rendersystem.h"
+#include "graphicssystem.h"
 #include "debug.h"
 
 namespace chrissly
@@ -15,8 +16,8 @@ static const char* const WindowTitle = "ChrisslyEngine";
 //------------------------------------------------------------------------------
 /**
 */
-DXGIRenderWindow::DXGIRenderWindow(D3D11ConfigOptions* config, ID3D11Device* const dev) :
-    instance(config->instance),
+DXGIRenderWindow::DXGIRenderWindow(graphics::ConfigOptions* config, ID3D11Device* const dev) :
+    instance((HINSTANCE)config->instance),
     hwnd(NULL),
     device(dev),
     swapChain(NULL),

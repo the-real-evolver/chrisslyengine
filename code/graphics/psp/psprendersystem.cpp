@@ -4,6 +4,7 @@
 //------------------------------------------------------------------------------
 #include "psprendersystem.h"
 #include "pspmappings.h"
+#include "graphicssystem.h"
 #include "psphardwarebuffermanager.h"
 #include "common.h"
 #include "entity.h"
@@ -37,7 +38,8 @@ PSPRenderSystem::PSPRenderSystem() :
     activeViewport(NULL),
     lights(NULL),
     restoreLights(false),
-    ambientLight(0x00000000)
+    ambientLight(0x00000000),
+    aaEnable(false)
 {
     Singleton = this;
     memset(&this->lightPos, 0, sizeof(this->lightPos));
@@ -62,6 +64,10 @@ PSPRenderSystem::~PSPRenderSystem()
 graphics::RenderWindow*
 PSPRenderSystem::Initialise(void* const customParams)
 {
+    CE_ASSERT(customParams != NULL, "PSPRenderSystem::Initialise(): customParams must not be NULL, pass a ConfigOptions pointer to GraphicsSystem::Initialise()\n");
+    graphics::ConfigOptions* config = (graphics::ConfigOptions*)customParams;
+    this->aaEnable = config->msaaEnable;
+
     sceGuInit();
 
     graphics::RenderWindow* renderWindow = CE_NEW graphics::RenderWindow();
@@ -111,6 +117,14 @@ PSPRenderSystem::SetViewport(graphics::Viewport* const vp)
     int height = vp->GetActualHeight();
     int left = vp->GetActualLeft();
     int top = vp->GetActualTop();
+
+    // fake anti aliasing: blur the image by shifting the view back and forth by one pixel for each frame
+    if (this->aaEnable && graphics::GraphicsSystem::Instance()->GetAutoCreatedWindow() == vp->GetTarget())
+    {
+        static int offset = 0;
+        offset ^= 1;
+        top += offset;
+    }
 
     // set viewport within guard-band
     sceGuOffset(2048U - ((unsigned int)width >> 1U) - left, 2048U - ((unsigned int)height >> 1U) - top);

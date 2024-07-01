@@ -41,8 +41,9 @@ main(int argc, char* argv[])
     sceKernelRegisterExitCallback(cbid);
 
     // create and initialise graphicssystem
+    ConfigOptions config(NULL, 480, 272, false, true, true);
     GraphicsSystem* gs = new GraphicsSystem();
-    RenderWindow* window = gs->Initialise();
+    RenderWindow* window = gs->Initialise((void*)&config);
     // add a camera
     Camera* camera = SceneManager::Instance()->CreateCamera("MainCamera");
     // add viewport

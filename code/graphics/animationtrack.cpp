@@ -3,7 +3,7 @@
 //  (C) 2012 Christian Bleicher
 //------------------------------------------------------------------------------
 #include "animationtrack.h"
-#include "graphicssystem.h"
+#include "chrisslyarray.h"
 #include "memoryallocatorconfig.h"
 #include "chrisslymemory.h"
 

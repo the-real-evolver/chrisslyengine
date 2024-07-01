@@ -92,6 +92,7 @@ private:
     ScePspFMatrix4 projMat;
     ScePspFMatrix4 worldMat;
     ScePspFMatrix4 texMat;
+    bool aaEnable;
 };
 
 } // namespace chrissly

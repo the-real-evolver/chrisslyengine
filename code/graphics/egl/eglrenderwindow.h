@@ -12,11 +12,16 @@
 //------------------------------------------------------------------------------
 namespace chrissly
 {
+namespace graphics
+{
+    struct ConfigOptions;
+}
+
 class EGLRenderWindow : public graphics::RenderTarget
 {
 public:
     /// constructor with window handle
-    EGLRenderWindow(void* windowHandle);
+    EGLRenderWindow(graphics::ConfigOptions* config);
     /// destructor
     ~EGLRenderWindow();
     /// creates & displays the new window

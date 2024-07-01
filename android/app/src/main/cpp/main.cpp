@@ -82,8 +82,9 @@ Channel* channel;
 static void
 Enter(struct android_app* state)
 {
+    ConfigOptions config(state->window, 0, 0, false, true, true);
     graphicsSystem = new GraphicsSystem();
-    RenderWindow* window = graphicsSystem->Initialise(state->window);
+    RenderWindow* window = graphicsSystem->Initialise((void*)&config);
     Camera* camera = SceneManager::Instance()->CreateCamera("MainCamera");
     camera->SetAspectRatio((float)window->GetWidth() / (float)window->GetHeight());
     camera->SetPosition(0.0f, 0.0f, 0.9f);

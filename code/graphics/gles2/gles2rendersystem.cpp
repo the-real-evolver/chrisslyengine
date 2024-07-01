@@ -6,6 +6,7 @@
 #include "gles2mappings.h"
 #include "gles2defaultshaders.h"
 #include "gles2debug.h"
+#include "graphicssystem.h"
 #include "chrisslyconfig.h"
 #include "light.h"
 #include "entity.h"
@@ -67,7 +68,10 @@ GLES2RenderSystem::~GLES2RenderSystem()
 graphics::RenderWindow*
 GLES2RenderSystem::Initialise(void* const customParams)
 {
-    graphics::RenderWindow* renderWindow = CE_NEW graphics::RenderWindow(customParams);
+    CE_ASSERT(customParams != NULL, "GLES2RenderSystem::Initialise(): customParams must not be NULL, pass a ConfigOptions pointer with a valid EGLNativeWindowType handle to GraphicsSystem::Initialise()\n");
+    graphics::ConfigOptions* config = (graphics::ConfigOptions*)customParams;
+
+    graphics::RenderWindow* renderWindow = CE_NEW graphics::RenderWindow(config);
     renderWindow->Create();
 
     CE_PRINT_GL_STRING("Version", GL_VERSION);

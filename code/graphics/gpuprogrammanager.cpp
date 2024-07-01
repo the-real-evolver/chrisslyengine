@@ -68,6 +68,7 @@ GpuProgramManager::LoadFromSource(const char *const name, const char *const vert
 #else
     CE_UNREFERENCED_PARAMETER(vertexShaderSource);
     CE_UNREFERENCED_PARAMETER(fragmentShaderSource);
+    CE_UNREFERENCED_PARAMETER(macros);
 #endif
 
     return program;
