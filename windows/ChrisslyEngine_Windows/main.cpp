@@ -61,7 +61,7 @@ WinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prevInstance, _In_ LPSTR cmd
 
     ConfigOptions config(instance, 1280, 720, false, true, true);
     GraphicsSystem* graphicsSystem = new GraphicsSystem();
-    RenderWindow* window = graphicsSystem->Initialise((void*)&config);
+    RenderWindow* window = graphicsSystem->Initialise(&config);
     Camera* camera = SceneManager::Instance()->CreateCamera("MainCamera");
     camera->SetPosition(-0.5f, -0.25f, 1.7f);
     camera->SetOrientation(Quaternion());

@@ -24,11 +24,11 @@ namespace graphics
 struct ConfigOptions
 {
     /// default constructor
-    ConfigOptions() : instance(NULL), windowWidth(0), windowHeight(0), fullScreen(false), depthBuffer(true), msaaEnable(false) {};
+    ConfigOptions() : windowHandle(NULL), windowWidth(0), windowHeight(0), fullScreen(false), depthBuffer(true), msaaEnable(false) {};
     /// constructor with all parameters
-    ConfigOptions(void* inst, int width, int height, bool fs, bool depth = true, bool msaa = false) : instance(inst), windowWidth(width), windowHeight(height), fullScreen(fs), depthBuffer(depth), msaaEnable(msaa) {};
+    ConfigOptions(void* handle, int width, int height, bool fs, bool depth = true, bool msaa = false) : windowHandle(handle), windowWidth(width), windowHeight(height), fullScreen(fs), depthBuffer(depth), msaaEnable(msaa) {};
 
-    void* instance;
+    void* windowHandle;
     int windowWidth;
     int windowHeight;
     bool fullScreen;
@@ -50,7 +50,7 @@ public:
     /// destructor
     ~GraphicsSystem();
     /// initialise graphicssystem
-    RenderWindow* Initialise(void* const customParams = NULL);
+    RenderWindow* Initialise(ConfigOptions* const config);
     /// retrieves a pointer to the window that was created automatically
     RenderWindow* GetAutoCreatedWindow() const;
     /// render one frame

@@ -17,7 +17,7 @@ static const char* const WindowTitle = "ChrisslyEngine";
 /**
 */
 DXGIRenderWindow::DXGIRenderWindow(graphics::ConfigOptions* config, ID3D11Device* const dev) :
-    instance((HINSTANCE)config->instance),
+    instance((HINSTANCE)config->windowHandle),
     hwnd(NULL),
     device(dev),
     swapChain(NULL),

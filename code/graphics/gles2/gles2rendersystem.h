@@ -30,7 +30,7 @@ public:
     ~GLES2RenderSystem();
 
     /// start up the renderer
-    graphics::RenderWindow* Initialise(void* const customParams);
+    graphics::RenderWindow* Initialise(graphics::ConfigOptions* const config);
     /// shutdown the renderer and cleanup resources
     void Shutdown();
     /// set current render target to target, enabling its device context if needed

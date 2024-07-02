@@ -79,10 +79,9 @@ D3D11RenderSystem::~D3D11RenderSystem()
 /**
 */
 graphics::RenderWindow*
-D3D11RenderSystem::Initialise(void* const customParams)
+D3D11RenderSystem::Initialise(graphics::ConfigOptions* const config)
 {
-    CE_ASSERT(customParams != NULL, "D3D11RenderSystem::Initialise(): customParams must not be NULL, pass a ConfigOptions pointer with a valid HINSTANCE to GraphicsSystem::Initialise()\n");
-    graphics::ConfigOptions* config = (graphics::ConfigOptions*)customParams;
+    CE_ASSERT(config != NULL, "D3D11RenderSystem::Initialise(): config must not be NULL, pass a ConfigOptions pointer with a valid HINSTANCE to GraphicsSystem::Initialise()\n");
 
     /* create device */
     D3D_FEATURE_LEVEL featureLevels[] = {D3D_FEATURE_LEVEL_10_1};

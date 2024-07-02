@@ -22,8 +22,8 @@ EGLRenderWindow::EGLRenderWindow()
 //------------------------------------------------------------------------------
 /**
 */
-EGLRenderWindow::EGLRenderWindow(graphics::ConfigOptions* config) :
-    window((EGLNativeWindowType)config->instance),
+EGLRenderWindow::EGLRenderWindow(graphics::ConfigOptions* const config) :
+    window((EGLNativeWindowType)config->windowHandle),
     display(EGL_NO_DISPLAY),
     surface(EGL_NO_SURFACE),
     context(EGL_NO_CONTEXT),

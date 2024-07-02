@@ -21,7 +21,7 @@ class EGLRenderWindow : public graphics::RenderTarget
 {
 public:
     /// constructor with window handle
-    EGLRenderWindow(graphics::ConfigOptions* config);
+    EGLRenderWindow(graphics::ConfigOptions* const config);
     /// destructor
     ~EGLRenderWindow();
     /// creates & displays the new window

@@ -66,10 +66,9 @@ GLES2RenderSystem::~GLES2RenderSystem()
 /**
 */
 graphics::RenderWindow*
-GLES2RenderSystem::Initialise(void* const customParams)
+GLES2RenderSystem::Initialise(graphics::ConfigOptions* const config)
 {
-    CE_ASSERT(customParams != NULL, "GLES2RenderSystem::Initialise(): customParams must not be NULL, pass a ConfigOptions pointer with a valid EGLNativeWindowType handle to GraphicsSystem::Initialise()\n");
-    graphics::ConfigOptions* config = (graphics::ConfigOptions*)customParams;
+    CE_ASSERT(config != NULL, "GLES2RenderSystem::Initialise(): config must not be NULL, pass a ConfigOptions pointer with a valid EGLNativeWindowType handle to GraphicsSystem::Initialise()\n");
 
     graphics::RenderWindow* renderWindow = CE_NEW graphics::RenderWindow(config);
     renderWindow->Create();
