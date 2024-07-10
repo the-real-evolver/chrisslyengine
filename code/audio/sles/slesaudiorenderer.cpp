@@ -200,13 +200,13 @@ SLESAudioRenderer::UpdateChannel(audio::Channel* const channel)
                 result = (*volumeInterface)->GetMaxVolumeLevel(volumeInterface, &slVolume);
                 CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::UpdateChannel(): failed to get max volume level\n");
             }
-            else if (volume < 0.020931f)
+            else if (volume < FLT_MIN)
             {
                 slVolume = SL_MILLIBEL_MIN;
             }
             else
             {
-                slVolume = (SLmillibel)((float)M_LN2 / logf(1.0f / (1.0f - volume)) * -1000.0f);
+                slVolume = (SLmillibel)(log10f(volume) * 4.0f * 1000.0f);
             }
             result = (*volumeInterface)->SetVolumeLevel(volumeInterface, slVolume);
             CE_ASSERT(SL_RESULT_SUCCESS == result, "SLESAudioRenderer::UpdateChannel(): failed to set volume level to: '%f' (SLmillibel '%i')\n", volume, slVolume);

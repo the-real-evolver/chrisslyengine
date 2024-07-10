@@ -38,6 +38,7 @@ PosixMutex::PosixMutex()
     pthread_mutexattr_t attrs;
     pthread_mutexattr_init(&attrs);
     pthread_mutexattr_settype(&attrs, PTHREAD_MUTEX_RECURSIVE);
+    pthread_mutexattr_setprotocol(&attrs, PTHREAD_PRIO_INHERIT);
     int result = pthread_mutex_init(&this->mutex, &attrs);
     CE_ASSERT(0 == result, "PosixMutex::PosixMutex(): pthread_mutex_init failed: %08x\n", result);
     pthread_mutexattr_destroy(&attrs);

@@ -137,7 +137,7 @@ ChannelBase::SetPressureLevel(float decibel)
     {
         this->volume = 1.0f;
     }
-    else if (decibel < -32.0f)
+    else if (decibel <= -32.0f)
     {
         this->volume = 0.0f;
     }
