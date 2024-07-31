@@ -165,7 +165,7 @@ WinAPIFSWrapper::ListFiles(const char* const path, const char* const pattern, un
     strcat(searchPath, pattern);
 
     WIN32_FIND_DATA findData = {};
-    HANDLE findHandle = FindFirstFile(searchPath, &findData);
+    HANDLE findHandle = FindFirstFileEx(searchPath, FindExInfoStandard, &findData, FindExSearchNameMatch, NULL, FIND_FIRST_EX_LARGE_FETCH);
     if (INVALID_HANDLE_VALUE == findHandle) return 0;
     unsigned int fileIndex = 0U;
     do

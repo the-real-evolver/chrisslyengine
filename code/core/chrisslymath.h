@@ -52,7 +52,7 @@ ce_math_lerp(float a, float b, float t)
 inline float
 ce_math_rand()
 {
-    return (float)(rand() % RAND_MAX) / (float)RAND_MAX;
+    return (float)rand() / (float)RAND_MAX;
 }
 
 /* returns value wrapped from min and max */

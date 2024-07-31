@@ -719,16 +719,16 @@ D3D11RenderSystem::ProcessLights(ce_hash_table* const lights)
             this->defaultLightShaderParams[lightIndex][0U][1U] = position.y;
             this->defaultLightShaderParams[lightIndex][0U][2U] = position.z;
 
-            float red, green, blue, alpha;
-            ce_colour_convert_u32_to_float(light->GetDiffuseColour(), red, green, blue, alpha);
-            this->defaultLightShaderParams[lightIndex][1U][0U] = red;
-            this->defaultLightShaderParams[lightIndex][1U][1U] = green;
-            this->defaultLightShaderParams[lightIndex][1U][2U] = blue;
+            float alpha;
+            ce_colour_convert_u32_to_float(light->GetDiffuseColour(),
+                this->defaultLightShaderParams[lightIndex][1U][0U],
+                this->defaultLightShaderParams[lightIndex][1U][1U],
+                this->defaultLightShaderParams[lightIndex][1U][2U], alpha);
 
-            ce_colour_convert_u32_to_float(light->GetSpecularColour(), red, green, blue, alpha);
-            this->defaultLightShaderParams[lightIndex][2U][0U] = red;
-            this->defaultLightShaderParams[lightIndex][2U][1U] = green;
-            this->defaultLightShaderParams[lightIndex][2U][2U] = blue;
+            ce_colour_convert_u32_to_float(light->GetSpecularColour(),
+                this->defaultLightShaderParams[lightIndex][2U][0U],
+                this->defaultLightShaderParams[lightIndex][2U][1U],
+                this->defaultLightShaderParams[lightIndex][2U][2U], alpha);
 
             this->defaultLightShaderParams[lightIndex][3U][0U] = light->GetAttenuationConstant();
             this->defaultLightShaderParams[lightIndex][3U][1U] = light->GetAttenuationLinear();
