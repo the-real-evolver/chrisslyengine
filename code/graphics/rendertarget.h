@@ -49,6 +49,8 @@ public:
     double GetFrameTime() const;
     /// reset the current frame time
     void ResetFrameTime();
+    /// just update frame time without rendering anything
+    void UpdateFrameTime();
 
     /// get the type of the rendertarget
     virtual unsigned int GetType() const;

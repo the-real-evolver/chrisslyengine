@@ -45,8 +45,7 @@ RenderTarget::Update()
         this->viewports[i]->Update();
     }
 
-    this->frameTime = this->timer.GetTime();
-    this->timer.Reset();
+    this->UpdateFrameTime();
 }
 
 //------------------------------------------------------------------------------
@@ -145,6 +144,16 @@ void
 RenderTarget::ResetFrameTime()
 {
     this->frameTime = 0.0;
+    this->timer.Reset();
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+RenderTarget::UpdateFrameTime()
+{
+    this->frameTime = this->timer.GetTime();
     this->timer.Reset();
 }
 
