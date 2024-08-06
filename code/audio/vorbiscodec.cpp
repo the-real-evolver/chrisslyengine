@@ -21,12 +21,12 @@ static const unsigned int MaxStreamBufferSamples = 2048U;
 /**
 */
 VorbisCodec::VorbisCodec() :
+    fileBuffer(NULL),
+    vorbisStream(NULL),
     lengthInSamples(0U),
-    openedAsStream(false),
     seekPosition(0U),
     currentStreamBufferIndex(0U),
-    fileBuffer(NULL),
-    vorbisStream(NULL)
+    openedAsStream(false)
 {
     this->streamBuffers[0U] = NULL;
     this->streamBuffers[1U] = NULL;

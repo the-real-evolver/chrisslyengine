@@ -98,15 +98,22 @@ private:
 
     static D3D11RenderSystem* Singleton;
 
-    graphics::Viewport* activeViewport;
+    D3D11_BLEND_DESC currentBlendState;
 
-    unsigned int ambientLight;
     core::Matrix4 defaultLightShaderParams[4U];
 
     core::Matrix4 worldMatrix;
     core::Matrix4 viewMatrix;
     core::Matrix4 projectionMatrix;
     core::Matrix4 textureMatrix;
+
+    D3D11_SAMPLER_DESC currentSamplerState;
+    D3D11_DEPTH_STENCIL_DESC currentDepthStencilState;
+    D3D11_RASTERIZER_DESC currentRasterState;
+
+    D3D11_VIEWPORT viewPort;
+    D3D11_RECT scissorRect[1U];
+    graphics::Viewport* activeViewport;
 
     D3D11GpuProgram* defaultGpuProgram;
     D3D11GpuProgram* defaultGpuProgramFog;
@@ -131,16 +138,12 @@ private:
 
     ID3D11Device* device;
     ID3D11DeviceContext* context;
-    D3D11_VIEWPORT viewPort;
-    D3D11_RECT scissorRect[1U];
     ID3D11InputLayout* inputLayout;
     ID3D11InputLayout* inputLayoutMorphAnim;
     ID3D11InputLayout* inputLayoutSkeletalAnim;
 
-    D3D11_RASTERIZER_DESC currentRasterState;
-    D3D11_DEPTH_STENCIL_DESC currentDepthStencilState;
-    D3D11_BLEND_DESC currentBlendState;
-    D3D11_SAMPLER_DESC currentSamplerState;
+    unsigned int ambientLight;
+
     bool msaaEnable;
 };
 

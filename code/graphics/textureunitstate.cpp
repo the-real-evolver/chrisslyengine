@@ -15,6 +15,7 @@ namespace graphics
 /**
 */
 TextureUnitState::TextureUnitState() :
+    texture(NULL),
     uScale(1.0f),
     vScale(1.0f),
     uMod(0.0f),
@@ -26,7 +27,6 @@ TextureUnitState::TextureUnitState() :
     lbt(LBT_COLOUR),
     mappingMode(TMM_TEXTURE_COORDS),
     projectionMappingMode(TPM_UV),
-    texture(NULL),
     textureType(TEX_TYPE_2D)
 {
     this->addressMode.u = TAM_WRAP;

@@ -25,12 +25,11 @@ static const unsigned int MaxLights = 4U;
 /**
 */
 D3D11RenderSystem::D3D11RenderSystem() :
-    activeViewport(NULL),
-    ambientLight(0x00000000),
     worldMatrix(core::Matrix4::ZERO),
     viewMatrix(core::Matrix4::ZERO),
     projectionMatrix(core::Matrix4::ZERO),
     textureMatrix(core::Matrix4::ZERO),
+    activeViewport(NULL),
     defaultGpuProgram(NULL),
     defaultGpuProgramFog(NULL),
     defaultGpuProgramLit(NULL),
@@ -56,9 +55,15 @@ D3D11RenderSystem::D3D11RenderSystem() :
     inputLayout(NULL),
     inputLayoutMorphAnim(NULL),
     inputLayoutSkeletalAnim(NULL),
+    ambientLight(0x00000000),
     msaaEnable(false)
 {
     Singleton = this;
+    unsigned int i;
+    for (i = 0U; i < 4U; ++i)
+    {
+        this->defaultLightShaderParams[i] = core::Matrix4::ZERO;
+    }
     this->viewPort = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
     this->scissorRect[0U] = {0, 0, 0, 0};
     ZeroMemory(&this->currentRasterState, sizeof(this->currentRasterState));

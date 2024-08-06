@@ -100,16 +100,19 @@ private:
     void UpdateView() const;
     /// implementation of updateFrustum (called if out of date)
     void UpdateFrustum() const;
+
+    /// pre-calced view matrix
+    mutable core::Matrix4 viewMatrix;
+    /// pre-calced projection matrix
+    mutable core::Matrix4 projMatrix;
+    /// frustum clipping planes
+    mutable core::Plane frustumPlanes[FRUSTUM_PLANE_COUNT];
     /// camera orientation, quaternion style
     core::Quaternion orientation;
     /// camera position - default (0,0,0)
     core::Vector3 position;
-    /// pre-calced view matrix
-    mutable core::Matrix4 viewMatrix;
-    /// something changed the viewmatrix
-    mutable bool recalcView;
-    /// something's changed in the frustum shape
-    mutable bool recalcFrustum;
+    /// fixed axis to yaw around
+    core::Vector3 yawFixedAxis;
     /// y-direction field-of-view (default 90)
     float FOVy;
     /// far clip distance - default 1000
@@ -120,16 +123,14 @@ private:
     float aspect;
     /// obliqueness parameters
     float horizontalObliqueness, verticalObliqueness;
-    /// pre-calced projection matrix
-    mutable core::Matrix4 projMatrix;
-    /// frustum clipping planes
-    mutable core::Plane frustumPlanes[FRUSTUM_PLANE_COUNT];
     /// near and far plane dimensions
     mutable float nearHeight, nearWidth, farHeight, farWidth;
     /// whether to yaw around a fixed axis
     bool yawFixed;
-    /// fixed axis to yaw around
-    core::Vector3 yawFixedAxis;
+    /// something changed the viewmatrix
+    mutable bool recalcView;
+    /// something's changed in the frustum shape
+    mutable bool recalcFrustum;
 };
 
 } // namespace graphics

@@ -14,34 +14,34 @@ namespace graphics
 /**
 */
 Pass::Pass(unsigned short index) :
+    textureUnitStates(NULL),
+    gpuProgram(NULL),
     blendOperation(SBO_ADD),
     sourceBlendFactor(SBF_SOURCE_COLOUR),
     destBlendFactor(SBF_SOURCE_COLOUR),
-    sceneBlend(false),
     sourceFixColor(0xff666666),
     destFixColor(0xff000000),
     alphaTestFunction(CF_ALWAYS),
     alphaTestRef(0.0f),
-    alphaToCoverage(false),
-    depthCheck(true),
-    depthWrite(true),
     cullMode(CULL_CLOCKWISE),
-    lightingEnabled(false),
     ambient(0xffffffff),
     diffuse(0xffffffff),
     specular(0x00000000),
     emissive(0x00000000),
     shininess(0.0f),
     tracking(TVC_NONE),
-    index(index),
     fogMode(FOG_NONE),
     fogColour(0xffffffff),
     fogStart(0.0f),
     fogEnd(1.0f),
+    index(index),
+    sceneBlend(false),
+    alphaToCoverage(false),
+    depthCheck(true),
+    depthWrite(true),
+    lightingEnabled(false),
     morphAnimation(false),
-    skeletalAnimation(false),
-    textureUnitStates(NULL),
-    gpuProgram(NULL)
+    skeletalAnimation(false)
 {
     ce_array_init(this->textureUnitStates, 1U);
 }

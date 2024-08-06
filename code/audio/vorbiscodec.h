@@ -45,14 +45,14 @@ private:
     /// prevent copy by assignment
     VorbisCodec& operator = (const VorbisCodec&);
 
-    unsigned int lengthInSamples;
-    bool openedAsStream;
-    unsigned int seekPosition;
+    stb_vorbis_info vorbisInfo;
     mutable void* streamBuffers[2U];
-    unsigned char currentStreamBufferIndex;
     void* fileBuffer;
     stb_vorbis* vorbisStream;
-    stb_vorbis_info vorbisInfo;
+    unsigned int lengthInSamples;
+    unsigned int seekPosition;
+    unsigned char currentStreamBufferIndex;
+    bool openedAsStream;
 };
 
 } // namespace audio

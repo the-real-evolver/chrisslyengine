@@ -104,9 +104,8 @@ public:
     /// gets the full transformation matrix for this node
     /**
         @remarks
-            This method returns the full transformation matrix
-            for this node, including the effect of any parent node
-            transformations, provided they have been updated using the Node::_Update method.
+            This method returns the full transformation matrix for this node, including the effect of
+            any parent node transformations, provided they have been updated using the Node::_Update method.
     */
     const core::Matrix4& _GetFullTransform() const;
 
@@ -128,6 +127,8 @@ private:
     /// collection of pointers to direct children
     ce_linked_list* children;
 
+    Entity** objects;
+
     /// stores the orientation of the node relative to it's parent
     core::Quaternion orientation;
     /// stores the position/translation of the node relative to its parent
@@ -135,36 +136,17 @@ private:
     /// stores the scaling factor applied to this node
     core::Vector3 scale;
 
-    /// cached combined orientation
-    /**
-        @par
-            This member is the orientation derived by combining the
-            local transformations and those of it's parents.
-    */
+    /// cached combined orientation, derived by combining the local transformations and those of it's parents
     mutable core::Quaternion derivedOrientation;
-
-    /// cached combined position
-    /**
-        @par
-            This member is the position derived by combining the
-            local transformations and those of it's parents.
-    */
+    /// cached combined position, derived by combining the local transformations and those of it's parents
     mutable core::Vector3 derivedPosition;
-
-    /// cached combined scale
-    /**
-        @par
-            This member is the position derived by combining the
-            local transformations and those of it's parents.
-    */
+    /// cached combined scale derived by combining the local transformations and those of it's parents
     mutable core::Vector3 derivedScale;
 
     /// cached derived transform as a 4x4 matrix
     mutable core::Matrix4 cachedTransform;
     mutable bool cachedTransformOutOfDate;
     bool updateChilds;
-
-    Entity** objects;
 };
 
 } // namespace graphics

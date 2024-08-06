@@ -56,7 +56,7 @@ D3D11RenderTexture::~D3D11RenderTexture()
 /**
 */
 void
-D3D11RenderTexture::Create(int w, int h, graphics::PixelFormat fmt, bool depth)
+D3D11RenderTexture::Create(int w, int h, graphics::PixelFormat fmt, bool depth, bool msaa)
 {
     D3D11_TEXTURE2D_DESC desc;
     ZeroMemory(&desc, sizeof(desc));
@@ -65,7 +65,7 @@ D3D11RenderTexture::Create(int w, int h, graphics::PixelFormat fmt, bool depth)
     desc.MipLevels = 1U;
     desc.ArraySize = 1U;
     desc.Format = D3D11Mappings::Get(fmt);
-    desc.SampleDesc.Count = 1U;
+    desc.SampleDesc.Count = msaa ? 4U : 1U;
     desc.Usage = D3D11_USAGE_DEFAULT;
     desc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
     desc.CPUAccessFlags = 0U;
@@ -75,22 +75,22 @@ D3D11RenderTexture::Create(int w, int h, graphics::PixelFormat fmt, bool depth)
 
     D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
     rtvDesc.Format = desc.Format;
-    rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
-    rtvDesc.Texture2D.MipSlice = 0;
+    rtvDesc.ViewDimension = msaa ? D3D11_RTV_DIMENSION_TEXTURE2DMS : D3D11_RTV_DIMENSION_TEXTURE2D;
+    rtvDesc.Texture2D.MipSlice = 0U;
     result = D3D11RenderSystem::Instance()->GetDevice()->CreateRenderTargetView(this->texture, &rtvDesc, &this->renderTargetView);
     CE_ASSERT(SUCCEEDED(result), "D3D11RenderTexture::Create(): failed to create rendertarget view\n");
 
     D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
     srvDesc.Format = desc.Format;
-    srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-    srvDesc.Texture2D.MostDetailedMip = 0;
-    srvDesc.Texture2D.MipLevels = 1;
+    srvDesc.ViewDimension = msaa ? D3D11_SRV_DIMENSION_TEXTURE2DMS : D3D11_SRV_DIMENSION_TEXTURE2D;
+    srvDesc.Texture2D.MostDetailedMip = 0U;
+    srvDesc.Texture2D.MipLevels = 1U;
     result = D3D11RenderSystem::Instance()->GetDevice()->CreateShaderResourceView(this->texture, &srvDesc, &this->shaderResourceView);
     CE_ASSERT(SUCCEEDED(result), "D3D11RenderTexture::Create(): failed to create resource view\n");
 
     if (depth)
     {
-        D3D11RenderSystem::Instance()->CreateDepthBuffer((UINT)w, (UINT)h, false, &this->depthStencilBuffer, &this->depthStencilView);
+        D3D11RenderSystem::Instance()->CreateDepthBuffer((UINT)w, (UINT)h, msaa, &this->depthStencilBuffer, &this->depthStencilView);
     }
 
     this->width = w;

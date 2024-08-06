@@ -21,7 +21,7 @@ public:
     /// destructor
     ~D3D11RenderTexture();
     /// creates a rendertexture from the given parameters
-    void Create(int w, int h, graphics::PixelFormat fmt, bool depth = false);
+    void Create(int w, int h, graphics::PixelFormat fmt, bool depth = false, bool msaa = false);
     /// does nothing no need for doublebuffering when rendering offline
     void SwapBuffers();
     /// get the type of the rendertarget

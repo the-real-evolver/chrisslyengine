@@ -21,26 +21,26 @@ SceneManager* SceneManager::Singleton = NULL;
 /**
 */
 SceneManager::SceneManager() :
-    frameNumber(1U),
     entities(NULL),
     sceneNodes(NULL),
     sceneRoot(NULL),
-    ambientLight(0x00000000),
     renderQueuesEndedCallback(NULL),
-    suppressRenderStateChanges(false),
     entityCreatedCallback(NULL),
     entityDestroyedCallback(NULL),
-    illuminationStage(IRS_NONE),
-    shadowTechnique(SHADOWTYPE_NONE),
-    shadowColour(0x00808080),
-    shadowTextureConfigDirty(true),
     shadowTexture(NULL),
     shadowRenderTexture(NULL),
     shadowCamera(NULL),
     shadowRttPass(NULL),
     shadowRttMorphAnimPass(NULL),
     shadowRttSkeletalAnimPass(NULL),
-    shadowPass(NULL)
+    shadowPass(NULL),
+    illuminationStage(IRS_NONE),
+    shadowTechnique(SHADOWTYPE_NONE),
+    shadowColour(0x00808080),
+    frameNumber(1U),
+    ambientLight(0x00000000),
+    suppressRenderStateChanges(false),
+    shadowTextureConfigDirty(true)
 {
     Singleton = this;
 

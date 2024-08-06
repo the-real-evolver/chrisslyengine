@@ -31,13 +31,13 @@ ThreadProc(_In_ LPVOID lpParameter)
 /**
 */
 WASAPIAudioRenderer::WASAPIAudioRenderer() :
-    running(false),
     thread(NULL),
     enumerator(NULL),
     device(NULL),
     audioClient(NULL),
     renderClient(NULL),
-    bufferFrameCount(0U)
+    bufferFrameCount(0U),
+    running(false)
 {
     Singleton = this;
 }

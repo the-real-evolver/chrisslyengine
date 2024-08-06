@@ -66,14 +66,14 @@ private:
     /// returns if the dsp is setup
     bool IsInUse() const;
 
+    int buffer[1024U];
+    Result(*release)(DSP* const dsp);
+    Result(*process)(DSP* const dsp, int numChannels, int bits, unsigned int numSamples, const void* const inbuffer, void* const outbuffer);
+    Result(*setParamFloat)(DSP* const dsp, int idx, float value);
+    void* userData;
+    int numParameters;
     bool bypass;
     bool inUse;
-    Result (*release)(DSP* const dsp);
-    Result (*process)(DSP* const dsp, int numChannels, int bits, unsigned int numSamples, const void* const inbuffer, void* const outbuffer);
-    int numParameters;
-    Result (*setParamFloat)(DSP* const dsp, int idx, float value);
-    void* userData;
-    int buffer[1024U];
 };
 
 } // namespace audio

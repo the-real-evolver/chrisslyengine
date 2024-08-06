@@ -150,6 +150,8 @@ public:
     void _Load();
 
 private:
+    core::String textureName;
+    Texture* texture;
     float uScale;
     float vScale;
     float uMod;
@@ -162,8 +164,6 @@ private:
     UVWAddressingMode addressMode;
     TextureMappingMode mappingMode;
     TextureProjectionMappingMode projectionMappingMode;
-    core::String textureName;
-    Texture* texture;
     TextureType textureType;
 };
 

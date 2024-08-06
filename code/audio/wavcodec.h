@@ -45,18 +45,18 @@ private:
     /// prevent copy by assignment
     WavCodec& operator = (const WavCodec&);
 
+    core::FileHandle streamFileHandle;
+    mutable void* streamBuffers[2U];
     unsigned int dataChunkOffset;
     unsigned int lengthInBytes;
-    unsigned char bytesPerSample;
-    bool openedAsStream;
-    core::FileHandle streamFileHandle;
     unsigned int seekPosition;
-    bool endOfStream;
-    mutable void* streamBuffers[2U];
-    unsigned char currentStreamBufferIndex;
     unsigned int currentStreamBufferLength;
     unsigned int bytesToLoadToBackBuffer;
+    unsigned char currentStreamBufferIndex;
+    unsigned char bytesPerSample;
+    bool openedAsStream;
     bool backBufferFilled;
+    bool endOfStream;
 };
 
 } // namespace audio

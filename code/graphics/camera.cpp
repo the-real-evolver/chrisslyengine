@@ -18,21 +18,21 @@ using namespace chrissly::core;
 */
 Camera::Camera() :
     viewMatrix(Matrix4::IDENTITY),
-    recalcView(true),
-    recalcFrustum(true),
+    projMatrix(Matrix4::ZERO),
+    yawFixedAxis(Vector3::UNIT_POSITIVE_Y),
     FOVy(45.0f),
     farDist(1000.0f),
     nearDist(0.01f),
     aspect(1.7777f),
     horizontalObliqueness(0.0f),
     verticalObliqueness(0.0f),
-    projMatrix(Matrix4::ZERO),
     nearHeight(0.0f),
     nearWidth(0.0f),
     farHeight(0.0f),
     farWidth(0.0f),
     yawFixed(true),
-    yawFixedAxis(Vector3::UNIT_POSITIVE_Y)
+    recalcView(true),
+    recalcFrustum(true)
 {
 
 }

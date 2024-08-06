@@ -18,12 +18,12 @@ using namespace chrissly::core;
 SceneNode::SceneNode() :
     parent(NULL),
     children(NULL),
+    objects(NULL),
     scale(Vector3::UNIFORM_SCALE),
     derivedScale(Vector3::UNIFORM_SCALE),
     cachedTransform(Matrix4::IDENTITY),
     cachedTransformOutOfDate(true),
-    updateChilds(false),
-    objects(NULL)
+    updateChilds(false)
 {
     ce_array_init(this->objects, 1U);
 }

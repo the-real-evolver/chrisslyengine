@@ -58,16 +58,16 @@ private:
     Material* material;
     /// submesh basis
     SubMesh* subMesh;
-    /// is this SubEntity visible?
-    bool visible;
     /// the vertex data for hardware morphing
     VertexData* morphVertexData;
-    /// vertex morph weight
-    float morphWeight;
     /// time index of the current morphkeyframe
     int currentTimeIndex;
+    /// vertex morph weight
+    float morphWeight;
     /// cached distance to camera
     float distanceToCamera;
+    /// is this SubEntity visible?
+    bool visible;
 };
 
 } // namespace graphics

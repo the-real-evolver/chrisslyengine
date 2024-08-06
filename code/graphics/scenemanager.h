@@ -181,28 +181,21 @@ private:
 
     static SceneManager* Singleton;
 
-    unsigned int frameNumber;
+    core::Matrix4 shadowTextureProjScaleTrans;
+    core::Matrix4 shadowProjection;
     mutable ce_hash_table cameras;
     mutable ce_hash_table lights;
     Entity** entities;
     SceneNode** sceneNodes;
     SceneNode* sceneRoot;
-    unsigned int ambientLight;
     RenderSystem* destRenderSystem;
     RenderQueue renderQueueOpaque;
     RenderQueue renderQueueTransparent;
     RenderQueue renderQueueTransparentShadowCaster;
     RenderQueue renderQueueShadowReceiver;
     RenderQueuesEndedCallback renderQueuesEndedCallback;
-    bool suppressRenderStateChanges;
     EntityCallback entityCreatedCallback;
     EntityCallback entityDestroyedCallback;
-
-    IlluminationRenderStage illuminationStage;
-    ShadowTechnique shadowTechnique;
-    unsigned int shadowColour;
-    bool shadowTextureConfigDirty;
-
     Texture* shadowTexture;
     RenderTexture* shadowRenderTexture;
     Camera* shadowCamera;
@@ -210,8 +203,13 @@ private:
     Pass* shadowRttMorphAnimPass;
     Pass* shadowRttSkeletalAnimPass;
     Pass* shadowPass;
-    core::Matrix4 shadowTextureProjScaleTrans;
-    core::Matrix4 shadowProjection;
+    IlluminationRenderStage illuminationStage;
+    ShadowTechnique shadowTechnique;
+    unsigned int shadowColour;
+    unsigned int frameNumber;
+    unsigned int ambientLight;
+    bool suppressRenderStateChanges;
+    bool shadowTextureConfigDirty;
 };
 
 } // namespace graphics

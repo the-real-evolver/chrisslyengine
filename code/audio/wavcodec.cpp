@@ -22,14 +22,14 @@ static const unsigned int MaxStreamBufferSamples = 2048U;
 WavCodec::WavCodec() :
     dataChunkOffset(0U),
     lengthInBytes(0U),
-    bytesPerSample(0U),
-    openedAsStream(false),
     seekPosition(0U),
-    endOfStream(false),
-    currentStreamBufferIndex(0U),
     currentStreamBufferLength(0U),
     bytesToLoadToBackBuffer(0U),
-    backBufferFilled(false)
+    currentStreamBufferIndex(0U),
+    bytesPerSample(0U),
+    openedAsStream(false),
+    backBufferFilled(false),
+    endOfStream(false)
 {
     this->streamBuffers[0U] = NULL;
     this->streamBuffers[1U] = NULL;

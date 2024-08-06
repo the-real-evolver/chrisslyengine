@@ -20,11 +20,11 @@ SubEntity::SubEntity(Entity* parent, SubMesh* subMeshBasis) :
     parentEntity(parent),
     material(NULL),
     subMesh(subMeshBasis),
-    visible(true),
     morphVertexData(NULL),
-    morphWeight(0.0f),
     currentTimeIndex(-1),
-    distanceToCamera(0.0f)
+    morphWeight(0.0f),
+    distanceToCamera(0.0f),
+    visible(true)
 {
 
 }

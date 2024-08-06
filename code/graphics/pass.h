@@ -233,36 +233,34 @@ public:
     void _Load();
 
 private:
+    TextureUnitState** textureUnitStates;
+    GpuProgram* gpuProgram;
     SceneBlendOperation blendOperation;
     SceneBlendFactor sourceBlendFactor;
     SceneBlendFactor destBlendFactor;
-    bool sceneBlend;
     unsigned int sourceFixColor;
     unsigned int destFixColor;
     ComparisonFunction alphaTestFunction;
     float alphaTestRef;
-    bool alphaToCoverage;
-    bool depthCheck;
-    bool depthWrite;
     CullingMode cullMode;
-    bool lightingEnabled;
     unsigned int ambient;
     unsigned int diffuse;
     unsigned int specular;
     unsigned int emissive;
     float shininess;
     unsigned int tracking;
-    unsigned short index;
     FogMode fogMode;
     unsigned int fogColour;
     float fogStart;
     float fogEnd;
+    unsigned short index;
+    bool sceneBlend;
+    bool alphaToCoverage;
+    bool depthCheck;
+    bool depthWrite;
+    bool lightingEnabled;
     bool morphAnimation;
     bool skeletalAnimation;
-
-    TextureUnitState** textureUnitStates;
-
-    GpuProgram* gpuProgram;
 };
 
 } // namespace graphics

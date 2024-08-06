@@ -47,6 +47,11 @@ GLES2RenderSystem::GLES2RenderSystem() :
 {
     Singleton = this;
 
+    unsigned int i;
+    for (i = 0U; i < 4U; ++i)
+    {
+        this->defaultLightShaderParams[i] = core::Matrix4::ZERO;
+    }
     memset(this->glWorldMatrix, 0, sizeof(this->glWorldMatrix));
     memset(this->glViewMatrix, 0, sizeof(this->glViewMatrix));
     memset(this->glProjectionMatrix, 0, sizeof(this->glProjectionMatrix));

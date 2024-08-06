@@ -16,13 +16,13 @@ namespace audio
 /**
 */
 DSP::DSP() :
-    bypass(false),
-    inUse(false),
     release(NULL),
     process(NULL),
-    numParameters(0),
     setParamFloat(NULL),
-    userData(NULL)
+    userData(NULL),
+    numParameters(0),
+    bypass(false),
+    inUse(false)
 {
     memset(this->buffer, 0, sizeof(this->buffer));
 }

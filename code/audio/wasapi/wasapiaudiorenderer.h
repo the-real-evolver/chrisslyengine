@@ -56,7 +56,6 @@ private:
 
     static WASAPIAudioRenderer* Singleton;
 
-    bool running;
     HANDLE thread;
     core::Mutex syncLock;
 
@@ -65,6 +64,7 @@ private:
     IAudioClient* audioClient;
     IAudioRenderClient* renderClient;
     UINT32 bufferFrameCount;
+    bool running;
 };
 
 } // namespace chrissly
