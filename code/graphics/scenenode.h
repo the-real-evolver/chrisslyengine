@@ -140,7 +140,7 @@ private:
     mutable core::Quaternion derivedOrientation;
     /// cached combined position, derived by combining the local transformations and those of it's parents
     mutable core::Vector3 derivedPosition;
-    /// cached combined scale derived by combining the local transformations and those of it's parents
+    /// cached combined scale, derived by combining the local transformations and those of it's parents
     mutable core::Vector3 derivedScale;
 
     /// cached derived transform as a 4x4 matrix

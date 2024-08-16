@@ -46,7 +46,7 @@ public:
     chrissly::core::Matrix4* GetLocalTransformMatrices() const;
     /// gets the list of inverse model transform matrices
     chrissly::core::Matrix4* GetInverseModelTransformMatrices() const;
-    /// gets the list of transform matrices
+    /// gets the list of parent indicies
     int* GetParentIndicies() const;
     /// gets the animation blending mode which this skeleton will use
     SkeletonAnimationBlendMode GetBlendMode() const;

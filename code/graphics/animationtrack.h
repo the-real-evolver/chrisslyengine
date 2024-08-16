@@ -80,7 +80,7 @@ public:
     float* GetTimeIndicies() const;
 
 private:
-    /// index of the parent bone
+    /// time position of the keyframe
     float* timeIndex;
     /// transformation relative to parent bone
     chrissly::core::Matrix4* localMatrix;
