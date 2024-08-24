@@ -66,7 +66,7 @@ StateManager::ChangeState(State* const state)
             this->currentState->Exit();
         }
 
-        CE_ASSERT(state != NULL, "StateManager::ChangeState() pointer to state is NULL\n");
+        CE_ASSERT(state != NULL, "StateManager::ChangeState(): pointer to state is NULL\n");
         this->currentState = state;
         this->currentState->Enter();
         this->isRunning = true;

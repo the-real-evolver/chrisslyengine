@@ -254,28 +254,16 @@ GLES2RenderSystem::SetTextureMatrix(const core::Matrix4& xform)
 /**
 */
 void
-GLES2RenderSystem::SetMatrices()
+GLES2RenderSystem::Render(graphics::SubEntity* const renderable)
 {
+    // update auto constants
     glUniformMatrix4fv(this->currentGpuProgram->GetUniformLocation(graphics::GpuProgramParameters::ACT_WORLD_MATRIX), 1, GL_FALSE, this->glWorldMatrix);
-    CE_GL_ERROR_CHECK("glUniformMatrix4fv");
-    glUniformMatrix4fv(this->currentGpuProgram->GetUniformLocation(graphics::GpuProgramParameters::ACT_VIEW_MATRIX), 1, GL_FALSE, this->glViewMatrix);
-    CE_GL_ERROR_CHECK("glUniformMatrix4fv");
-    glUniformMatrix4fv(this->currentGpuProgram->GetUniformLocation(graphics::GpuProgramParameters::ACT_PROJECTION_MATRIX), 1, GL_FALSE, this->glProjectionMatrix);
     CE_GL_ERROR_CHECK("glUniformMatrix4fv");
     GLES2Mappings::MakeGLMatrix(this->glWorldViewProjectionMatrix, this->projectionMatrix * this->viewMatrix * this->worldMatrix);
     glUniformMatrix4fv(this->currentGpuProgram->GetUniformLocation(graphics::GpuProgramParameters::ACT_WORLDVIEWPROJ_MATRIX), 1, GL_FALSE, this->glWorldViewProjectionMatrix);
     CE_GL_ERROR_CHECK("glUniformMatrix4fv");
     glUniformMatrix4fv(this->currentGpuProgram->GetUniformLocation(graphics::GpuProgramParameters::ACT_TEXTURE_MATRIX), 1, GL_FALSE, this->glTextureMatrix);
     CE_GL_ERROR_CHECK("glUniformMatrix4fv");
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-void
-GLES2RenderSystem::Render(graphics::SubEntity* const renderable)
-{
-    this->SetMatrices();
 
     if (renderable->GetParent()->GetMesh()->GetSkeleton() != NULL)
     {
@@ -630,6 +618,12 @@ GLES2RenderSystem::SetPass(graphics::Pass* const pass)
             it = it->next;
         }
     }
+
+    // set auto params
+    glUniformMatrix4fv(this->currentGpuProgram->GetUniformLocation(graphics::GpuProgramParameters::ACT_VIEW_MATRIX), 1, GL_FALSE, this->glViewMatrix);
+    CE_GL_ERROR_CHECK("glUniformMatrix4fv");
+    glUniformMatrix4fv(this->currentGpuProgram->GetUniformLocation(graphics::GpuProgramParameters::ACT_PROJECTION_MATRIX), 1, GL_FALSE, this->glProjectionMatrix);
+    CE_GL_ERROR_CHECK("glUniformMatrix4fv");
 }
 
 //------------------------------------------------------------------------------

@@ -24,9 +24,9 @@ DXGIRenderWindow::DXGIRenderWindow(graphics::ConfigOptions* config, ID3D11Device
     renderTargetView(NULL),
     depthStencilBuffer(NULL),
     depthStencilView(NULL),
-    fullScreen(false),
-    depthBuffer(true),
-    msaaEnable(false)
+    fullScreen(config->fullScreen),
+    depthBuffer(config->depthBuffer),
+    msaaEnable(config->msaaEnable)
 {
     if (config->fullScreen)
     {
@@ -38,11 +38,6 @@ DXGIRenderWindow::DXGIRenderWindow(graphics::ConfigOptions* config, ID3D11Device
         this->width = config->windowWidth;
         this->height = config->windowHeight;
     }
-    this->fullScreen = config->fullScreen;
-
-    this->depthBuffer = config->depthBuffer;
-
-    this->msaaEnable = config->msaaEnable;
 }
 
 //------------------------------------------------------------------------------

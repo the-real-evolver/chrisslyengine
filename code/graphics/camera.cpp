@@ -5,6 +5,8 @@
 #include "camera.h"
 #include "scenemanager.h"
 #include "chrisslymath.h"
+#include "debug.h"
+#include "float.h"
 
 namespace chrissly
 {
@@ -122,6 +124,7 @@ Camera::SetDirection(const Vector3& direction)
         xAxis.Normalise();
         Vector3 yAxis = zAxis.CrossProduct(xAxis);
         yAxis.Normalise();
+        CE_ASSERT(xAxis.SquaredLength() >= FLT_MIN && yAxis.SquaredLength() >= FLT_MIN && zAxis.SquaredLength() >= FLT_MIN, "Camera::SetDirection(): undefined axes");
         this->orientation.FromAxes(xAxis, yAxis, zAxis);
     }
     else
@@ -130,7 +133,7 @@ Camera::SetDirection(const Vector3& direction)
         this->orientation.ToRotationMatrix(kRot);
         Vector3 axes[3U];
         unsigned int i;
-        for (i = 0U; i < 3U; i++)
+        for (i = 0U; i < 3U; ++i)
         {
             axes[i].x = kRot[0U][i];
             axes[i].y = kRot[1U][i];

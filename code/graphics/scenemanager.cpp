@@ -403,23 +403,18 @@ SceneManager::SetShadowColour(unsigned int colour)
     this->shadowColour = colour;
 #if __CE_PSP__
     this->shadowRttPass->SetBlendingFixColors(this->shadowColour, 0xff000000);
-#elif __CE_D3D11__
+#else
     Vector3 rgb;
     float alpha;
     ce_colour_convert_u32_to_float(colour, rgb.x, rgb.y, rgb.z, alpha);
     this->destRenderSystem->GetDefaultShadowCasterGpuProgram()->GetDefaultParameters()->SetNamedConstant("shadowColour", rgb);
-    this->destRenderSystem->GetDefaultTransparentShadowCasterGpuProgram()->GetDefaultParameters()->SetNamedConstant("shadowColour", rgb);
+    this->destRenderSystem->GetDefaultShadowCasterSkeletalAnimGpuProgram()->GetDefaultParameters()->SetNamedConstant("shadowColour", rgb);
     this->destRenderSystem->GetDefaultTransparentShadowCasterAlphaTestGpuProgram()->GetDefaultParameters()->SetNamedConstant("shadowColour", rgb);
+#if __CE_D3D11__
+    this->destRenderSystem->GetDefaultTransparentShadowCasterGpuProgram()->GetDefaultParameters()->SetNamedConstant("shadowColour", rgb);
     this->destRenderSystem->GetDefaultShadowCasterMorphAnimGpuProgram()->GetDefaultParameters()->SetNamedConstant("shadowColour", rgb);
     this->destRenderSystem->GetDefaultTransparentShadowCasterMorphAnimGpuProgram()->GetDefaultParameters()->SetNamedConstant("shadowColour", rgb);
-    this->destRenderSystem->GetDefaultShadowCasterSkeletalAnimGpuProgram()->GetDefaultParameters()->SetNamedConstant("shadowColour", rgb);
-#elif __CE_GLES2__
-    Vector3 rgb;
-    float alpha;
-    ce_colour_convert_u32_to_float(colour, rgb.x, rgb.y, rgb.z, alpha);
-    this->destRenderSystem->GetDefaultShadowCasterGpuProgram()->GetDefaultParameters()->SetNamedConstant("shadowColour", rgb);
-    this->destRenderSystem->GetDefaultShadowCasterSkeletalAnimGpuProgram()->GetDefaultParameters()->SetNamedConstant("shadowColour", rgb);
-    this->destRenderSystem->GetDefaultTransparentShadowCasterAlphaTestGpuProgram()->GetDefaultParameters()->SetNamedConstant("shadowColour", rgb);
+#endif
 #endif
 }
 
@@ -470,14 +465,14 @@ SceneManager::_RenderScene(Camera* const camera, Viewport* const vp)
     }
 
     // fill renderqueues
-    unsigned int sceneNodeIndex;
-    for (sceneNodeIndex = 0U; sceneNodeIndex < ce_array_size(this->sceneNodes); ++sceneNodeIndex)
+    unsigned int sceneNodeIndex, numSceneNodes = ce_array_size(this->sceneNodes);
+    for (sceneNodeIndex = 0U; sceneNodeIndex < numSceneNodes; ++sceneNodeIndex)
     {
         // for all scenenodes
         SceneNode* sceneNode = this->sceneNodes[sceneNodeIndex];
 
-        unsigned int entityIndex;
-        for (entityIndex = 0U; entityIndex < sceneNode->NumAttachedObjects(); ++entityIndex)
+        unsigned int entityIndex, numEntities = sceneNode->NumAttachedObjects();
+        for (entityIndex = 0U; entityIndex < numEntities; ++entityIndex)
         {
             // for all attached entities
             Entity* entity = sceneNode->GetAttachedObject((unsigned short)entityIndex);
@@ -507,8 +502,8 @@ SceneManager::_RenderScene(Camera* const camera, Viewport* const vp)
                 entity->UpdateAnimation();
             }
 
-            unsigned int subEntityIndex;
-            for (subEntityIndex = 0U; subEntityIndex < entity->GetNumSubEntities(); ++subEntityIndex)
+            unsigned int subEntityIndex, numSubEntities = entity->GetNumSubEntities();
+            for (subEntityIndex = 0U; subEntityIndex < numSubEntities; ++subEntityIndex)
             {
                 // for all subentities
                 SubEntity* subEntity = entity->GetSubEntity(subEntityIndex);
@@ -547,8 +542,8 @@ SceneManager::_RenderScene(Camera* const camera, Viewport* const vp)
                     continue;
                 }
 
-                unsigned int passIndex;
-                for (passIndex = 0U; passIndex < material->GetNumPasses(); ++passIndex)
+                unsigned int passIndex, numPasses = material->GetNumPasses();
+                for (passIndex = 0U; passIndex < numPasses; ++passIndex)
                 {
                     // for all passes
                     Pass* pass = material->GetPass((unsigned short)passIndex);
@@ -734,8 +729,7 @@ SceneManager::RenderQueueGroupObjects(RenderQueue* const queue)
 {
     Pass* lastPass = NULL;
 
-    unsigned short numRenderablePasses = queue->GetNumRenderablePasses();
-    unsigned short i;
+    unsigned short i, numRenderablePasses = queue->GetNumRenderablePasses();
     for (i = 0U; i < numRenderablePasses; ++i)
     {
         RenderablePass* renderablePass = queue->GetRenderablePass(i);
@@ -766,8 +760,7 @@ SceneManager::RenderQueueGroupObjects(RenderQueue* const queue)
 void
 SceneManager::RenderTransparentTextureShadowCasterQueueGroupObjects(RenderQueue* const queue)
 {
-    unsigned short numRenderablePasses = queue->GetNumRenderablePasses();
-    unsigned short i;
+    unsigned short i, numRenderablePasses = queue->GetNumRenderablePasses();
     for (i = 0U; i < numRenderablePasses; ++i)
     {
         RenderablePass* renderablePass = queue->GetRenderablePass(i);
@@ -819,14 +812,13 @@ SceneManager::RenderTextureShadowReceiverQueueGroupObjects(RenderQueue* const qu
 {
     this->destRenderSystem->SetPass(this->shadowPass);
 
-    unsigned short numRenderablePasses = queue->GetNumRenderablePasses();
-    unsigned short i;
+    unsigned short i, numRenderablePasses = queue->GetNumRenderablePasses();
     for (i = 0U; i < numRenderablePasses; ++i)
     {
         SubEntity* renderable = queue->GetRenderablePass(i)->renderable;
-
-        this->destRenderSystem->SetWorldMatrix(renderable->parentEntity->parentNode->_GetFullTransform());
-        this->destRenderSystem->SetTextureMatrix(this->shadowProjection * renderable->parentEntity->parentNode->_GetFullTransform());
+        Matrix4 worldMatrix = renderable->parentEntity->parentNode->_GetFullTransform();
+        this->destRenderSystem->SetWorldMatrix(worldMatrix);
+        this->destRenderSystem->SetTextureMatrix(this->shadowProjection * worldMatrix);
         this->destRenderSystem->Render(renderable);
     }
 

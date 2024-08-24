@@ -87,9 +87,6 @@ private:
     /// prevent copy by assignment
     GLES2RenderSystem& operator = (const GLES2RenderSystem&);
 
-    /// set uniform matrices
-    void SetMatrices();
-
     static GLES2RenderSystem* Singleton;
 
     graphics::Viewport* activeViewport;

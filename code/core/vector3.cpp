@@ -297,7 +297,7 @@ Vector3::GetRotationTo(const Vector3& dest, const Vector3& fallbackAxis) const
         {
             // generate an axis
             Vector3 axis = Vector3::UNIT_POSITIVE_X.CrossProduct(*this);
-            if (axis.SquaredLength() < (1e-06 * 1e-06)) // pick another if colinear
+            if (axis.SquaredLength() < (1e-06f * 1e-06f)) // pick another if colinear
             {
                 axis = Vector3::UNIT_POSITIVE_Y.CrossProduct(*this);
             }
