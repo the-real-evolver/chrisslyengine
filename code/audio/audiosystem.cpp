@@ -329,8 +329,8 @@ void
 AudioSystem::_Mix(unsigned int numSamples, unsigned char* const buffer)
 {
     memset(buffer, 0, numSamples << 2U);
-    unsigned int i;
-    for (i = 0U; i < ce_array_size(this->channelPool); ++i)
+    unsigned int i, numChannels = ce_array_size(this->channelPool);
+    for (i = 0U; i < numChannels; ++i)
     {
         Channel* channel = this->channelPool[i];
         int index;

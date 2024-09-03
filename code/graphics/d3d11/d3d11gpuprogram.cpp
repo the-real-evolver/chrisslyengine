@@ -26,6 +26,11 @@ D3D11GpuProgram::D3D11GpuProgram(const char* const source, const char* const fil
     fragmentShader(NULL),
     bufferSlot(0U)
 {
+    UINT compileFlags = D3DCOMPILE_WARNINGS_ARE_ERRORS | D3DCOMPILE_PACK_MATRIX_COLUMN_MAJOR;
+#ifndef __CE_DEBUG__
+    compileFlags |= D3DCOMPILE_OPTIMIZATION_LEVEL3 | D3DCOMPILE_AVOID_FLOW_CONTROL;
+#endif
+
     /* compile and create vertex shader */
     ID3D10Blob* errorBlob = NULL;
     HRESULT result = D3DCompile(
@@ -36,7 +41,7 @@ D3D11GpuProgram::D3D11GpuProgram(const char* const source, const char* const fil
         NULL,                               /* _In_opt_                                                 ID3DInclude* pInclude               */
         vertexShaderFunctionName,           /* _In_opt_                                                 LPCSTR pEntrypoint                  */
         "vs_4_0",                           /* _In_                                                     LPCSTR pTarget                      */
-        D3DCOMPILE_WARNINGS_ARE_ERRORS,     /* _In_                                                     UINT Flags1                         */
+        compileFlags,                       /* _In_                                                     UINT Flags1                         */
         0U,                                 /* _In_                                                     UINT Flags2                         */
         &this->vertexShaderCode,            /* _Out_                                                    ID3DBlob** ppCode                   */
         &errorBlob                          /* _Out_opt_                                                ID3DBlob** ppErrorMsgs              */
@@ -72,7 +77,7 @@ D3D11GpuProgram::D3D11GpuProgram(const char* const source, const char* const fil
         NULL,                               /* _In_opt_                                                 ID3DInclude* pInclude               */
         fragmentShaderFunctionName,         /* _In_opt_                                                 LPCSTR pEntrypoint                  */
         "ps_4_0",                           /* _In_                                                     LPCSTR pTarget                      */
-        D3DCOMPILE_WARNINGS_ARE_ERRORS,     /* _In_                                                     UINT Flags1                         */
+        compileFlags,                       /* _In_                                                     UINT Flags1                         */
         0U,                                 /* _In_                                                     UINT Flags2                         */
         &fragmentShaderCode,                /* _Out_                                                    ID3DBlob** ppCode                   */
         &errorBlob                          /* _Out_opt_                                                ID3DBlob** ppErrorMsgs              */
