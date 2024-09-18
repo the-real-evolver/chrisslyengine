@@ -69,8 +69,8 @@ D3D11ConstantBuffer::UpdateConstants()
     ID3D11DeviceContext* context = D3D11RenderSystem::Instance()->GetContext();
     context->Map(this->buffer, 0U, D3D11_MAP_WRITE_DISCARD, 0U, &mappedResource);
 
-    unsigned int i;
-    for (i = 0U; i < ce_array_size(this->constants); ++i)
+    unsigned int i, numConstants = ce_array_size(this->constants);
+    for (i = 0U; i < numConstants; ++i)
     {
         graphics::GpuConstantDefinition* variable = this->constants[i];
         memcpy((void*)((UINT_PTR)mappedResource.pData + (UINT_PTR)variable->location), variable->buffer, variable->size * variable->arraySize);

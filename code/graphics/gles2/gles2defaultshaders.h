@@ -42,6 +42,7 @@ const char* const DefaultFragmentShader =
 */
 const char* const DefaultVertexShaderFog =
     "#version 100\n"
+    "#define FOG_LINEAR 1\n"
     "attribute vec2 texCoordIn;\n"
     "attribute vec4 position;\n"
     "uniform mat4 worldMatrix;\n"
@@ -56,7 +57,7 @@ const char* const DefaultVertexShaderFog =
     "{\n"
     "    gl_Position = worldViewProjMatrix * position;\n"
     "    texCoordOut = texCoordIn;\n"
-    "    if (1 == fogMode)\n"
+    "    if (FOG_LINEAR == fogMode)\n"
     "    {\n"
     "        // range based linear fog\n"
     "        fogFactor = clamp((fogEnd - length(viewMatrix * worldMatrix * position)) / (fogEnd - fogStart), 0.0, 1.0);\n"
@@ -107,8 +108,8 @@ const char* const DefaultVertexShaderLit =
 
 const char* const DefaultFragmentShaderLit =
     "#version 100\n"
+    "#define MaxLights 4\n"
     "precision mediump float;\n"
-    "const int MaxLights = 4;\n"
     "varying vec2 texCoordOut;\n"
     "varying vec3 worldNormal;\n"
     "varying vec3 worldPosition;\n"
@@ -139,6 +140,7 @@ const char* const DefaultFragmentShaderLit =
 */
 const char* const DefaultVertexShaderLitFog =
     "#version 100\n"
+    "#define FOG_LINEAR 1\n"
     "attribute vec2 texCoordIn;\n"
     "attribute vec3 normal;\n"
     "attribute vec4 position;\n"
@@ -156,7 +158,7 @@ const char* const DefaultVertexShaderLitFog =
     "{\n"
     "    gl_Position = worldViewProjMatrix * position;\n"
     "    texCoordOut = texCoordIn;\n"
-    "    if (1 == fogMode)\n"
+    "    if (FOG_LINEAR == fogMode)\n"
     "    {\n"
     "        // range based linear fog\n"
     "        fogFactor = clamp((fogEnd - length(viewMatrix * worldMatrix * position)) / (fogEnd - fogStart), 0.0, 1.0);\n"
@@ -171,8 +173,8 @@ const char* const DefaultVertexShaderLitFog =
 
 const char* const DefaultFragmentShaderLitFog =
     "#version 100\n"
+    "#define MaxLights 4\n"
     "precision mediump float;\n"
-    "const int MaxLights = 4;\n"
     "varying float fogFactor;\n"
     "varying vec2 texCoordOut;\n"
     "varying vec3 worldNormal;\n"
@@ -234,6 +236,7 @@ const char* const DefaultFragmentShaderMorphAnim =
 */
 const char* const DefaultVertexShaderSkeletalAnim =
     "#version 100\n"
+    "#define BONE_WEIGHTS_PER_VERTEX 4\n"
     "attribute vec4 weights;\n"
     "attribute vec4 indices;\n"
     "attribute vec2 texCoordIn;\n"
@@ -247,7 +250,7 @@ const char* const DefaultVertexShaderSkeletalAnim =
     "    if (weights.x > 0.0 || weights.y > 0.0 || weights.z > 0.0 || weights.w > 0.0)\n"
     "    {\n"
     "        P = vec3(0.0);\n"
-    "        for (int i = 0; i < 4; ++i)\n"
+    "        for (int i = 0; i < BONE_WEIGHTS_PER_VERTEX; ++i)\n"
     "        {\n"
     "            P += (boneMatrices[int(indices[i])] * position).xyz * weights[i];\n"
     "        }\n"
@@ -360,6 +363,7 @@ const char* const DefaultFragmentShaderShadowReceiver =
 */
 const char* const DefaultVertexShaderShadowCasterSkeletalAnim =
     "#version 100\n"
+    "#define BONE_WEIGHTS_PER_VERTEX 4\n"
     "attribute vec4 weights;\n"
     "attribute vec4 indices;\n"
     "attribute vec4 position;\n"
@@ -371,7 +375,7 @@ const char* const DefaultVertexShaderShadowCasterSkeletalAnim =
     "    if (weights.x > 0.0 || weights.y > 0.0 || weights.z > 0.0 || weights.w > 0.0)\n"
     "    {\n"
     "        P = vec3(0.0);\n"
-    "        for (int i = 0; i < 4; ++i)\n"
+    "        for (int i = 0; i < BONE_WEIGHTS_PER_VERTEX; ++i)\n"
     "        {\n"
     "            P += (boneMatrices[int(indices[i])] * position).xyz * weights[i];\n"
     "        }\n"

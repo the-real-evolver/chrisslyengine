@@ -60,6 +60,7 @@ const char* const DefaultGpuProgram =
 /**
 */
 const char* const DefaultGpuProgramFog =
+    "#define FOG_LINEAR 1\n"
     "#ifndef NO_TEXTURE\n"
     "Texture2D texture0 : register(t0);\n"
     "SamplerState samplerLinear : register(s0);\n"
@@ -102,7 +103,7 @@ const char* const DefaultGpuProgramFog =
     "{\n"
     "    output.uv = input.uv;\n"
     "    output.position = mul(float4(input.position, 1.0f), worldViewProjMatrix);\n"
-    "    if (1 == fogMode)\n"
+    "    if (FOG_LINEAR == fogMode)\n"
     "    {\n"
     "        // range based linear fog\n"
     "        output.fogFactor = clamp((fogEnd - length(mul(mul(float4(input.position, 1.0f), worldMatrix), viewMatrix))) / (fogEnd - fogStart), 0.0f, 1.0f);\n"
@@ -125,6 +126,7 @@ const char* const DefaultGpuProgramFog =
 /**
 */
 const char* const DefaultGpuProgramLit =
+    "#define MaxLights 4\n"
     "#ifndef NO_TEXTURE\n"
     "Texture2D texture0 : register(t0);\n"
     "SamplerState samplerLinear : register(s0);\n"
@@ -179,7 +181,7 @@ const char* const DefaultGpuProgramLit =
     "    float3 L;\n"
     "    float3 diffuse = {0.0f, 0.0f, 0.0f};\n"
     "    float3 specular = {0.0f, 0.0f, 0.0f};\n"
-    "    for (int i = 0; i < 4; ++i)\n"
+    "    for (int i = 0; i < MaxLights; ++i)\n"
     "    {\n"
     "        L = normalize(float3(lightParams[i][0][0], lightParams[i][1][0], lightParams[i][2][0]) - input.worldPosition);\n"
     "        float distance = length(float3(lightParams[i][0][0], lightParams[i][1][0], lightParams[i][2][0]) - input.worldPosition);\n"
@@ -197,6 +199,8 @@ const char* const DefaultGpuProgramLit =
 /**
 */
 const char* const DefaultGpuProgramLitFog =
+    "#define MaxLights 4\n"
+    "#define FOG_LINEAR 1\n"
     "#ifndef NO_TEXTURE\n"
     "Texture2D texture0 : register(t0);\n"
     "SamplerState samplerLinear : register(s0);\n"
@@ -243,7 +247,7 @@ const char* const DefaultGpuProgramLitFog =
     "{\n"
     "    output.uv = input.uv;\n"
     "    output.position = mul(float4(input.position, 1.0f), worldViewProjMatrix);\n"
-    "    if (1 == fogMode)\n"
+    "    if (FOG_LINEAR == fogMode)\n"
     "    {\n"
     "        // range based linear fog\n"
     "        output.fogFactor = clamp((fogEnd - length(mul(mul(float4(input.position, 1.0f), worldMatrix), viewMatrix))) / (fogEnd - fogStart), 0.0f, 1.0f);\n"
@@ -266,7 +270,7 @@ const char* const DefaultGpuProgramLitFog =
     "    float3 L;\n"
     "    float3 diffuse = {0.0f, 0.0f, 0.0f};\n"
     "    float3 specular = {0.0f, 0.0f, 0.0f};\n"
-    "    for (int i = 0; i < 4; ++i)\n"
+    "    for (int i = 0; i < MaxLights; ++i)\n"
     "    {\n"
     "        L = normalize(float3(lightParams[i][0][0], lightParams[i][1][0], lightParams[i][2][0]) - input.worldPosition);\n"
     "        float distance = length(float3(lightParams[i][0][0], lightParams[i][1][0], lightParams[i][2][0]) - input.worldPosition);\n"
@@ -284,6 +288,7 @@ const char* const DefaultGpuProgramLitFog =
 /**
 */
 const char* const DefaultGpuProgramMorphAnim =
+    "#define MaxLights 4\n"
     "#ifndef NO_TEXTURE\n"
     "Texture2D texture0 : register(t0);\n"
     "SamplerState samplerLinear : register(s0);\n"
@@ -343,7 +348,7 @@ const char* const DefaultGpuProgramMorphAnim =
     "    float3 L;\n"
     "    float3 diffuse = {0.0f, 0.0f, 0.0f};\n"
     "    float3 specular = {0.0f, 0.0f, 0.0f};\n"
-    "    for (int i = 0; i < 4; ++i)\n"
+    "    for (int i = 0; i < MaxLights; ++i)\n"
     "    {\n"
     "        L = normalize(float3(lightParams[i][0][0], lightParams[i][1][0], lightParams[i][2][0]) - input.worldPosition);\n"
     "        float distance = length(float3(lightParams[i][0][0], lightParams[i][1][0], lightParams[i][2][0]) - input.worldPosition);\n"
@@ -361,6 +366,8 @@ const char* const DefaultGpuProgramMorphAnim =
 /**
 */
 const char* const DefaultGpuProgramSkeletalAnim =
+    "#define MaxLights 4\n"
+    "#define BONE_WEIGHTS_PER_VERTEX 4\n"
     "#ifndef NO_TEXTURE\n"
     "Texture2D texture0 : register(t0);\n"
     "SamplerState samplerLinear : register(s0);\n"
@@ -408,7 +415,7 @@ const char* const DefaultGpuProgramSkeletalAnim =
     "    {\n"
     "        P = 0.0f;\n"
     "        N = 0.0f;\n"
-    "        for (int i = 0; i < 4; ++i)\n"
+    "        for (int i = 0; i < BONE_WEIGHTS_PER_VERTEX; ++i)\n"
     "        {\n"
     "            P += mul(float4(input.position, 1.0f), boneMatrices[input.indices0[i]]).xyz * input.weights0[i];\n"
     "            N += mul(input.normal, float3x3(boneMatrices[input.indices0[i]][0].xyz, boneMatrices[input.indices0[i]][1].xyz, boneMatrices[input.indices0[i]][2].xyz)) * input.weights0[i];\n"
@@ -432,7 +439,7 @@ const char* const DefaultGpuProgramSkeletalAnim =
     "    float3 L;\n"
     "    float3 diffuse = {0.0f, 0.0f, 0.0f};\n"
     "    float3 specular = {0.0f, 0.0f, 0.0f};\n"
-    "    for (int i = 0; i < 4; ++i)\n"
+    "    for (int i = 0; i < MaxLights; ++i)\n"
     "    {\n"
     "        L = normalize(float3(lightParams[i][0][0], lightParams[i][1][0], lightParams[i][2][0]) - input.worldPosition);\n"
     "        float distance = length(float3(lightParams[i][0][0], lightParams[i][1][0], lightParams[i][2][0]) - input.worldPosition);\n"
@@ -638,6 +645,7 @@ const char* const DefaultGpuProgramTransparentShadowCasterMorphAnim =
 /**
 */
 const char* const DefaultGpuProgramShadowCasterSkeletalAnim =
+    "#define BONE_WEIGHTS_PER_VERTEX 4\n"
     "cbuffer AutoConstantBuffer : register(b0)\n"
     "{\n"
     "    matrix worldViewProjMatrix;\n"
@@ -666,7 +674,7 @@ const char* const DefaultGpuProgramShadowCasterSkeletalAnim =
     "    if (any(input.weights0))\n"
     "    {\n"
     "        P = 0.0f;\n"
-    "        for (int i = 0; i < 4; ++i)\n"
+    "        for (int i = 0; i < BONE_WEIGHTS_PER_VERTEX; ++i)\n"
     "        {\n"
     "            P += mul(float4(input.position, 1.0f), boneMatrices[input.indices0[i]]).xyz * input.weights0[i];\n"
     "        }\n"
