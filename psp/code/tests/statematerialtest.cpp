@@ -83,6 +83,7 @@ StateMaterialTest::Enter()
     this->spotLight->SetDirection(this->lightConeSceneNode->GetOrientation() * Vector3(0.0f, 0.0f, -1.0f));
     this->spotLight->SetSpotlightOuterAngle(0.78f);
     this->spotLight->SetSpotlightFalloff(0.1f);
+    this->spotLight->SetCastShadows(true);
     Light* light = SceneManager::Instance()->CreateLight("PointLight");
     light->SetType(Light::LT_POINT);
     light->SetDiffuseColour(0xff777777);

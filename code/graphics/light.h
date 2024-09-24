@@ -135,6 +135,11 @@ public:
     /// returns the falloff between the inner and outer cones of the spotlight
     float GetSpotlightFalloff() const;
 
+    /// sets whether or not this light will cast shadows
+    void SetCastShadows(bool enabled);
+    /// returns whether shadow casting is enabled for this object
+    bool GetCastShadows() const;
+
 private:
     /// constructor, called by SceneManager::CreateLight()
     Light();
@@ -150,6 +155,7 @@ private:
     core::Vector3 direction;
     float spotOuter;
     float spotFalloff;
+    bool castShadows;
 };
 
 } // namespace graphics

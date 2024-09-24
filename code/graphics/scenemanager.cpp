@@ -703,7 +703,7 @@ SceneManager::PrepareShadowTextures()
         while (it != NULL && shadowCameraDirty)
         {
             Light* light = (graphics::Light*)((ce_key_value_pair*)it->data)->value;
-            if (Light::LT_SPOTLIGHT == light->GetType())
+            if (light->GetCastShadows())
             {
                 this->shadowCamera->SetPosition(light->GetPosition());
                 this->shadowCamera->SetDirection(light->GetDirection());

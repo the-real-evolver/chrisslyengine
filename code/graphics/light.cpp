@@ -24,7 +24,8 @@ Light::Light() :
     attenuationQuad(0.0f),
     direction(Vector3::UNIT_POSITIVE_Z),
     spotOuter(0.78f),
-    spotFalloff(1.0f)
+    spotFalloff(1.0f),
+    castShadows(false)
 {
 
 }
@@ -231,6 +232,24 @@ float
 Light::GetSpotlightFalloff() const
 {
     return this->spotFalloff;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+Light::SetCastShadows(bool enabled)
+{
+    this->castShadows = enabled;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+bool
+Light::GetCastShadows() const
+{
+    return this->castShadows;
 }
 
 } // namespace graphics
