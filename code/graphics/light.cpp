@@ -25,6 +25,7 @@ Light::Light() :
     direction(Vector3::UNIT_POSITIVE_Z),
     spotOuter(0.78f),
     spotFalloff(1.0f),
+    shadowFarDist(5.0f),
     castShadows(false)
 {
 
@@ -250,6 +251,24 @@ bool
 Light::GetCastShadows() const
 {
     return this->castShadows;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+Light::SetShadowFarDistance(float distance)
+{
+    this->shadowFarDist = distance;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+float
+Light::GetShadowFarDistance() const
+{
+    return this->shadowFarDist;
 }
 
 } // namespace graphics

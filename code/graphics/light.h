@@ -139,6 +139,10 @@ public:
     void SetCastShadows(bool enabled);
     /// returns whether shadow casting is enabled for this object
     bool GetCastShadows() const;
+    /// sets the maximum distance away from the camera that shadows by this light will be visible
+    void SetShadowFarDistance(float distance);
+    /// gets the maximum distance away from the camera that shadows by this light will be visible
+    float GetShadowFarDistance() const;
 
 private:
     /// constructor, called by SceneManager::CreateLight()
@@ -155,6 +159,7 @@ private:
     core::Vector3 direction;
     float spotOuter;
     float spotFalloff;
+    float shadowFarDist;
     bool castShadows;
 };
 

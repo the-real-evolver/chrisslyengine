@@ -32,6 +32,9 @@ Camera::Camera() :
     nearWidth(0.0f),
     farHeight(0.0f),
     farWidth(0.0f),
+    orthoWidth(1.0f),
+    orthoHeight(1.0f),
+    projectionType(PT_PERSPECTIVE),
     yawFixed(true),
     recalcView(true),
     recalcFrustum(true)
@@ -336,6 +339,28 @@ Camera::SetObliqueness(float horizontal, float vertical)
 //------------------------------------------------------------------------------
 /**
 */
+void
+Camera::SetProjectionType(ProjectionType pt)
+{
+    this->projectionType = pt;
+    this->recalcFrustum = true;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+Camera::SetOrthoWindow(float w, float h)
+{
+    this->orthoWidth = w;
+    this->orthoHeight = h;
+    this->aspect = w / h;
+    this->recalcFrustum = true;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
 const Matrix4&
 Camera::GetViewMatrix() const
 {
@@ -473,37 +498,67 @@ Camera::UpdateView() const
 void
 Camera::UpdateFrustum() const
 {
-    static const float DegreeToRadianHalf = (float)M_PI / 180.0f * 0.5f;
+    if (PT_PERSPECTIVE == this->projectionType)
+    {
+        float fovy = this->FOVy * (float)M_PI / 180.0f * 0.5f;
 
-    float fovy = this->FOVy * DegreeToRadianHalf;
+        float f = 1.0f / Math::ATan(fovy);
 
-    float f = 1.0f / Math::ATan(fovy);
+        this->projMatrix[0U][0U] = f / this->aspect;
+        this->projMatrix[1U][0U] = 0.0f;
+        this->projMatrix[2U][0U] = 0.0f;
+        this->projMatrix[3U][0U] = 0.0f;
 
-    this->projMatrix[0U][0U] = f / this->aspect;
-    this->projMatrix[1U][0U] = 0.0f;
-    this->projMatrix[2U][0U] = 0.0f;
-    this->projMatrix[3U][0U] = 0.0f;
+        this->projMatrix[0U][1U] = 0.0f;
+        this->projMatrix[1U][1U] = f;
+        this->projMatrix[2U][1U] = 0.0f;
+        this->projMatrix[3U][1U] = 0.0f;
 
-    this->projMatrix[0U][1U] = 0.0f;
-    this->projMatrix[1U][1U] = f;
-    this->projMatrix[2U][1U] = 0.0f;
-    this->projMatrix[3U][1U] = 0.0f;
+        this->projMatrix[0U][2U] = this->horizontalObliqueness;
+        this->projMatrix[1U][2U] = this->verticalObliqueness;
+        this->projMatrix[2U][2U] = (this->farDist + this->nearDist) / (this->nearDist - this->farDist);
+        this->projMatrix[3U][2U] = -1.0f;
 
-    this->projMatrix[0U][2U] = this->horizontalObliqueness;
-    this->projMatrix[1U][2U] = this->verticalObliqueness;
-    this->projMatrix[2U][2U] = (this->farDist + this->nearDist) / (this->nearDist - this->farDist);
-    this->projMatrix[3U][2U] = -1.0f;
+        this->projMatrix[0U][3U] = 0.0f;
+        this->projMatrix[1U][3U] = 0.0f;
+        this->projMatrix[2U][3U] = (2.0f * this->farDist * this->nearDist) / (this->nearDist - this->farDist);
+        this->projMatrix[3U][3U] = 0.0f;
 
-    this->projMatrix[0U][3U] = 0.0f;
-    this->projMatrix[1U][3U] = 0.0f;
-    this->projMatrix[2U][3U] = (2.0f * this->farDist * this->nearDist) / (this->nearDist - this->farDist);
-    this->projMatrix[3U][3U] = 0.0f;
+        float tangent = Math::Tan(fovy);
+        this->nearHeight = this->nearDist * tangent;
+        this->nearWidth = this->nearHeight * this->aspect;
+        this->farHeight = this->farDist * tangent;
+        this->farWidth = this->farHeight * this->aspect;
+    }
+    else if (PT_ORTHOGRAPHIC == this->projectionType)
+    {
+        float left = -this->orthoWidth * 0.5f, right = this->orthoWidth * 0.5f, bottom = -this->orthoHeight * 0.5f, top = this->orthoHeight * 0.5f;
 
-    float tangent = Math::Tan(fovy);
-    this->nearHeight = this->nearDist * tangent;
-    this->nearWidth = this->nearHeight * this->aspect;
-    this->farHeight = this->farDist * tangent;
-    this->farWidth = this->farHeight * this->aspect;
+        this->projMatrix[0U][0U] = 2.0f / (right - left);
+        this->projMatrix[1U][0U] = 0.0f;
+        this->projMatrix[2U][0U] = 0.0f;
+        this->projMatrix[3U][0U] = 0.0f;
+
+        this->projMatrix[0U][1U] = 0.0f;
+        this->projMatrix[1U][1U] = 2.0f / (top - bottom);
+        this->projMatrix[2U][1U] = 0.0f;
+        this->projMatrix[3U][1U] = 0.0f;
+
+        this->projMatrix[0U][2U] = 0.0f;
+        this->projMatrix[1U][2U] = 0.0f;
+        this->projMatrix[2U][2U] = -2.0f / (this->farDist - this->nearDist);
+        this->projMatrix[3U][2U] = 0.0f;
+
+        this->projMatrix[0U][3U] = -(right + left) / (right - left);
+        this->projMatrix[1U][3U] = -(top + bottom) / (top - bottom);
+        this->projMatrix[2U][3U] = -(this->farDist + this->nearDist) / (this->farDist - this->nearDist);
+        this->projMatrix[3U][3U] = 1.0f;
+
+        this->nearHeight = this->orthoHeight;
+        this->nearWidth = this->orthoWidth;
+        this->farHeight = this->orthoHeight;
+        this->farWidth = this->orthoWidth;
+    }
 
     this->recalcFrustum = false;
 }

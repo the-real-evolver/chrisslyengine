@@ -22,6 +22,13 @@ class Viewport;
 class Camera
 {
 public:
+    /// specifies the projection the camera uses
+    enum ProjectionType
+    {
+        PT_ORTHOGRAPHIC,
+        PT_PERSPECTIVE
+    };
+
     /// default constructor
     Camera();
     /// destructor
@@ -74,6 +81,10 @@ public:
     float GetAspectRatio() const;
     /// shift view frustum relative to the camera's center line so one side is at a smaller angle to the centre line than the opposite side
     void SetObliqueness(float horizontal, float vertical);
+    /// sets the type of projection to use (orthographic or perspective)
+    void SetProjectionType(ProjectionType pt);
+    /// sets the dimensions of the view window in world units when using orthographic projection
+    void SetOrthoWindow(float w, float h);
     /// gets the view matrix for this frustum
     const core::Matrix4& GetViewMatrix() const;
     /// gets the projection matrix for this frustum
@@ -125,6 +136,10 @@ private:
     float horizontalObliqueness, verticalObliqueness;
     /// near and far plane dimensions
     mutable float nearHeight, nearWidth, farHeight, farWidth;
+    /// orthographic view window dimensions
+    float orthoWidth, orthoHeight;
+    /// orthographic or perspective
+    ProjectionType projectionType;
     /// whether to yaw around a fixed axis
     bool yawFixed;
     /// something changed the viewmatrix

@@ -312,6 +312,9 @@ SceneManager::SetShadowTechnique(ShadowTechnique technique)
             this->shadowCamera->SetFixedYawAxis(false);
             this->shadowCamera->SetAspectRatio(1.0f);
             this->shadowCamera->SetFOVy(90.0f);
+#ifndef __CE_PSP__
+            this->shadowCamera->SetProjectionType(Camera::PT_ORTHOGRAPHIC);
+#endif
 
             this->shadowTextureProjScaleTrans = Matrix4::IDENTITY;
             this->shadowTextureProjScaleTrans[0U][0U] = 0.5f;
@@ -332,7 +335,6 @@ SceneManager::SetShadowTechnique(ShadowTechnique technique)
             this->shadowPass->SetSceneBlending(SBF_DEST_COLOUR, SBF_ZERO);
             TextureUnitState* tus = this->shadowPass->CreateTextureUnitState();
             tus->SetTextureAddressingMode(TextureUnitState::TAM_BORDER, TextureUnitState::TAM_BORDER);
-
 #if __CE_PSP__
             this->shadowRenderTexture->Create(256, 256, PF_A4R4G4B4);
             // fake GL_CLAMP_TO_BORDER by clearing the rendertarget with transparency and setting the viewport one pixel
@@ -707,6 +709,8 @@ SceneManager::PrepareShadowTextures()
             {
                 this->shadowCamera->SetPosition(light->GetPosition());
                 this->shadowCamera->SetDirection(light->GetDirection());
+                float windowSize = light->GetShadowFarDistance() * 2.0f;
+                this->shadowCamera->SetOrthoWindow(windowSize, windowSize);
                 this->shadowProjection = this->shadowTextureProjScaleTrans * (this->shadowCamera->GetProjectionMatrix() * this->shadowCamera->GetViewMatrix());
                 shadowCameraDirty = false;
             }
