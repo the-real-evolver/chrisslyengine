@@ -546,6 +546,7 @@ def ce_write_skeletal_animation(file_path, objects, write_all_weights, operator_
 
 #------------------------------------------------------------------------------
 class Export_ChrisslyEngineMesh(bpy.types.Operator, ExportHelper):
+    """Export scene as ChrisslyEngine-Mesh"""
     bl_idname = "export_scene.chrisslyengine_mesh"
     bl_label = "Export ChrisslyEngine-Mesh"
 
