@@ -76,7 +76,7 @@ typedef struct ce_array_header_t
                 } \
             }\
         } \
-    } while(0)
+    } while (0)
 
 /* Returns the header data for a. */
 #define ce_array_header(a) \
