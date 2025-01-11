@@ -91,7 +91,6 @@ target_include_directories(chrisslyengine_android PRIVATE
     ${CE_SRC_FILES}/core/standard
     ${CE_SRC_FILES}/code/core/posix
     ${CE_SRC_FILES}/core/android
-    ${CE_SRC_FILES}/core/android
     ${CE_SRC_FILES}/graphics
     ${CE_SRC_FILES}/graphics/egl
     ${CE_SRC_FILES}/graphics/gles2
