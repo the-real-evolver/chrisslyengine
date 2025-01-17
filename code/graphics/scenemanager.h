@@ -26,17 +26,6 @@ namespace graphics
 class SceneManager
 {
 public:
-    /// describes the stage of rendering when performing complex illumination
-    enum IlluminationRenderStage
-    {
-        /// no special illumination stage
-        IRS_NONE,
-        /// render to texture stage, used for texture based shadows
-        IRS_RENDER_TO_TEXTURE,
-        /// render from shadow texture to receivers stage
-        IRS_RENDER_RECEIVER_PASS
-    };
-
     /// get pointer to the singleton
     static SceneManager* const Instance()
     {
@@ -164,6 +153,16 @@ public:
     SceneNode** _GetAllSceneNodes() const;
 
 private:
+    /// describes the stage of rendering when performing complex illumination
+    enum IlluminationRenderStage
+    {
+        /// no special illumination stage
+        IRS_NONE,
+        /// render to texture stage, used for texture based shadows
+        IRS_RENDER_TO_TEXTURE,
+        /// render from shadow texture to receivers stage
+        IRS_RENDER_RECEIVER_PASS
+    };
     /// copy constructor
     SceneManager(const SceneManager&);
     /// prevent copy by assignment
