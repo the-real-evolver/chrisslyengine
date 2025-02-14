@@ -319,6 +319,10 @@ D3D11GpuProgram::ExtractConstantDefs(ID3D10Blob* const shaderCode)
                     this->defaultParams->_SetAutoConstant(graphics::GpuProgramParameters::ACT_MORPH_WEIGHT, variable);
                     updatePerObject = true;
                     break;
+                case graphics::GpuProgramParameters::ACT_BONE_MATRICES:
+                    this->defaultParams->_SetAutoConstant(graphics::GpuProgramParameters::ACT_BONE_MATRICES, variable);
+                    updatePerObject = true;
+                    break;
             }
 
             CE_LOG("D3D11GpuProgram::ExtractConstantDefs(): add type: %i name: '%s' size: %u offset: %i arraySize %i\n", variable->constType, variableDesc.Name, variable->size, variable->location, variable->arraySize);

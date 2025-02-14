@@ -189,6 +189,21 @@ GpuProgramParameters::SetAutoConstant(AutoConstantType autoType, float val)
 /**
 */
 void
+GpuProgramParameters::SetAutoConstant(AutoConstantType autoType, const Matrix4* const m, unsigned int numEntries)
+{
+    CE_ASSERT(autoType >= ACT_WORLD_MATRIX && autoType < ACT_COUNT, "GpuProgramParameters::SetAutoConstant(): invalid AutoConstantType value '%u'\n", autoType);
+    GpuConstantDefinition* def = this->autoConstants[autoType];
+    if (def != NULL)
+    {
+        CE_ASSERT(numEntries <= def->arraySize, "GpuProgramParameters::SetAutoConstant(): Matrix4 numEntries: '%u' > arraySize: '%u'\n", numEntries, def->arraySize);
+        memcpy(def->buffer, m, (size_t)def->size * numEntries);
+    }
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
 GpuProgramParameters::_SetNamedConstants(GpuNamedConstants* const constantMap)
 {
     this->constantDefs = constantMap;
@@ -216,6 +231,7 @@ GpuProgramParameters::AutoConstantTypeFromString(const char* const name)
     if (0 == strcmp(name, "worldViewProjMatrix"))   {return ACT_WORLDVIEWPROJ_MATRIX;}
     if (0 == strcmp(name, "textureMatrix"))         {return ACT_TEXTURE_MATRIX;}
     if (0 == strcmp(name, "morphWeight"))           {return ACT_MORPH_WEIGHT;}
+    if (0 == strcmp(name, "boneMatrices"))          {return ACT_BONE_MATRICES;}
     if (0 == strcmp(name, "boneMatrices[0]"))       {return ACT_BONE_MATRICES;}
 
     return ACT_COUNT;

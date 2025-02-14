@@ -121,6 +121,8 @@ public:
     void SetAutoConstant(AutoConstantType autoType, const core::Matrix4& m);
     /// sets a single float constant which will automatically be updated by the system
     void SetAutoConstant(AutoConstantType autoType, float val);
+    /// sets a list of Matrix4 parameters which will automatically be updated by the system
+    void SetAutoConstant(AutoConstantType autoType, const core::Matrix4* const m, unsigned int numEntries);
 
     /// internal method for providing a link to a name->definition map for parameters
     void _SetNamedConstants(GpuNamedConstants* const constantMap);
