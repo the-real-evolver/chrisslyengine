@@ -31,13 +31,17 @@ public:
     /// removes all Passes from this Material 
     void RemoveAllPasses();
 
+    /// set this material specific shadow casting material
+    void SetShadowCasterMaterial(Material* mat);
+    /// return this material specific shadow casting material
+    Material* GetShadowCasterMaterial() const;
+
     /// loads the material, if it is not already (e.g. loads all textures)
     void Load();
 
 private:
-    /// list of primary passes
+    Material* shadowCasterMaterial;
     Pass** passes;
-
     bool loaded;
 };
 

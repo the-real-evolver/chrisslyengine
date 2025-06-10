@@ -525,7 +525,12 @@ SceneManager::_RenderScene(Camera* const camera, Viewport* const vp)
                 if (this->IsShadowTechniqueInUse() && this->illuminationStage == IRS_RENDER_TO_TEXTURE)
                 {
 #if __CE_D3D11__ || __CE_GLES2__
-                    if (entity->GetMesh()->GetSkeleton() != NULL)
+                    Material* shadowCasterMaterial = material->GetShadowCasterMaterial();
+                    if (shadowCasterMaterial != NULL && shadowCasterMaterial->GetNumPasses() > 0U)
+                    {
+                        this->renderQueueOpaque.AddRenderable(subEntity, shadowCasterMaterial->GetPass(0U));
+                    }
+                    else if (entity->GetMesh()->GetSkeleton() != NULL)
                     {
                         this->renderQueueOpaque.AddRenderable(subEntity, this->shadowRttSkeletalAnimPass);
                     }

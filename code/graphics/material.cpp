@@ -15,6 +15,7 @@ namespace graphics
 /**
 */
 Material::Material() :
+    shadowCasterMaterial(NULL),
     passes(NULL),
     loaded(false)
 {
@@ -71,6 +72,24 @@ Material::RemoveAllPasses()
         CE_DELETE this->passes[i];
     }
     ce_array_delete(this->passes);
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+Material::SetShadowCasterMaterial(Material* mat)
+{
+    this->shadowCasterMaterial = mat;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+Material*
+Material::GetShadowCasterMaterial() const
+{
+    return this->shadowCasterMaterial;
 }
 
 //------------------------------------------------------------------------------
