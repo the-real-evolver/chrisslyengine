@@ -64,12 +64,12 @@ TextureManager::Load(const char* const name, TextureType type)
     {
         char* ext = (char*)strrchr(name, '.');
         if (NULL == ext) return NULL;
-        strncpy(fileNames[0U], name, ext - name); strcat(strcat(fileNames[0U], "_px"), ext);
-        strncpy(fileNames[1U], name, ext - name); strcat(strcat(fileNames[1U], "_nx"), ext);
-        strncpy(fileNames[2U], name, ext - name); strcat(strcat(fileNames[2U], "_py"), ext);
-        strncpy(fileNames[3U], name, ext - name); strcat(strcat(fileNames[3U], "_ny"), ext);
-        strncpy(fileNames[4U], name, ext - name); strcat(strcat(fileNames[4U], "_pz"), ext);
-        strncpy(fileNames[5U], name, ext - name); strcat(strcat(fileNames[5U], "_nz"), ext);
+        memcpy(fileNames[0U], name, ext - name); strcat(strcat(fileNames[0U], "_px"), ext);
+        memcpy(fileNames[1U], name, ext - name); strcat(strcat(fileNames[1U], "_nx"), ext);
+        memcpy(fileNames[2U], name, ext - name); strcat(strcat(fileNames[2U], "_py"), ext);
+        memcpy(fileNames[3U], name, ext - name); strcat(strcat(fileNames[3U], "_ny"), ext);
+        memcpy(fileNames[4U], name, ext - name); strcat(strcat(fileNames[4U], "_pz"), ext);
+        memcpy(fileNames[5U], name, ext - name); strcat(strcat(fileNames[5U], "_nz"), ext);
     }
     else
     {

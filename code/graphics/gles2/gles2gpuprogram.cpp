@@ -272,7 +272,7 @@ GLES2GpuProgram::CreateShaderFromString(GLenum shaderType, const char* source, c
         unsigned int sourceLen = strlen(source);
         srcMod = (char*)CE_MALLOC(sourceLen + definesLen);
         memset(srcMod, 0, sourceLen + definesLen);
-        if (versionLen > 0U) strncpy(srcMod, versionBegin, versionLen);
+        if (versionLen > 0U) memcpy(srcMod, versionBegin, versionLen);
         index = 0U;
         while (macros[index] != NULL)
         {

@@ -114,7 +114,7 @@ String::Set(const char* const ptr, unsigned int length)
     {
         this->data = (char*)CE_MALLOC(length + 1U);
         CE_ASSERT(this->data != NULL, "String::Set(): failed to allocate '%i' bytes\n", length + 1U);
-        strncpy(this->data, ptr, length);
+        memcpy(this->data, ptr, length);
         this->data[length] = '\0';
         this->size = length;
     }
@@ -158,13 +158,13 @@ String::SubstituteString(const char* const pattern, const char* const replacemen
     while (0 != (match = strstr(src, pattern)))
     {
         size_t fragLen = match - src;
-        strncpy(dst, src, fragLen);
+        memcpy(dst, src, fragLen);
         dst += fragLen;
-        strncpy(dst, replacement, replacementLen);
+        memcpy(dst, replacement, replacementLen);
         dst += replacementLen;
         src += fragLen + patternLen;
     }
-    strncpy(dst, src, this->size - (src - this->data));
+    memcpy(dst, src, this->size - (src - this->data));
 
     this->Delete();
     this->data = buffer;
