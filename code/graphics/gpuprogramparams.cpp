@@ -111,7 +111,7 @@ GpuProgramParameters::SetNamedConstant(const char* const name, const Vector3* co
     if (def != NULL)
     {
         CE_ASSERT(numEntries <= def->arraySize, "GpuProgramParameters::SetNamedConstant(): Vector3 numEntries: '%u' > arraySize: '%u'\n", numEntries, def->arraySize);
-        memcpy(def->buffer, vec, def->size * numEntries);
+        memcpy(def->buffer, vec, (size_t)def->size * numEntries);
     }
 }
 
@@ -151,7 +151,7 @@ GpuProgramParameters::SetNamedConstant(const char* const name, const Matrix4* co
     if (def != NULL)
     {
         CE_ASSERT(numEntries <= def->arraySize, "GpuProgramParameters::SetNamedConstant(): Matrix4 numEntries: '%u' > arraySize: '%u'\n", numEntries, def->arraySize);
-        memcpy(def->buffer, m, def->size * numEntries);
+        memcpy(def->buffer, m, (size_t)def->size * numEntries);
     }
 }
 

@@ -328,7 +328,7 @@ AudioSystem::Set3DListenerAttributes(const Vector3* const pos, const Vector3* co
 void
 AudioSystem::_Mix(unsigned int numSamples, unsigned char* const buffer)
 {
-    memset(buffer, 0, numSamples << 2U);
+    memset(buffer, 0, (size_t)numSamples << 2U);
     unsigned int i, channelCount = ce_array_size(this->channelPool);
     for (i = 0U; i < channelCount; ++i)
     {
