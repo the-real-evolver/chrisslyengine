@@ -663,12 +663,6 @@ D3D11RenderSystem::SetPass(graphics::Pass* const pass)
             params->SetNamedConstant("uScale", tus->GetTextureUScale());
             params->SetNamedConstant("vScale", tus->GetTextureVScale());
         }
-        else
-        {
-            core::Quaternion ambient;
-            ce_colour_convert_u32_to_float(pass->GetDiffuse(), ambient.w, ambient.x, ambient.y, ambient.z);
-            params->SetNamedConstant("ambient", ambient);
-        }
 
         if (fog)
         {
@@ -694,6 +688,11 @@ D3D11RenderSystem::SetPass(graphics::Pass* const pass)
             params->SetNamedConstant("lightParams", this->defaultLightShaderParams, MaxLights);
         }
     }
+
+    /* set custom params */
+    core::Quaternion ambient;
+    ce_colour_convert_u32_to_float(pass->GetDiffuse(), ambient.w, ambient.x, ambient.y, ambient.z);
+    params->SetNamedConstant("ambient", ambient);
 
     /* set auto params */
     params->SetAutoConstant(graphics::GpuProgramParameters::ACT_VIEW_MATRIX, this->viewMatrix);

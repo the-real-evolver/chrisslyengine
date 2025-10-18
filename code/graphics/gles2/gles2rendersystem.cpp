@@ -512,9 +512,11 @@ GLES2RenderSystem::SetPass(graphics::Pass* const pass)
     }
 
     // set gpu program to use
+    graphics::GpuProgramParameters* params = NULL;
     if (pass->IsProgrammable())
     {
         this->currentGpuProgram = pass->GetGpuProgram();
+        params = this->currentGpuProgram->GetDefaultParameters();
     }
     else
     {
@@ -545,7 +547,7 @@ GLES2RenderSystem::SetPass(graphics::Pass* const pass)
             this->currentGpuProgram = this->defaultGpuProgram;
         }
 
-        graphics::GpuProgramParameters* params = this->currentGpuProgram->GetDefaultParameters();
+        params = this->currentGpuProgram->GetDefaultParameters();
 
         if (pass->GetNumTextureUnitStates() > 0U)
         {
@@ -575,6 +577,11 @@ GLES2RenderSystem::SetPass(graphics::Pass* const pass)
             params->SetNamedConstant("lightParams[0]", this->defaultLightShaderParams, MaxLights);
         }
     }
+
+    // set custom params
+    core::Quaternion ambient;
+    ce_colour_convert_u32_to_float(pass->GetDiffuse(), ambient.w, ambient.x, ambient.y, ambient.z);
+    params->SetNamedConstant("ambient", ambient);
 
     glUseProgram(this->currentGpuProgram->GetProgramHandle());
     CE_GL_ERROR_CHECK("glUseProgram");
