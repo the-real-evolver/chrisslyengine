@@ -391,6 +391,15 @@ GLES2RenderSystem::Render(graphics::SubEntity* const renderable)
             CE_GL_ERROR_CHECK("glEnableVertexAttribArray: texturecoords");
         }
 
+        GLuint vertexColourHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_COLOUR);
+        if (vertexColourHandle < this->maxVertexAttribs)
+        {
+            glVertexAttribPointer(vertexColourHandle, 1, GL_UNSIGNED_INT, GL_FALSE, stride, (void*)(buffer + 8U));
+            CE_GL_ERROR_CHECK("glVertexAttribPointer: colour");
+            glEnableVertexAttribArray(vertexColourHandle);
+            CE_GL_ERROR_CHECK("glEnableVertexAttribArray: colour");
+        }
+
         GLuint vertexNormalHandle = this->currentGpuProgram->GetAttributeLocation(graphics::VES_NORMAL);
         if (vertexNormalHandle < this->maxVertexAttribs)
         {

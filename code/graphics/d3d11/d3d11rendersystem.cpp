@@ -95,7 +95,7 @@ D3D11RenderSystem::Initialise(graphics::ConfigOptions* const config)
         NULL,                       /* __in     IDXGIAdapter *pAdapter  (use NULL for the first adapter)    */
         D3D_DRIVER_TYPE_HARDWARE,   /* __in     D3D_DRIVER_TYPE DriverType                                  */
         NULL,                       /* __in     HMODULE Software                                            */
-        0U,                         /* __in     UINT Flags                                                  */
+        0U,                         /* __in     UINT Flags (like: D3D11_CREATE_DEVICE_DEBUG)                */
         featureLevels,              /* __in     const D3D_FEATURE_LEVEL *pFeatureLevels                     */
         _countof(featureLevels),    /* __in     UINT FeatureLevels                                          */
         D3D11_SDK_VERSION,          /* __in     UINT SDKVersion                                             */

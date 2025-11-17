@@ -2,7 +2,7 @@
 #define HARDWAREVERTEXBUFFER_H_
 //------------------------------------------------------------------------------
 /**
-    Vertexbuffer related stuff
+    Vertexbuffer related stuff.
 
     (C) 2012 Christian Bleicher
 */
@@ -25,6 +25,8 @@ namespace graphics
         VES_NORMAL,
         /// texture coordinates
         VES_TEXTURE_COORDINATES,
+        /// vertex colour
+        VES_COLOUR,
         /// position of the morph target vertex
         VES_POSITION_MORPH_TARGET,
         /// the  number of VertexElementSemantic elements
