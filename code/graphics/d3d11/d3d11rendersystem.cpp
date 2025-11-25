@@ -323,6 +323,7 @@ D3D11RenderSystem::Shutdown()
     }
     if (this->context != NULL)
     {
+        this->context->Flush();
         this->context->Release();
         this->context = NULL;
     }
@@ -341,6 +342,9 @@ D3D11RenderSystem::Shutdown()
 void
 D3D11RenderSystem::SetRenderTarget(graphics::RenderTarget* const target)
 {
+    static ID3D11ShaderResourceView* srvs[D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT] = {NULL};
+    this->context->PSSetShaderResources(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT, srvs);
+
     ID3D11RenderTargetView* renderTargetView = NULL;
     ID3D11DepthStencilView* depthStencilView = NULL;
     if ('DXGW' == target->GetType())
