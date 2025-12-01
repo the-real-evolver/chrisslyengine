@@ -390,9 +390,6 @@
     <ClInclude Include="..\..\code\graphics\textureunitstate.h">
       <Filter>graphics</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\code\graphics\vertexdata.h">
-      <Filter>graphics</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\code\graphics\viewport.h">
       <Filter>graphics</Filter>
     </ClInclude>

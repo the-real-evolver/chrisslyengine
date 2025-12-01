@@ -58,7 +58,7 @@ public:
     /**
         @param timeIndex the time position in the animation to apply
     */
-    void ApplyToVertexData(VertexData* const data, int timeIndex);
+    void ApplyToVertexData(HardwareVertexBuffer* const data, int timeIndex);
 
 private:
     unsigned char handle;

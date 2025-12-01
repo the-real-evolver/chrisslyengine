@@ -6,7 +6,7 @@
 
     (C) 2012 Christian Bleicher
 */
-#include "vertexdata.h"
+#include "hardwarevertexbuffer.h"
 
 //------------------------------------------------------------------------------
 namespace chrissly
@@ -26,7 +26,7 @@ public:
     float GetTime() const;
 
     /// vertex data
-    VertexData* vertexData;
+    HardwareVertexBuffer* vertexBuffer;
 
 private:
     float time;

@@ -89,13 +89,13 @@ VertexAnimationTrack::RemoveAllKeyFrames()
 /**
 */
 void
-VertexAnimationTrack::ApplyToVertexData(VertexData* const data, int timeIndex)
+VertexAnimationTrack::ApplyToVertexData(HardwareVertexBuffer* const data, int timeIndex)
 {
     if ((unsigned int)timeIndex < ce_array_size(this->keyFrames) - 1U)
     {
-        HardwareVertexBuffer* kf1 = this->keyFrames[timeIndex]->vertexData->vertexBuffer;
-        HardwareVertexBuffer* kf2 = this->keyFrames[timeIndex + 1]->vertexData->vertexBuffer;
-        HardwareVertexBuffer* dst = data->vertexBuffer;
+        HardwareVertexBuffer* kf1 = this->keyFrames[timeIndex]->vertexBuffer;
+        HardwareVertexBuffer* kf2 = this->keyFrames[timeIndex + 1]->vertexBuffer;
+        HardwareVertexBuffer* dst = data;
         ce_memory_fill_interleaved(kf1->Map(), kf2->Map(),
                                    dst->Map(), (unsigned short)kf1->GetBytesPerVertex(),
                                    dst->GetBytesPerVertex() * dst->GetNumVertices());

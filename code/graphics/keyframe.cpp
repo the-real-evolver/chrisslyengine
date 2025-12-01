@@ -15,7 +15,7 @@ namespace graphics
 /**
 */
 VertexMorphKeyFrame::VertexMorphKeyFrame(float time) :
-    vertexData(NULL),
+    vertexBuffer(NULL),
     time(time)
 {
 
@@ -26,7 +26,7 @@ VertexMorphKeyFrame::VertexMorphKeyFrame(float time) :
 */
 VertexMorphKeyFrame::~VertexMorphKeyFrame()
 {
-    CE_DELETE this->vertexData;
+    CE_DELETE this->vertexBuffer;
 }
 
 //------------------------------------------------------------------------------

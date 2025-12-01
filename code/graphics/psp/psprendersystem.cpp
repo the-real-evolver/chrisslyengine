@@ -9,7 +9,6 @@
 #include "common.h"
 #include "entity.h"
 #include "animationtrack.h"
-#include "vertexdata.h"
 #include "debug.h"
 #include <stdio.h>
 #include <pspgum.h>
@@ -205,7 +204,7 @@ PSPRenderSystem::Render(graphics::SubEntity* const renderable)
             sceGuBoneMatrix(i, &boneMatrices[i]);
             sceGuMorphWeight(i, 1.0f);
         }
-        graphics::HardwareVertexBuffer* vertexBuffer = renderable->GetSubMesh()->vertexData->vertexBuffer;
+        graphics::HardwareVertexBuffer* vertexBuffer = renderable->GetSubMesh()->vertexBuffer;
         sceGumDrawArray(PSPMappings::Get(renderable->GetSubMesh()->topology),
                         GU_TEXTURE_32BITF | GU_COLOR_8888 | GU_NORMAL_32BITF | GU_VERTEX_32BITF | GU_WEIGHT_32BITF | GU_TRANSFORM_3D | GU_WEIGHTS(numBones),
                         vertexBuffer->GetNumVertices(), 0,
@@ -217,7 +216,7 @@ PSPRenderSystem::Render(graphics::SubEntity* const renderable)
         sceGuMorphWeight(0, 1.0f - morphWeight);
         sceGuMorphWeight(1, morphWeight);
 
-        graphics::HardwareVertexBuffer* vertexBuffer = renderable->GetMorphVertexData()->vertexBuffer;
+        graphics::HardwareVertexBuffer* vertexBuffer = renderable->GetMorphVertexData();
         sceGumDrawArray(PSPMappings::Get(renderable->GetSubMesh()->topology),
                         GU_TEXTURE_32BITF | GU_COLOR_8888 | GU_NORMAL_32BITF | GU_VERTEX_32BITF | GU_TRANSFORM_3D | GU_VERTICES(2) | GU_WEIGHTS(2),
                         vertexBuffer->GetNumVertices(), 0,
@@ -225,7 +224,7 @@ PSPRenderSystem::Render(graphics::SubEntity* const renderable)
     }
     else
     {
-        graphics::HardwareVertexBuffer* vertexBuffer = renderable->GetSubMesh()->vertexData->vertexBuffer;
+        graphics::HardwareVertexBuffer* vertexBuffer = renderable->GetSubMesh()->vertexBuffer;
         sceGumDrawArray(PSPMappings::Get(renderable->GetSubMesh()->topology),
                         GU_TEXTURE_32BITF | GU_COLOR_8888 | GU_NORMAL_32BITF | GU_VERTEX_32BITF | GU_TRANSFORM_3D,
                         vertexBuffer->GetNumVertices(), 0,

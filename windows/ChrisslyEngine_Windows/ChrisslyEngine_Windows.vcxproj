@@ -297,7 +297,6 @@
     <ClInclude Include="..\..\code\graphics\texturebase.h" />
     <ClInclude Include="..\..\code\graphics\texturemanager.h" />
     <ClInclude Include="..\..\code\graphics\textureunitstate.h" />
-    <ClInclude Include="..\..\code\graphics\vertexdata.h" />
     <ClInclude Include="..\..\code\graphics\viewport.h" />
     <ClInclude Include="..\..\code\input\chrisslyinput.h" />
     <ClInclude Include="..\..\code\input\chrisslyinputplatform.h" />

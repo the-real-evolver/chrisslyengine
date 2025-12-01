@@ -277,7 +277,7 @@ GLES2RenderSystem::Render(graphics::SubEntity* const renderable)
         }
         glUniformMatrix4fv(this->currentGpuProgram->GetUniformLocation(graphics::GpuProgramParameters::ACT_BONE_MATRICES), (GLsizei)numBones, GL_FALSE, boneMatrices[0U]);
 
-        graphics::HardwareVertexBuffer* vertexBuffer = renderable->GetSubMesh()->vertexData->vertexBuffer;
+        graphics::HardwareVertexBuffer* vertexBuffer = renderable->GetSubMesh()->vertexBuffer;
         GLsizei stride = (GLsizei)vertexBuffer->GetBytesPerVertex();
 
         glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer->GetName());
@@ -336,7 +336,7 @@ GLES2RenderSystem::Render(graphics::SubEntity* const renderable)
         glUniform1f(this->currentGpuProgram->GetUniformLocation(graphics::GpuProgramParameters::ACT_MORPH_WEIGHT), renderable->GetMorphWeight());
         CE_GL_ERROR_CHECK("glUniform1f");
 
-        graphics::HardwareVertexBuffer* vertexBuffer = renderable->GetMorphVertexData()->vertexBuffer;
+        graphics::HardwareVertexBuffer* vertexBuffer = renderable->GetMorphVertexData();
         GLsizei stride = (GLsizei)vertexBuffer->GetBytesPerVertex();
         unsigned char* buffer = (unsigned char*)vertexBuffer->Map();
 
@@ -375,7 +375,7 @@ GLES2RenderSystem::Render(graphics::SubEntity* const renderable)
     }
     else
     {
-        graphics::HardwareVertexBuffer* vertexBuffer = renderable->GetSubMesh()->vertexData->vertexBuffer;
+        graphics::HardwareVertexBuffer* vertexBuffer = renderable->GetSubMesh()->vertexBuffer;
         GLsizei stride = (GLsizei)vertexBuffer->GetBytesPerVertex();
         unsigned char* buffer = vertexBuffer->GetUsage() == graphics::HBU_DYNAMIC ? (unsigned char*)vertexBuffer->Map() : 0U;
 

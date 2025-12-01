@@ -510,7 +510,7 @@ D3D11RenderSystem::Render(graphics::SubEntity* const renderable)
     if (renderable->GetParent()->GetMesh()->GetSkeleton() != NULL)
     {
         this->context->IASetInputLayout(this->inputLayoutSkeletalAnim);
-        vertexBuffer = renderable->GetSubMesh()->vertexData->vertexBuffer;
+        vertexBuffer = renderable->GetSubMesh()->vertexBuffer;
         unsigned int numBones = ce_array_size(renderable->GetParent()->GetBoneMatrices());
         CE_ASSERT(numBones <= CE_MAX_BONES_PER_SKELETON, "D3D11RenderSystem::Render(): right now only up to %i bones are supported for skeletal animation, number of bones requested: %i\n", CE_MAX_BONES_PER_SKELETON, numBones);
         params->SetAutoConstant(graphics::GpuProgramParameters::ACT_BONE_MATRICES, renderable->GetParent()->GetBoneMatrices(), numBones);
@@ -518,13 +518,13 @@ D3D11RenderSystem::Render(graphics::SubEntity* const renderable)
     else if (graphics::VAT_MORPH == renderable->GetSubMesh()->GetVertexAnimationType())
     {
         this->context->IASetInputLayout(this->inputLayoutMorphAnim);
-        vertexBuffer = renderable->GetMorphVertexData()->vertexBuffer;
+        vertexBuffer = renderable->GetMorphVertexData();
         params->SetAutoConstant(graphics::GpuProgramParameters::ACT_MORPH_WEIGHT, renderable->GetMorphWeight());
     }
     else
     {
         this->context->IASetInputLayout(this->inputLayout);
-        vertexBuffer = renderable->GetSubMesh()->vertexData->vertexBuffer;
+        vertexBuffer = renderable->GetSubMesh()->vertexBuffer;
     }
     this->currentGpuProgram->UpdatePerObjectConstantBuffers();
     ID3D11Buffer* d3d11Buffer = vertexBuffer->GetD3D11Buffer();

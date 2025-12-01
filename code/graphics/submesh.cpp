@@ -17,7 +17,7 @@ using namespace chrissly::core;
 /**
 */
 SubMesh::SubMesh() :
-    vertexData(NULL),
+    vertexBuffer(NULL),
     topology(PT_TRIANGLELIST),
     vertexAnimationType(VAT_NONE)
 {
@@ -29,7 +29,7 @@ SubMesh::SubMesh() :
 */
 SubMesh::~SubMesh()
 {
-    CE_DELETE this->vertexData;
+    CE_DELETE this->vertexBuffer;
 }
 
 //------------------------------------------------------------------------------

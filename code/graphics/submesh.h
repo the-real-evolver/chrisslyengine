@@ -7,7 +7,6 @@
     (C) 2011 Christian Bleicher
 */
 #include "common.h"
-#include "vertexdata.h"
 #include "animationtrack.h"
 #include "chrisslystring.h"
 
@@ -34,7 +33,7 @@ public:
     VertexAnimationType GetVertexAnimationType() const;
 
     /// dedicated vertex data
-    VertexData* vertexData;
+    HardwareVertexBuffer* vertexBuffer;
     /// type of primitive used when rendering this mesh
     PrimitiveTopology topology;
 

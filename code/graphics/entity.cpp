@@ -50,10 +50,10 @@ Entity::Entity(Mesh* const mesh) :
                     VertexAnimationTrack* vertexTrack = anim->GetVertexTrack(trackIndex);
                     SubEntity* subEntity = this->GetSubEntity(vertexTrack->GetHandle());
                     CE_ASSERT(subEntity != NULL, "Entity::Entity(): subEntity not valid\n");
-                    HardwareVertexBuffer* subMeshVertexBuffer = subEntity->GetSubMesh()->vertexData->vertexBuffer;
+                    HardwareVertexBuffer* subMeshVertexBuffer = subEntity->GetSubMesh()->vertexBuffer;
                     HardwareVertexBuffer* vertexBuffer = CE_NEW HardwareVertexBuffer(subMeshVertexBuffer->GetNumVertices(),
                                                                                     2U * subMeshVertexBuffer->GetBytesPerVertex(), HBU_DYNAMIC, false);
-                    subEntity->morphVertexData = CE_NEW VertexData(vertexBuffer);
+                    subEntity->morphVertexData = vertexBuffer;
                     vertexTrack->ApplyToVertexData(subEntity->morphVertexData, 0);
                 }
 

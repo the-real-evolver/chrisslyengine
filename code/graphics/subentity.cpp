@@ -130,7 +130,7 @@ SubEntity::GetParent() const
 //------------------------------------------------------------------------------
 /**
 */
-VertexData*
+HardwareVertexBuffer*
 SubEntity::GetMorphVertexData() const
 {
     return this->morphVertexData;

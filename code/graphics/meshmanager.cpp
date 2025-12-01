@@ -98,7 +98,7 @@ MeshManager::Load(const char* const filename)
 
                     // add submesh
                     SubMesh* subMesh = mesh->CreateSubMesh();
-                    subMesh->vertexData = CE_NEW VertexData(vertexBuffer);
+                    subMesh->vertexBuffer = vertexBuffer;
                     subMesh->SetMaterialName(materialName);
                 }
                 break;
@@ -150,13 +150,13 @@ MeshManager::Load(const char* const filename)
                     // add morphkeyframe
                     CE_ASSERT(animationTrack != NULL, "MeshManager::Load(): can't create VertexMorphKeyFrame without VertexAnimationTrack\n");
                     VertexMorphKeyFrame* vertexMorphKeyFrame = animationTrack->CreateVertexMorphKeyFrame(keyTime);
-                    vertexMorphKeyFrame->vertexData = CE_NEW VertexData(vertexBuffer);
+                    vertexMorphKeyFrame->vertexBuffer = vertexBuffer;
 
                     // initialise submesh
                     SubMesh* subMesh = mesh->GetSubMesh(animationTrack->GetHandle());
                     CE_ASSERT(subMesh != NULL, "MeshManager::Load(): no submesh to map to\n");
                     subMesh->vertexAnimationType = VAT_MORPH;
-                    subMesh->vertexData->vertexBuffer->SetNumVertices(vertexCount);
+                    subMesh->vertexBuffer->SetNumVertices(vertexCount);
                 }
                 break;
             case M_MESH_SKELETON_FILE:

@@ -39,7 +39,7 @@ public:
     /// get the parent entity of this subentity
     Entity* GetParent() const;
     /// advanced method to get the hardware morph vertex information
-    VertexData* GetMorphVertexData() const;
+    HardwareVertexBuffer* GetMorphVertexData() const;
     /// set vertex morph weight value
     void SetMorphWeight(float weight);
     /// get vertex morph weight value
@@ -59,7 +59,7 @@ private:
     /// submesh basis
     SubMesh* subMesh;
     /// the vertex data for hardware morphing
-    VertexData* morphVertexData;
+    HardwareVertexBuffer* morphVertexData;
     /// time index of the current morphkeyframe
     int currentTimeIndex;
     /// vertex morph weight
